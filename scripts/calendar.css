@@ -1,0 +1,60 @@
+﻿table#calendar .ascalbar{clear:both;margin:0;padding:0px;text-align:center;}
+table#calendar .ascalnext{cursor:pointer;float:right;width:20px;}
+table#calendar .ascalprev{cursor:pointer;float:left;width:20px;}
+table#calendar {background-color:#fff;}
+table#calendar a {text-decoration: none;}
+table#calendar tr#title th#prev{border-left:solid 1px #242;}
+table#calendar tr#title th#next{border-right:solid 1px #242;}
+table#calendar tr#days th#sat{border-right:solid 1px #242;}
+table#calendar tr#days th#sun {border-left:solid 1px #242;}
+table#calendar tr#days th {font-size:11px;font-weight:normal;font-family:Tahoma,monospace;color: #000; text-align:center; padding:0;background-color:#f5f5f5;border-bottom:solid 1px #cdcdcd;}
+table#calendar tr#title th {font-size:11px;font-family:Tahoma,monospace;text-align:center;background-color: #ccc; color: #000;border-top:solid 1px #242;border-bottom:solid 1px #242; white-space:nowrap;}
+table#calendar td {font-size:11px;font-family:Tahoma,monospace;cursor:pointer;vertical-align:middle;padding:0;border:solid 0px #cdcdcd; border-width:0 0 1px 1px;margin:0;padding-bottom:0 !important;}
+table#calendar td.sat {border-right:solid 1px grey;}
+table#calendar td.sun {border-left:solid 1px grey;}
+table#calendar td a {font-weight: bold; display: block; margin: 0;}
+table#calendar a:link {color: navy;}
+table#calendar a:visited {color: purple;}
+table#calendar a:hover {background: #FF6;}
+
+table#calendar td.sat, table#calendar td.sun {background-color: #E1F0FF;}
+table#calendar td.prevmonth,table#calendar td.nextmonth{background-color: #f3f3f3; color: #889;}
+table#calendar tr#lastweek td {border-bottom: 2px solid #AAB;}
+table#calendar td.holiday {background: #FAA;border-color: #BBB #FCC #FCC #BBB;}
+table#calendar td.today {background-color: yellow;}
+table#calendar tr#time td{font-weight:bold;border-left:solid 1px grey;border-bottom:solid 1px grey;background-color:#FFFFCC;}
+table#calendar tr#time select{width:100%;}
+table#calendar tr#time #timeselect{border-right:solid 1px grey;}
+
+
+table#calendar td.today div.date {color: #C33; font-weight: bold; background: #FFC;}
+table#calendar div.event {margin: 0.5em;}
+table#calendar div.event span {display: block;}
+table#calendar div.holiday {font-style: italic;}
+table#calendar span.time {font-weight: bold;}
+table#calendar span.loc {color: #555; font-style: italic;}
+
+table#calendar td.sat div.date,table#calendar td.sun div.date {color: gray; background: transparent;}
+table#calendar td.prevmonth div.date, table#calendar td.nextmonth div.date {color: gray; background: transparent;}
+
+
+
+
+/*Calendar Picker */
+.ampicker{padding-left:2px;}
+.ampicker input{width:100px;}
+.amcalbutton{border:none;cursor:pointer;}
+.amcalendar td{font-size:11px;text-align:center;}
+.amcalendar select{font-size: 11px;font-family: Tahoma,monospace;font-weight:normal;}
+.amcaltitle{font-weight:bold;background-color:#D7D7E5;font-family: Tahoma,monospace;text-align:center;vertical-align:middle;}
+.amcaltitle img{cursor:pointer;}
+.amdayhover{width:25px;cursor:pointer;text-align:center;text-decoration:underline;border-width:1px;border-color:#F6F6F6;border-style:solid;}
+.amdayheader{width:25px;text-align:center;border-width:1px;border-color:white;border-style:solid;font-weight:bold;background-color:#FFFFFF;}
+.amothermonthday{color:#999999;cursor:pointer;border-color:transparent;border-style:solid;border-width:1px;}
+.amcurrentmonthday{color:#000000;cursor:pointer;border-color:transparent;border-style:solid;border-width:1px;}
+.amselectedday{width:25px;background-color:#FBE694;text-align:center;color:#000000;border-width:1px;border-color:#ff0000 !important;border-style:solid;font-weight:bold;cursor:pointer;}
+.amcurrentday{width:25px;background-color:#000000;text-align:center;color:#ffffff;border-width:1px;border-color:#666 !important;border-style:solid;font-weight:bold;cursor:pointer;}
+/*.amcalendar{font-family: Tahoma,monospace;border:solid 1px #000;background-color:#FFFFFF;cursor:default;}*/
+.ammonth{background-color:#F6F6F6;margin-left:5px;margin-right:5px;margin-bottom:5px;margin-top:0px;}
+.amnextprev{cursor:pointer;height:25px;vertical-align: middle;padding:0px 5px 0px 5px;}
+/*End Calendar Picker */

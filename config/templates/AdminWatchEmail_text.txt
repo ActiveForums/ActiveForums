@@ -1,0 +1,14 @@
+A message was posted by a user you are tracking.
+----------------------------------------------------------------
+Author:[DISPLAYNAME]
+Date: [POSTDATE] 
+Subject: [SUBJECT]
+Message:
+----------------------------------------------------------------
+[BODY]
+----------------------------------------------------------------
+To view the complete thread and reply, please visit:
+ [HYPERLINK]
+
+Thank you,
+[PORTALNAME]

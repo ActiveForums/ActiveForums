@@ -1,0 +1,8 @@
+A user has sent the following alert:
+--------------------------------------
+Comments:[COMMENTS]
+Link:[LINK]
+--------------------------------------
+Post Subject:[SUBJECT]
+Author:[DISPLAYNAME]
+Body:[BODY]

@@ -1,0 +1,3 @@
+﻿/desktopmodules/activeforums/cb.aspx
+/desktopmodules/activeforums/settings.ascx
+

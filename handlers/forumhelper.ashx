@@ -1,0 +1,1 @@
+﻿<%@ WebHandler Language="C#" CodeBehind="forumhelper.ashx.cs" Class="DotNetNuke.Modules.ActiveForums.Handlers.forumhelper" %>

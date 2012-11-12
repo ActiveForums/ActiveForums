@@ -1,0 +1,664 @@
+﻿IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_Tags_Save]') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Tags_Save]
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_UI_UnansweredView]') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}[{objectQualifier}activeforums_UI_UnansweredView]
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_UI_NotRead]') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}[{objectQualifier}activeforums_UI_NotRead]
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}activeforums_Attachments_Delete') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}{objectQualifier}activeforums_Attachments_Delete
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}activeforums_Attachments_List') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}{objectQualifier}activeforums_Attachments_List
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}activeforums_Attachments_ListAttachFiles') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}{objectQualifier}activeforums_Attachments_ListAttachFiles
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}activeforums_Attachments_ListMyFiles') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}{objectQualifier}activeforums_Attachments_ListMyFiles
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}activeforums_Attachments_SaveToContent') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}{objectQualifier}activeforums_Attachments_SaveToContent
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}activeforums_Attachments_Content_Delete') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}{objectQualifier}activeforums_Attachments_Content_Delete
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}activeforums_Attachments_Save') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}{objectQualifier}activeforums_Attachments_Save
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}activeforums_Attachments_Get') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}{objectQualifier}activeforums_Attachments_Get
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}activeforums_UI_TopicView') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}{objectQualifier}activeforums_UI_TopicView
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}activeforums_Attachments_ListForPost') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}{objectQualifier}activeforums_Attachments_ListForPost
+GO
+
+ALTER TABLE {databaseOwner}{objectQualifier}activeforums_Attachments ADD
+	AllowDownload bit NOT NULL CONSTRAINT DF_{objectQualifier}activeforums_Attachments_AllowDownload DEFAULT 1,
+	DisplayInline bit NOT NULL CONSTRAINT DF_{objectQualifier}activeforums_Attachments_DisplayInline DEFAULT 0,
+	DownloadCount int NOT NULL CONSTRAINT DF_{objectQualifier}activeforums_Attachments_DownloadCount DEFAULT 0,
+	ParentAttachId int NOT NULL CONSTRAINT DF_{objectQualifier}activeforums_Attachments_ParentAttachId DEFAULT 0
+GO
+CREATE TABLE {databaseOwner}{objectQualifier}activeforums_Content_Attachments(
+	[ContentId] [int] NOT NULL,
+	[AttachId] [int] NOT NULL
+) ON [PRIMARY]
+GO
+INSERT INTO {databaseOwner}{objectQualifier}activeforums_Content_Attachments
+	(ContentId, AttachId)
+	SELECT ContentId, AttachId from {databaseOwner}{objectQualifier}activeforums_Attachments WHERE ContentId > 0
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Tags_Save]
+	@PortalId int,
+	@ModuleId int,
+	@TagId int,
+	@TagName nvarchar(255),
+	@Clicks int,
+	@Items int,
+	@Priority int,
+	@TopicId int = -1
+AS
+BEGIN
+	IF EXISTS(SELECT * FROM {databaseOwner}{objectQualifier}activeforums_Tags WHERE (PortalId = @PortalId AND ModuleId = @ModuleId) AND (TagId = @TagId OR TagName = @TagName))
+		BEGIN
+			IF @TagId <= 0
+				SELECT @TagId = TagId FROM {databaseOwner}{objectQualifier}activeforums_Tags WHERE (PortalId = @PortalId AND ModuleId = @ModuleId AND UPPER(RTRIM(LTRIM(TagName))) = UPPER(RTRIM(LTRIM(@TagName))))
+				SET @Items = (SELECT COUNT(TopicId) FROM {databaseOwner}{objectQualifier}activeforums_Topics_Tags WHERE TagId = @TagId)
+				UPDATE {databaseOwner}{objectQualifier}activeforums_Tags
+					SET TagName = @TagName, Priority = @Priority, Items = @Items + 1
+				WHERE PortalId = @PortalId AND ModuleId = @ModuleId AND TagId = @TagId
+			END
+	ELSE
+		BEGIN
+		INSERT INTO {databaseOwner}{objectQualifier}activeforums_Tags
+			(PortalId, ModuleId, TagName, Clicks, Items, Priority )
+			Values
+			(@PortalId, @ModuleId, @TagName, @Clicks, @Items, @Priority )
+		SET @TagId = SCOPE_IDENTITY()
+		END
+END
+IF @TopicId > 0
+	IF NOT EXISTS(SELECT TopicId FROM {databaseOwner}{objectQualifier}activeforums_Topics_Tags WHERE TopicId = @TopicId AND TagId = @TagId)
+		INSERT INTO {databaseOwner}{objectQualifier}activeforums_Topics_Tags
+				(TopicId, TagId)VALUES(@TopicId, @TagId)
+				
+
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}activeforums_Util_GetFirstUnread
+@TopicId int,
+@LastReadId int
+AS
+SELECT TOP 1 r.ReplyId from {databaseOwner}{objectQualifier}activeforums_Replies as r WHERE r.TopicId = @TopicId AND r.ReplyId > @LastReadId
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}activeforums_UI_UnansweredView
+	@PortalId int,
+	@ModuleId int,
+	@UserId int,
+	@RowIndex int = 0,
+	@MaxRows int = 20,
+	@Sort nvarchar(10) = 'DESC',
+	@IsSuperUser bit = 0
+AS
+DECLARE @RecordCount int
+SET @RecordCount = (Select Count(*) from {databaseOwner}{objectQualifier}vw_activeforums_TopicsView as T INNER JOIN {databaseOwner}{objectQualifier}activeforums_Forums as F on T.ForumId = F.ForumId LEFT OUTER JOIN (
+				SELECT DISTINCT S.SecurityKey, MAX(Convert(int,S.[View]))as [Read]
+						FROM  {databaseOwner}{objectQualifier}activeforums_Security AS S LEFT OUTER JOIN
+						{databaseOwner}{objectQualifier}UserRoles AS R ON S.ObjectId = R.RoleID
+					WHERE (
+							S.[Read] = 1 
+							AND  
+							(
+								(
+									(
+									(R.EffectiveDate IS NULL) AND (R.ExpiryDate >= GETDATE()) OR
+									(R.EffectiveDate IS NULL) AND (R.ExpiryDate IS NULL) OR
+									(R.EffectiveDate <= GETDATE()) AND (R.ExpiryDate IS NULL) OR
+									(R.EffectiveDate <= GETDATE()) AND (R.ExpiryDate >= GETDATE()))
+									AND 
+									(R.UserId = @UserId AND @UserId > 0 AND S.ObjectType = 0)
+									)
+								)
+							OR 
+								(
+									(@UserId = -1 AND S.ObjectId = -3)
+									OR
+									(S.ObjectId = -1)
+								)
+							OR
+								(
+									S.ObjectId = @UserId AND S.ObjectType = 1 AND @UserId > 0
+								)
+							)
+				Group By s.SecurityKey
+			   ) sec on sec.SecurityKey = f.ForumSecurityKey
+		
+WHERE (sec.[Read] = 1 OR @IsSuperUser = 1) AND T.LastReplyId = 0 AND T.PortalId = @PortalId AND T.ModuleId = @ModuleId)
+
+SELECT ForumId, ForumName, LastReplyId, TopicId, ViewCount, ReplyCount, IsLocked, IsPinned, TopicIcon, StatusId, IsAnnounce, AnnounceStart, AnnounceEnd,
+		TopicType, [Subject], Summary, AuthorId, AuthorName, Body, DateCreated, LastReplySubject, LastReplySummary, LastReplyAuthorId,
+		LastReplyAuthorName, LastReplyUserName, LastReplyFirstName, LastReplyLastName, LastReplyDisplayName, LastReplyDate, AuthorUserName,
+		AuthorFirstName, AuthorLastName, AuthorDisplayName, "LastReplyRead" = 0, IsRead, TopicRating, @RecordCount as RecordCount
+	FROM
+	(SELECT     T.ForumId, T.ForumName, T.LastReplyId, T.TopicId, T.ViewCount, T.ReplyCount, T.IsLocked, T.IsPinned, IsNull(T.TopicIcon,'') as TopicIcon, T.StatusId, T.IsAnnounce, T.AnnounceStart, T.AnnounceEnd, 
+                      T.TopicType, T.Subject, T.Summary, T.AuthorId, T.AuthorName, T.Body, T.DateCreated, T.LastReplySubject, T.LastReplySummary, T.LastReplyAuthorId, 
+                      T.LastReplyAuthorName, T.LastReplyUsername, T.LastReplyFirstName, T.LastReplyLastName, T.LastReplyDisplayName, T.LastReplyDate, T.AuthorUsername, 
+                      T.AuthorFirstName, T.AuthorLastName, T.AuthorDisplayName,
+                      (CASE WHEN FT.MaxTopicRead > TT.TopicId OR TT.TopicId IS NULL THEN ISNULL(FT.MaxTopicRead,0) ELSE TT.TopicId END) as IsRead,
+                          (SELECT     ISNULL(AVG(Rating), 0) AS Expr1
+                            FROM	{databaseOwner}{objectQualifier}activeforums_Topics_Ratings
+                            WHERE      (TopicId = T.TopicId)) AS TopicRating, 
+						ROW_NUMBER() OVER (
+							ORDER BY 
+								CASE
+									WHEN @Sort = 'DESC' THEN T.LastReplyDate END DESC,
+								CASE 
+									WHEN @Sort = 'ASC' THEN T.LastReplyDate END ASC
+								
+							) as RowRank
+		FROM	{databaseOwner}{objectQualifier}vw_activeforums_TopicsView as T INNER JOIN {databaseOwner}{objectQualifier}activeforums_Forums as F on T.ForumId = F.ForumId LEFT OUTER JOIN 
+			(SELECT DISTINCT S.SecurityKey, MAX(Convert(int,S.[Read]))as [Read]
+						FROM  {databaseOwner}{objectQualifier}activeforums_Security AS S LEFT OUTER JOIN
+						{databaseOwner}{objectQualifier}UserRoles AS R ON S.ObjectId = R.RoleID
+					WHERE (
+							S.[Read] = 1 
+							AND  
+							(
+								(
+									(
+									(R.EffectiveDate IS NULL) AND (R.ExpiryDate >= GETDATE()) OR
+									(R.EffectiveDate IS NULL) AND (R.ExpiryDate IS NULL) OR
+									(R.EffectiveDate <= GETDATE()) AND (R.ExpiryDate IS NULL) OR
+									(R.EffectiveDate <= GETDATE()) AND (R.ExpiryDate >= GETDATE()))
+									AND 
+									(R.UserId = @UserId AND @UserId > 0 AND S.ObjectType = 0)
+									)
+								)
+							OR 
+								(
+									(@UserId = -1 AND S.ObjectId = -3)
+									OR
+									(S.ObjectId = -1)
+								)
+							OR
+								(
+									S.ObjectId = @UserId AND S.ObjectType = 1 AND @UserId > 0
+								)
+							)
+				Group By s.SecurityKey
+			   ) sec on sec.SecurityKey = f.ForumSecurityKey LEFT OUTER JOIN
+                {databaseOwner}{objectQualifier}activeforums_Topics_Tracking AS TT ON T.TopicId = TT.TopicId AND TT.UserId = @UserId LEFT OUTER JOIN
+				{databaseOwner}{objectQualifier}activeforums_Forums_Tracking as FT ON f.ForumId = FT.ForumId AND FT.UserId = @UserId
+		WHERE T.PortalId = @PortalId AND T.ModuleId = @ModuleId AND T.LastReplyId = 0 AND (sec.[Read] = 1 or @IsSuperUser = 1)
+	) AS TopicsWithRowNumbers
+	WHERE RowRank > @RowIndex AND RowRank <= (@RowIndex + @MaxRows)
+	
+GO
+
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_UI_NotRead]
+	@PortalId int,
+	@ModuleId int,
+	@UserId int,
+	@RowIndex int = 0,
+	@MaxRows int = 20,
+	@Sort nvarchar(10) = 'DESC',
+	@IsSuperUser bit = 0
+AS
+DECLARE @RecordCount int
+SET @RecordCount = (Select Count(*) from {databaseOwner}{objectQualifier}vw_activeforums_TopicsView as T INNER JOIN 
+					{databaseOwner}{objectQualifier}activeforums_Forums as F on f.ForumId = t.ForumId LEFT OUTER JOIN 
+					{databaseOwner}{objectQualifier}activeforums_Forums_Tracking as FT on ft.forumid = t.Forumid AND ft.UserId = @UserId LEFT OUTER JOIN
+					(
+					SELECT DISTINCT S.SecurityKey, MAX(Convert(int,S.[View]))as [View]
+						FROM  {databaseOwner}{objectQualifier}activeforums_Security AS S LEFT OUTER JOIN
+						{databaseOwner}{objectQualifier}UserRoles AS R ON S.ObjectId = R.RoleID
+					WHERE ((S.[View] = 1 AND S.ObjectType = 0 AND S.SecureType = 1) 
+						AND  
+					(R.EffectiveDate IS NULL) AND (R.ExpiryDate >= GETDATE()) OR
+                      (R.EffectiveDate IS NULL) AND (R.ExpiryDate IS NULL) OR
+                      (R.EffectiveDate <= GETDATE()) AND (R.ExpiryDate IS NULL) OR
+                      (R.EffectiveDate <= GETDATE()) AND (R.ExpiryDate >= GETDATE()))
+				
+				AND (R.UserId = @UserId OR ((@UserId = -1 AND S.ObjectId = -3) OR (@UserId = -1 AND S.ObjectId = -1)))
+				Group By s.SecurityKey
+			   ) sec on sec.SecurityKey = f.ForumSecurityKey
+				--ON sec.SecurityKey
+WHERE sec.[View] = 1 AND T.ModuleId = @ModuleId AND
+	(
+(
+		T.TopicId NOT IN (SELECT TopicId FROM {databaseOwner}{objectQualifier}activeforums_Topics_Tracking WHERE UserId = @UserId)
+		AND
+		T.TopicId > IsNull(FT.MaxTopicRead,0)
+		)
+		OR
+		(
+		T.LastReplyId > (SELECT IsNull(MAX(LastReplyId),0) FROM {databaseOwner}{objectQualifier}activeforums_Topics_Tracking WHERE UserId = @UserId AND TopicId = T.TopicId)
+		AND
+		T.LastReplyId >  IsNull(FT.MaxReplyRead,0)
+		)
+))
+
+SELECT ForumId, ForumName, LastReplyId, TopicId, ViewCount, ReplyCount, IsLocked, IsPinned, TopicIcon, StatusId, IsAnnounce, AnnounceStart, AnnounceEnd,
+		TopicType, [Subject], Summary, AuthorId, AuthorName, Body, DateCreated, LastReplySubject, LastReplySummary, LastReplyAuthorId,
+		LastReplyAuthorName, LastReplyUserName, LastReplyFirstName, LastReplyLastName, LastReplyDisplayName, LastReplyDate, AuthorUserName,
+		AuthorFirstName, AuthorLastName, AuthorDisplayName, TopicRating, LastReplyRead, IsRead = 0, @RecordCount as RecordCount
+	FROM
+	(SELECT     T.ForumId, T.ForumName, T.LastReplyId, T.TopicId, T.ViewCount, T.ReplyCount, T.IsLocked, T.IsPinned, IsNull(T.TopicIcon,'') as TopicIcon, T.StatusId, T.IsAnnounce, T.AnnounceStart, T.AnnounceEnd, 
+                      T.TopicType, T.Subject, T.Summary, T.AuthorId, T.AuthorName, T.Body, T.DateCreated, T.LastReplySubject, T.LastReplySummary, T.LastReplyAuthorId, 
+                      T.LastReplyAuthorName, T.LastReplyUsername, T.LastReplyFirstName, T.LastReplyLastName, T.LastReplyDisplayName, T.LastReplyDate, T.AuthorUsername, 
+                      T.AuthorFirstName, T.AuthorLastName, T.AuthorDisplayName,
+                          (SELECT     ISNULL(AVG(Rating), 0) AS Expr1
+                            FROM	{databaseOwner}{objectQualifier}activeforums_Topics_Ratings
+                            WHERE      (TopicId = T.TopicId)) AS TopicRating, 
+                            IsNull(TT.LastReplyId,0) as LastReplyRead,
+						ROW_NUMBER() OVER (
+							ORDER BY 
+								CASE
+									WHEN @Sort = 'DESC' THEN T.LastReplyDate END DESC,
+								CASE 
+									WHEN @Sort = 'ASC' THEN T.LastReplyDate END ASC
+								
+							) as RowRank
+		FROM	{databaseOwner}{objectQualifier}vw_activeforums_TopicsView as T INNER JOIN 
+					{databaseOwner}{objectQualifier}activeforums_Forums as F on f.ForumId = t.ForumId  LEFT OUTER JOIN 
+			{databaseOwner}{objectQualifier}activeforums_Forums_Tracking as FT on ft.forumid = t.Forumid AND ft.UserId = @UserId  LEFT OUTER JOIN 
+			{databaseOwner}{objectQualifier}activeforums_Topics_Tracking as TT on t.TopicId = tt.TopicId AND tt.UserId = @UserId  LEFT OUTER JOIN 
+			(SELECT DISTINCT S.SecurityKey, MAX(Convert(int,S.[View]))as [View]
+				FROM  {databaseOwner}{objectQualifier}activeforums_Security AS S LEFT OUTER JOIN
+                      {databaseOwner}{objectQualifier}UserRoles AS R ON S.ObjectId = R.RoleID
+				WHERE ((S.[View] = 1 AND S.ObjectType = 0 ) 
+						AND  
+					(R.EffectiveDate IS NULL) AND (R.ExpiryDate >= GETDATE()) OR
+                      (R.EffectiveDate IS NULL) AND (R.ExpiryDate IS NULL) OR
+                      (R.EffectiveDate <= GETDATE()) AND (R.ExpiryDate IS NULL) OR
+                      (R.EffectiveDate <= GETDATE()) AND (R.ExpiryDate >= GETDATE()))
+				AND (R.UserId = @UserId OR ((@UserId = -1 AND S.ObjectId = -3) OR (@UserId = -1 AND S.ObjectId = -1)))
+				Group By s.SecurityKey
+			   ) sec
+			ON F.ForumSecurityKey = sec.SecurityKey
+		WHERE 
+			T.PortalId = @PortalId AND T.ModuleId = @ModuleId AND (sec.[View] = 1 or @IsSuperUser = 1)
+		 AND
+			(
+				(
+				T.TopicId NOT IN (SELECT TopicId FROM {databaseOwner}{objectQualifier}activeforums_Topics_Tracking WHERE UserId = @UserId)
+				AND
+				T.TopicId > IsNull(FT.MaxTopicRead,0)
+				)
+				OR
+				(
+				T.LastReplyId > (SELECT IsNull(MAX(LastReplyId),0) FROM {databaseOwner}{objectQualifier}activeforums_Topics_Tracking WHERE UserId = @UserId AND TopicId = T.TopicId)
+				AND
+				T.LastReplyId >  IsNull(FT.MaxReplyRead,0)
+				)
+			)
+	) AS TopicsWithRowNumbers
+	WHERE RowRank > @RowIndex AND RowRank <= (@RowIndex + @MaxRows)
+GO
+CREATE PROCEDURE {databaseOwner}{objectQualifier}activeforums_Attachments_Delete
+@AttachId int,
+@ContentId int,
+@UserId int
+AS
+IF @AttachId <> -1 AND @ContentId = -1 AND @UserId = -1
+	BEGIN
+		DELETE FROM {databaseOwner}{objectQualifier}activeforums_Attachments WHERE AttachId = @AttachId
+		DELETE FROM {databaseOwner}{objectQualifier}activeforums_Content_Attachments WHERE AttachId = @AttachId
+	END
+IF @AttachId <> -1 AND @ContentId <> -1 AND @UserId = -1
+	BEGIN
+		DELETE FROM {databaseOwner}{objectQualifier}activeforums_Attachments WHERE AttachId = @AttachId AND ContentId = @ContentId
+		DELETE FROM {databaseOwner}{objectQualifier}activeforums_Content_Attachments WHERE AttachId = @AttachId AND ContentId = @ContentId
+	END
+IF @AttachId <> -1 AND @ContentId <> -1 AND @UserId <> -1
+	BEGIN
+		DELETE FROM {databaseOwner}{objectQualifier}activeforums_Attachments WHERE AttachId = @AttachId AND ContentId = @ContentId AND UserId = @UserId
+		DELETE FROM {databaseOwner}{objectQualifier}activeforums_Content_Attachments WHERE AttachId = @AttachId AND ContentId = @ContentId
+	END
+IF @AttachId <> -1 AND @ContentId = -1 AND @UserId <> -1
+	BEGIN
+		DELETE FROM {databaseOwner}{objectQualifier}activeforums_Attachments WHERE AttachId = @AttachId AND UserId = @UserId
+		DELETE FROM {databaseOwner}{objectQualifier}activeforums_Content_Attachments WHERE AttachId = @AttachId
+	END
+IF @AttachId = -1 AND @ContentId <> -1 AND @UserId = -1
+	BEGIN
+		DELETE FROM {databaseOwner}{objectQualifier}activeforums_Attachments WHERE ContentId = @ContentId
+		DELETE FROM {databaseOwner}{objectQualifier}activeforums_Content_Attachments WHERE ContentId = @ContentId
+	END
+IF @AttachId = -1 AND @ContentId <> -1 AND @UserId <> -1
+	BEGIN
+		DELETE FROM {databaseOwner}{objectQualifier}activeforums_Attachments WHERE ContentId = @ContentId AND UserId = @UserId
+		DELETE FROM {databaseOwner}{objectQualifier}activeforums_Content_Attachments WHERE ContentId = @ContentId
+	END
+IF @AttachId = -1 AND @ContentId = -1 AND @UserId <> -1
+	DELETE FROM {databaseOwner}{objectQualifier}activeforums_Attachments WHERE UserId = @UserId
+GO
+CREATE PROCEDURE {databaseOwner}{objectQualifier}activeforums_Attachments_ListAttachFiles
+@UserId int,
+@AttachIds varchar(2000)
+AS
+SELECT
+	AttachID,
+	UserID,
+	[Filename],
+	DateAdded,
+	DateUpdated,
+	FileData,
+	ContentType,
+	FileSize,
+	AllowDownload,
+	DisplayInline,
+	DownloadCount,
+	ParentAttachId
+	FROM {databaseOwner}{objectQualifier}activeforums_Attachments as a INNER JOIN
+	{databaseOwner}{objectQualifier}activeforums_Functions_Split(@AttachIds,';') as fn ON fn.id = a.AttachId
+	WHERE UserId = @UserId
+GO
+CREATE PROCEDURE {databaseOwner}{objectQualifier}activeforums_Attachments_List
+@TopicId int = -1,
+@ReplyId int = 0,
+@ContentId int,
+@UserId int = -1
+AS
+IF @TopicId = -1 AND @ReplyId = 0 AND @ContentId = -1 
+	BEGIN
+		IF @ContentId > -1
+			SELECT AttachID, ContentId, IsNull(PostID,-1) as PostId,UserID, Filename, DateAdded, DateUpdated, FileData, ContentType, FileSize, AllowDownload, DisplayInline, DownloadCount, ParentAttachId from {databaseOwner}{objectQualifier}activeforums_Attachments WHERE ContentId = @ContentId
+			ELSE
+			SELECT AttachID, ContentId, IsNull(PostID,-1) as PostId,UserID, Filename, DateAdded, DateUpdated, FileData, ContentType, FileSize, AllowDownload, DisplayInline, DownloadCount, ParentAttachId from {databaseOwner}{objectQualifier}activeforums_Attachments WHERE UserId = @UserId AND ContentId = @ContentId
+	END
+ELSE
+SELECT     T.TopicId, T.ReplyId, A.AttachID, A.ContentId, ISNULL(A.PostID, - 1) AS PostId, A.UserID, A.Filename, A.DateAdded, A.DateUpdated, A.FileData, A.ContentType, A.AllowDownload, A.DisplayInline, A.DownloadCount, A.ParentAttachId,
+                      A.FileSize
+FROM	{databaseOwner}{objectQualifier}activeforums_Attachments AS A LEFT OUTER JOIN
+        {databaseOwner}{objectQualifier}vw_activeforums_TopicView AS T ON A.ContentId = T.ContentId
+WHERE   (T.TopicId = @TopicId AND T.ReplyId = 0 AND @TopicId = @ReplyId)
+		OR (T.TopicId = @TopicId AND T.ReplyId = @ReplyId AND T.ReplyId <> 0) OR (A.ContentId = -1 AND A.UserId = @UserId)
+GO
+CREATE PROCEDURE {databaseOwner}{objectQualifier}activeforums_Attachments_ListMyFiles
+@UserId int,
+@RowIndex int, 
+@MaxRows int,
+@SortColumn varchar(20) = 'Filename',
+@Sort varchar(10) = 'ASC'
+AS
+SELECT     AttachID, UserID, [Filename], DateAdded, DateUpdated, FileData, ContentType, FileSize, AllowDownload, DisplayInline, DownloadCount, ParentAttachId, RowRank
+	FROM 
+		(
+						SELECT     AttachID, UserID, [Filename], DateAdded, DateUpdated, 
+			CASE WHEN 
+				CHARINDEX([Filename],'jpg') > 0 OR 
+				CHARINDEX([Filename],'jpeg') > 0 OR 
+				CHARINDEX([Filename],'png') > 0 OR 
+				CHARINDEX([Filename],'gif') > 0 OR 
+				CHARINDEX([Filename],'bmp') > 0  THEN FileData ELSE NULL END as FileData, IsNull(ContentType,'') as ContentType, IsNull(FileSize,0) as FileSize, AllowDownload, DisplayInline, DownloadCount, ParentAttachId,
+			ROW_NUMBER() OVER (Order By 
+								CASE
+									WHEN @Sort = 'ASC' AND @SortColumn = 'Filename' THEN [Filename] END ASC,
+								CASE 
+									WHEN @Sort = 'DESC' AND @SortColumn = 'Filename' THEN [Filename] END DESC
+								) as RowRank
+			FROM         {databaseOwner}{objectQualifier}activeforums_Attachments
+			WHERE UserId = @UserId
+		) as myfiles
+		WHERE RowRank > @RowIndex AND RowRank <= (@RowIndex + @MaxRows)
+GO
+CREATE PROCEDURE {databaseOwner}{objectQualifier}activeforums_Attachments_SaveToContent
+@ContentId int,
+@AttachId int
+AS
+BEGIN
+	If NOT EXISTS(SELECT ContentId FROM {databaseOwner}{objectQualifier}activeforums_Content_Attachments WHERE ContentId = @ContentId AND AttachId = @AttachId)
+	INSERT INTO {databaseOwner}{objectQualifier}activeforums_Content_Attachments (ContentId, AttachId) VALUES (@ContentId, @AttachId)
+		
+END
+GO
+CREATE PROCEDURE {databaseOwner}{objectQualifier}activeforums_Attachments_Save
+@AttachId int,
+@ContentId int,
+@UserId int,
+@FileName nvarchar(50),
+@FileData image,
+@ContentType nvarchar(25),
+@FileSize int,
+@AllowDownload bit,
+@DisplayInline bit,
+@ParentAttachId int = 0
+AS
+IF EXISTS(SELECT AttachId FROM {databaseOwner}{objectQualifier}activeforums_Attachments WHERE AttachId = @AttachId AND ContentId = @ContentId AND UserId = @UserId)
+	UPDATE {databaseOwner}{objectQualifier}activeforums_Attachments
+		SET ContentId = @ContentId,
+			UserId = @UserId,
+			FileName = @FileName,
+			DateUpdated = GetDate(),
+			FileData = @FileData,
+			ContentType = @ContentType,
+			FileSize = @FileSize,
+			AllowDownload = @AllowDownload,
+			DisplayInline = @DisplayInline,
+			ParentAttachId = @ParentAttachId
+		WHERE AttachId = @AttachId AND UserId = @UserId AND ContentId = @ContentId
+ELSE
+	BEGIN
+	INSERT INTO {databaseOwner}{objectQualifier}activeforums_Attachments
+		(ContentId, UserId, FileName, DateAdded, FileData, ContentType, FileSize, AllowDownload, DisplayInline, ParentAttachId)
+		VALUES
+		(@ContentId, @UserId, @FileName, GetDate(), @FileData, @ContentType, @FileSize, @AllowDownload, @DisplayInline, @ParentAttachId)
+	SET @AttachId = SCOPE_IDENTITY()
+	END
+SELECT @AttachId
+GO
+CREATE PROCEDURE {databaseOwner}{objectQualifier}activeforums_Attachments_Content_Delete
+@AttachId int,
+@ContentId int
+AS
+DELETE FROM {databaseOwner}{objectQualifier}activeforums_Content_Attachments WHERE AttachId = @AttachId AND ContentId = @ContentId
+GO
+CREATE PROCEDURE {databaseOwner}{objectQualifier}activeforums_Attachments_Get
+@AttachId int,
+@ContentId int,
+@UserId int,
+@WithSecurity bit = 0
+AS
+If @WithSecurity = 0
+SELECT AttachId, ContentId, IsNull(PostId,-1) as PostId, IsNull(UserId,-1) as UserId, [FileName], IsNull(DateAdded,'') as DateAdded, IsNull(DateUpdated,'') as DateUpdated,
+	FileData, ContentType, FileSize, AllowDownload, DisplayInline, DownloadCount,ParentAttachId from {databaseOwner}{objectQualifier}activeforums_Attachments WHERE AttachId = @AttachId
+ELSE
+DECLARE @IsSuperUser bit
+SET @IsSuperUser = (SELECT IsSuperUser FROM {databaseOwner}{objectQualifier}Users WHERE UserId = @UserId)
+SELECT    A.AttachID, C.ContentId, IsNull(A.PostID,-1) as PostId, IsNull(A.UserID,-1) as UserId, A.Filename, A.DateAdded,
+ A.DateUpdated, A.FileData, A.ParentAttachId, A.ContentType, A.FileSize,CASE WHEN @IsSuperUser = 1 THEN 1 ELSE IsNull(sec.[Read],0) END as CanRead, A.AllowDownload, A.DisplayInline, A.DownloadCount
+FROM         {databaseOwner}{objectQualifier}activeforums_Attachments AS A INNER JOIN
+			{databaseOwner}{objectQualifier}activeforums_Content_Attachments as c on c.attachid = a.attachid LEFT OUTER JOIN
+                      {databaseOwner}{objectQualifier}vw_activeforums_TopicView AS T ON c.ContentId = T.ContentId LEFT OUTER JOIN
+					  {databaseOwner}{objectQualifier}activeforums_Forums as F on f.ForumId = t.ForumId 
+					 LEFT OUTER JOIN  
+						(	
+							SELECT DISTINCT S.SecurityKey, MAX(Convert(int,S.[Read]))as [Read]
+							FROM  {databaseOwner}{objectQualifier}activeforums_Security AS S LEFT OUTER JOIN
+							{databaseOwner}{objectQualifier}UserRoles AS UR ON S.ObjectId = UR.RoleID	AND S.ObjectType = 0 WHERE
+							(@IsSuperUser = 0 AND
+								(
+									(UR.EffectiveDate IS NULL AND UR.ExpiryDate >= GETDATE()) 
+									OR
+									(UR.EffectiveDate IS NULL AND UR.ExpiryDate IS NULL)
+									OR
+									(UR.EffectiveDate <= GETDATE() AND UR.ExpiryDate IS NULL)
+									OR
+									(UR.EffectiveDate <= GETDATE() AND UR.ExpiryDate >= GETDATE())
+								)
+								AND
+								(UR.UserId = @UserId AND S.ObjectType = 0 AND @UserId > 0)
+							)
+							OR
+							(S.ObjectId = @UserId AND @UserId > 0 AND S.ObjectType = 1)
+							OR 
+							(S.ObjectId = -1 AND S.ObjectType = 0) 
+							OR
+							(S.ObjectId = -3 AND S.ObjectType = 0 AND @UserId = -1)
+							OR @IsSuperUser = 1
+				Group By s.SecurityKey
+			   ) sec on sec.SecurityKey = f.ForumSecurityKey
+WHERE A.AttachId = @AttachId AND (sec.[Read] = 1 OR (A.UserId = @UserId AND @UserId > 0))
+GO
+CREATE PROCEDURE {databaseOwner}{objectQualifier}activeforums_Attachments_ListForPost
+@UserId int,
+@ContentId int
+AS
+SELECT
+	a.AttachID,
+	UserID,
+	[Filename],
+	DateAdded,
+	DateUpdated,
+	FileData,
+	ContentType,
+	FileSize,
+	AllowDownload,
+	DisplayInline,
+	DownloadCount
+	FROM {databaseOwner}{objectQualifier}activeforums_Attachments as a INNER JOIN
+	{databaseOwner}{objectQualifier}activeforums_Content_Attachments as c on a.attachid = c.attachid
+	WHERE c.ContentId = @ContentId
+GO
+CREATE PROCEDURE {databaseOwner}{objectQualifier}activeforums_UI_TopicView
+@PortalId int,
+@ModuleId int,
+@ForumId int,
+@TopicId int,
+@UserId int,
+@RowIndex int, 
+@MaxRows int,
+@IsSuperUser bit = 0,
+@Sort varchar(10) = 'ASC'
+AS
+DECLARE @LastPostId int
+DECLARE @ReplyCount int
+SET @ReplyCount = (Select Count(ReplyId) from {databaseOwner}{objectQualifier}activeforums_Replies WHERE TopicId = @TopicId AND IsDeleted = 0 AND IsApproved = 1)
+BEGIN
+SELECT     
+	v.ForumGroupId, 
+	v.ModuleId, 
+	v.GroupName, 
+	v.GroupActive, 
+	v.GroupHidden, 
+	v.ForumId, 
+	v.ParentForumId, 
+	v.ForumName, 
+	v.ForumDesc, 
+	v.ForumActive, 
+	v.ForumHidden, 
+    v.TotalTopics, 
+	ISNULL(v.TotalReplies, 0) AS TotalReplies,
+	v.LastPostId,
+	v.GroupSettingsKey,
+	v.ForumSettingsKey,
+	TopicTemplateId = IsNull((SELECT SettingValue FROM {databaseOwner}{objectQualifier}activeforums_Settings WHERE SettingName = 'TOPICTEMPLATEID' and GroupKey = v.ForumSettingsKey),0),
+    
+                          IsNull((SELECT     SettingValue
+                            FROM          {databaseOwner}{objectQualifier}activeforums_Settings AS activeforums_Settings_1
+                            WHERE      (SettingName = 'ALLOWRSS') AND (GroupKey = v.ForumSettingsKey)),0) AS AllowRSS,
+                          IsNull((SELECT     SettingValue
+                            FROM          {databaseOwner}{objectQualifier}activeforums_Settings AS activeforums_Settings_3
+                            WHERE      (SettingName = 'ALLOWHTML') AND (GroupKey = v.ForumSettingsKey)),0) AS AllowHTML,
+                          IsNull((SELECT     SettingValue
+                            FROM          {databaseOwner}{objectQualifier}activeforums_Settings AS activeforums_Settings_2
+                            WHERE      (SettingName = 'ALLOWSCRIPT') AND (GroupKey = v.ForumSettingsKey)),0) AS AllowScript,
+                            IsNull((SELECT     SettingValue
+                            FROM          {databaseOwner}{objectQualifier}activeforums_Settings
+                            WHERE      (SettingName = 'ALLOWTAGS') AND (GroupKey = v.ForumSettingsKey)),0) AS AllowTags,
+                             FT.TopicId,
+                          (SELECT     ISNULL(AVG(Rating), 0) AS Expr1
+                            FROM          {databaseOwner}{objectQualifier}activeforums_Topics_Ratings
+                            WHERE      (TopicId = @TopicId)) AS TopicRating,
+ISNULL
+                          ((SELECT     Id
+                              FROM         {databaseOwner}{objectQualifier}activeforums_Subscriptions
+                              WHERE     (ForumId = @ForumId) AND (TopicId = @TopicId) AND (UserId = @UserId)), 0) AS IsSubscribedTopic, ISNULL
+                          ((SELECT     Id
+                              FROM         {databaseOwner}{objectQualifier}activeforums_Subscriptions AS activeforums_Subscriptions_1
+                              WHERE     (ForumId = @ForumId) AND (TopicId = 0) AND (UserId = @UserId)), 0) AS IsSubscribedForum,
+						CASE WHEN FT.LastReplyId is NULL THEN IsNull(T.DateCreated,'') ELSE IsNull(R.DateCreated,'') END AS LastPostDate, 
+						CASE WHEN FT.LastReplyId is NULL THEN IsNull(T.AuthorId,'') ELSE IsNull(R.AuthorId,'') END AS LastPostAuthorId, 
+						CASE WHEN FT.LastReplyId is NULL THEN IsNull(T.AuthorName,'') ELSE IsNull(R.AuthorName,'') END AS LastPostAuthorName,
+						CASE WHEN FT.LastReplyId is NULL THEN IsNull(T.UserName,'') ELSE IsNull(R.Username,'') END AS LastPostUserName,
+						CASE WHEN FT.LastReplyId is NULL THEN IsNull(T.FirstName,'') ELSE IsNull(R.FirstName,'') END AS LastPostFirstName, 
+						CASE WHEN FT.LastReplyId is NULL THEN IsNull(T.LastName,'') ELSE IsNull(R.LastName,'') END AS LastPostLastName, 
+						CASE WHEN FT.LastReplyId is NULL THEN IsNull(T.DisplayName,'') ELSE IsNull(R.DisplayName,'') END AS LastPostDisplayName, T.Subject, T.Summary, T.AuthorId, T.AuthorName, T.Username, T.FirstName, T.LastName, 
+                      T.DisplayName, T.DateCreated, T.DateUpdated, T.ViewCount, @ReplyCount as ReplyCount, T.IsPinned, T.IsLocked, T.StatusId, T.TopicIcon, T.TopicType, 
+                      {databaseOwner}{objectQualifier}activeforums_Poll.PollID,
+					{databaseOwner}{objectQualifier}activeforums_Topic_GetPrevNext(@ForumId, @TopicId, 1) AS NextTopic, 
+                    {databaseOwner}{objectQualifier}activeforums_Topic_GetPrevNext(@ForumId, @TopicId, -1) AS PrevTopic
+FROM         {databaseOwner}{objectQualifier}activeforums_ForumTopics AS FT INNER JOIN
+                      {databaseOwner}{objectQualifier}vw_activeforums_GroupForum AS v ON FT.ForumId = v.ForumId INNER JOIN
+                      {databaseOwner}{objectQualifier}vw_activeforums_ForumTopics AS T ON FT.TopicId = T.TopicId LEFT OUTER JOIN
+                      {databaseOwner}{objectQualifier}vw_activeforums_ForumReplies AS R ON FT.LastReplyId = R.ReplyId AND FT.LastReplyId IS NOT NULL LEFT OUTER JOIN
+                      {databaseOwner}{objectQualifier}activeforums_Poll ON T.TopicId = {databaseOwner}{objectQualifier}activeforums_Poll.TopicId
+WHERE     (v.ForumActive = 1) AND (v.ModuleId = @ModuleId) AND (v.ForumId = @ForumId) AND (FT.TopicId = @TopicId)
+END
+--Forum Security
+BEGIN
+	exec {databaseOwner}{objectQualifier}activeforums_Security_GetByUser @PortalId, @ForumId, @UserId, @IsSuperUser
+END
+--Get Topic and Replies
+	SELECT	ForumId, TopicId, ReplyId, [Subject], Summary, AuthorId, StatusId, AuthorName, UserName, FirstName, LastName,
+			DisplayName, DateCreated, DateUpdated, Body, TopicCount, ReplyCount, ViewCount, AnswerCount,
+			RewardPoints, UserDateCreated, DateLastActivity, UserCaption, [Signature], SignatureDisabled,
+			UserPostCount, UserTotalPoints,IPAddress,Avatar,AvatarType,AvatarDisabled,Yahoo,MSN,ICQ,AOL,Occupation,Location,Interests,WebSite,MemberSince,
+			ContentId,IsUserOnline,	UserRoles = {databaseOwner}{objectQualifier}activeforums_UserProfiles_GetUserRoles(AuthorId, @PortalID, GetDate()),
+			Tags = RTRIM(IsNull({databaseOwner}{objectQualifier}activeforums_Topics_GetTags(TopicId),''))
+			
+	FROM
+			(
+			SELECT	T.ForumId, T.TopicId, T.ReplyId, T.Subject, T.Summary, T.AuthorId, T.StatusId, IsNull(T.AuthorName,'anon') as AuthorName, IsNull(T.Username,IsNull(T.AuthorName,'anon')) as Username,
+			IsNull(T.FirstName,'') as FirstName, IsNull(T.LastName,'') as LastName,IsNull(T.DisplayName,T.AuthorName) as DisplayName,
+			T.DateCreated, T.DateUpdated, C.Body, IsNull(P.TopicCount,0) as TopicCount, IsNull(P.ReplyCount,0) as ReplyCount,
+			IsNull(P.ViewCount,0) as ViewCount, IsNull(P.AnswerCount,0) as AnswerCount, IsNull(P.RewardPoints,0) as RewardPoints,
+			IsNull(P.DateCreated,'') AS UserDateCreated, IsNull(P.DateLastActivity,'') as DateLastActivity, 
+			IsNull(P.UserCaption,'') as UserCaption, IsNull(P.Signature,'') as [Signature], IsNull(P.SignatureDisabled,0) as SignatureDisabled, 
+			UserPostCount = (IsNull(P.TopicCount,0) + IsNull(P.ReplyCount,0)), 
+			UserTotalPoints = (IsNull(P.TopicCount,0) + IsNull(P.ReplyCount,0) + IsNull(P.AnswerCount,0) + IsNull(P.RewardPoints,0)),
+			C.IPAddress, IsNull(P.Avatar,'') as Avatar, IsNull(P.AvatarType,0) as AvatarType, IsNull(P.AvatarDisabled,0) as AvatarDisabled,
+			IsNull(P.Yahoo,'') as Yahoo, IsNull(P.MSN,'') as MSN, IsNull(P.ICQ,'') as ICQ, IsNull(P.AOL,'') as AOL, IsNull(P.Occupation,'') as Occupation, 
+			IsNull(P.Location,'') as Location, IsNull(P.Interests,'') as Interests, IsNull(P.WebSite,'') as WebSite, IsNull(P.DateCreated,'') as MemberSince,
+			C.ContentId, IsUserOnline = (CASE WHEN DATEDIFF(mi,p.DateLastActivity,GetDate()) <=1 THEN 1 ELSE 0 END),
+			ROW_NUMBER() OVER (Order By 
+								CASE
+									WHEN @Sort = 'DESC' THEN T.DateCreated END DESC,
+								CASE 
+									WHEN @Sort = 'ASC' THEN T.DateCreated END ASC
+								) as RowRank
+			FROM	{databaseOwner}{objectQualifier}vw_activeforums_TopicView AS T INNER JOIN
+                    {databaseOwner}{objectQualifier}activeforums_Content AS C ON T.ContentId = C.ContentId LEFT OUTER JOIN
+                    {databaseOwner}{objectQualifier}activeforums_UserProfiles AS P ON C.AuthorId = P.UserId
+			WHERE     (T.TopicId = @TopicId)
+			)
+		AS TopicWithRowNumbers
+		WHERE RowRank > @RowIndex AND RowRank <= (@RowIndex + @MaxRows)
+
+--Get Attachments
+SELECT     A.AttachID, c.ContentId, A.PostID, A.UserID, A.Filename, A.DateAdded, A.DateUpdated, A.FileData, A.ContentType, A.FileSize, A.AllowDownload
+FROM         {databaseOwner}{objectQualifier}activeforums_Attachments AS A INNER JOIN
+			{databaseOwner}{objectQualifier}activeforums_Content_Attachments as c on a.attachid = c.attachid inner join
+                      {databaseOwner}{objectQualifier}vw_activeforums_TopicView AS T ON c.ContentId = T.ContentId
+WHERE     (T.TopicId = @TopicId AND A.AllowDownload = 1)
+--Update View Count
+UPDATE {databaseOwner}{objectQualifier}activeforums_Topics SET ViewCount = (ViewCount+1) WHERE TopicId = @TopicId
+If @UserId > 0
+BEGIN
+SELECT @LastPostId = IsNull(LastReplyId,0) FROM {databaseOwner}{objectQualifier}activeforums_ForumTopics WHERE ForumId = @ForumId AND TopicId = @TopicId
+exec {databaseOwner}{objectQualifier}activeforums_Forums_Tracking_UpdateUser @ModuleId, @UserId, @ForumId	
+SET @LastPostId = IsNull(@LastPostId,0)
+exec {databaseOwner}{objectQualifier}activeforums_Topics_Tracking_UpdateUser @ForumId, @TopicId, @LastPostId, @UserId
+exec {databaseOwner}{objectQualifier}activeforums_UserProfiles_UpdateActivity @PortalId, @ModuleId, @UserId
+END
+GO
+
+
