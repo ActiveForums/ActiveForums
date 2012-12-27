@@ -1,2 +1,0 @@
-<%@ Control Language="C#" AutoEventWireup="false" Codebehind="af_markallread.ascx.cs" Inherits="DotNetNuke.Modules.ActiveForums.af_markread" %>
-<asp:LinkButton id="btnMarkAllRead" CssClass="dnnTertiaryAction" runat="server">[RESX:MarkAllRead]</asp:LinkButton>

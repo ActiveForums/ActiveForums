@@ -1,7 +1,0 @@
-Dear [DISPLAYNAME]
-Your message has been approved.
-[LINK]
-
-Thank you,
-
-[PORTALNAME]

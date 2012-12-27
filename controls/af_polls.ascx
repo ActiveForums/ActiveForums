@@ -1,1 +1,0 @@
-﻿<%@ Control Language="C#" AutoEventWireup="false" CodeBehind="af_polls.ascx.cs" Inherits="DotNetNuke.Modules.ActiveForums.af_polls" %>

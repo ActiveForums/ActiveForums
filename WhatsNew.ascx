@@ -1,1 +1,0 @@
-﻿<%@ Control Language="C#" AutoEventWireup="false" CodeBehind="WhatsNew.ascx.cs" Inherits="DotNetNuke.Modules.ActiveForums.WhatsNew" %>

@@ -1,1 +1,0 @@
-<%@ Page Language="C#" AutoEventWireup="false" Codebehind="viewer.aspx.cs" Inherits="DotNetNuke.Modules.ActiveForums.af_viewer" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
