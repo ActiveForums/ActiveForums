@@ -1,0 +1,54 @@
+﻿IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}activeforums_TP_GetByUser') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}{objectQualifier}activeforums_TP_GetByUser
+GO
+CREATE PROCEDURE {databaseOwner}{objectQualifier}activeforums_TP_GetByUser
+@PortalId int,
+@Rows int = 10,
+@IsSuperUser bit,
+@CurrentUserId int,
+@FilteredUserId int,
+@TopicsOnly bit = 0
+AS
+
+IF @TopicsOnly = 0
+BEGIN
+SELECT TOP 10 [Subject], body, posts.datecreated, authorid, authorname, posts.forumid, topicId,f.ForumName,
+	 u.userid, u.firstname as AuthorFirstName,u.lastname as AuthorLastName, u.displayname as AuthorDisplayName, u.Username as AuthorUserName,
+	 m.ModuleId, m.TabId, g.GroupName, g.ForumGroupId, ReplyId, replycount
+	FROM
+		(
+Select c.Subject, c.Body, c.DateCreated, c.AuthorId, c.AuthorName, ISNULL(ft.forumid,rft.forumid) as forumid, ISNULL(t.topicid,rt.TopicId) as TopicId, IsNull(r.ReplyId,0) as ReplyId,
+	ISNULL(t.ReplyCount,0) as Replycount from {databaseOwner}{objectQualifier}activeforums_Content as c 
+LEFT OUTER JOIN {databaseOwner}{objectQualifier}activeforums_Replies as r on r.contentid = c.contentId and r.isapproved = 1 and r.isdeleted = 0
+LEFT JOIN {databaseOwner}{objectQualifier}activeforums_Topics as rt on r.topicid = rt.topicId
+LEFT JOIN {databaseOwner}{objectQualifier}activeforums_ForumTopics as rft on rt.topicid = rft.topicid
+LEFT OUTER JOIN {databaseOwner}{objectQualifier}activeforums_Topics as t on t.contentid = c.contentid and t.isapproved = 1 and t.isdeleted = 0
+LEFT JOIN {databaseOwner}{objectQualifier}activeforums_ForumTopics as ft on t.topicid = ft.topicid
+where c.authorid = @FilteredUserId
+
+		) as posts INNER JOIN {databaseOwner}{objectQualifier}activeforums_forums as f on posts.forumid = f.forumid 
+		INNER JOIN {databaseOwner}{objectQualifier}activeforums_GetForumSecurity(@Portalid,@CurrentUserId,@IsSuperUser) as s on s.forumid = f.forumid
+		INNER JOIN {databaseOwner}{objectQualifier}users as u on u.userid = posts.authorid
+		INNER JOIN {databaseOwner}{objectQualifier}TabModules as M ON f.ModuleId = M.ModuleId
+		INNER JOIN {databaseOwner}{objectQualifier}activeforums_Groups as g on g.forumgroupid = f.forumgroupid
+Order By posts.DateCreated DESC
+END
+ELSE
+SELECT TOP 10 contentid, [Subject], body, posts.datecreated, authorid, authorname, posts.forumid, topicId,f.ForumName,
+	 u.userid, u.firstname as AuthorFirstName,u.lastname as AuthorLastName, u.displayname as AuthorDisplayName, u.Username as AuthorUserName,
+	 m.ModuleId, m.TabId, g.GroupName, g.ForumGroupId, replyid, replycount
+	FROM
+		(
+Select c.contentid, c.Subject, c.Body, c.DateCreated, c.AuthorId, c.AuthorName, ft.forumid, t.topicid, 0 as ReplyId, t.replycount  from {databaseOwner}{objectQualifier}activeforums_Content as c 
+LEFT OUTER JOIN {databaseOwner}{objectQualifier}activeforums_Topics as t on t.contentid = c.contentid and t.isapproved = 1 and t.isdeleted = 0
+LEFT JOIN {databaseOwner}{objectQualifier}activeforums_ForumTopics as ft on t.topicid = ft.topicid
+where authorid = @FilteredUserId
+
+		) as posts INNER JOIN {databaseOwner}{objectQualifier}activeforums_forums as f on posts.forumid = f.forumid 
+		INNER JOIN {databaseOwner}{objectQualifier}activeforums_GetForumSecurity(@PortalId,@CurrentUserId,@IsSuperUser) as s on s.forumid = f.forumid
+		INNER JOIN {databaseOwner}{objectQualifier}users as u on u.userid = posts.authorid
+		INNER JOIN {databaseOwner}{objectQualifier}TabModules as M ON f.ModuleId = M.ModuleId
+		INNER JOIN {databaseOwner}{objectQualifier}activeforums_Groups as g on g.forumgroupid = f.forumgroupid
+Order By posts.datecreated DESC
+GO
+

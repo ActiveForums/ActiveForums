@@ -1,0 +1,41 @@
+<h3>DotNetNuke Active Forums</h3>
+<p class="Contributor">
+	DotNetNuke&reg; <br />
+	<a href=http://www.dotnetnuke.com>http://www.dotnetnuke.com</a><br />
+</p>
+<hr/>
+<div class="License">
+	<p class="Owner">
+		<h3>About DotNetNuke Active Forums</h3>
+		<strong>Version 5.0.0</strong><br /><br />		
+		
+	</p>
+</div>
+<h3>DotNetNuke Active Forums 05.00.02</h3>
+<p class="Contributor">
+	Will Morgenweck <br />
+	Benjiro Nelson <br />
+   Chris Hammond <br />
+</p>
+<hr/>
+<div class="License">
+   <h3>About the Active Forums Package</h3>
+
+        <p class="Owner">
+       <b>Version 05.00.02</b><br /><br />
+   </p>
+   <p>
+        <ul>
+            <li><a href="http://activeforums.codeplex.com/workitem/1746" target="_blank">Item 1746</a> - table missing clustered index</li>
+            <li><a href="http://activeforums.codeplex.com/workitem/1725" target="_blank">Item 1725</a> - No apostrophe in topic title (topics view)</li>
+			<li><a href="http://activeforums.codeplex.com/workitem/1600" target="_blank">Item 1600</a> - IE9 Attachment stop to 100% and not go ahead</li>
+			<li><a href="http://activeforums.codeplex.com/workitem/1587" target="_blank">Item 1587</a> - Forum post time stamp incorrect</li>
+			<li><a href="http://activeforums.codeplex.com/workitem/1640" target="_blank">Item 1640</a> - Active Topics render only first post</li>
+        </ul>
+    </p>
+   <p class="Owner">
+       <b>Version 05.00.00</b><br /><br />
+   </p>
+   <p>This initial release of Active Forums 5.0</p>
+   
+</div>

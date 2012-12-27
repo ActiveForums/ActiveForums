@@ -1,0 +1,1 @@
+<%@ Page Language="C#" AutoEventWireup="false" Codebehind="feeds.aspx.cs" Inherits="DotNetNuke.Modules.ActiveForums.af_rss" ResponseEncoding="utf-8" ContentType="text/xml" %>

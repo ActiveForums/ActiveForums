@@ -1,0 +1,9 @@
+﻿DELETE FROM {databaseOwner}{objectQualifier}Schedule WHERE TypeFullName = N'DotNetNuke.Modules.ActiveForums.QueueScheduler,Active.Modules.Forums'
+GO
+DELETE FROM {databaseOwner}{objectQualifier}Schedule WHERE TypeFullName = N'DotNetNuke.Modules.ActiveForums.DailyDigest, ACTIVE.MODULES.FORUMS'
+GO
+DELETE FROM {databaseOwner}{objectQualifier}Schedule WHERE TypeFullName = N'DotNetNuke.Modules.ActiveForums.WeeklyDigest, ACTIVE.MODULES.FORUMS'
+GO
+DELETE FROM {databaseOwner}{objectQualifier}Schedule WHERE TypeFullName = N'DotNetNuke.Modules.ActiveForums.MailConnector.MailConnectorScheduler, ACTIVE.MODULES.FORUMS'
+GO
+

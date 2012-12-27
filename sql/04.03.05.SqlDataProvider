@@ -1,0 +1,76 @@
+﻿IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}fn_activeforums_GetURL]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+DROP FUNCTION {databaseOwner}[{objectQualifier}fn_activeforums_GetURL]
+GO
+CREATE FUNCTION {databaseOwner}[{objectQualifier}fn_activeforums_GetURL]
+(
+	@ModuleId int,
+	@ForumGroupId int,
+	@ForumId int,
+	@TopicId int,
+	@UserId int,
+	@ContentId int
+)
+RETURNS nvarchar(1000)
+AS
+BEGIN
+DECLARE @PageSize int
+DECLARE @Page int
+SET @Page = 1
+SET @PageSize = 20
+IF @ForumId =-1 AND @TopicId >0
+	SET @ForumId = (SELECT ForumId from {databaseOwner}{objectQualifier}activeforums_ForumTopics WHERE TopicId = @TopicId)
+DECLARE @url nvarchar(max)
+SET @url = ''
+
+DECLARE @baseprefix nvarchar(50)
+set @baseprefix = ''
+SET @baseprefix = (SELECT ISNULL(SettingValue,'') from {databaseOwner}{objectQualifier}activeforums_Settings WHERE SettingName='URLBASE' AND ModuleId=@ModuleId)
+IF @baseprefix <> ''
+	SET @url = @baseprefix + '/'
+	
+DECLARE @grouprefix nvarchar(50)
+set @grouprefix = ''
+SET @grouprefix = (SELECT ISNULL(g.PrefixURL,'') FROM {databaseOwner}{objectQualifier}activeforums_Groups as g WHERE g.ForumGroupId = @ForumGroupId)
+IF @grouprefix <> ''
+	SET @url = @url + @grouprefix + '/'
+
+DECLARE @forumprefix nvarchar(50)
+SET @forumprefix = ''
+DECLARE @topicURL nvarchar(max)
+IF @ForumId > 0
+	BEGIN
+	SET @forumprefix = (SELECT ISNULL(PrefixURL,'') from {databaseOwner}{objectQualifier}activeforums_Forums WHERE ForumId=@ForumId)
+	IF @forumprefix <> ''
+		SET @url = @url + @forumprefix + '/'
+	END
+If @url <> '' AND @TopicId > 0
+	BEGIN
+		SET @topicURL =(SELECT url from {databaseOwner}{objectQualifier}activeforums_Topics WHERE TopicId = @TopicId)
+		If @topicURL = '' OR @topicURL IS NULL
+			SET @url = ''
+		Else
+			BEGIN
+				SET @url = @url + @topicURL + '/'
+			END
+	END
+If @url <> '' AND @TopicId > 0 AND @ContentId > 0
+	BEGIN
+		BEGIN
+			IF @UserId > 0 
+				SET @PageSize = (SELECT TOP 1 PrefPageSize FROM {databaseOwner}{objectQualifier}activeforums_UserProfiles WHERE UserId = @UserId)
+			ELSE
+				SET @PageSize = (SELECT s.SettingValue FROM {databaseOwner}{objectQualifier}activeforums_Settings as s INNER JOIN {databaseOwner}{objectQualifier}activeforums_Forums as f ON f.ModuleId = s.ModuleId WHERE f.ForumId=@ForumId AND s.SettingName='PAGESIZE')
+		END
+		SET @Page = (SELECT ((idx)/@PageSize)+1 FROM (
+							SELECT ReplyId, ROW_NUMBER() OVER(Order By ReplyId) as idx from {databaseOwner}{objectQualifier}activeforums_Replies WHERE TopicId = @TopicId AND IsApproved = 1 AND IsDeleted = 0)
+					as pos WHERE pos.ReplyId = @ContentId)
+		IF @Page > 1
+			SET @url = @url + CAST(@Page as varchar(1000)) + '/'
+	END
+RETURN ISNULL(@url,'')
+
+END
+
+GO
+
+

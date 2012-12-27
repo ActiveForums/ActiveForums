@@ -1,0 +1,72 @@
+﻿IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_MC_Forums]') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}[{objectQualifier}activeforums_MC_Forums]
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_UserProfiles_List]') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}[{objectQualifier}activeforums_UserProfiles_List]
+GO
+CREATE PROCEDURE {databaseOwner}{objectQualifier}activeforums_MC_Forums
+AS
+DECLARE @SettingName nvarchar(100)
+DECLARE @SettingValue nvarchar(100)
+SET @SettingName = 'MCENABLED'
+SET @SettingValue = 'true'
+DECLARE @MailForums table (forumid int)
+INSERT INTO @MailForums(forumid)
+Select f.ForumId From {databaseOwner}{objectQualifier}activeforums_Forums as F 
+	INNER JOIN {databaseOwner}{objectQualifier}Modules as M ON F.ModuleId = M.ModuleId
+	INNER JOIN {databaseOwner}{objectQualifier}activeforums_Settings as S ON S.GroupKey = F.ForumSettingsKey AND S.SettingName = @SettingName
+WHERE M.IsDeleted = 0 AND F.Active = 1 AND S.SettingValue = @SettingValue
+
+SELECT *, TM.TabId from {databaseOwner}{objectQualifier}activeforums_Forums as F INNER JOIN @MailForums as M ON M.forumid = F.ForumId
+	INNER JOIN {databaseOwner}{objectQualifier}TabModules as TM ON F.ModuleId = TM.ModuleId
+GO
+CREATE PROCEDURE {databaseOwner}{objectQualifier}activeforums_UserProfiles_List
+	@PortalId int,
+	@ModuleId int,
+	@MaxRows int,
+	@RowIndex int,
+	@Filter nvarchar(50)
+AS
+BEGIN
+SELECT COUNT(U.UserId) FROM {databaseOwner}{objectQualifier}Users AS U INNER JOIN {databaseOwner}{objectQualifier}UserPortals AS P ON U.UserID = P.UserId 
+WHERE PortalId = @PortalId AND Authorised = 1 AND (@Filter = '' OR @Filter <> '' AND DisplayName LIKE @Filter + '%')
+END
+BEGIN
+	SELECT 		ProfileId, UserId, ModuleId, PortalId, TopicCount, ReplyCount, ViewCount, 
+				AnswerCount, RewardPoints, UserCaption, DateCreated, 
+                DateUpdated, DateLastActivity, [Signature], SignatureDisabled, 
+				TrustLevel, AdminWatch, AttachDisabled, Avatar, AvatarType, AvatarDisabled, 
+				PrefDefaultSort, PrefDefaultShowReplies, PrefJumpLastPost, PrefTopicSubscribe,
+				PrefSubscriptionType, PrefUseAjax, PrefEmailFormat, PrefBlockAvatars, 
+				PrefBlockSignatures, PrefPageSize, Yahoo, MSN, ICQ, AOL, 
+				Occupation,Location, Interests, WebSite, Badges, Bio,
+				UserName, FirstName, 
+				LastName, Email, DisplayName,
+				DateLastPost,IsUserOnline, RowRank
+	
+		 FROM (SELECT P.ProfileId, U.UserId, P.ModuleId, UP.PortalId,
+		 			IsNull(P.TopicCount,0) as TopicCount,
+				IsNull(P.ReplyCount,0) as ReplyCount,
+				IsNull(P.ViewCount,0) as ViewCount,
+				IsNull(P.AnswerCount,0) as AnswerCount,
+				IsNull(P.RewardPoints,0) as RewardPoints,
+				P.UserCaption, P.DateCreated, 
+                P.DateUpdated, P.DateLastActivity, P.Signature, P.SignatureDisabled, 
+				P.TrustLevel, P.AdminWatch, P.AttachDisabled, P.Avatar, P.AvatarType, P.AvatarDisabled, 
+				P.PrefDefaultSort, P.PrefDefaultShowReplies, P.PrefJumpLastPost, P.PrefTopicSubscribe,
+				P.PrefSubscriptionType, P.PrefUseAjax, P.PrefEmailFormat, P.PrefBlockAvatars, 
+				P.PrefBlockSignatures, P.PrefPageSize, P.Yahoo, P.MSN, P.ICQ, P.AOL, 
+				P.Occupation, P.Location, P.Interests, P.WebSite, P.Badges, IsNull(P.Bio,'') as Bio,
+				IsNull(U.Username,'') as UserName, IsNull(U.FirstName,'') as FirstName, 
+				IsNull(U.LastName,'') as LastName, IsNull(U.Email,'') as Email , IsNull(U.DisplayName,'') as DisplayName,
+				IsNull(P.DateLastPost,'') as DateLastPost,
+				IsUserOnline = (CASE WHEN DATEDIFF(mi,p.DateLastActivity,GetDate()) <=1 THEN 1 ELSE 0 END),
+				ROW_NUMBER() OVER (Order By DisplayName) as RowRank
+				FROM        {databaseOwner}{objectQualifier}Users AS U INNER JOIN
+				        {databaseOwner}{objectQualifier}UserPortals AS UP ON U.UserID = UP.UserId LEFT OUTER JOIN
+						{databaseOwner}{objectQualifier}activeforums_UserProfiles AS P ON U.UserID = P.UserId
+				WHERE     (UP.Authorised = 1) AND (UP.PortalId = @PortalId) AND (@Filter = '' OR @Filter <> '' AND DisplayName LIKE @Filter + '%')
+			) as Members
+	WHERE RowRank > @RowIndex AND RowRank <= (@RowIndex + @MaxRows)
+END
+GO

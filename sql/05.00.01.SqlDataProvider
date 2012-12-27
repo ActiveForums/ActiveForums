@@ -1,0 +1,26 @@
+﻿-- update topics to fill in the new nexttopic and prevtopic fields // could take a few minutes if there are lots of threads
+DECLARE @ForumId INT
+DECLARE @CurForums CURSOR
+SET @CurForums = CURSOR FOR
+SELECT DISTINCT f.ForumId 
+FROM {databaseOwner}{objectQualifier}activeforums_topics t INNER JOIN {databaseOwner}{objectQualifier}activeforums_forumtopics f ON t.TopicId = f.TopicId
+WHERE t.nexttopic = 1 OR t.nexttopic IS NULL
+ORDER BY 1 desc
+
+
+OPEN @CurForums
+FETCH NEXT
+FROM @CurForums INTO @ForumId
+WHILE @@FETCH_STATUS = 0
+BEGIN
+PRINT @ForumId
+EXEC {databaseOwner}[{objectQualifier}activeforums_SaveTopicNextPrev] @forumid
+FETCH NEXT
+FROM @CurForums INTO @ForumId
+END
+CLOSE @CurForums
+DEALLOCATE @CurForums
+
+GO
+DELETE FROM {databaseOwner}{objectQualifier}activeforums_Templates WHERE TemplateType = 12
+GO

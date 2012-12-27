@@ -1,0 +1,48 @@
+<%@ Register TagPrefix="af" Assembly="DotNetNuke.Modules.ActiveForums" Namespace="DotNetNuke.Modules.ActiveForums.Controls"%>
+[BREADCRUMB]
+[GROUPSECTION]
+<table class="afgrid">
+	<tr>
+		<td class="afgrouprow af-groupname">[GROUPNAME]</td>
+		<td class="afgrouprow af-groupcollapse">[GROUPCOLLAPSE]</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			[GROUP]
+				<table class="afsubgrid">
+					<tr>
+						<td class="afheader">[SPACER:10:1]</td>
+						<td class="afheader" width="100%" colspan="2">[RESX:FORUMHEADER]</td>
+						<td class="afheader af-colstats">[RESX:TOPICSHEADER]</td>
+						<td class="afheader af-colstats">[RESX:REPLIESHEADER]</td>
+						<td class="afheader af-lastpost">[RESX:LASTPOSTHEADER]</td>
+					</tr>
+					[FORUMS]
+					<tr>
+						<td class="[CSS:afforumrowtop:afforumrowmid:afforumrowbottom]">[FORUMICON]</td>
+						<td class="[CSS:afforumrowtop:afforumrowmid:afforumrowbottom] af-forumdetail" colspan="2">[FORUMNAME]<br />[FORUMDESCRIPTION]</td>
+						<td class="[CSS:afforumrowtop:afforumrowmid:afforumrowbottom] af-colstats">[TOTALTOPICS]</td>
+						<td class="[CSS:afforumrowtop:afforumrowmid:afforumrowbottom] af-colstats">[TOTALREPLIES]</td>
+						<td class="[CSS:afforumrowtop:afforumrowmid:afforumrowbottom] af-lastpost"><div>[LASTPOSTSUBJECT:25]<br />[RESX:BY] [DISPLAYNAME]<br />[LASTPOSTDATE]</div></td>
+					</tr>
+					[SUBFORUMS]
+						<tr>
+							<td class="[CSS:afsubforumrowtop:afsubforumrowmid:afsubforumrowbottom]"></td>
+							<td class="[CSS:afsubforumrowtop:afsubforumrowmid:afsubforumrowbottom] af-minicon">[FORUMICONSM]</td>
+							<td class="[CSS:afsubforumrowtop:afsubforumrowmid:afsubforumrowbottom] af-subforumdetail">[FORUMNAME]<br />[FORUMDESCRIPTION]</td>
+							<td class="[CSS:afsubforumrowtop:afsubforumrowmid:afsubforumrowbottom] af-colstats">[TOTALTOPICS]</td>
+						<td class="[CSS:afsubforumrowtop:afsubforumrowmid:afsubforumrowbottom] af-colstats">[TOTALREPLIES]</td>
+						<td class="[CSS:afsubforumrowtop:afsubforumrowmid:afsubforumrowbottom] af-lastpost"><div>[LASTPOSTSUBJECT:25]<br />[RESX:BY] [DISPLAYNAME]<br />[LASTPOSTDATE]</div></td>
+						</tr>
+					[/SUBFORUMS]
+					[/FORUMS]
+				</table>		
+			[/GROUP]
+		</td>
+	</tr>
+</table>
+[/GROUPSECTION]
+[WHOSONLINE]
+<div style="text-align:right;">[JUMPTO]</div>
+
+

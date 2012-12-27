@@ -1,0 +1,296 @@
+﻿<dotnetnuke type="Package" version="5.0">
+    <packages>
+        <package name="Active Forums" type="Module" version="05.00.02">
+            <friendlyname>Active Forums</friendlyname>
+            <description>Active Forums - Forum module for DotNetNuke</description>
+            <iconFile></iconFile>
+            <owner>
+                <name>DotNetNuke Active Forums Module</name>
+                <organization>DotNetNuke Corporation</organization>
+                <url>activeforums.codeplex.com</url>
+                <email />
+            </owner>
+            <license src="License.txt"></license>
+            <releaseNotes src="ReleaseNotes.txt"></releaseNotes>
+            <dependencies>
+                <dependency type="CoreVersion">06.02.00</dependency>
+            </dependencies>
+            <components>
+                <component type="Module">
+                    <desktopModule>
+                        <moduleName>Active Forums</moduleName>
+                        <foldername>ActiveForums</foldername>
+                        <businessControllerClass>DotNetNuke.Modules.ActiveForums.TopicsController, DotNetNuke.Modules.ActiveForums</businessControllerClass>
+                        <supportedFeatures>
+                            <supportedFeature type="Searchable" />
+                        </supportedFeatures>
+                        <moduleDefinitions>
+                            <moduleDefinition>
+                                <friendlyName>Active Forums</friendlyName>
+                                <defaultCacheTime>-1</defaultCacheTime>
+                                <moduleControls>
+                                    <moduleControl>
+                                        <controlKey />
+                                        <controlSrc>DesktopModules/ActiveForums/ActiveForums.ascx</controlSrc>
+                                        <supportsPartialRendering>False</supportsPartialRendering>
+                                        <controlTitle>Active Forums</controlTitle>
+                                        <controlType>View</controlType>
+                                        <iconFile />
+                                        <helpUrl />
+                                        <supportsPopUps>False</supportsPopUps>
+                                        <viewOrder>0</viewOrder>
+                                    </moduleControl>
+                                    <moduleControl>
+                                        <controlKey>Edit</controlKey>
+                                        <controlSrc>DesktopModules/ActiveForums/ControlPanel.ascx</controlSrc>
+                                        <supportsPartialRendering>False</supportsPartialRendering>
+                                        <controlTitle>Manage Forums</controlTitle>
+                                        <controlType>Edit</controlType>
+                                        <iconFile />
+                                        <helpUrl />
+                                        <supportsPopUps>False</supportsPopUps>
+                                        <viewOrder>0</viewOrder>
+                                    </moduleControl>
+                                    <moduleControl>
+                                        <controlKey>Settings</controlKey>
+                                        <controlSrc>DesktopModules/ActiveForums/ForumSettings.ascx</controlSrc>
+                                        <supportsPartialRendering>False</supportsPartialRendering>
+                                        <controlTitle>Settings</controlTitle>
+                                        <controlType>Edit</controlType>
+                                        <iconFile />
+                                        <helpUrl />
+                                        <supportsPopUps>False</supportsPopUps>
+                                    </moduleControl>
+                                </moduleControls>
+                            </moduleDefinition>
+                        </moduleDefinitions>
+                    </desktopModule>
+                </component>
+                <component type="Assembly">
+                    <assemblies>
+                        <assembly>
+                            <name>DotNetNuke.Modules.ActiveForums.dll</name>
+                            <sourceFileName>DotNetNuke.Modules.ActiveForums.dll</sourceFileName>
+                            <version>05.00.02</version>
+                        </assembly>
+                    </assemblies>
+                </component>
+                <component type="File">
+                    <files>
+                        <basePath>DesktopModules\ActiveForums\Documentation</basePath>
+                        <file>
+                            <name>License.txt</name>
+                        </file>
+                        <file>
+                            <name>ReleaseNotes.txt</name>
+                        </file>
+                    </files>
+                </component>
+                <component type="Script">
+                    <scripts>
+                        <basePath>DesktopModules\ActiveForums\sql</basePath>
+                        <script type="Install">
+                            <name>04.00.00.SqlDataProvider</name>
+                            <version>04.00.00</version>
+                        </script>
+                        <script type="Install">
+                            
+                            <name>04.00.01.SqlDataProvider</name>
+                            <version>04.00.01</version>
+                        </script>
+                        <script type="Install">
+                            
+                            <name>04.00.02.SqlDataProvider</name>
+                            <version>04.00.02</version>
+                        </script>
+                        <script type="Install">
+                            
+                            <name>04.00.03.SqlDataProvider</name>
+                            <version>04.00.03</version>
+                        </script>
+                        <script type="Install">
+                            
+                            <name>04.00.04.SqlDataProvider</name>
+                            <version>04.00.04</version>
+                        </script>
+                        <script type="Install">
+                            
+                            <name>04.00.05.SqlDataProvider</name>
+                            <version>04.00.05</version>
+                        </script>
+                        <script type="Install">
+                            
+                            <name>04.01.00.SqlDataProvider</name>
+                            <version>04.01.00</version>
+                        </script>
+                        <script type="Install">
+                            
+                            <name>04.01.01.SqlDataProvider</name>
+                            <version>04.01.01</version>
+                        </script>
+                        <script type="Install">
+                            
+                            <name>04.01.04.SqlDataProvider</name>
+                            <version>04.01.04</version>
+                        </script>
+                        <script type="Install">
+                            
+                            <name>04.01.05.SqlDataProvider</name>
+                            <version>04.01.05</version>
+                        </script>
+                        <script type="Install">
+                            
+                            <name>04.01.07.SqlDataProvider</name>
+                            <version>04.01.07</version>
+                        </script>
+                        <script type="Install">
+                            
+                            <name>04.01.08.SqlDataProvider</name>
+                            <version>04.01.08</version>
+                        </script>
+                        <script type="Install">
+                            
+                            <name>04.01.10.SqlDataProvider</name>
+                            <version>04.01.10</version>
+                        </script>
+                        <script type="Install">
+                            
+                            <name>04.01.13.SqlDataProvider</name>
+                            <version>04.01.13</version>
+                        </script>
+                        <script type="Install">
+                            
+                            <name>04.01.15.SqlDataProvider</name>
+                            <version>04.01.15</version>
+                        </script>
+                        <script type="Install">
+                            
+                            <name>04.01.16.SqlDataProvider</name>
+                            <version>04.01.16</version>
+                        </script>
+                        <script type="Install">
+                            
+                            <name>04.01.17.SqlDataProvider</name>
+                            <version>04.01.17</version>
+                        </script>
+                        <script type="Install">
+                            
+                            <name>04.01.18.SqlDataProvider</name>
+                            <version>04.01.18</version>
+                        </script>
+                        <script type="Install">
+                            
+                            <name>04.02.00.SqlDataProvider</name>
+                            <version>04.02.00</version>
+                        </script>
+                        <script type="Install">
+                            
+                            <name>04.02.01.SqlDataProvider</name>
+                            <version>04.02.01</version>
+                        </script>
+                        <script type="Install">
+                            
+                            <name>04.02.03.SqlDataProvider</name>
+                            <version>04.02.03</version>
+                        </script>
+                        <script type="Install">
+                            
+                            <name>04.02.04.SqlDataProvider</name>
+                            <version>04.02.04</version>
+                        </script>
+                        <script type="Install">
+                            
+                            <name>04.02.05.SqlDataProvider</name>
+                            <version>04.02.05</version>
+                        </script>
+                        <script type="Install">
+                            
+                            <name>04.02.06.SqlDataProvider</name>
+                            <version>04.02.06</version>
+                        </script>
+                        <script type="Install">
+                            
+                            <name>04.02.07.SqlDataProvider</name>
+                            <version>04.02.07</version>
+                        </script>
+                        <script type="Install">
+                            
+                            <name>04.03.00.SqlDataProvider</name>
+                            <version>04.03.00</version>
+                        </script>
+                        <script type="Install">
+                            
+                            <name>04.03.01.SqlDataProvider</name>
+                            <version>04.03.01</version>
+                        </script>
+                        <script type="Install">
+                            
+                            <name>04.03.02.SqlDataProvider</name>
+                            <version>04.03.02</version>
+                        </script>
+                        <script type="Install">
+                            
+                            <name>04.03.03.SqlDataProvider</name>
+                            <version>04.03.03</version>
+                        </script>
+                        <script type="Install">
+                            
+                            <name>04.03.04.SqlDataProvider</name>
+                            <version>04.03.04</version>
+                        </script>
+                        <script type="Install">
+                            
+                            <name>04.03.05.SqlDataProvider</name>
+                            <version>04.03.05</version>
+                        </script>
+                        <script type="Install">
+                            
+                            <name>04.03.06.SqlDataProvider</name>
+                            <version>04.03.06</version>
+                        </script>
+                        <script type="Install">
+                            
+                            <name>04.03.09.SqlDataProvider</name>
+                            <version>04.03.09</version>
+                        </script>
+                      <script type="Install">
+                        <name>05.00.01.SqlDataProvider</name>
+                        <version>05.00.01</version>
+                      </script>
+                        <script type="UnInstall">                            
+                            <name>Uninstall.SqlDataProvider</name>
+                            <version>05.00.00</version>
+                        </script>
+                    </scripts>
+                </component>
+                <component type="ResourceFile">
+                    <resourceFiles>
+                        <basePath>DesktopModules\ActiveForums</basePath>
+                        <resourceFile>
+                            <name>Resources.zip</name>
+                            <sourceFileName>Resources.zip</sourceFileName>
+                        </resourceFile>
+                    </resourceFiles>
+                </component>
+                <component type="Config">
+                    <config>
+                        <configFile>web.config</configFile>
+                        <install>
+                            <configuration>
+                                <nodes />
+                            </configuration>
+                        </install>
+                        <uninstall>
+                            <configuration>
+                                <nodes>
+                                    <node path="/configuration/system.webServer/modules/add[@name = 'ForumsReWriter']" action="remove" />
+                                    <node path="/configuration/system.web/httpModules/add[@name = 'ForumsReWriter']" action="remove" />
+                                </nodes>
+                            </configuration>
+                        </uninstall>
+                    </config>
+                </component>
+            </components>
+        </package>
+    </packages>
+</dotnetnuke>

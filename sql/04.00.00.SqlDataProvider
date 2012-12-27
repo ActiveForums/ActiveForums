@@ -1,0 +1,2109 @@
+﻿IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}activeforums_MC_FindUserByEmail') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}{objectQualifier}activeforums_MC_FindUserByEmail
+GO
+CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Attachments](
+	[AttachID] [int] IDENTITY(1,1) NOT NULL,
+	[ContentId] [int] NULL,
+	[PostID] [int] NULL,
+	[UserID] [int] NULL,
+	[Filename] [varchar](50) NULL,
+	[DateAdded] [datetime] NULL,
+	[DateUpdated] [datetime] NULL,
+	[FileData] [image] NULL,
+	[ContentType] [nvarchar](50) NULL,
+	[FileSize] [int] NULL,
+ CONSTRAINT [PK_{objectQualifier}activeforums_Attachments] PRIMARY KEY CLUSTERED 
+(
+	[AttachID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_AuditLog](
+	[AuditId] [int] IDENTITY(1,1) NOT NULL,
+	[RelatedId] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_AuditLog_RelatedId]  DEFAULT ((0)),
+	[RelatedType] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_AuditLog_RelatedType]  DEFAULT ((0)),
+	[UserId] [int] NOT NULL,
+	[AuditAction] [int] NOT NULL,
+	[UserAddress] [nvarchar](50) NULL,
+	[UserAgent] [nvarchar](255) NULL,
+	[DateAdded] [datetime] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_AuditLog_DateAdded]  DEFAULT (getdate()),
+ CONSTRAINT [PK_{objectQualifier}activeforums_AuditLog] PRIMARY KEY CLUSTERED 
+(
+	[AuditId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Content](
+	[ContentId] [int] IDENTITY(1,1) NOT NULL,
+	[Subject] [nvarchar](255) NULL,
+	[Summary] [nvarchar](1000) NULL,
+	[Body] [ntext] NULL,
+	[DateCreated] [datetime] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Content_DateCreated]  DEFAULT (getdate()),
+	[DateUpdated] [datetime] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Content_DateUpdated]  DEFAULT (getdate()),
+	[AuthorId] [int] NOT NULL,
+	[AuthorName] [nvarchar](150) NULL,
+	[IsDeleted] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Content_IsDeleted]  DEFAULT ((0)),
+	[IPAddress] [nvarchar](50) NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Content_IPAddress]  DEFAULT ('0.0.0.0'),
+ CONSTRAINT [PK_{objectQualifier}activeforums_Content] PRIMARY KEY CLUSTERED 
+(
+	[ContentId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Filters](
+	[FilterId] [int] IDENTITY(1,1) NOT NULL,
+	[Find] [nvarchar](1000) NULL,
+	[Replace] [nvarchar](1000) NULL,
+	[FilterType] [nvarchar](50) NULL,
+	[PortalId] [int] NULL,
+	[ModuleId] [int] NULL,
+ CONSTRAINT [PK_{objectQualifier}activeforums_Filters] PRIMARY KEY CLUSTERED 
+(
+	[FilterId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Forums](
+	[ForumId] [int] IDENTITY(1,1) NOT NULL,
+	[PortalId] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Forums_PortalId]  DEFAULT ((0)),
+	[ModuleId] [int] NOT NULL,
+	[ForumGroupId] [int] NOT NULL,
+	[ParentForumId] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Forums_ParentForumId]  DEFAULT ((0)),
+	[ForumName] [nvarchar](255) NOT NULL,
+	[ForumDesc] [nvarchar](2000) NULL,
+	[SortOrder] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Forums_SortOrder]  DEFAULT ((0)),
+	[Active] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Forums_Active]  DEFAULT ((1)),
+	[Hidden] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Forums_Hidden]  DEFAULT ((0)),
+	[TotalTopics] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Forums_TotalTopics]  DEFAULT ((0)),
+	[TotalReplies] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Forums_TotalReplies]  DEFAULT ((0)),
+	[LastPostId] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Forums_LastPostId]  DEFAULT ((0)),
+	[ForumSettingsKey] [varchar](50) NULL,
+	[ForumSecurityKey] [varchar](50) NULL,
+	[DateCreated] [datetime] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Forums_DateCreated]  DEFAULT (getdate()),
+	[DateUpdated] [datetime] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Forums_DateUpdated]  DEFAULT (getdate()),
+ CONSTRAINT [PK_{objectQualifier}activeforums_Forums] PRIMARY KEY CLUSTERED 
+(
+	[ForumId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Forums_Tracking](
+	[TrackingId] [int] IDENTITY(1,1) NOT NULL,
+	[ModuleId] [int] NOT NULL,
+	[UserId] [int] NOT NULL,
+	[ForumId] [int] NOT NULL,
+	[LastAccessDate] [datetime] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Forums_Tracking_LastAccessDate]  DEFAULT (getdate()),
+	[MaxTopicRead] int NOT NULL CONSTRAINT DF_{objectQualifier}activeforums_Forums_Tracking_MaxTopicRead DEFAULT 0,
+	[MaxReplyRead] int NOT NULL CONSTRAINT DF_{objectQualifier}activeforums_Forums_Tracking_MaxReplyRead DEFAULT 0,
+ CONSTRAINT [PK_{objectQualifier}activeforums_Forums_Tracking] PRIMARY KEY CLUSTERED 
+(
+	[TrackingId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_ForumTopics](
+	[ForumId] [int] NOT NULL,
+	[TopicId] [int] NOT NULL,
+	[LastReplyId] [int] NULL
+) ON [PRIMARY]
+GO
+CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Groups](
+	[ForumGroupId] [int] IDENTITY(1,1) NOT NULL,
+	[ModuleId] [int] NOT NULL,
+	[GroupName] [nvarchar](150) NOT NULL,
+	[SortOrder] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Groups_SortOrder]  DEFAULT ((0)),
+	[Active] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Groups_Active]  DEFAULT ((1)),
+	[Hidden] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Groups_Hidden]  DEFAULT ((0)),
+	[GroupSettingsKey] [varchar](50) NOT NULL,
+	[GroupSecurityKey] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_{objectQualifier}activeforums_Groups] PRIMARY KEY CLUSTERED 
+(
+	[ForumGroupId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Poll](
+	[PollID] [int] IDENTITY(1,1) NOT NULL,
+	[TopicId] [int] NULL,
+	[UserId] [int] NULL,
+	[Question] [nvarchar](255) NULL,
+	[PollType] [nvarchar](10) NULL,
+	[DateAdded] [datetime] NULL,
+	[DateUpdated] [datetime] NULL,
+ CONSTRAINT [PK_{objectQualifier}activeforums_Poll] PRIMARY KEY CLUSTERED 
+(
+	[PollID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Poll_Options](
+	[PollOptionsID] [int] IDENTITY(1,1) NOT NULL,
+	[PollID] [int] NULL,
+	[OptionName] [nvarchar](255) NULL,
+	[DateAdded] [datetime] NULL,
+	[DateUpdated] [datetime] NULL,
+ CONSTRAINT [PK_{objectQualifier}activeforums_Poll_Options] PRIMARY KEY CLUSTERED 
+(
+	[PollOptionsID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Poll_Results](
+	[PollResultsID] [int] IDENTITY(1,1) NOT NULL,
+	[PollID] [int] NULL,
+	[PollOptionID] [int] NULL,
+	[Response] [nvarchar](50) NULL,
+	[IPAddress] [nvarchar](25) NULL,
+	[UserID] [int] NULL,
+	[DateAdded] [datetime] NULL CONSTRAINT [DF_{objectQualifier}activeforums_Poll_Results_DateAdded]  DEFAULT (getdate()),
+	[DateUpdated] [datetime] NULL CONSTRAINT [DF_{objectQualifier}activeforums_Poll_Results_DateUpdated]  DEFAULT (getdate()),
+ CONSTRAINT [PK_{objectQualifier}activeforums_Poll_Results] PRIMARY KEY CLUSTERED 
+(
+	[PollResultsID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Ranks](
+	[RankId] [int] IDENTITY(1,1) NOT NULL,
+	[PortalId] [int] NOT NULL,
+	[ModuleId] [int] NOT NULL,
+	[RankName] [nvarchar](100) NULL,
+	[MinPosts] [int] NULL,
+	[MaxPosts] [int] NULL,
+	[Display] [nvarchar](1000) NULL,
+ CONSTRAINT [PK_{objectQualifier}activeforums_Ranks] PRIMARY KEY CLUSTERED 
+(
+	[RankId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Replies](
+	[ReplyId] [int] IDENTITY(1,1) NOT NULL,
+	[TopicId] [int] NOT NULL,
+	[ReplyToId] [int] NULL,
+	[ContentId] [int] NOT NULL,
+	[IsApproved] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Replies_IsApproved]  DEFAULT ((1)),
+	[IsRejected] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Replies_IsRejected]  DEFAULT ((0)),
+	[StatusId] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Replies_StatusId]  DEFAULT ((0)),
+	[IsDeleted] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Replies_IsDeleted]  DEFAULT ((0)),
+ CONSTRAINT [PK_{objectQualifier}activeforums_Replies] PRIMARY KEY CLUSTERED 
+(
+	[ReplyId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Security](
+	[SecuredId] [int] NOT NULL,
+	[ObjectId] [int] NOT NULL,
+	[ObjectName] [nvarchar](255) NOT NULL,
+	[SecureAction] [int] NULL,
+	[ObjectType] [int] NOT NULL,
+	[SecureType] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Security_SecureType]  DEFAULT ((0)),
+	[View] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Security_CanView]  DEFAULT ((0)),
+	[Read] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Security_Read]  DEFAULT ((0)),
+	[Create] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Security_Create]  DEFAULT ((0)),
+	[Reply] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Security_Reply]  DEFAULT ((0)),
+	[Edit] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Security_Edit]  DEFAULT ((0)),
+	[Delete] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Security_Delete]  DEFAULT ((0)),
+	[Lock] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Security_Lock]  DEFAULT ((0)),
+	[Pin] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Security_Pin]  DEFAULT ((0)),
+	[Attach] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Security_Attach]  DEFAULT ((0)),
+	[Poll] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Security_Poll]  DEFAULT ((0)),
+	[Block] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Security_Block]  DEFAULT ((0)),
+	[Trust] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Security_Trust]  DEFAULT ((0)),
+	[Subscribe] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Security_Subscribe]  DEFAULT ((0)),
+	[Announce] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Security_Announce]  DEFAULT ((0)),
+	[ModApprove] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Security_ModApprove]  DEFAULT ((0)),
+	[ModMove] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Security_ModMove]  DEFAULT ((0)),
+	[ModSplit] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Security_ModSplit]  DEFAULT ((0)),
+	[ModDelete] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Security_ModDelete]  DEFAULT ((0)),
+	[ModUser] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Security_ModUser]  DEFAULT ((0)),
+	[ModEdit] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Security_ModEdit]  DEFAULT ((0)),
+	[ModLock] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Security_ModLock]  DEFAULT ((0)),
+	[ModPin] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Security_ModPin]  DEFAULT ((0)),
+	[SecurityKey] [nvarchar](25)
+) ON [PRIMARY]
+GO
+CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Settings](
+	[ModuleId] [int] NOT NULL,
+	[GroupKey] [nvarchar](25) NULL,
+	[SettingName] [nvarchar](50) NOT NULL,
+	[SettingValue] [nvarchar](2000) NOT NULL
+) ON [PRIMARY]
+GO
+CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Subscriptions](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[PortalId] [int] NOT NULL,
+	[ModuleId] [int] NOT NULL,
+	[ForumId] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Subscriptions_ForumId]  DEFAULT ((0)),
+	[TopicId] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Subscriptions_TopicId]  DEFAULT ((0)),
+	[Mode] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Subscriptions_Mode]  DEFAULT ((0)),
+	[UserId] [int] NOT NULL,
+ CONSTRAINT [PK_{objectQualifier}activeforums_Subscriptions] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Tags](
+	[TagId] [int] IDENTITY(1,1) NOT NULL,
+	[Portalid] [int] NOT NULL,
+	[ModuleId] [int] NOT NULL,
+	[TagName] [nvarchar](255) NOT NULL,
+	[Clicks] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Tags_Clicks]  DEFAULT ((0)),
+	[Items] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Tags_Items]  DEFAULT ((0)),
+	[Priority] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Tags_Priority]  DEFAULT ((0)),
+ CONSTRAINT [PK_{objectQualifier}activeforums_Tags] PRIMARY KEY CLUSTERED 
+(
+	[TagId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Templates](
+	[TemplateId] [int] IDENTITY(1,1) NOT NULL,
+	[PortalId] [int] NOT NULL,
+	[ModuleId] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Templates_ModuleId]  DEFAULT ((0)),
+	[TemplateType] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Templates_TemplateType]  DEFAULT ((0)),
+	[IsSystem] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Templates_IsSystem]  DEFAULT ((0)),
+	[Title] [nvarchar](150) NULL,
+	[Subject] [nvarchar](200) NULL,
+	[Template] [ntext] NULL,
+	[DateCreated] [datetime] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Templates_DateCreated]  DEFAULT (getdate()),
+	[DateUpdated] [datetime] NULL,
+ CONSTRAINT [PK_{objectQualifier}activeforums_Templates] PRIMARY KEY CLUSTERED 
+(
+	[TemplateId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Topics](
+	[TopicId] [int] IDENTITY(1,1) NOT NULL,
+	[ContentId] [int] NOT NULL,
+	[ViewCount] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Topics_ViewCount]  DEFAULT ((0)),
+	[ReplyCount] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Topics_ReplyCount]  DEFAULT ((0)),
+	[IsLocked] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Topics_IsLocked]  DEFAULT ((0)),
+	[IsPinned] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Topics_IsPinned]  DEFAULT ((0)),
+	[TopicIcon] [nvarchar](25) NULL,
+	[StatusId] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Topics_StatusId]  DEFAULT ((-1)),
+	[IsApproved] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Topics_IsApproved]  DEFAULT ((1)),
+	[IsRejected] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Topics_IsRejected]  DEFAULT ((0)),
+	[IsDeleted] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Topics_IsDeleted]  DEFAULT ((0)),
+	[IsAnnounce] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Topics_IsAnnounce]  DEFAULT ((0)),
+	[IsArchived] [bit] NOT NULL,
+	[AnnounceStart] [datetime] NULL,
+	[AnnounceEnd] [datetime] NULL,
+	[TopicType] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Topics_TopicType]  DEFAULT ((0)),
+ CONSTRAINT [PK_{objectQualifier}activeforums_Topics] PRIMARY KEY CLUSTERED 
+(
+	[TopicId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Topics_Ratings](
+	[RatingID] [int] IDENTITY(1,1) NOT NULL,
+	[TopicId] [int] NOT NULL,
+	[UserID] [int] NULL,
+	[Rating] [int] NULL,
+	[Helpful] [bit] NULL,
+	[Comments] [nvarchar](500) NULL,
+	[IPAddress] [nvarchar](25) NULL,
+	[DateAdded] [datetime] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Topics_Ratings_DateAdded]  DEFAULT (getdate()),
+	[DateUpdated] [datetime] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Topics_Ratings_DateUpdated]  DEFAULT (getdate()),
+ CONSTRAINT [PK_{objectQualifier}activeforums_Topics_Ratings] PRIMARY KEY CLUSTERED 
+(
+	[RatingID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Topics_Tags](
+	[TopicId] [int] NOT NULL,
+	[TagId] [int] NOT NULL
+) ON [PRIMARY]
+GO
+CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Topics_Tracking](
+	[TrackingId] [int] IDENTITY(1,1) NOT NULL,
+	[ForumId] [int] NULL,
+	[TopicId] [int] NULL,
+	[LastReplyId] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Topics_Tracking_LastReplyId]  DEFAULT ((0)),
+	[UserId] [int] NULL,
+	[DateAdded] [datetime] NULL,
+ CONSTRAINT [PK_{objectQualifier}activeforums_Topics_Tracking] PRIMARY KEY CLUSTERED 
+(
+	[TrackingId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_UserProfiles](
+	[ProfileId] [int] IDENTITY(1,1) NOT NULL,
+	[UserId] [int] NOT NULL,
+	[ModuleId] [int] NOT NULL,
+	[PortalId] [int] NOT NULL,
+	[TopicCount] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_UserProfiles_TopicCount]  DEFAULT ((0)),
+	[ReplyCount] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_UserProfiles_ReplyCount]  DEFAULT ((0)),
+	[ViewCount] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_UserProfiles_ViewCount]  DEFAULT ((0)),
+	[AnswerCount] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_UserProfiles_AnswerCount]  DEFAULT ((0)),
+	[RewardPoints] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_UserProfiles_RewardPoints]  DEFAULT ((0)),
+	[UserCaption] [nvarchar](255) NULL,
+	[DateCreated] [datetime] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_UserProfiles_DateCreated]  DEFAULT (getdate()),
+	[DateUpdated] [datetime] NULL,
+	[DateLastActivity] [datetime] NULL,
+	[DateLastPost] [datetime] NULL,
+	[Signature] [nvarchar](1500) NULL,
+	[SignatureDisabled] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_UserProfiles_SignatureDisabled]  DEFAULT ((0)),
+	[TrustLevel] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_UserProfiles_TrustLevel]  DEFAULT ((0)),
+	[AdminWatch] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_UserProfiles_AdminWatch]  DEFAULT ((0)),
+	[AttachDisabled] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_UserProfiles_AttachDisabled]  DEFAULT ((0)),
+	[Avatar] [nvarchar](2000) NULL,
+	[AvatarType] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_UserProfiles_AvatarType]  DEFAULT ((0)),
+	[AvatarDisabled] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_UserProfiles_AvatarDisabled]  DEFAULT ((0)),
+	[PrefDefaultSort] [char](10) NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_UserProfiles_PrefDefaultSort]  DEFAULT ('ASC'),
+	[PrefDefaultShowReplies] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_UserProfiles_PrefDefaultShowReplies]  DEFAULT ((0)),
+	[PrefJumpLastPost] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_UserProfiles_PrefJumpLastPost]  DEFAULT ((0)),
+	[PrefTopicSubscribe] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_UserProfiles_PrefTopicSubscribe]  DEFAULT ((0)),
+	[PrefSubscriptionType] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_UserProfiles_PrefSubscriptionType]  DEFAULT ((0)),
+	[PrefUseAjax] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_UserProfiles_PrefUseAjax]  DEFAULT ((1)),
+	[PrefEmailFormat] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_UserProfiles_PrefEmailFormat]  DEFAULT ((0)),
+	[PrefBlockAvatars] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_UserProfiles_PrefBlockAvatars]  DEFAULT ((0)),
+	[PrefBlockSignatures] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_UserProfiles_PrefBlockSignatures]  DEFAULT ((0)),
+	[PrefPageSize] [int] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_UserProfiles_PrefPageSize]  DEFAULT ((20)),
+	[Yahoo] [nvarchar](50) NULL,
+	[MSN] [nvarchar](50) NULL,
+	[ICQ] [nvarchar](50) NULL,
+	[AOL] [nvarchar](50) NULL,
+	[Occupation] [nvarchar](150) NULL,
+	[Location] [nvarchar](150) NULL,
+	[Interests] [nvarchar](150) NULL,
+	[WebSite] [nvarchar](150) NULL,
+	[Badges] [nvarchar](2000) NULL,
+ CONSTRAINT [PK_{objectQualifier}activeforums_UserProfiles] PRIMARY KEY CLUSTERED 
+(
+	[ProfileId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+ALTER TABLE {databaseOwner}[{objectQualifier}activeforums_ForumTopics]  WITH CHECK ADD  CONSTRAINT [FK_{objectQualifier}activeforums_ForumTopics_activeforums_Forums] FOREIGN KEY([ForumId])
+REFERENCES {databaseOwner}[{objectQualifier}activeforums_Forums] ([ForumId])
+GO
+ALTER TABLE {databaseOwner}[{objectQualifier}activeforums_ForumTopics] CHECK CONSTRAINT [FK_{objectQualifier}activeforums_ForumTopics_activeforums_Forums]
+GO
+ALTER TABLE {databaseOwner}[{objectQualifier}activeforums_ForumTopics]  WITH CHECK ADD  CONSTRAINT [FK_{objectQualifier}activeforums_ForumTopics_activeforums_Replies] FOREIGN KEY([LastReplyId])
+REFERENCES {databaseOwner}[{objectQualifier}activeforums_Replies] ([ReplyId])
+GO
+ALTER TABLE {databaseOwner}[{objectQualifier}activeforums_ForumTopics] NOCHECK CONSTRAINT [FK_{objectQualifier}activeforums_ForumTopics_activeforums_Replies]
+GO
+ALTER TABLE {databaseOwner}[{objectQualifier}activeforums_ForumTopics]  WITH CHECK ADD  CONSTRAINT [FK_{objectQualifier}activeforums_ForumTopics_activeforums_Topics] FOREIGN KEY([TopicId])
+REFERENCES {databaseOwner}[{objectQualifier}activeforums_Topics] ([TopicId])
+GO
+ALTER TABLE {databaseOwner}[{objectQualifier}activeforums_ForumTopics] CHECK CONSTRAINT [FK_{objectQualifier}activeforums_ForumTopics_activeforums_Topics]
+GO
+ALTER TABLE {databaseOwner}[{objectQualifier}activeforums_Replies]  WITH CHECK ADD  CONSTRAINT [FK_{objectQualifier}activeforums_Replies_activeforums_Content] FOREIGN KEY([ContentId])
+REFERENCES {databaseOwner}[{objectQualifier}activeforums_Content] ([ContentId])
+GO
+ALTER TABLE {databaseOwner}[{objectQualifier}activeforums_Replies] CHECK CONSTRAINT [FK_{objectQualifier}activeforums_Replies_activeforums_Content]
+GO
+ALTER TABLE {databaseOwner}[{objectQualifier}activeforums_Replies]  WITH CHECK ADD  CONSTRAINT [FK_{objectQualifier}activeforums_Replies_activeforums_Topics] FOREIGN KEY([TopicId])
+REFERENCES {databaseOwner}[{objectQualifier}activeforums_Topics] ([TopicId])
+GO
+ALTER TABLE {databaseOwner}[{objectQualifier}activeforums_Replies] CHECK CONSTRAINT [FK_{objectQualifier}activeforums_Replies_activeforums_Topics]
+GO
+ALTER TABLE {databaseOwner}[{objectQualifier}activeforums_Topics]  WITH CHECK ADD  CONSTRAINT [FK_{objectQualifier}activeforums_Topics_activeforums_Content] FOREIGN KEY([ContentId])
+REFERENCES {databaseOwner}[{objectQualifier}activeforums_Content] ([ContentId])
+GO
+ALTER TABLE {databaseOwner}[{objectQualifier}activeforums_Topics] CHECK CONSTRAINT [FK_{objectQualifier}activeforums_Topics_activeforums_Content]
+GO
+CREATE VIEW {databaseOwner}[{objectQualifier}vw_activeforums_ForumTopics]
+AS
+SELECT     F.ForumId, T.TopicId, TC.Subject, TC.Summary, TC.AuthorId, TC.AuthorName, TC.IsDeleted, ISNULL(U.Username, ISNULL(TC.AuthorName, 'anon')) AS Username, 
+                      ISNULL(U.FirstName, '') AS FirstName, ISNULL(U.LastName, '') AS LastName, ISNULL(U.DisplayName, ISNULL(TC.AuthorName, 'anon')) AS DisplayName, TC.Body, 
+                      TC.ContentId, TC.DateCreated, TC.DateUpdated, TC.IPAddress, FF.PortalId, FF.ModuleId, FF.ForumName, T.TopicIcon, T.StatusId, T.IsLocked, T.IsPinned, T.ViewCount, 
+                      T.ReplyCount, T.TopicType, T.IsApproved, FF.ForumGroupId, FF.SortOrder, T.IsRejected
+FROM         {databaseOwner}{objectQualifier}activeforums_Content AS TC INNER JOIN
+                      {databaseOwner}{objectQualifier}activeforums_Topics AS T ON TC.ContentId = T.ContentId INNER JOIN
+                      {databaseOwner}{objectQualifier}activeforums_ForumTopics AS F ON T.TopicId = F.TopicId INNER JOIN
+                      {databaseOwner}{objectQualifier}activeforums_Forums AS FF ON F.ForumId = FF.ForumId LEFT OUTER JOIN
+                      {databaseOwner}{objectQualifier}Users AS U ON TC.AuthorId = U.UserID
+WHERE     (T.IsDeleted = 0) AND (TC.IsDeleted = 0) AND (FF.Active = 1) AND (T.IsAnnounce = 0) OR
+                      (T.IsDeleted = 0) AND (TC.IsDeleted = 0) AND (FF.Active = 1) AND (T.IsAnnounce = 1) AND (T.AnnounceStart <= GETDATE())
+
+GO
+CREATE VIEW {databaseOwner}[{objectQualifier}vw_activeforums_ForumReplies]
+AS
+SELECT     F.ForumId, R.TopicId, RC.Subject, RC.Summary, RC.AuthorId, RC.AuthorName, R.ReplyId, U.Username, U.FirstName, U.LastName, U.DisplayName, RC.Body, 
+                      RC.ContentId, RC.DateCreated, T.Subject AS TopicSubject, RC.DateUpdated, RC.IPAddress, FF.PortalId, FF.ModuleId, FF.ForumName, T.TopicIcon, R.StatusId, 
+                      T.IsLocked, T.IsPinned, T.ViewCount, T.ReplyCount, T.TopicType, R.IsApproved, FF.ForumGroupId, FF.SortOrder, R.IsRejected
+FROM         {databaseOwner}{objectQualifier}activeforums_Content AS RC INNER JOIN
+                      {databaseOwner}{objectQualifier}activeforums_Replies AS R ON RC.ContentId = R.ContentId INNER JOIN
+                      {databaseOwner}{objectQualifier}activeforums_ForumTopics AS F ON R.TopicId = F.TopicId INNER JOIN
+                      {databaseOwner}{objectQualifier}vw_activeforums_ForumTopics AS T ON F.TopicId = T.TopicId INNER JOIN
+                      {databaseOwner}{objectQualifier}activeforums_Forums AS FF ON F.ForumId = FF.ForumId LEFT OUTER JOIN
+                      {databaseOwner}{objectQualifier}Users AS U ON RC.AuthorId = U.UserID
+WHERE     (RC.IsDeleted = 0) AND (R.IsDeleted = 0) AND (FF.Active = 1)
+
+GO
+
+CREATE VIEW {databaseOwner}[{objectQualifier}vw_activeforums_ForumView]
+AS
+SELECT     TOP (100) PERCENT G.ForumGroupId, G.ModuleId, G.GroupName, F.ForumId, F.ForumName, F.ForumDesc, F.TotalTopics, F.TotalReplies, F.ParentForumId, 
+                      ISNULL(FT.Subject, '') AS Subject, G.SortOrder AS GroupSort, F.SortOrder AS ForumSort, G.Hidden AS GroupHidden, F.Hidden AS ForumHidden, F.LastPostId, 
+                      ISNULL((CASE WHEN FT.Subject IS NULL THEN FR.Subject ELSE FT.Subject END), '') AS LastPostSubject, ISNULL((CASE WHEN FT.Summary IS NULL 
+                      THEN FR.Summary ELSE FT.Summary END), '') AS LastPostSummary, ISNULL((CASE WHEN FT.AuthorId IS NULL THEN FR.AuthorId ELSE FT.AuthorId END), '') 
+                      AS LastPostAuthorId, ISNULL((CASE WHEN FT.Username IS NULL THEN FR.Username ELSE FT.Username END), '') AS LastPostUsername, 
+                      ISNULL((CASE WHEN FT.FirstName IS NULL THEN FR.FirstName ELSE FT.FirstName END), '') AS LastPostFirstName, ISNULL((CASE WHEN FT.LastName IS NULL 
+                      THEN FR.LastName ELSE FT.LastName END), '') AS LastPostLastName, ISNULL((CASE WHEN FT.DisplayName IS NULL 
+                      THEN FR.DisplayName ELSE FT.DisplayName END), '') AS LastPostDisplayName, ISNULL((CASE WHEN FT.DateCreated IS NULL 
+                      THEN FR.DateCreated ELSE FT.DateCreated END), '') AS LastPostDateTime, FR.TopicSubject
+FROM         {databaseOwner}{objectQualifier}activeforums_Groups AS G INNER JOIN
+                      {databaseOwner}{objectQualifier}activeforums_Forums AS F ON G.ForumGroupId = F.ForumGroupId LEFT OUTER JOIN
+                      {databaseOwner}{objectQualifier}vw_activeforums_ForumReplies AS FR ON F.LastPostId = FR.ReplyId AND FR.IsApproved = 1 AND F.ForumId = FR.ForumId LEFT OUTER JOIN
+                      {databaseOwner}{objectQualifier}vw_activeforums_ForumTopics AS FT ON F.LastPostId = FT.TopicId AND FT.IsApproved = 1 AND F.ForumId = FT.ForumId
+WHERE     (G.Active = 1) AND (F.Active = 1)
+
+GO
+
+CREATE VIEW {databaseOwner}[{objectQualifier}vw_activeforums_GroupForum]
+AS
+SELECT     FG.ForumGroupId, FG.ModuleId, FG.GroupName, FG.Active AS GroupActive, FG.Hidden AS GroupHidden, F.ForumId, F.ParentForumId, F.ForumName, F.ForumDesc, 
+                      F.Active AS ForumActive, F.Hidden AS ForumHidden, F.TotalTopics, F.TotalReplies, F.LastPostId, FG.GroupSettingsKey, F.ForumSettingsKey
+FROM         {databaseOwner}{objectQualifier}activeforums_Forums AS F WITH (NOLOCK) INNER JOIN
+                      {databaseOwner}{objectQualifier}activeforums_Groups AS FG WITH (NOLOCK) ON F.ForumGroupId = FG.ForumGroupId
+
+GO
+
+CREATE VIEW {databaseOwner}[{objectQualifier}vw_activeforums_Security]
+AS
+SELECT     S.SecuredId, S.ObjectId, S.ObjectName, S.SecureAction, S.ObjectType, S.SecureType, UR.RoleID, UR.UserID
+FROM         {databaseOwner}{objectQualifier}activeforums_Security AS S WITH (NOLOCK) INNER JOIN
+                      {databaseOwner}{objectQualifier}UserRoles AS UR WITH (NOLOCK) ON S.ObjectId = UR.RoleID AND S.ObjectType = 0
+WHERE     (UR.EffectiveDate IS NULL) AND (UR.ExpiryDate >= GETDATE()) OR
+                      (UR.EffectiveDate IS NULL) AND (UR.ExpiryDate IS NULL) OR
+                      (UR.EffectiveDate <= GETDATE()) AND (UR.ExpiryDate IS NULL) OR
+                      (UR.EffectiveDate <= GETDATE()) AND (UR.ExpiryDate >= GETDATE())
+
+GO
+
+CREATE VIEW {databaseOwner}[{objectQualifier}vw_activeforums_TopicsView]
+AS
+SELECT     FT.ForumId, ISNULL(FT.LastReplyId, 0) AS LastReplyId, T.TopicId, T.ViewCount, T.ReplyCount, T.IsLocked, T.IsPinned, T.TopicIcon, T.StatusId, T.IsAnnounce, 
+                      T.AnnounceStart, T.AnnounceEnd, T.TopicType, C.Subject, ISNULL(C.Summary, '') AS Summary, C.AuthorId, C.AuthorName, ISNULL(C.Body, '') AS Body, C.DateCreated, 
+                      ISNULL(R.Subject, '') AS LastReplySubject, ISNULL(R.Summary, '') AS LastReplySummary, ISNULL(R.AuthorId, 0) AS LastReplyAuthorId, ISNULL(R.AuthorName, '') 
+                      AS LastReplyAuthorName, ISNULL(R.Username, '') AS LastReplyUsername, ISNULL(R.FirstName, '') AS LastReplyFirstName, ISNULL(R.LastName, '') 
+                      AS LastReplyLastName, ISNULL(R.DisplayName, '') AS LastReplyDisplayName, (CASE WHEN R.DateCreated IS NULL THEN C.DateCreated ELSE R.DateCreated END) 
+                      AS LastReplyDate, ISNULL(U.Username, '') AS AuthorUsername, ISNULL(U.FirstName, '') AS AuthorFirstName, ISNULL(U.LastName, '') AS AuthorLastName, 
+                      ISNULL(U.DisplayName, '') AS AuthorDisplayName, C.IPAddress, F.PortalId, F.ModuleId, F.ForumName
+FROM         {databaseOwner}{objectQualifier}activeforums_Topics AS T WITH (NOLOCK) INNER JOIN
+                      {databaseOwner}{objectQualifier}activeforums_ForumTopics AS FT WITH (NOLOCK) ON T.TopicId = FT.TopicId INNER JOIN
+                      {databaseOwner}{objectQualifier}activeforums_Content AS C WITH (NOLOCK) ON T.ContentId = C.ContentId INNER JOIN
+                      {databaseOwner}{objectQualifier}activeforums_Forums AS F ON FT.ForumId = F.ForumId LEFT OUTER JOIN
+                      {databaseOwner}{objectQualifier}Users AS U ON C.AuthorId = U.UserID LEFT OUTER JOIN
+                      {databaseOwner}{objectQualifier}vw_activeforums_ForumReplies AS R WITH (NOLOCK) ON FT.LastReplyId = R.ReplyId
+WHERE     (T.IsApproved = 1) AND (T.IsDeleted = 0) AND (T.IsArchived = 0) AND (C.IsDeleted = 0) AND (F.Active = 1)
+
+GO
+
+CREATE VIEW {databaseOwner}[{objectQualifier}vw_activeforums_TopicView]
+AS
+SELECT     PortalId, ModuleId, ForumId, ForumName, TopicId, ReplyId, Subject, Summary, AuthorId, AuthorName, Username, FirstName, LastName, DisplayName, DateCreated, 
+                      DateUpdated, ContentId, TopicIcon, StatusId, TopicType, IsPinned, IsLocked, ViewCount, ReplyCount
+FROM         {databaseOwner}{objectQualifier}vw_activeforums_ForumReplies AS R
+WHERE     (IsApproved = 1)
+UNION
+SELECT     PortalId, ModuleId, ForumId, ForumName, TopicId, 0 AS ReplyId, Subject, Summary, AuthorId, AuthorName, Username, FirstName, LastName, DisplayName, 
+                      DateCreated, DateUpdated, ContentId, TopicIcon, StatusId, TopicType, IsPinned, IsLocked, ViewCount, ReplyCount
+FROM         {databaseOwner}{objectQualifier}vw_activeforums_ForumTopics AS T
+WHERE     (IsApproved = 1)
+
+GO
+CREATE FUNCTION {databaseOwner}[{objectQualifier}activeforums_UserProfiles_GetUserRoles](@UserID int, @PortalID int, @dt DateTime)
+RETURNS nvarchar(255)
+AS
+BEGIN
+DECLARE roles_curs CURSOR FOR
+SELECT R.RoleName from {databaseOwner}{objectQualifier}UserRoles AS UR INNER JOIN {databaseOwner}{objectQualifier}Users AS U on UR.UserId = U.UserId INNER JOIN {databaseOwner}{objectQualifier}Roles AS R on UR.RoleId = R.RoleId WHERE U.UserId = @UserID and R.PortalId = @PortalID AND (ExpiryDate >= @dt or ExpiryDate is NULL)
+
+DECLARE @Roles nvarchar(255)
+DECLARE @RolesOut nvarchar(255)
+SET @RolesOut = ''
+OPEN roles_curs
+
+fetch next from roles_curs into @roles
+
+WHILE (@@fetch_status = 0)
+BEGIN
+	Set @RolesOut = @RolesOut +  @roles + ';'
+	
+	fetch next from roles_curs into @roles
+END
+
+
+close roles_curs
+deallocate roles_curs
+
+RETURN @RolesOut
+END
+GO
+
+CREATE FUNCTION {databaseOwner}[{objectQualifier}activeforums_Functions_Split](@text varchar(8000), @delimiter char(1))
+RETURNS @words TABLE (objectid smallint primary key, id int)
+AS
+BEGIN
+	DECLARE @pos smallint,
+		@i smallint,
+		@j smallint,
+		@s varchar(255)
+
+	SET @pos = 1
+
+	WHILE @pos <= LEN(@text)
+	BEGIN
+		SET @i = CHARINDEX(' ', @text, @pos)
+		SET @j = CHARINDEX(@delimiter, @text, @pos)
+
+		IF @i > 0 OR @j > 0
+		BEGIN
+			IF @i = 0 OR (@j > 0 AND @j < @i)
+				SET @i = @j
+
+			IF @i > @pos
+			BEGIN
+				-- @i now holds the earliest delimiter in the string
+				SET @s = SUBSTRING(@text, @pos, @i - @pos)
+	
+				INSERT INTO @words
+				VALUES (@pos, @s)
+			END
+
+			SET @pos = @i + 1
+			WHILE @pos < LEN(@text) AND SUBSTRING(@text, @pos, 1) IN (' ', ',')
+				SET @pos = @pos + 1
+		END
+		ELSE
+		BEGIN
+			INSERT INTO @words
+			VALUES (@pos, SUBSTRING(@text, @pos, LEN(@text) - @pos + 1))
+
+			SET @pos = LEN(@text) + 1
+		END
+	END
+	
+	RETURN
+END
+GO
+
+CREATE FUNCTION {databaseOwner}[{objectQualifier}activeforums_Topics_GetTags](@TopicId int)
+RETURNS nvarchar(255)
+AS
+BEGIN
+Declare tag_curs cursor for 
+SELECT     T.TagName
+FROM         {databaseOwner}{objectQualifier}activeforums_Tags AS T INNER JOIN
+             {databaseOwner}{objectQualifier}activeforums_Topics_Tags AS C ON T.TagId = C.TagId
+WHERE     (C.TopicId = @TopicId)
+
+Declare @Tags nvarchar(255)
+Declare @TagsOut nvarchar(255)
+Set @TagsOut = ''
+open tag_curs
+
+fetch next from tag_curs into @tags
+
+WHILE (@@fetch_status = 0)
+BEGIN
+	Set @tagsOut = @tagsOut +  @tags + ','
+	
+	fetch next from tag_curs into @tags
+END
+
+
+close tag_curs
+deallocate tag_curs
+IF LEN(@tagsOut) > 1 
+	SET @tagsOut = SUBSTRING(@tagsOut, 1, LEN(@tagsOut)-1)
+RETURN @tagsOut
+END
+GO
+
+CREATE FUNCTION {databaseOwner}[{objectQualifier}activeforums_Tracking_HasRead](@UserID int, @TopicId int, @LastReplyId int, @ForumID int)
+RETURNS bit
+AS
+BEGIN
+DECLARE @LastRead int
+DECLARE @HasRead bit
+SET @HasRead = 0
+	SELECT @LastRead = LastReplyId From {databaseOwner}{objectQualifier}activeforums_Topics_Tracking WHERE UserID = @UserID AND ForumID = @ForumID
+	IF @LastRead IS NOT NULL
+		BEGIN
+			IF (@LastRead >= @LastReplyId AND @LastReplyId > 0)  OR (@LastRead >= @TopicId AND @LastReplyId = 0)
+				Set @HasRead =  1
+			ELSE
+				Set @HasRead = 0
+		END
+	IF  EXISTS (SELECT TrackingId FROM {databaseOwner}{objectQualifier}activeforums_Topics_Tracking WHERE (UserID = @UserID AND TopicId = @TopicId AND LastReplyId >= @LastReplyId)  OR (UserID = @UserID AND TopicId = @TopicId AND LastReplyId = -1))
+	  SET @HasRead = 1
+	
+RETURN @HasRead
+END
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Attachments_SaveFromTemp]
+@AttachId int,
+@ContentId int,
+@UserId int,
+@ClearFile bit,
+@FileName nvarchar(50)
+AS
+If @AttachId = -1 
+UPDATE {databaseOwner}{objectQualifier}activeforums_Attachments
+SET ContentId = @ContentId
+WHERE ContentId = -1 AND UserId = @UserId
+ELSE
+	If @AttachId > 0 AND @ClearFile = 1 
+	UPDATE {databaseOwner}{objectQualifier}activeforums_Attachments
+	SET FileData = NULL, FileName = @FileName, ContentId = @ContentId
+	WHERE AttachId = @AttachId
+		
+
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_DashBoard_Stats]
+@PortalId int,
+@ModuleId int
+AS
+BEGIN
+SELECT     TOP 5 T.TopicId, C.Subject, C.DateCreated, U.Username, U.FirstName, U.LastName, U.DisplayName, C.AuthorName, C.Summary
+FROM         {databaseOwner}{objectQualifier}activeforums_Topics  AS T WITH (NOLOCK) INNER JOIN
+                      {databaseOwner}{objectQualifier}activeforums_Content  AS C WITH (NOLOCK) ON T.ContentId = C.ContentId INNER JOIN
+                      {databaseOwner}{objectQualifier}activeforums_ForumTopics AS FT WITH (NOLOCK) ON T.TopicId = FT.TopicId INNER JOIN
+                      {databaseOwner}{objectQualifier}activeforums_Forums  AS F WITH (NOLOCK) ON FT.ForumId = F.ForumId LEFT OUTER JOIN
+                      {databaseOwner}{objectQualifier}Users AS U ON C.AuthorId = U.UserID
+WHERE     (T.IsApproved = 1) AND (T.IsDeleted = 0) AND (F.ModuleId = @ModuleId)
+ORDER BY C.DateCreated DESC
+END
+BEGIN
+SELECT  TOP 5   U.UserID, U.Username, U.FirstName, U.LastName, U.Email, U.DisplayName, UP.CreatedDate, UP.PortalId
+FROM         {databaseOwner}{objectQualifier}Users AS U WITH (NOLOCK) INNER JOIN
+                      {databaseOwner}{objectQualifier}UserPortals AS UP WITH (NOLOCK) ON U.UserID = UP.UserId
+WHERE     (UP.Authorised = 1) AND (UP.PortalId = @PortalId)
+ORDER BY UP.CreatedDate DESC
+END
+BEGIN
+
+SELECT   TOP 5  ForumId, ModuleId, ForumName, TotalTopics, TotalReplies
+FROM         {databaseOwner}{objectQualifier}activeforums_Forums WITH (NOLOCK)
+WHERE     (Active = 1) AND (ModuleId = @ModuleId)
+ORDER BY (TotalTopics + TotalReplies) DESC
+END
+BEGIN
+SELECT     TOP 10 UP.ProfileId, UP.UserId, UP.ModuleId, UP.PortalId, UP.TopicCount, UP.ReplyCount, UP.ViewCount, UP.AnswerCount, UP.RewardPoints, U.Username, 
+                      U.FirstName, U.LastName, U.DisplayName
+FROM         {databaseOwner}{objectQualifier}activeforums_UserProfiles AS UP WITH (NOLOCK) INNER JOIN
+             {databaseOwner}{objectQualifier}Users  AS U WITH (NOLOCK) ON UP.UserId = U.UserID
+WHERE     (UP.ModuleId = @ModuleId) AND (UP.PortalId = @PortalId)
+ORDER BY ((UP.TopicCount * 10) + (UP.ReplyCount * 5) + UP.ViewCount) DESC
+END
+BEGIN
+DECLARE @TotalForums int
+DECLARE @TotalTopics int
+DECLARE @TotalReplies int
+DECLARE @TotalUsers int
+DECLARE @TotalActiveUsers int
+SELECT @TotalForums = Count(*) FROM {databaseOwner}{objectQualifier}activeforums_Forums WHERE ModuleId = @ModuleId and Active = 1
+SELECT @TotalTopics = SUM(TotalTopics), @TotalReplies = SUM(TotalReplies) FROM {databaseOwner}{objectQualifier}activeforums_Forums WHERE ModuleId = @ModuleId AND Active = 1
+SELECT @TotalUsers = Count(*) FROM {databaseOwner}{objectQualifier}Users AS U  WITH (NOLOCK) INNER JOIN
+                      {databaseOwner}{objectQualifier}UserPortals AS UP WITH (NOLOCK) ON U.UserID = UP.UserId
+WHERE     (UP.Authorised = 1) AND (UP.PortalId = @PortalId)
+SELECT @TotalActiveUsers = Count(*) FROM {databaseOwner}{objectQualifier}activeforums_UserProfiles WITH (NOLOCK) WHERE ModuleId = @ModuleId AND PortalId = @PortalId AND DATEDIFF(dd,GetDate(),DateLastActivity) < 30
+SELECT @TotalForums as TotalForums, @TotalTopics as TotalTopics, @TotalReplies as TotalReplies, @TotalUsers as TotalMembers, @TotalActiveUsers as TotalActiveMembers
+
+END
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Filters_Delete]
+@PortalId int,
+@ModuleId int,
+@FilterId int
+AS
+DELETE
+  FROM {databaseOwner}{objectQualifier}activeforums_Filters
+	WHERE PortalId = @PortalId AND ModuleId = @ModuleId AND FilterId = @FilterId
+
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Filters_DeleteByModuleId]
+@PortalId int,
+@ModuleId int
+AS
+DELETE
+  FROM {databaseOwner}{objectQualifier}activeforums_Filters
+	WHERE PortalId = @PortalId AND ModuleId = @ModuleId
+
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Filters_Get]
+@PortalId int,
+@ModuleId int,
+@FilterId int
+AS
+SELECT *
+  FROM {databaseOwner}{objectQualifier}activeforums_Filters
+	WHERE PortalId = @PortalId AND ModuleId = @ModuleId AND FilterId = @FilterId
+
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Filters_GetEmoticons](@ModuleID int)
+AS
+SELECT     FilterId, Find, [Replace], FilterType, PortalID, ModuleID
+FROM         {databaseOwner}{objectQualifier}activeforums_Filters
+WHERE ModuleID = @ModuleID AND FilterType = 'EMOTICON'
+
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Filters_List]
+	@PortalId int,
+	@ModuleId int,
+	@PageIndex int,	
+	@PageSize int,
+	@Sort varchar(4) = "DESC",
+	@SortColumn varchar(50) = "FilterType"
+AS
+DECLARE @PageLowerBound int
+DECLARE @PageUpperBound int
+DECLARE @RowsToReturn int
+DECLARE @sql nvarchar(2000)
+SET @sql = ''
+SET @PageLowerBound = @PageSize * @PageIndex
+SET @PageUpperBound = @PageLowerBound + @PageSize + 1
+SET @RowsToReturn = @PageSize * (@PageIndex + 1)
+SET ROWCOUNT @RowsToReturn
+Create TABLE #PageIndex
+(
+	IndexId int IDENTITY (1, 1) NOT NULL,
+	FilterId int
+)
+DECLARE @sqlP nvarchar(2000)
+			SET @sql = ' PortalId = ''' + Convert(varchar(50),@PortalId) + ''' AND ModuleId = ''' + Convert(varchar(50),@ModuleId) + ''''
+		
+	BEGIN
+			-- Record Count
+			select @sqlP = 'SELECT Count(*) from {databaseOwner}{objectQualifier}activeforums_Filters '
+			
+			if @sql <> ''
+				set @sql = ' WHERE ' + @sql
+			
+			select @sqlP = @sqlP + @sql 
+			
+			exec sp_executesql  @sqlP 
+		END
+		select @sqlP = 'INSERT INTO #PageIndex (FilterId) 
+						SELECT FilterId FROM {databaseOwner}{objectQualifier}activeforums_Filters '
+		
+					select @sql = @sql + ' ORDER BY ' + @SortColumn + ' ' + @Sort
+
+				select @sqlP = @sqlP + @sql
+       -- print @sqlP
+		exec sp_executesql @sqlP 
+Select F.* From {databaseOwner}{objectQualifier}activeforums_Filters as F, #PageIndex PageIndex
+WHERE F.FilterId = PageIndex.FilterId AND PageIndex.IndexId > @PageLowerBound AND PageIndex.IndexId < @PageUpperBound
+Order By PageIndex.IndexId
+
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Filters_ListByType]
+@PortalId int,
+@ModuleId int,
+@FilterType nvarchar(50)
+AS
+SELECT *
+  FROM {databaseOwner}{objectQualifier}activeforums_Filters
+	WHERE PortalId = @PortalId AND ModuleId = @ModuleId AND FilterType = @FilterType
+
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Filters_Save]
+@PortalId int,
+@ModuleId int,
+@FilterId int,
+@Find nvarchar(1000),
+@Replace nvarchar(1000),
+@FilterType nvarchar(50)
+AS
+IF EXISTS(SELECT FilterId FROM {databaseOwner}{objectQualifier}activeforums_Filters WHERE FilterId = @FilterId AND PortalId = @PortalId AND ModuleId = @ModuleId)
+	UPDATE {databaseOwner}{objectQualifier}activeforums_Filters
+		SET Find = @Find, [Replace] = @Replace, [FilterType] = @FilterType
+		WHERE  FilterId = @FilterId AND PortalId = @PortalId AND ModuleId = @ModuleId
+ELSE
+	INSERT INTO {databaseOwner}{objectQualifier}activeforums_Filters
+		(Find,[Replace],[FilterType],PortalId, ModuleId)
+		VALUES
+		(@Find,@Replace,@FilterType,@PortalId,@ModuleId)
+
+GO
+
+
+
+
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Forums_Tracking_UpdateUser]
+	@ModuleId int,
+	@UserId int,
+	@ForumId int
+AS
+IF EXISTS(SELECT TrackingId FROM {databaseOwner}{objectQualifier}activeforums_Forums_Tracking WHERE UserId = @UserId AND ForumId = @ForumId)
+	UPDATE {databaseOwner}{objectQualifier}activeforums_Forums_Tracking
+		SET LastAccessDate = GetDate()
+		WHERE UserId = @UserId AND ForumId = @ForumID
+ELSE
+	INSERT INTO {databaseOwner}{objectQualifier}activeforums_Forums_Tracking
+		(ModuleId, UserId, ForumId, LastAccessDate)
+		VALUES
+		(@ModuleId, @UserId, @ForumId, GetDate())
+
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}activeforums_Groups_Delete
+@ModuleId int,
+@ForumGroupId int
+AS
+DECLARE @GroupSettingsKey nvarchar(25)
+SET @GroupSettingsKey = (SELECT GroupSettingsKey FROM {databaseOwner}{objectQualifier}activeforums_Groups WHERE ForumGroupId = @ForumGroupId AND ModuleId = @ModuleId)
+DELETE FROM {databaseOwner}{objectQualifier}activeforums_Settings WHERE GroupKey = @GroupSettingsKey AND ModuleId = @ModuleId
+DELETE FROM {databaseOwner}{objectQualifier}activeforums_Security WHERE SecurityKey = @GroupSettingsKey
+
+DELETE FROM {databaseOwner}{objectQualifier}activeforums_Groups WHERE ForumGroupId = @ForumGroupId AND ModuleId = @ModuleId
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Groups_List]
+@ModuleId int
+AS
+SELECT     ForumGroupId, ModuleId, GroupName, SortOrder, GroupSettingsKey, GroupSecurityKey, Active, Hidden
+FROM         {databaseOwner}{objectQualifier}activeforums_Groups
+WHERE ModuleId = @ModuleId
+
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Groups_Save]
+@ModuleId int,
+@ForumGroupId int,
+@GroupName nvarchar(150),
+@SortOrder int,
+@Active bit,
+@Hidden bit
+AS
+IF EXISTS(Select ForumGroupId FROM {databaseOwner}{objectQualifier}activeforums_Groups WHERE ForumGroupId = @ForumGroupId AND ModuleId = @ModuleId)
+	UPDATE {databaseOwner}{objectQualifier}activeforums_Groups
+	SET GroupName=@GroupName, Active=@Active,Hidden=@Hidden
+	WHERE ForumGroupId = @ForumGroupId and ModuleId = @ModuleId
+ELSE
+	BEGIN
+		BEGIN
+			SELECT @SortOrder = Max(SortOrder) + 1 From {databaseOwner}{objectQualifier}activeforums_Groups WHERE ModuleID=@ModuleID
+				If @SortOrder IS NULL 
+					SET @SortOrder = 1
+			END
+		INSERT INTO {databaseOwner}{objectQualifier}activeforums_Groups
+		(ModuleId, GroupName, SortOrder,GroupSettingsKey,GroupSecurityKey,Active,Hidden)
+		VALUES
+		(@ModuleId, @GroupName, @SortOrder,'','',@Active,@Hidden)
+		SET @ForumGroupId = SCOPE_IDENTITY()
+		UPDATE {databaseOwner}{objectQualifier}activeforums_Groups SET GroupSettingsKey = 'G:' + CAST(@ForumGroupId as varchar(50)), GroupSecurityKey = 'G:' + CAST(@ForumGroupId as varchar(50)) WHERE ForumGroupId = @ForumGroupId
+	END
+SELECT @ForumGroupId
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Mod_Pending]
+@PortalId int,
+@ModuleId int,
+@ForumId int,
+@UserId int
+AS
+	DECLARE @tmpForumId int
+	Set @tmpForumId = -1
+	If @ForumId = -1
+		SET @tmpForumId = 0
+	SET NOCOUNT ON;
+	BEGIN	
+SELECT     PortalId, T.ModuleId, ForumId, ForumName, TopicId, 0 as ReplyId, Subject, Summary, Convert(nvarchar(max),Body) as Body, AuthorId, AuthorName, Username, FirstName, LastName, DisplayName, DateCreated, 
+                      DateUpdated, ContentId, TopicIcon, StatusId, TopicType, IsPinned, IsLocked, ViewCount, ReplyCount, T.SortOrder as ForumSort, G.GroupName, G.SortOrder as GroupSort 
+                      FROM {databaseOwner}{objectQualifier}vw_activeforums_ForumTopics as T
+				INNER JOIN {databaseOwner}{objectQualifier}activeforums_Groups as G on T.ForumGroupId = G.ForumGroupId
+	WHERE PortalId = @PortalId AND T.ModuleId = @ModuleId AND IsApproved = 0 AND T.IsRejected = 0 AND (ForumId = @ForumId AND @tmpForumId = -1 OR ForumId > @tmpForumId AND @tmpForumId = 0)
+	UNION
+	SELECT     PortalId, R.ModuleId, ForumId, ForumName, TopicId, ReplyId, Subject, Summary, Convert(nvarchar(max),Body) as Body, AuthorId, AuthorName, Username, FirstName, LastName, DisplayName, DateCreated, 
+                      DateUpdated, ContentId, TopicIcon, StatusId, TopicType, IsPinned, IsLocked, ViewCount, ReplyCount, R.SortOrder as ForumSort, G.GroupName, G.SortOrder as GroupSort
+                       FROM {databaseOwner}{objectQualifier}vw_activeforums_ForumReplies as R
+				INNER JOIN {databaseOwner}{objectQualifier}activeforums_Groups as G on R.ForumGroupId = G.ForumGroupId
+	WHERE PortalId = @PortalId AND R.ModuleId = @ModuleId AND IsApproved = 0 AND R.IsRejected = 0 AND (ForumId = @ForumId AND @tmpForumId = -1 OR ForumId > @tmpForumId AND @tmpForumId = 0)
+	ORDER BY GroupSort, ForumSort, DateCreated
+	END
+	BEGIN
+SELECT     A.AttachID, A.ContentId, A.UserID, A.Filename, A.DateAdded, A.DateUpdated, A.FileData, A.ContentType, A.FileSize
+FROM         {databaseOwner}{objectQualifier}activeforums_Attachments AS A
+WHERE A.ContentId in (SELECT ContentId FROM {databaseOwner}{objectQualifier}vw_activeforums_ForumReplies WHERE IsApproved = 0 AND PortalId = @PortalId AND ModuleId = @ModuleId)
+OR
+A.ContentId in (SELECT ContentId FROM {databaseOwner}{objectQualifier}vw_activeforums_ForumTopics WHERE IsApproved = 0 AND PortalId = @PortalId AND ModuleId = @ModuleId)
+END
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Poll_Get]
+@TopicId int
+AS 
+BEGIN
+SELECT PollId, UserId, Question, PollType FROM {databaseOwner}{objectQualifier}activeforums_Poll WHERE TopicId = @TopicId
+END
+BEGIN
+SELECT     O.PollOptionsID, O.OptionName
+FROM       {databaseOwner}{objectQualifier}activeforums_Poll_Options AS O INNER JOIN
+           {databaseOwner}{objectQualifier}activeforums_Poll AS P ON O.PollID = P.PollID
+WHERE     (P.TopicId = @TopicId)
+ORDER BY O.PollOptionsID
+END
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Poll_GetResults](@TopicId int)
+ AS
+DECLARE @PollID int
+BEGIN
+SELECT     PollID, Question, PollType,TopicId
+FROM         {databaseOwner}{objectQualifier}activeforums_Poll 
+WHERE     (TopicId = @TopicId)
+SELECT @PollID = PollID FROM {databaseOwner}{objectQualifier}activeforums_Poll WHERE (TopicId = @TopicId)
+END
+BEGIN
+SELECT Count(PollOptionID) as Votes FROM {databaseOwner}{objectQualifier}activeforums_Poll_Results WHERE PollID = @PollID
+END
+BEGIN
+SELECT     COUNT(R.PollOptionID) AS ResultCount, O.OptionName
+FROM         {databaseOwner}{objectQualifier}activeforums_Poll_Options O LEFT OUTER JOIN
+                      {databaseOwner}{objectQualifier}activeforums_Poll_Results R ON R.PollOptionID = O.PollOptionsID
+GROUP BY O.PollID, O.OptionName, R.PollID, O.PollOptionsID
+HAVING      (O.PollID = @PollID)
+ORDER BY O.PollOptionsID
+END
+
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Poll_Options_Save]
+@PollOptionsId int,
+@PollId int,
+@OptionName nvarchar(255),
+@TopicId int
+AS
+If @PollOptionsId > 0 OR EXISTS(SELECT O.PollOptionsID FROM {databaseOwner}{objectQualifier}activeforums_Poll_Options AS O INNER JOIN {databaseOwner}{objectQualifier}activeforums_Poll AS P ON O.PollID = P.PollID WHERE (P.TopicId = @TopicId AND O.OptionName = @OptionName))
+		UPDATE {databaseOwner}{objectQualifier}activeforums_Poll_Options
+			SET OptionName = @OptionName WHERE (PollOptionsId = @PollOptionsId AND @PollOptionsId > 0) OR OptionName = @OptionName
+ELSE
+	INSERT INTO {databaseOwner}{objectQualifier}activeforums_Poll_Options
+		(PollId, OptionName) VALUES (@PollId, @OptionName)
+
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Poll_Save]
+@PollId int,
+@TopicId int,
+@UserId int,
+@Question nvarchar(255),
+@PollType nvarchar(10)
+AS
+IF EXISTS(SELECT PollId FROM {databaseOwner}{objectQualifier}activeforums_Poll WHERE TopicId = @TopicId)
+	BEGIN
+		SELECT @PollId = PollId FROM {databaseOwner}{objectQualifier}activeforums_Poll WHERE TopicId = @TopicId
+		UPDATE {databaseOwner}{objectQualifier}activeforums_Poll
+		SET UserId = @UserId, Question = @Question, PollType = @PollType
+		WHERE TopicId = @TopicId
+	END
+ELSE
+	BEGIN
+	INSERT INTO {databaseOwner}{objectQualifier}activeforums_Poll
+		(TopicId,UserId,Question, PollType, DateAdded, DateUpdated)
+		VALUES
+		(@TopicId,@UserId,@Question, @PollType, GetDate(), GetDate())
+	SET @PollId = SCOPE_IDENTITY()
+	END
+SELECT @PollId
+
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Poll_Vote]
+(
+	@PollID int,
+	@PollOptionID int,
+	@Response nvarchar(255),
+	@IPAddress nvarchar(50),
+	@UserID int
+)
+ AS
+INSERT INTO {databaseOwner}{objectQualifier}activeforums_Poll_Results
+                      (PollID, PollOptionID, Response, IPAddress, UserID)
+VALUES     (@PollID, @PollOptionID, @Response, @IPAddress, @UserID)
+
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Ranks_Delete]
+	@PortalId int,
+	@ModuleId int,
+	@RankId int
+AS
+	DELETE FROM {databaseOwner}{objectQualifier}activeforums_Ranks WHERE PortalId = @PortalId AND ModuleId = @ModuleId AND RankId = @RankId
+
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Ranks_Get]
+	@PortalId int,
+	@ModuleId int,
+	@RankId int
+AS
+	SELECT * FROM {databaseOwner}{objectQualifier}activeforums_Ranks WHERE PortalId = @PortalId AND ModuleId = @ModuleId AND RankId = @RankId
+
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Ranks_List]
+	@PortalId int,
+	@ModuleId int
+AS
+BEGIN
+	SELECT Count(*) FROM  {databaseOwner}{objectQualifier}activeforums_Ranks WHERE PortalId = @PortalId AND ModuleId = @ModuleId
+END
+BEGIN
+	SELECT * FROM {databaseOwner}{objectQualifier}activeforums_Ranks WHERE PortalId = @PortalId AND ModuleId = @ModuleId Order By MinPosts
+END
+
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Ranks_Save]
+	@PortalId int,
+	@ModuleId int,
+	@RankId int,
+	@RankName nvarchar(100),
+	@MinPosts int,
+	@MaxPosts int,
+	@Display nvarchar(1000)
+AS
+	IF EXISTS(SELECT RankId FROM {databaseOwner}{objectQualifier}activeforums_Ranks WHERE PortalId = @PortalId AND ModuleId = @ModuleId AND RankId = @RankId)
+		UPDATE {databaseOwner}{objectQualifier}activeforums_Ranks
+			SET RankName = @RankName, MinPosts = @MinPosts, MaxPosts = @MaxPosts, Display = @Display
+		WHERE PortalId = @PortalId AND ModuleId = @ModuleId AND RankId = @RankId
+	ELSE
+		INSERT INTO {databaseOwner}{objectQualifier}activeforums_Ranks
+			(PortalId, ModuleId, RankName, MinPosts, MaxPosts, Display)
+			Values
+			(@PortalId, @ModuleId, @RankName, @MinPosts, @MaxPosts, @Display)
+
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Replies_UpdateStatus]
+@PortalId int,
+@ModuleId int,
+@TopicId int,
+@ReplyId int,
+@UserId int,
+@StatusId int,
+@IsMod bit = 0
+AS
+IF EXISTS(SELECT c.AuthorId FROM {databaseOwner}{objectQualifier}activeforums_topics as t inner join {databaseOwner}{objectQualifier}activeforums_content as c ON c.ContentId = t.ContentId WHERE c.AuthorId = @UserId AND t.TopicId =@TopicId) OR @IsMod = 1
+BEGIN
+	UPDATE  {databaseOwner}{objectQualifier}activeforums_Replies
+	SET		StatusId = @StatusId
+	WHERE ReplyId = @ReplyId AND TopicId = @TopicId
+	UPDATE	{databaseOwner}{objectQualifier}activeforums_Topics
+	SET		StatusId = 3
+	WHERE TopicId = @TopicId
+
+DECLARE @PointValue int
+DECLARE @AuthorAnswer int
+	SET @AuthorAnswer = (SELECT c.AuthorId FROM {databaseOwner}{objectQualifier}activeforums_replies as r inner join {databaseOwner}{objectQualifier}activeforums_content as c ON c.ContentId = r.ContentId WHERE r.TopicId =@TopicId AND r.ReplyId = @ReplyId)
+	SET @PointValue = 0
+	SELECT @PointValue = SettingValue FROM {databaseOwner}{objectQualifier}activeforums_Settings WHERE SettingName = 'MARKANSWERPOINTVALUE' AND ModuleId = @ModuleId
+	UPDATE {databaseOwner}{objectQualifier}activeforums_UserProfiles
+	SET RewardPoints = RewardPoints + @PointValue
+	WHERE UserId = @UserId AND PortalId = @PortalId AND ModuleId = @ModuleId
+	UPDATE {databaseOwner}{objectQualifier}activeforums_UserProfiles
+	SET AnswerCount = AnswerCount + @PointValue
+	WHERE UserId = @AuthorAnswer AND PortalId = @PortalId AND ModuleId = @ModuleId
+END
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Reply_Get]
+@PortalId int,
+@ModuleId int,
+@TopicId int,
+@ReplyId int
+AS
+SELECT     T.ViewCount, T.ReplyCount, T.IsLocked, T.IsPinned, T.TopicIcon, C.Subject, C.Summary, C.Body, C.DateCreated, C.AuthorId, C.AuthorName, T.TopicType, 
+                      C.DateUpdated, R.ReplyId, R.ReplyToId, R.TopicId, R.StatusId, C.ContentId, C.IsDeleted, R.IsApproved, C.IPAddress, IsNull(U.Username,'') as Username, 
+                      IsNull(U.FirstName,'') as FirstName, IsNull(U.LastName,'') as LastName, IsNull(U.Email,'') as Email, IsNull(U.DisplayName,'') as DisplayName
+FROM         {databaseOwner}{objectQualifier}activeforums_Topics AS T INNER JOIN
+                      {databaseOwner}{objectQualifier}activeforums_Replies AS R ON T.TopicId = R.TopicId INNER JOIN
+                      {databaseOwner}{objectQualifier}activeforums_Content AS C ON R.ContentId = C.ContentId LEFT OUTER JOIN
+                      {databaseOwner}{objectQualifier}Users AS U ON C.AuthorId = U.UserID
+WHERE     (C.IsDeleted = 0) AND (R.IsDeleted = 0) AND (R.TopicId = @TopicId) AND (R.ReplyId = @ReplyId)
+
+GO
+
+
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Security_Delete]
+@SecuredId int,
+@ObjectId int,
+@SecureAction int,
+@SecureType int,
+@ObjectType int
+AS
+DELETE FROM {databaseOwner}{objectQualifier}activeForums_Security 
+WHERE  SecuredId = @SecuredId AND ObjectId = @ObjectId AND SecureAction = @SecureAction AND SecureType = @SecureType AND ObjectType = @ObjectType
+
+
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Security_Get](@SecuredId int, @ObjectId int, @SecureType int)
+AS
+Select * FROM {databaseOwner}{objectQualifier}activeforums_Security WHERE SecuredId = @SecuredId AND SecureType = @SecureType ORDER BY ObjectId, ObjectName, ObjectType, SecureType
+
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Security_GetByUser]
+@PortalId int,
+@ForumId int =0,
+@UserId int =-1,
+@IsSuperUser bit = 0
+AS
+If @IsSuperUser = 1
+		SELECT  1 as [View],
+			1 as [Read],
+			1 as [Create],
+			1 as [Reply],
+			1 as [Edit],
+			1 as [Delete],
+			1 as [Lock],
+			1 as [Pin],
+			1 as [Attach],
+			1 as [Poll],
+			0 as [Block],
+			1 as [Trust],
+			1 as [Subscribe],
+			1 as [Announce],
+			1 as [ModApprove],
+			1 as [ModMove],
+			1 as [ModSplit],
+			1 as [ModDelete],
+			1 as [ModUser],
+			1 as [ModEdit],
+			1 as [ModLock],
+			1 as [ModPin],
+			1 as [UserTrustLevel]
+	ELSE
+	SELECT  IsNULL(MAX(Convert(int,[View])),0) as [View],
+			IsNULL(MAX(Convert(int,[Read])),0) as [Read],
+			IsNULL(MAX(Convert(int,[Create])),0) as [Create],
+			IsNULL(MAX(Convert(int,[Reply])),0) as [Reply],
+			IsNULL(MAX(Convert(int,[Edit])),0) as [Edit],			
+			IsNULL(MAX(Convert(int,[Delete])),0) as [Delete],
+			IsNULL(MAX(Convert(int,[Lock])),0) as [Lock],
+			IsNULL(MAX(Convert(int,[Pin])),0) as [Pin],
+			IsNULL(MAX(Convert(int,[Attach])),0) as [Attach],
+			IsNULL(MAX(Convert(int,[Poll])),0) as [Poll],
+			IsNULL(MAX(Convert(int,[Block])),0) as [Block],
+			IsNULL(MAX(Convert(int,[Trust])),0) as [Trust],
+			IsNULL(MAX(Convert(int,[Subscribe])),0) as [Subscribe],
+			IsNULL(MAX(Convert(int,[Announce])),0) as [Announce],
+			IsNULL(MAX(Convert(int,[ModApprove])),0) as [ModApprove],
+			IsNULL(MAX(Convert(int,[ModMove])),0) as [ModMove],
+			IsNULL(MAX(Convert(int,[ModSplit])),0) as [ModSplit],
+			IsNULL(MAX(Convert(int,[ModDelete])),0) as [ModDelete],
+			IsNULL(MAX(Convert(int,[ModUser])),0) as [ModUser],
+			IsNULL(MAX(Convert(int,[ModEdit])),0) as [ModEdit],
+			IsNULL(MAX(Convert(int,[ModLock])),0) as [ModLock],
+			IsNULL(MAX(Convert(int,[ModPin])),0) as [ModPin],
+			[UserTrustLevel] = IsNull((SELECT TrustLevel from {databaseOwner}{objectQualifier}activeforums_UserProfiles WHERE PortalId = @PortalId AND UserId = @UserId),0)
+
+FROM         {databaseOwner}{objectQualifier}activeforums_Security AS S WITH (NOLOCK) INNER JOIN
+			{databaseOwner}{objectQualifier}activeforums_Forums as F on S.SecurityKey = F.ForumSecurityKey AND ((F.ForumId = @ForumId AND @ForumId > 0) OR @ForumId = 0) LEFT OUTER JOIN
+             {databaseOwner}{objectQualifier}UserRoles AS UR WITH (NOLOCK) ON S.ObjectId = UR.RoleID AND S.ObjectType = 0
+WHERE
+		(
+				(
+					(UR.EffectiveDate IS NULL AND UR.ExpiryDate >= GETDATE()) 
+					OR
+					(UR.EffectiveDate IS NULL AND UR.ExpiryDate IS NULL)
+					OR
+					(UR.EffectiveDate <= GETDATE() AND UR.ExpiryDate IS NULL)
+					OR
+					(UR.EffectiveDate <= GETDATE() AND UR.ExpiryDate >= GETDATE())
+				)
+				AND
+					(UR.UserId = @UserId AND S.ObjectType = 0 AND @UserId > 0)
+			)
+			OR
+			(S.ObjectId = @UserId AND @UserId > 0 AND S.ObjectType = 1)
+			OR 
+			(S.ObjectId = -1 AND S.ObjectType = 0) 
+			OR
+			(S.ObjectId = -3 AND S.ObjectType = 0 AND @UserId = -1) 
+
+
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Security_Save](
+@SecuredId int,
+@ObjectId int,
+@SecureAction varchar(50),
+@SecureActionValue bit,
+@SecureType int,
+@ObjectName nvarchar(255),
+@ObjectType int,
+@SecurityKey varchar(255)
+)
+AS
+DECLARE @sql nvarchar(2000)
+	BEGIN
+	IF NOT EXISTS(SELECT * FROM {databaseOwner}{objectQualifier}activeForums_Security WHERE (SecuredId = @SecuredId OR SecurityKey = @SecurityKey) AND (ObjectId = @ObjectId AND SecureType = @SecureType AND ObjectType = @ObjectType))
+	BEGIN
+	set @sql = 'INSERT INTO {databaseOwner}{objectQualifier}activeForums_Security (SecuredId,ObjectId,SecureType,ObjectName,ObjectType,[' + @SecureAction + '], SecurityKey)
+				VALUES
+				(' + Convert(varchar(50),@SecuredId) + ',' + Convert(varchar(50),@ObjectId) + ',' + Convert(varchar(50),@SecureType) + ',''' + @ObjectName + ''',' + Convert(varchar(50),@ObjectType) + ',' + Convert(varchar(50),@SecureActionValue) + ',''' + Convert(varchar(255), @SecurityKey) + ''')'
+	END
+	ELSE
+		BEGIN
+			If @SecurityKey = ''
+				set @sql = 'UPDATE {databaseOwner}{objectQualifier}activeForums_Security SET [' + @SecureAction + '] = ' + Convert(varchar(50),@SecureActionValue) + ' WHERE
+				SecuredId = ' + Convert(varchar(50),@SecuredId) + ' AND ObjectId = ' + Convert(varchar(50),@ObjectId) + ' AND SecureType = ' + Convert(varchar(50),@SecureType) + ' AND ObjectType = ' + Convert(varchar(50),@ObjectType)
+			ELSE
+				set @sql = 'UPDATE {databaseOwner}{objectQualifier}activeForums_Security SET [' + @SecureAction + '] = ' + Convert(varchar(50),@SecureActionValue) + ' WHERE
+				SecurityKey = ''' + Convert(varchar(255),@SecurityKey) + ''' AND ObjectId = ' + Convert(varchar(50),@ObjectId) + ' AND SecureType = ' + Convert(varchar(50),@SecureType) + ' AND ObjectType = ' + Convert(varchar(50),@ObjectType)
+		END
+	END
+	exec sp_executesql  @sql
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Security_SearchObjects](@PortalId as Integer, @Search nvarchar(100))
+AS
+BEGIN
+SELECT     'U:' + CAST(U.UserID as varchar(100)) as ObjectId, U.DisplayName as ObjectName, UP.PortalId
+FROM         {databaseOwner}{objectQualifier}Users as U INNER JOIN
+                      {databaseOwner}{objectQualifier}UserPortals AS UP ON U.UserID = UP.UserId
+WHERE UP.PortalId = @PortalId AND U.DisplayName LIKE @Search
+UNION
+SELECT     'R:' + CAST(RoleId as varchar(100)) as ObjectId, RoleName as ObjectName, PortalId
+FROM         {databaseOwner}{objectQualifier}Roles
+WHERE PortalId = @PortalId AND RoleName LIKE @Search
+ORDER BY ObjectName
+
+END
+
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Settings_Delete]
+(
+	@ModuleId int,
+	@GroupKey nvarchar(25),
+	@SettingName nvarchar(50)
+)
+AS
+DELETE FROM {databaseOwner}[{objectQualifier}activeforums_Settings] WHERE ModuleId = @ModuleId AND SettingName = @SettingName AND GroupKey = @GroupKey
+
+
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Settings_Get]
+(
+	@ModuleId int,
+	@GroupKey nvarchar(25),
+	@SettingName nvarchar(50)
+)
+AS
+SELECT SettingValue FROM {databaseOwner}[{objectQualifier}activeforums_Settings] WHERE ModuleId = @ModuleId AND SettingName = @SettingName AND GroupKey = @GroupKey
+
+
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Settings_List]
+(
+	@ModuleId int,
+	@GroupKey nvarchar(25)
+)
+AS
+SELECT SettingName, SettingValue FROM {databaseOwner}[{objectQualifier}activeforums_Settings] WHERE ModuleId = @ModuleId AND GroupKey = @GroupKey
+
+
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Settings_Save]
+(
+	@ModuleId int,
+	@GroupKey nvarchar(25),
+	@SettingName nvarchar(50),
+	@SettingValue nvarchar(2000)
+)
+AS
+If EXISTS(SELECT SettingName FROM {databaseOwner}[{objectQualifier}activeforums_Settings] WHERE ModuleId = @ModuleId AND SettingName = @SettingName AND GroupKey = @GroupKey)
+	BEGIN
+		UPDATE {databaseOwner}[{objectQualifier}activeforums_Settings]
+		SET SettingValue = @SettingValue
+		 WHERE ModuleId = @ModuleId AND SettingName = @SettingName AND GroupKey = @GroupKey
+	END
+ELSE
+	INSERT INTO {databaseOwner}[{objectQualifier}activeforums_Settings]
+		(ModuleId, GroupKey, SettingName, SettingValue)
+		VALUES
+		(@ModuleId, @GroupKey, @SettingName, @SettingValue)
+
+GO
+
+CREATE PROCEDURE  {databaseOwner}{objectQualifier}activeforums_Subscriptions_Subscribers(@PortalId int, @ForumId int, @TopicId int, @SubType int)
+AS
+DECLARE @subs TABLE (userid int, username nvarchar(255), firstname nvarchar(255), lastname nvarchar(255), email nvarchar(255), displayname nvarchar(255))
+
+INSERT INTO @subs 
+	(userid, username, firstname, lastname, email, displayname)
+	(SELECT  U.UserID, U.Username, U.FirstName, U.LastName, U.Email, U.DisplayName
+FROM         {databaseOwner}{objectQualifier}activeforums_Subscriptions AS S INNER JOIN
+                     {databaseOwner}{objectQualifier}Users AS U ON S.UserId = U.UserID INNER JOIN
+                      {databaseOwner}{objectQualifier}UserPortals AS P ON U.UserID = P.UserId INNER JOIN
+                      {databaseOwner}{objectQualifier}UserRoles AS ur ON U.UserID = ur.UserID RIGHT OUTER JOIN
+                      {databaseOwner}{objectQualifier}activeforums_Security AS sec ON ur.RoleID = sec.ObjectId AND S.ForumId = sec.SecuredId 
+WHERE     (P.Authorised = 1 AND sec.Subscribe = 1 AND s.Mode = @SubType) 
+	AND ((S.ForumId = @ForumId AND S.TopicId = 0) OR (S.TopicId = @TopicId))
+	AND (
+			(
+				(UR.EffectiveDate IS NULL AND UR.ExpiryDate >= GETDATE()) 
+			 OR (UR.EffectiveDate IS NULL AND UR.ExpiryDate IS NULL)
+			 OR (UR.EffectiveDate <= GETDATE() AND UR.ExpiryDate IS NULL)
+			 OR (UR.EffectiveDate <= GETDATE() AND UR.ExpiryDate >= GETDATE())
+			)
+	
+		)
+)
+
+INSERT INTO @subs 
+	(userid, username, firstname, lastname, email, displayname)
+	(SELECT     U.UserID, U.Username, U.FirstName, U.LastName, U.Email, U.DisplayName
+FROM         {databaseOwner}{objectQualifier}activeforums_Subscriptions AS S INNER JOIN
+                     {databaseOwner}{objectQualifier}Users AS U ON S.UserId = U.UserID INNER JOIN
+                      {databaseOwner}{objectQualifier}UserPortals AS P ON U.UserID = P.UserId INNER JOIN
+                      {databaseOwner}{objectQualifier}activeforums_Security AS sec ON U.UserID = sec.ObjectId AND S.ForumId = sec.SecuredId
+WHERE     (P.Authorised = 1) AND (sec.Subscribe = 1) AND (sec.ObjectType = 1) AND s.Mode = @SubType
+	AND ((S.ForumId = @ForumId AND S.TopicId = 0) OR (S.TopicId = @TopicId)))
+
+DECLARE @AutoSubscribe bit
+DECLARE @AutoSubscribeRoles nvarchar(255)
+DECLARE @TopicsOnly bit
+DECLARE @IsNewTopic bit
+SET @AutoSubscribe = IsNull((SELECT SettingValue FROM {databaseOwner}{objectQualifier}activeforums_Settings as S INNER JOIN {databaseOwner}{objectQualifier}activeforums_Forums as F ON F.ForumSettingsKey = S.GroupKey  WHERE S.SettingName = 'AUTOSUBSCRIBEENABLED' AND F.ForumId  = @ForumId),0)
+SET @AutoSubscribeRoles = IsNull((SELECT SettingValue FROM {databaseOwner}{objectQualifier}activeforums_Settings as S INNER JOIN {databaseOwner}{objectQualifier}activeforums_Forums as F ON F.ForumSettingsKey = S.GroupKey  WHERE S.SettingName = 'AUTOSUBSCRIBEROLES' AND F.ForumId  = @ForumId),'')
+SET @TopicsOnly = IsNull((SELECT SettingValue FROM {databaseOwner}{objectQualifier}activeforums_Settings as S INNER JOIN {databaseOwner}{objectQualifier}activeforums_Forums as F ON F.ForumSettingsKey = S.GroupKey  WHERE S.SettingName = 'AUTOSUBSCRIBENEWTOPICSONLY' AND F.ForumId  = @ForumId),0)
+SET @IsNewTopic = 0
+IF (SELECT ReplyCount FROM {databaseOwner}{objectQualifier}activeforums_Topics WHERE TopicId = @TopicId) > 0
+	SET @IsNewTopic = 1
+
+If (@TopicsOnly = 1 AND @IsNewTopic = 0) OR (@TopicsOnly = 0)
+	BEGIN
+	IF @AutoSubscribe = 1 AND @AutoSubscribeRoles <> ''
+		BEGIN
+		INSERT INTO @subs 
+		(userid, username, firstname, lastname, email, displayname)
+		(SELECT  U.UserID, U.Username, U.FirstName, U.LastName, U.Email, U.DisplayName
+		FROM                 {databaseOwner}{objectQualifier}Users AS U INNER JOIN
+						  {databaseOwner}{objectQualifier}UserPortals AS P ON U.UserID = P.UserId INNER JOIN
+						  {databaseOwner}{objectQualifier}UserRoles AS ur ON U.UserID = ur.UserID INNER JOIN
+						  {databaseOwner}{objectQualifier}activeforums_Functions_Split(@AutoSubscribeRoles,';')  AS r ON ur.RoleId = r.ID 
+		WHERE     (P.Authorised = 1) 
+		
+		AND (
+				(
+					(UR.EffectiveDate IS NULL AND UR.ExpiryDate >= GETDATE()) 
+				 OR (UR.EffectiveDate IS NULL AND UR.ExpiryDate IS NULL)
+				 OR (UR.EffectiveDate <= GETDATE() AND UR.ExpiryDate IS NULL)
+				 OR (UR.EffectiveDate <= GETDATE() AND UR.ExpiryDate >= GETDATE())
+				)
+		
+			))
+		END
+	END
+SELECT DISTINCT * FROM @subs
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Subscriptions_Update]
+@PortalId int,
+@ModuleId int,
+@ForumId int,
+@TopicId int,
+@Mode int,
+@UserId int
+AS
+DECLARE @SubStatus int 
+SET @SubStatus = 0
+If @TopicId > 0 
+	BEGIN
+	--Topic Subscription
+	IF EXISTS(SELECT Id FROM {databaseOwner}{objectQualifier}activeforums_Subscriptions WHERE ForumId = @ForumId AND TopicId = @TopicId AND UserId = @UserId)
+		DELETE FROM {databaseOwner}{objectQualifier}activeforums_Subscriptions WHERE ForumId = @ForumId AND TopicId = @TopicId AND UserId = @UserId
+	ELSE
+		BEGIN
+			INSERT INTO {databaseOwner}{objectQualifier}activeforums_Subscriptions
+			(PortalId, ModuleId, ForumId, TopicId, Mode, UserId)
+			VALUES
+			(@PortalId, @ModuleId, @ForumId, @TopicId, @Mode, @UserId)
+			SET @SubStatus = 1
+		END
+	END
+ELSE
+	BEGIN
+	--Forum Subscription
+		IF EXISTS(SELECT Id FROM {databaseOwner}{objectQualifier}activeforums_Subscriptions WHERE ForumId = @ForumId AND TopicId = 0 AND UserId = @UserId)
+			DELETE FROM {databaseOwner}{objectQualifier}activeforums_Subscriptions WHERE ForumId = @ForumId AND TopicId = 0 AND UserId = @UserId
+		ELSE
+			BEGIN
+				INSERT INTO {databaseOwner}{objectQualifier}activeforums_Subscriptions
+				(PortalId, ModuleId, ForumId, TopicId, Mode, UserId)
+				VALUES
+				(@PortalId, @ModuleId, @ForumId, 0, @Mode, @UserId)
+				SET @SubStatus = 1
+			END
+	END
+SELECT @SubStatus
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Tags_Get]
+	@PortalId int,
+	@ModuleId int,
+	@TagId int
+AS
+	SELECT * FROM {databaseOwner}{objectQualifier}activeforums_Tags WHERE PortalId = @PortalId AND ModuleId = @ModuleId AND TagId = @TagId
+
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Tags_List]
+	@PortalId int,
+	@ModuleId int,
+	@PageIndex int,	
+	@PageSize int,
+	@Sort varchar(4) = "DESC",
+	@SortColumn varchar(50) = "TagName"
+AS
+DECLARE @PageLowerBound int
+DECLARE @PageUpperBound int
+DECLARE @RowsToReturn int
+DECLARE @sql nvarchar(2000)
+SET @sql = ''
+SET @PageLowerBound = @PageSize * @PageIndex
+SET @PageUpperBound = @PageLowerBound + @PageSize + 1
+SET @RowsToReturn = @PageSize * (@PageIndex + 1)
+SET ROWCOUNT @RowsToReturn
+Create TABLE #PageIndex
+(
+	IndexId int IDENTITY (1, 1) NOT NULL,
+	TagId int
+)
+DECLARE @sqlP nvarchar(2000)
+			SET @sql = ' PortalId = ''' + Convert(varchar(50),@PortalId) + ''' AND ModuleId = ''' + Convert(varchar(50),@ModuleId) + ''''
+		
+	BEGIN
+			-- Record Count
+			select @sqlP = 'SELECT Count(*) from {databaseOwner}{objectQualifier}activeforums_Tags '
+			
+			if @sql <> ''
+				set @sql = ' WHERE ' + @sql
+			
+			select @sqlP = @sqlP + @sql 
+			
+			exec sp_executesql  @sqlP 
+		END
+		select @sqlP = 'INSERT INTO #PageIndex (TagId) 
+						SELECT TagId FROM {databaseOwner}{objectQualifier}activeforums_Tags '
+		
+					select @sql = @sql + ' ORDER BY ' + @SortColumn + ' ' + @Sort
+
+				select @sqlP = @sqlP + @sql
+       -- print @sqlP
+		exec sp_executesql @sqlP 
+Select T.* From {databaseOwner}{objectQualifier}activeforums_Tags as T, #PageIndex PageIndex
+WHERE T.TagId = PageIndex.TagId AND PageIndex.IndexId > @PageLowerBound AND PageIndex.IndexId < @PageUpperBound
+Order By PageIndex.IndexId
+
+
+GO
+
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Tags_Search]
+	@PortalId int,
+	@ModuleId int,
+	@TagName nvarchar(50)
+AS
+DECLARE @TagSearch nvarchar(50)
+SET @TagSearch = @TagName + '%'
+SELECT TagId, TagName FROM {databaseOwner}{objectQualifier}activeforums_Tags WHERE PortalId = @PortalId AND ModuleId = @ModuleId AND TagName LIKE @TagSearch ORDER By TagName
+
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Templates_Delete]
+	@TemplateId int,
+	@PortalId int,
+	@ModuleId int
+	
+AS
+BEGIN
+	If EXISTS(SELECT TemplateId FROM {databaseOwner}{objectQualifier}activeforums_Templates WHERE PortalID = @PortalId AND  TemplateId = @TemplateId AND IsSystem = 0)
+		DELETE FROM {databaseOwner}{objectQualifier}activeforums_Templates WHERE PortalID = @PortalId AND TemplateId = @TemplateId
+END
+
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Templates_Get]
+	@TemplateId int,
+	@PortalId int,
+	@ModuleId int
+	
+AS
+BEGIN
+	SELECT * FROM {databaseOwner}{objectQualifier}activeforums_Templates WHERE TemplateId = @TemplateId
+	
+END
+
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Templates_List]
+@PortalId int,
+	@ModuleId int,
+	@TemplateType int = 0,
+	@RowIndex int = 0, 
+	@MaxRows int = 100000
+AS
+If @TemplateType = 0 OR @TemplateType = -1
+	BEGIN
+		BEGIN 
+			SELECT Count(*) FROM {databaseOwner}{objectQualifier}activeforums_Templates WHERE  ModuleId = @ModuleId
+		END
+		BEGIN
+			SELECT TemplateId, PortalId, ModuleId, TemplateType, IsSystem,Title,Subject,Template,DateCreated,DateUpdated,RowRank
+			 FROM
+				(
+					SELECT TemplateId, PortalId, ModuleId, TemplateType, IsSystem,Title,Subject,Template,DateCreated,DateUpdated,
+					ROW_NUMBER() OVER (ORDER BY TemplateType, Title) as RowRank FROM {databaseOwner}{objectQualifier}activeforums_Templates 
+					WHERE ModuleId = @ModuleId
+				) as T WHERE RowRank > @RowIndex AND RowRank <= (@RowIndex + @MaxRows)
+		END
+	END
+ELSE
+	BEGIN
+		BEGIN 
+			SELECT Count(*) FROM {databaseOwner}{objectQualifier}activeforums_Templates WHERE  ModuleId = @ModuleId AND TemplateType = @TemplateType
+		END
+		BEGIN
+			SELECT * FROM {databaseOwner}{objectQualifier}activeforums_Templates WHERE ModuleId = @ModuleId AND TemplateType = @TemplateType
+			ORDER BY Title
+		END
+	END
+
+GO
+
+create PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Templates_Save]
+	@TemplateId int,
+	@PortalId int,
+	@ModuleId int,
+	@TemplateType int,
+	@IsSystem bit,
+	@Title nvarchar(150),
+	@Subject nvarchar(200),
+	@Template ntext	
+AS
+BEGIN
+IF EXISTS (Select TemplateId FROM {databaseOwner}{objectQualifier}activeforums_Templates WHERE TemplateId = @TemplateID AND PortalId = @PortalId AND ModuleId = @ModuleID) 
+	--UPDATE
+	BEGIN
+		UPDATE {databaseOwner}{objectQualifier}activeforums_Templates
+			SET
+				TemplateType = @TemplateType,
+				IsSystem = @IsSystem,
+				Title = @Title,
+				Subject = @Subject,
+				Template = @Template,
+				DateUpdated = GetDate()
+			WHERE
+				TemplateId = @TemplateId AND PortalId = @PortalId AND ModuleId = @ModuleId
+	END
+ELSE
+	--INSERT
+	BEGIN
+		INSERT INTO {databaseOwner}{objectQualifier}activeforums_Templates
+			(PortalId, ModuleId, TemplateType, Title, Subject, Template, DateCreated)
+			VALUES
+			(@PortalId, @ModuleId, @TemplateType,@Title,@Subject,@Template, GETDATE())
+	SET @TemplateId = SCOPE_IDENTITY()
+	END
+END
+SELECT @TemplateId
+
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Topics_AddRating] 
+(
+@TopicId int,
+@UserID int,
+@Rating int, 
+@Comments nvarchar(500),
+@IPAddress nvarchar(25)
+)
+ AS
+DECLARE @HasRated int
+SELECT @HasRated = Count(RatingID) FROM {databaseOwner}{objectQualifier}activeforums_Topics_Ratings WHERE UserID = @UserID AND IPAddress = @IPAddress AND TopicId = @TopicId
+IF @HasRated = 0
+INSERT INTO {databaseOwner}{objectQualifier}activeforums_Topics_Ratings
+                      (TopicId, UserID, Rating, Comments, IPAddress)
+VALUES     (@TopicId,@UserID,@Rating,@Comments,@IPAddress)
+
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Topics_Get]
+@PortalId int,
+@ModuleId int,
+@TopicId int,
+@ForumId int,
+@UserId int = -1,
+@WithSecurity bit = 0
+AS
+SELECT     T.TopicId, T.ContentId, T.ViewCount, T.ReplyCount, T.IsLocked, T.IsPinned, IsNull(T.TopicIcon,'') as TopicIcon, T.StatusId, T.AnnounceStart, T.AnnounceEnd, C.Subject, C.Summary, C.Body, 
+                      C.DateCreated, C.AuthorId, C.AuthorName, T.IsApproved, T.IsDeleted, T.IsAnnounce, T.IsArchived, T.TopicType, C.DateUpdated,T.IsApproved, IsNull(U.Username,'') as Username, 
+                      IsNull(U.FirstName,'') as FirstName, IsNull(U.LastName,'') as LastName, IsNull(U.Email,'') as Email, IsNull(U.DisplayName,'') as DisplayName,
+			Tags = IsNull({databaseOwner}{objectQualifier}activeforums_Topics_GetTags(@TopicId),'')
+FROM        {databaseOwner}{objectQualifier}activeforums_Topics AS T INNER JOIN
+            {databaseOwner}{objectQualifier}activeforums_Content AS C ON T.ContentId = C.ContentId LEFT OUTER JOIN
+            {databaseOwner}{objectQualifier}Users AS U ON C.AuthorId = U.UserID
+WHERE     (T.IsDeleted = 0) AND (T.IsArchived = 0) AND (C.IsDeleted = 0) AND (T.TopicId = @TopicId)
+If @WithSecurity = 1 AND @ForumId > 0
+	BEGIN
+	DECLARE @IsSuperUser bit 
+	SET @IsSuperUser = 0
+	SELECT @IsSuperUser = IsSuperUser FROM {databaseOwner}{objectQualifier}Users WHERE UserId = @UserId
+	exec {databaseOwner}{objectQualifier}activeforums_Security_GetByUser @PortalId, @ForumId, @UserId, @IsSuperUser
+	END
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Topics_GetRating](@TopicId int)
+ AS
+SELECT     ISNULL(AVG(Rating),0) AS Rating
+FROM         {databaseOwner}{objectQualifier}activeforums_Topics_Ratings
+WHERE     (TopicId = @TopicId)
+
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Topics_List]
+@ForumId int,
+@PortalId int,
+@ModuleId int
+
+AS
+IF @ForumId = -1
+SELECT     T.TopicId, T.ContentId, T.ViewCount, T.ReplyCount, T.IsLocked, T.IsPinned, T.TopicIcon, T.StatusId, T.AnnounceStart, T.AnnounceEnd, C.Subject, C.Summary, C.Body, 
+                      C.DateCreated, C.AuthorId, C.AuthorName, T.IsApproved, T.IsDeleted, T.IsAnnounce, T.IsArchived, T.TopicType, C.DateUpdated, IsNull(U.Username,'') as Username, 
+                      IsNull(U.FirstName,'') as FirstName, IsNull(U.LastName,'') as LastName, IsNull(U.Email,'') as Email, IsNull(U.DisplayName,'') as DisplayName
+FROM	{databaseOwner}{objectQualifier}activeforums_Topics AS T INNER JOIN
+        {databaseOwner}{objectQualifier}activeforums_Content AS C ON T.ContentId = C.ContentId LEFT OUTER JOIN
+        {databaseOwner}{objectQualifier}Users AS U ON C.AuthorId = U.UserID
+WHERE     (T.IsApproved = 1) AND (T.IsDeleted = 0) AND (T.IsArchived = 0) AND (C.IsDeleted = 0)
+ELSE
+SELECT     T.TopicId, T.ContentId, T.ViewCount, T.ReplyCount, T.IsLocked, T.IsPinned, T.TopicIcon, T.StatusId, T.AnnounceStart, T.AnnounceEnd, C.Subject, C.Summary, C.Body, 
+                      C.DateCreated, C.AuthorId, C.AuthorName, FT.ForumId, T.IsApproved, T.IsDeleted, T.IsAnnounce, T.IsArchived, T.TopicType, C.DateUpdated, IsNull(U.Username,'') as Username, 
+                      IsNull(U.FirstName,'') as FirstName, IsNull(U.LastName,'') as LastName, IsNull(U.Email,'') as Email, IsNull(U.DisplayName,'') as DisplayName
+FROM         {databaseOwner}{objectQualifier}activeforums_Topics AS T INNER JOIN
+             {databaseOwner}{objectQualifier}activeforums_Content AS C ON T.ContentId = C.ContentId INNER JOIN
+             {databaseOwner}{objectQualifier}activeforums_ForumTopics AS FT ON T.TopicId = FT.TopicId LEFT OUTER JOIN
+             {databaseOwner}{objectQualifier}Users AS U ON C.AuthorId = U.UserID
+WHERE     (T.IsApproved = 1) AND (T.IsDeleted = 0) AND (T.IsArchived = 0) AND (C.IsDeleted = 0) AND (FT.ForumId = @ForumId)
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Topics_Replies]
+@TopicId int
+AS
+BEGIN
+SELECT     T.TopicId, T.ContentId, T.ViewCount, T.ReplyCount, T.IsLocked, T.IsPinned, T.TopicIcon, T.StatusId, T.AnnounceStart, T.AnnounceEnd, C.Subject, C.Summary, C.Body, 
+                      C.DateCreated, C.AuthorId, C.AuthorName, T.IsApproved, T.IsDeleted, T.IsAnnounce, T.IsArchived, T.TopicType, C.DateUpdated, C.IsDeleted AS Expr1
+FROM         {databaseOwner}{objectQualifier}activeforums_Topics AS T INNER JOIN
+                      {databaseOwner}{objectQualifier}activeforums_Content AS C ON T.ContentId = C.ContentId
+WHERE   T.TopicId = @TopicId
+END
+BEGIN
+SELECT     R.ReplyId, R.ReplyToId, R.ContentId, R.IsApproved, R.StatusId, R.IsDeleted, T.Subject, T.Summary, T.Body, T.DateCreated, T.DateUpdated, T.AuthorId, 
+                      T.AuthorName
+FROM         {databaseOwner}{objectQualifier}activeforums_Replies AS R INNER JOIN
+                      {databaseOwner}{objectQualifier}activeforums_Content AS T ON R.ContentId = T.ContentId
+WHERE     (R.TopicId = @TopicId)
+END
+
+GO
+
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Topics_Tracking_UpdateUser]
+	@ForumId int,
+	@TopicId int,
+	@LastReplyId int,
+	@UserId int
+	
+AS
+IF EXISTS(SELECT TrackingId FROM {databaseOwner}{objectQualifier}activeforums_Topics_Tracking WHERE UserId = @UserId AND ForumId = @ForumId AND TopicId = @TopicId)
+	UPDATE {databaseOwner}{objectQualifier}activeforums_Topics_Tracking
+		SET DateAdded = GetDate(), LastReplyId = @LastReplyId
+		WHERE UserId = @UserId AND ForumId = @ForumID AND TopicId = @TopicId
+ELSE
+	INSERT INTO {databaseOwner}{objectQualifier}activeforums_Topics_Tracking
+		(ForumId, TopicId, LastReplyId, UserId,DateAdded)
+		VALUES
+		(@ForumId, @TopicId, @LastReplyId, @UserId, GetDate())
+
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Topics_UpdateStatus]
+@PortalId int,
+@ModuleId int,
+@TopicId int,
+@ReplyId int,
+@TopicStatusId int,
+@ReplyStatusId int,
+@UserId int = -1
+AS
+
+UPDATE {databaseOwner}{objectQualifier}activeforums_Topics SET StatusId = @TopicStatusId WHERE TopicId = @TopicId
+If @ReplyId > 0 AND @TopicStatusId = 3
+	BEGIN
+	UPDATE {databaseOwner}{objectQualifier}activeforums_Replies SET StatusId = @ReplyStatusId WHERE ReplyId = @ReplyId
+	DECLARE @ReplyAuthorId int
+	SELECT @ReplyAuthorId = C.AuthorId FROM {databaseOwner}{objectQualifier}activeforums_Replies as R INNER JOIN {databaseOwner}{objectQualifier}activeforums_Content as C ON c.ContentId = R.ContentId WHERE R.ReplyId = @ReplyId AND R.TopicId = @TopicId
+	IF @ReplyAuthorId > 0 
+		BEGIN
+		DECLARE @ProvideAnswer int
+		SELECT @ProvideAnswer = SettingValue FROM {databaseOwner}{objectQualifier}activeforums_Settings WHERE ModuleId = @ModuleId AND SettingName = 'ANSWERPOINTVALUE'
+		UPDATE {databaseOwner}{objectQualifier}activeforums_UserProfiles SET RewardPoints = (RewardPoints + @ProvideAnswer), AnswerCount = (AnswerCount + 1) WHERE UserId = @ReplyAuthorId AND PortalId = @PortalId AND ModuleId = @ModuleId
+		END
+	END
+IF @TopicStatusId = 3 AND EXISTS(SELECT TopicId FROM {databaseOwner}{objectQualifier}activeforums_Topics as T INNER JOIN {databaseOwner}{objectQualifier}activeforums_Content as C ON c.ContentId = T.ContentId WHERE TopicId = @TopicId AND AuthorId = @UserId)
+	BEGIN
+		DECLARE @MarkAnswer int
+		SELECT @MarkAnswer = SettingValue FROM {databaseOwner}{objectQualifier}activeforums_Settings WHERE ModuleId = @ModuleId AND SettingName = 'MARKANSWERPOINTVALUE'
+		UPDATE {databaseOwner}{objectQualifier}activeforums_UserProfiles SET RewardPoints = (RewardPoints + @MarkAnswer) WHERE UserId = @UserId AND PortalId = @PortalId AND ModuleId = @ModuleId
+	END
+
+GO
+
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_UserProfiles_GetUsersOnline]
+@PortalId int,
+@Interval int
+AS
+SELECT    DATEDIFF(mi, P.DateLastActivity, GETDATE()), U.UserID, U.Username, U.FirstName, U.LastName, U.Email, U.DisplayName, P.PortalId
+FROM	{databaseOwner}{objectQualifier}activeforums_UserProfiles AS P INNER JOIN
+        {databaseOwner}{objectQualifier}Users AS U ON P.UserId = U.UserID
+WHERE     (P.PortalId = @PortalId) AND (DATEDIFF(mi, P.DateLastActivity, GETDATE()) < @Interval)
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_UserProfiles_Save]
+@PortalId	int,
+@ModuleId	int,
+@UserId	int,
+@TopicCount	int,
+@ReplyCount	int,
+@ViewCount	int,
+@AnswerCount	int,
+@RewardPoints	int,
+@UserCaption	nvarchar(255),
+@Signature	nvarchar(1500),
+@SignatureDisabled	bit,
+@TrustLevel int,
+@AdminWatch	bit,
+@AttachDisabled	bit,
+@Avatar	nvarchar(2000),
+@AvatarType	int,
+@AvatarDisabled	bit,
+@PrefDefaultSort	char(10),
+@PrefDefaultShowReplies	bit,
+@PrefJumpLastPost	bit,
+@PrefTopicSubscribe	bit,
+@PrefSubscriptionType	int,
+@PrefUseAjax	bit,
+@PrefBlockAvatars	bit,
+@PrefBlockSignatures	bit,
+@PrefPageSize	int,
+@Yahoo	nvarchar(50),
+@MSN	nvarchar(50),
+@ICQ	nvarchar(50),
+@AOL	nvarchar(50),
+@Occupation	nvarchar(150),
+@Location	nvarchar(150),
+@Interests	nvarchar(150),
+@WebSite	nvarchar(150),
+@Badges	nvarchar(2000)
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	UPDATE    {databaseOwner}{objectQualifier}activeforums_UserProfiles
+	SET              TopicCount = @TopicCount, ReplyCount = @ReplyCount, ViewCount = @ViewCount, AnswerCount = @AnswerCount, RewardPoints = @RewardPoints, 
+						  UserCaption = @UserCaption, DateUpdated = GETDATE(), [Signature] = @Signature, SignatureDisabled = @SignatureDisabled, TrustLevel = @TrustLevel, 
+						  AdminWatch = @AdminWatch, AttachDisabled = @AttachDisabled, Avatar = @Avatar, AvatarType = @AvatarType, AvatarDisabled = @AvatarDisabled, 
+						  PrefDefaultSort = @PrefDefaultSort, PrefDefaultShowReplies = @PrefDefaultShowReplies, PrefJumpLastPost = @PrefJumpLastPost, 
+						  PrefTopicSubscribe = @PrefTopicSubscribe, PrefSubscriptionType = @PrefSubscriptionType, PrefUseAjax = @PrefUseAjax, PrefBlockAvatars = @PrefBlockAvatars, 
+						  PrefBlockSignatures = @PrefBlockSignatures, PrefPageSize = @PrefPageSize, Yahoo = @Yahoo, MSN = @MSN, ICQ = @ICQ, AOL = @AOL, 
+						  Occupation = @Occupation, Location = @Location, Interests = @Interests, WebSite = @WebSite, Badges = @Badges
+	WHERE     (UserId = @UserId) AND (ModuleId = @ModuleId) AND (PortalId = @PortalId)
+END
+
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_UserProfiles_Stats]
+@PortalId int,
+@Interval int
+AS
+DECLARE @Guests int
+SET @Guests = (SELECT Count(*) FROM {databaseOwner}{objectQualifier}AnonymousUsers WHERE PortalId = @PortalId and (DATEDIFF(mi, LastActiveDate, GETDATE()) < @Interval))
+
+DECLARE @Members int
+SET @Members = (SELECT Count(*) FROM {databaseOwner}{objectQualifier}activeforums_UserProfiles  WHERE PortalId = @PortalId AND DATEDIFF(mi, DateLastActivity, GETDATE()) < @Interval)
+DECLARE @MembersTotal int
+SET @MembersTotal = (SELECT COUNT(*) FROM {databaseOwner}{objectQualifier}Users AS U INNER JOIN {databaseOwner}{objectQualifier}UserPortals AS P ON U.UserID = P.UserId WHERE PortalId = @PortalId AND Authorised = 1)
+
+SELECT IsNull(@Guests,0) as Guests, IsNull(@Members,0) as Members, IsNull(@MembersTotal, 0) as MembersTotal
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_UserProfiles_UpdateActivity]
+@PortalId int,
+@ModuleId int,
+@UserId int
+
+AS
+If @UserId > 0 
+	exec {databaseOwner}{objectQualifier}activeforums_UserProfiles_Create @PortalId, @ModuleId, @UserId
+	UPDATE {databaseOwner}{objectQualifier}activeforums_UserProfiles SET DateLastActivity = GetDate() WHERE UserId = @UserId and PortalId = @PortalId
+GO
+CREATE PROCEDURE {databaseOwner}{objectQualifier}activeforums_Forums_Delete
+@PortalId int,
+@ModuleId int,
+@ForumId int
+AS
+DELETE FROM {databaseOwner}{objectQualifier}activeforums_ForumTopics WHERE ForumId = @ForumId
+DELETE FROM {databaseOwner}{objectQualifier}activeforums_Forums WHERE ForumId = @ForumId
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Search_ManageFullText]
+@Enable bit
+AS
+DECLARE @FullTextEnabled bit
+If @Enable = 1
+	BEGIN
+	
+	SET @FullTextEnabled = 0
+	
+	DECLARE @dbName nvarchar(1000)
+	SET @dbName = DB_NAME()
+	SET @FullTextEnabled = (SELECT DATABASEPROPERTY(@dbName, 'IsFulltextEnabled'))
+	If @FullTextEnabled = 0
+		BEGIN
+			exec sp_fulltext_database 'enable'
+			SET @FullTextEnabled = (SELECT DATABASEPROPERTY(@dbName, 'IsFulltextEnabled'))
+		END
+	IF @FullTextEnabled > 0
+		BEGIN
+			IF OBJECTPROPERTY(object_id('{databaseOwner}{objectQualifier}activeforums_Content'),'TableHasActiveFulltextIndex') = 0
+				BEGIN
+					
+					IF  NOT EXISTS (SELECT * FROM sysfulltextcatalogs ftc WHERE ftc.name = N'{objectQualifier}activeforums_Catalog')
+						BEGIN
+							exec sp_fulltext_catalog '{objectQualifier}activeforums_Catalog', 'create'
+						END					
+					exec sp_fulltext_table N'{databaseOwner}{objectQualifier}activeforums_Content', N'create', N'{objectQualifier}activeforums_Catalog', N'PK_{objectQualifier}activeforums_Content'
+					exec sp_fulltext_column N'{databaseOwner}{objectQualifier}activeforums_Content', N'Subject', N'add', 1033  
+					exec sp_fulltext_column N'{databaseOwner}{objectQualifier}activeforums_Content', N'Body', N'add', 1033  
+					exec sp_fulltext_table N'{databaseOwner}{objectQualifier}activeforums_Content', N'activate'
+					exec sp_fulltext_catalog '{objectQualifier}activeforums_Catalog', 'start_full'
+				END
+		END
+	SELECT @FullTextEnabled
+	END
+ELSE
+	BEGIN
+			IF OBJECTPROPERTY(object_id('{databaseOwner}{objectQualifier}activeforums_Content'),'TableHasActiveFulltextIndex') = 1
+				BEGIN
+					exec sp_fulltext_table N'{databaseOwner}{objectQualifier}activeforums_Content', N'drop'					
+				END
+		SELECT @Enable
+	END
+GO
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}activeforums_TP_PortalForums
+@PortalId int
+AS
+SELECT     G.ForumGroupId, G.GroupName, F.ForumId, F.ParentForumId, F.ForumName, F.ForumDesc, G.ModuleId, T.TabId
+FROM         {databaseOwner}{objectQualifier}activeforums_Forums AS F INNER JOIN
+                      {databaseOwner}{objectQualifier}activeforums_Groups AS G ON F.ForumGroupId = G.ForumGroupId INNER JOIN
+                      {databaseOwner}{objectQualifier}Tabs AS T INNER JOIN
+                      {databaseOwner}{objectQualifier}TabModules AS M ON T.TabID = M.TabID ON G.ModuleId = M.ModuleID
+WHERE     (G.Active = 1) AND (F.Active = 1) AND (T.IsDeleted = 0) AND (T.PortalID = @PortalId)
+ORDER BY T.TabName, M.ModuleId, G.SortOrder, F.SortOrder
+GO
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Util_MarkAsRead]
+@ModuleId int,
+@UserId int,
+@ForumId int = 0
+AS
+
+DECLARE @MaxTopicRead int
+DECLARE @MaxReplyRead int
+IF @ForumId = 0
+	BEGIN
+		DECLARE @tmpForumId int
+		DECLARE forumcur CURSOR FOR
+		SELECT forumid from {databaseOwner}{objectQualifier}activeforums_Forums WHERE ModuleId = @ModuleId
+		OPEN forumcur
+		FETCH NEXT FROM forumcur INTO @tmpForumId
+		WHILE @@FETCH_STATUS = 0
+			BEGIN
+				SET @MaxTopicRead = (SELECT MAX(T.TopicId) from {databaseOwner}{objectQualifier}activeforums_topics as t INNER JOIN {databaseOwner}{objectQualifier}activeforums_ForumTopics as ft ON ft.TopicId = t.TopicId WHERE ft.ForumId = @tmpForumId AND t.isapproved = 1 and t.isdeleted = 0)
+				SET @MaxReplyRead = (SELECT MAX(ReplyId) from {databaseOwner}{objectQualifier}activeforums_replies as r INNER JOIN {databaseOwner}{objectQualifier}activeforums_Topics as t on t.TopicId = r.TopicId INNER JOIN {databaseOwner}{objectQualifier}activeforums_ForumTopics as ft ON ft.TopicId = t.TopicId WHERE ft.ForumId = @tmpForumId AND r.isapproved = 1 and r.isdeleted = 0)
+				IF EXISTS(SELECT TrackingId FROM {databaseOwner}{objectQualifier}activeforums_Forums_Tracking WHERE ForumId = @tmpForumId AND UserId = @UserId)
+					UPDATE {databaseOwner}{objectQualifier}activeforums_Forums_Tracking
+					SET LastAccessDate = GetDate(), MaxTopicRead = IsNull(@MaxTopicRead,0), MaxReplyRead = IsNull(@MaxReplyRead,0) WHERE ForumId = @tmpForumId AND UserId = @UserId
+				ELSE
+					INSERT INTO {databaseOwner}{objectQualifier}activeforums_Forums_Tracking
+						(ModuleId, UserId, ForumId, LastAccessDate, MaxTopicRead, MaxReplyRead)
+						Values
+						(@ModuleId, @UserId, @tmpForumId, GetDate(), IsNull(@MaxTopicRead,0), IsNull(@MaxReplyRead,0))
+				FETCH NEXT FROM forumcur INTO @tmpForumId
+			END
+		CLOSE forumcur
+		DEALLOCATE forumcur
+	END
+ELSE
+	BEGIN
+		SET @MaxTopicRead = (SELECT MAX(T.TopicId) from {databaseOwner}{objectQualifier}activeforums_topics as t INNER JOIN {databaseOwner}{objectQualifier}activeforums_ForumTopics as ft ON ft.TopicId = t.TopicId WHERE ft.ForumId = @ForumId AND t.isapproved = 1 and t.isdeleted = 0)
+		SET @MaxReplyRead = (SELECT MAX(ReplyId) from {databaseOwner}{objectQualifier}activeforums_replies as r INNER JOIN {databaseOwner}{objectQualifier}activeforums_Topics as t on t.TopicId = r.TopicId INNER JOIN {databaseOwner}{objectQualifier}activeforums_ForumTopics as ft ON ft.TopicId = t.TopicId WHERE ft.ForumId = @ForumId AND r.isapproved = 1 and r.isdeleted = 0)
+		UPDATE {databaseOwner}{objectQualifier}activeforums_Forums_Tracking
+		SET LastAccessDate = GetDate(), MaxTopicRead = IsNull(@MaxTopicRead,0), MaxReplyRead = IsNull(@MaxReplyRead,0) WHERE ForumId = @ForumId AND UserId = @UserId
+	END
+GO
+CREATE PROCEDURE {databaseOwner}{objectQualifier}activeforums_Forum_ConfigCleanUp
+@ModuleId int,
+@ForumSettingsKey nvarchar(25),
+@ForumSecurityKey nvarchar(25)
+AS
+DELETE FROM {databaseOwner}{objectQualifier}activeforums_Settings WHERE GroupKey = @ForumSettingsKey AND ModuleId = @ModuleId
+DELETE FROM {databaseOwner}{objectQualifier}activeforums_Security WHERE SecurityKey = @ForumSecurityKey 
+GO
+CREATE PROCEDURE {databaseOwner}{objectQualifier}activeforums_Security_GetByKey(@SecurityKey nvarchar(25))
+AS
+Select * FROM {databaseOwner}{objectQualifier}activeforums_Security WHERE SecurityKey = @SecurityKey ORDER BY ObjectId, ObjectName, ObjectType, SecureType
+GO
+CREATE PROCEDURE {databaseOwner}{objectQualifier}activeforums_Search_GetSearchItems(@ModuleId int)
+AS
+SELECT     R.PortalId, R.ModuleId, R.ForumId, R.ForumName, R.TopicId, ReplyId, Subject, Summary, AuthorId, AuthorName, Username, FirstName, LastName, DisplayName, R.DateCreated, 
+                      R.DateUpdated, ContentId, TopicIcon, StatusId, TopicType, IsPinned, IsLocked, ViewCount, ReplyCount, Convert(nvarchar(max),Body) as Body
+FROM         {databaseOwner}{objectQualifier}vw_activeforums_ForumReplies AS R inner join {databaseOwner}{objectQualifier}activeforums_Forums as F on F.ForumId = R.ForumId inner join {databaseOwner}{objectQualifier}activeforums_settings as S ON F.ForumSettingsKey = S.GroupKey AND S.SettingName = 'INDEXCONTENT'
+WHERE     (IsApproved = 1 AND S.SettingValue = 'true' AND R.ModuleId = @ModuleId)
+UNION
+SELECT     T.PortalId, T.ModuleId, T.ForumId, T.ForumName, TopicId, 0 AS ReplyId, Subject, Summary, AuthorId, AuthorName, Username, FirstName, LastName, DisplayName, 
+                      T.DateCreated, T.DateUpdated, ContentId, TopicIcon, StatusId, TopicType, IsPinned, IsLocked, ViewCount, ReplyCount, Convert(nvarchar(max), Body) as Body
+FROM         {databaseOwner}{objectQualifier}vw_activeforums_ForumTopics AS T inner join {databaseOwner}{objectQualifier}activeforums_Forums as F on F.ForumId = T.ForumId inner join {databaseOwner}{objectQualifier}activeforums_settings as S ON F.ForumSettingsKey = S.GroupKey AND S.SettingName = 'INDEXCONTENT'
+WHERE     (IsApproved = 1 AND S.SettingValue = 'true' AND T.ModuleId = @ModuleId)
+GO
+CREATE PROCEDURE {databaseOwner}{objectQualifier}activeforums_Poll_HasVoted(@TopicId int, @UserId int)
+ AS
+DECLARE @PollID int
+BEGIN
+SET @PollId = (SELECT PollID FROM {databaseOwner}{objectQualifier}activeforums_Poll WHERE TopicId = @TopicId)
+
+SELECT Count(PollOptionID) as Votes FROM {databaseOwner}{objectQualifier}activeforums_Poll_Results WHERE PollID = @PollID AND UserId = @UserId
+END
+GO
+CREATE PROCEDURE {databaseOwner}{objectQualifier}activeforums_Subscriptions_IsSubscribed
+@PortalId int,
+@ModuleId int,
+@ForumId int,
+@TopicId int,
+@Mode int,
+@UserId int
+AS
+DECLARE @SubStatus int 
+SET @SubStatus = 0
+If @TopicId > 0 
+	BEGIN
+	IF EXISTS(SELECT Id FROM {databaseOwner}{objectQualifier}activeforums_Subscriptions WHERE ForumId = @ForumId AND TopicId = @TopicId AND UserId = @UserId)
+		SET @SubStatus = 1
+	END
+ELSE
+	BEGIN
+	IF EXISTS(SELECT Id FROM {databaseOwner}{objectQualifier}activeforums_Subscriptions WHERE ForumId = @ForumId AND TopicId = 0 AND UserId = @UserId)
+		SET @SubStatus = 1
+	END
+SELECT @SubStatus
+GO
+
+IF NOT EXISTS (Select * From {databaseOwner}{objectQualifier}Schedule WHERE TypeFullName = 'DotNetNuke.Modules.ActiveForums.Queue.Scheduler,DotNetNuke.Modules.ActiveForums')
+	INSERT INTO {databaseOwner}{objectQualifier}Schedule (TypeFullName,TimeLapse,TimeLapseMeasurement,RetryTimeLapse,RetryTimeLapseMeasurement,RetainHistoryNum,AttachToEvent,CatchUpEnabled,Enabled,ObjectDependencies,Servers)
+	VALUES('DotNetNuke.Modules.ActiveForums.Queue.Scheduler,DotNetNuke.Modules.ActiveForums'
+	,1,'m',1,'m',5,'',0,1,'','')
+GO
+CREATE TABLE {databaseOwner}{objectQualifier}activeforums_Queue (
+	[Id] [int] IDENTITY (1, 1) NOT NULL ,
+	[EmailFrom] [nvarchar] (255) NULL ,
+	[EmailTo] [nvarchar] (255) NULL ,
+	[EmailSubject] [nvarchar] (255) NULL ,
+	[EmailBody] [ntext] NULL ,
+	[EmailBodyPlainText] [ntext] NULL ,
+	[EmailCC] [nvarchar] (255) NULL ,
+	[EmailBCC] [nvarchar] (255) NULL ,
+	[DateCreated] [datetime] NOT NULL 
+) 
+GO
+CREATE PROCEDURE {databaseOwner}{objectQualifier}activeforums_Queue_DeleteItem
+(
+	@Id int
+)
+AS
+BEGIN
+DELETE FROM {databaseOwner}{objectQualifier}activeforums_Queue WHERE Id = @Id
+END
+GO
+CREATE PROCEDURE {databaseOwner}{objectQualifier}activeforums_Queue_List
+AS
+BEGIN
+SELECT     TOP 200 Id, EmailFrom, EmailTo, EmailSubject, EmailBody, EmailBodyPlainText, EmailCC, EmailBCC
+FROM         {databaseOwner}{objectQualifier}activeforums_Queue WITH (nolock)
+ORDER BY DateCreated
+END
+GO
+CREATE PROCEDURE {databaseOwner}{objectQualifier}activeforums_Queue_Add
+(
+	@EmailFrom nvarchar(255),
+	@EmailTo nvarchar(255),
+	@EmailSubject nvarchar(255),
+	@EmailBody ntext,
+	@EmailBodyPlainText ntext,
+	@EmailCC nvarchar(255),
+	@EmailBCC nvarchar(255)
+)
+AS
+INSERT INTO {databaseOwner}{objectQualifier}activeforums_Queue
+                      (EmailFrom, EmailTo, EmailSubject, EmailBody, EmailBodyPlainText, EmailCC, EmailBCC, DateCreated)
+VALUES     (@EmailFrom,@EmailTo,@EmailSubject,@EmailBody,@EmailBodyPlainText,@EmailCC,@EmailBCC, GETDATE())
+GO
+CREATE PROCEDURE {databaseOwner}{objectQualifier}activeforums_Mod_Reject
+	@PortalId int,
+	@ModuleId int,
+	@UserId int,
+	@ForumId int,
+	@TopicId int,
+	@ReplyId int,
+	@Reason int = 0,
+	@Comment nvarchar(2000)
+AS
+BEGIN
+	SET NOCOUNT ON;
+	If @ReplyId = 0 
+		--Update Topic
+		BEGIN
+			UPDATE {databaseOwner}{objectQualifier}activeforums_Topics SET IsRejected = 1, IsApproved = 0 WHERE TopicId = @TopicId
+		END
+	ELSE
+		BEGIN
+			UPDATE {databaseOwner}{objectQualifier}activeforums_Replies SET IsRejected = 1, IsApproved = 0 Where TopicId = @TopicId AND ReplyId = @ReplyId
+		END
+END
+GO
+DELETE FROM {databaseOwner}{objectQualifier}Schedule WHERE TypeFullName = N'DotNetNuke.Modules.ActiveForums.QueueScheduler,Active.Modules.Forums'
+GO
+DELETE FROM {databaseOwner}{objectQualifier}Schedule WHERE TypeFullName = N'DotNetNuke.Modules.ActiveForums.DailyDigest, ACTIVE.MODULES.FORUMS'
+GO
+DELETE FROM {databaseOwner}{objectQualifier}Schedule WHERE TypeFullName = N'DotNetNuke.Modules.ActiveForums.WeeklyDigest, ACTIVE.MODULES.FORUMS'
+GO
+DELETE FROM {databaseOwner}{objectQualifier}Schedule WHERE TypeFullName = N'DotNetNuke.Modules.ActiveForums.MailConnector.MailConnectorScheduler, ACTIVE.MODULES.FORUMS'
+GO

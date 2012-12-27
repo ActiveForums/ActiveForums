@@ -1,0 +1,1462 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="[RESX:SubjectPrefix].Text" xml:space="preserve">
+    <value>RE:</value>
+  </data>
+  <data name="GuestSuffix.Text" xml:space="preserve">
+    <value>(guest)</value>
+  </data>
+  <data name="[RESX:PostedBy].Text" xml:space="preserve">
+    <value>Posted By</value>
+  </data>
+  <data name="On.Text" xml:space="preserve">
+    <value>on</value>
+  </data>
+  <data name="NoResults.Text" xml:space="preserve">
+    <value>No Results Found</value>
+  </data>
+  <data name="ForumHeader.Text" xml:space="preserve">
+    <value>Forum Name</value>
+  </data>
+  <data name="TopicsHeader.Text" xml:space="preserve">
+    <value>Topics</value>
+  </data>
+  <data name="ReplyHeader.Text" xml:space="preserve">
+    <value>Replies</value>
+  </data>
+  <data name="By.Text" xml:space="preserve">
+    <value>by</value>
+  </data>
+  <data name="TopicHeader.Text" xml:space="preserve">
+    <value>Topics</value>
+  </data>
+  <data name="[RESX:Views].Text" xml:space="preserve">
+    <value>Views</value>
+  </data>
+  <data name="StartedHeader.Text" xml:space="preserve">
+    <value>Started By</value>
+  </data>
+  <data name="[RESX:SubPages].Text" xml:space="preserve">
+    <value>Pages:</value>
+  </data>
+  <data name="[RESX:Author].Text" xml:space="preserve">
+    <value>Author</value>
+  </data>
+  <data name="[RESX:Messages].Text" xml:space="preserve">
+    <value>Messages</value>
+  </data>
+  <data name="[RESX:TopicLocked].Text" xml:space="preserve">
+    <value>Topic is locked</value>
+  </data>
+  <data name="NotLoggedIn.Text" xml:space="preserve">
+    <value>Please login to post a reply</value>
+  </data>
+  <data name="[RESX:NotAuthorized].Text" xml:space="preserve">
+    <value>You must be logged in to post a reply.</value>
+  </data>
+  <data name="PostedDate.Text" xml:space="preserve">
+    <value>Posted:</value>
+  </data>
+  <data name="Lock.Text" xml:space="preserve">
+    <value>Lock</value>
+  </data>
+  <data name="[RESX:Pin].Text" xml:space="preserve">
+    <value>Pin</value>
+  </data>
+  <data name="[RESX:Alert].Text" xml:space="preserve">
+    <value>Alert</value>
+  </data>
+  <data name="Subscribe.Text" xml:space="preserve">
+    <value>Email me when someone replies to this thread.</value>
+  </data>
+  <data name="[RESX:AddReply].Text" xml:space="preserve">
+    <value>Add Reply</value>
+  </data>
+  <data name="ForumSubscribe.Text" xml:space="preserve">
+    <value>Email me when someone posts to this forum.</value>
+  </data>
+  <data name="[RESX:AddTopic].Text" xml:space="preserve">
+    <value>Add New Topic</value>
+  </data>
+  <data name="[RESX:MarkAllRead].Text" xml:space="preserve">
+    <value>Mark All Read</value>
+  </data>
+  <data name="SearchCaption.Text" xml:space="preserve">
+    <value>Search this forum:</value>
+  </data>
+  <data name="SearchGO.Text" xml:space="preserve">
+    <value>GO</value>
+  </data>
+  <data name="[RESX:ForumMain].Text" xml:space="preserve">
+    <value>Forums</value>
+  </data>
+  <data name="[RESX:PostStatus0].Text" xml:space="preserve">
+    <value>Informative</value>
+  </data>
+  <data name="[RESX:PostStatus1].Text" xml:space="preserve">
+    <value>Not Resolved</value>
+  </data>
+  <data name="[RESX:PostStatus2].Text" xml:space="preserve">
+    <value>In Progress</value>
+  </data>
+  <data name="[RESX:PostStatus3].Text" xml:space="preserve">
+    <value>Resolved</value>
+  </data>
+  <data name="Status.Text" xml:space="preserve">
+    <value>Status:</value>
+  </data>
+  <data name="[RESX:Email].Text" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="[RESX:Page].Text" xml:space="preserve">
+    <value>Page</value>
+  </data>
+  <data name="[RESX:PageOf].Text" xml:space="preserve">
+    <value>of</value>
+  </data>
+  <data name="[RESX:UserOnline].Text" xml:space="preserve">
+    <value>User is Online</value>
+  </data>
+  <data name="[RESX:UserOffline].Text" xml:space="preserve">
+    <value>User is Offline</value>
+  </data>
+  <data name="DatePosted.Text" xml:space="preserve">
+    <value>Date Posted</value>
+  </data>
+  <data name="User.Text" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="[RESX:Bold].Text" xml:space="preserve">
+    <value> B </value>
+  </data>
+  <data name="[RESX:Italics].Text" xml:space="preserve">
+    <value> I </value>
+  </data>
+  <data name="[RESX:Underline].Text" xml:space="preserve">
+    <value> U </value>
+  </data>
+  <data name="DeleteConfirm.Text" xml:space="preserve">
+    <value>Are you sure you wish to delete this item?</value>
+  </data>
+  <data name="Stats.StatsHeader.Text" xml:space="preserve">
+    <value>Statistics:</value>
+  </data>
+  <data name="Stats.TotalForums.Text" xml:space="preserve">
+    <value>Total Forums</value>
+  </data>
+  <data name="Stats.TotalTopics.Text" xml:space="preserve">
+    <value>Total Topics</value>
+  </data>
+  <data name="Stats.TotalPosts.Text" xml:space="preserve">
+    <value>Total Posts</value>
+  </data>
+  <data name="Stats.MostActive.Text" xml:space="preserve">
+    <value>Most Active</value>
+  </data>
+  <data name="Stats.MostViews.Text" xml:space="preserve">
+    <value>Most Views</value>
+  </data>
+  <data name="Stats.MostReplies.Text" xml:space="preserve">
+    <value>Most Replies</value>
+  </data>
+  <data name="Stats.LastCreated.Text" xml:space="preserve">
+    <value>Statistics Last Created</value>
+  </data>
+  <data name="[RESX:WhosOnline].Text" xml:space="preserve">
+    <value>Who is online:</value>
+  </data>
+  <data name="[RESX:GuestsOnline].Text" xml:space="preserve">
+    <value>There are currently [GUESTCOUNT] guests(s) online.</value>
+  </data>
+  <data name="[RESX:UsersOnline].Text" xml:space="preserve">
+    <value>There are [USERCOUNT] of [TOTALMEMBERCOUNT] member(s) online:</value>
+  </data>
+  <data name="Stats.TotalReplies.Text" xml:space="preserve">
+    <value>Total Replies</value>
+  </data>
+  <data name="ActiveTopics.10080min" xml:space="preserve">
+    <value>Last Week</value>
+  </data>
+  <data name="ActiveTopics.120min" xml:space="preserve">
+    <value>Last 2 Hours</value>
+  </data>
+  <data name="ActiveTopics.1440min" xml:space="preserve">
+    <value>Yesterday</value>
+  </data>
+  <data name="ActiveTopics.15min" xml:space="preserve">
+    <value>Last 15 Minutes</value>
+  </data>
+  <data name="ActiveTopics.20160min" xml:space="preserve">
+    <value>Last 2 Weeks</value>
+  </data>
+  <data name="ActiveTopics.2880min" xml:space="preserve">
+    <value>Last 2 Days</value>
+  </data>
+  <data name="ActiveTopics.30min" xml:space="preserve">
+    <value>Last 30 Minutes</value>
+  </data>
+  <data name="ActiveTopics.360min" xml:space="preserve">
+    <value>Last 6 Hours</value>
+  </data>
+  <data name="ActiveTopics.40320min" xml:space="preserve">
+    <value>Last Month</value>
+  </data>
+  <data name="ActiveTopics.45min" xml:space="preserve">
+    <value>Last 45 Minutes</value>
+  </data>
+  <data name="ActiveTopics.60min" xml:space="preserve">
+    <value>Last Hour</value>
+  </data>
+  <data name="ActiveTopics.720min" xml:space="preserve">
+    <value>Last 12 Hours</value>
+  </data>
+  <data name="ActiveTopics.80640min" xml:space="preserve">
+    <value>Last 2 Months</value>
+  </data>
+  <data name="[RESX:About].Text" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="[RESX:Contact].Text" xml:space="preserve">
+    <value>Contact</value>
+  </data>
+  <data name="[RESX:Joined].Text" xml:space="preserve">
+    <value>Joined</value>
+  </data>
+  <data name="[RESX:Posts].Text" xml:space="preserve">
+    <value>Posts</value>
+  </data>
+  <data name="[RESX:Website].Text" xml:space="preserve">
+    <value>Website</value>
+  </data>
+  <data name="[RESX:Occupation].Text" xml:space="preserve">
+    <value>Occupation</value>
+  </data>
+  <data name="[RESX:Location].Text" xml:space="preserve">
+    <value>Location</value>
+  </data>
+  <data name="[RESX:Interests].Text" xml:space="preserve">
+    <value>Interests</value>
+  </data>
+  <data name="[RESX:SendMessage].Text" xml:space="preserve">
+    <value>Contact</value>
+  </data>
+  <data name="[RESX:Yahoo].Text" xml:space="preserve">
+    <value>Yahoo</value>
+  </data>
+  <data name="[RESX:MSN].Text" xml:space="preserve">
+    <value>MSN</value>
+  </data>
+  <data name="[RESX:ICQ].Text" xml:space="preserve">
+    <value>ICQ</value>
+  </data>
+  <data name="[RESX:AOL].Text" xml:space="preserve">
+    <value>AOL</value>
+  </data>
+  <data name="EditProfile.Text" xml:space="preserve">
+    <value>Edit Profile</value>
+  </data>
+  <data name="Back.Text" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="[RESX:MemberName].Text" xml:space="preserve">
+    <value>Member Name</value>
+  </data>
+  <data name="NoProfile.Text" xml:space="preserve">
+    <value>User has not created a profile.</value>
+  </data>
+  <data name="Subscriptions.Text" xml:space="preserve">
+    <value>Subscriptions</value>
+  </data>
+  <data name="ThreadsTracked.Text" xml:space="preserve">
+    <value>Threads you are tracking: </value>
+  </data>
+  <data name="ForumsTracked.Text" xml:space="preserve">
+    <value>Forums you are tracking:</value>
+  </data>
+  <data name="Banned.Text" xml:space="preserve">
+    <value>Banned:</value>
+  </data>
+  <data name="[RESX:ViewPostsByUser].Text" xml:space="preserve">
+    <value>View Posts By User</value>
+  </data>
+  <data name="[RESX:Profile].Text" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="AccountInfo.Text" xml:space="preserve">
+    <value>Account Information</value>
+  </data>
+  <data name="[RESX:FirstName].Text" xml:space="preserve">
+    <value>First Name</value>
+  </data>
+  <data name="[RESX:LastName].Text" xml:space="preserve">
+    <value>Last Name</value>
+  </data>
+  <data name="EmailAddress.Text" xml:space="preserve">
+    <value>Email Address:</value>
+  </data>
+  <data name="[RESX:Region].Text" xml:space="preserve">
+    <value>Region</value>
+  </data>
+  <data name="Street.Text" xml:space="preserve">
+    <value>Street:</value>
+  </data>
+  <data name="[RESX:City].Text" xml:space="preserve">
+    <value>City</value>
+  </data>
+  <data name="[RESX:Country].Text" xml:space="preserve">
+    <value>Country</value>
+  </data>
+  <data name="[RESX:Phone].Text" xml:space="preserve">
+    <value>Telephone</value>
+  </data>
+  <data name="[RESX:Cell].Text" xml:space="preserve">
+    <value>Cell</value>
+  </data>
+  <data name="[RESX:TimeZone].Text" xml:space="preserve">
+    <value>Time Zone</value>
+  </data>
+  <data name="Update.Text" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="[RESX:BoldDesc].Text" xml:space="preserve">
+    <value>Make Text Bold</value>
+  </data>
+  <data name="[RESX:ItalicsDesc].Text" xml:space="preserve">
+    <value>Make Text Italics</value>
+  </data>
+  <data name="[RESX:UnderlineDesc].Text" xml:space="preserve">
+    <value>Underline Text</value>
+  </data>
+  <data name="SendEmail.Body.Text" xml:space="preserve">
+    <value>Body:</value>
+  </data>
+  <data name="SendEmail.Cancel.Text" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="SendEmail.MessageSent.Text" xml:space="preserve">
+    <value>Your Message has been sent!</value>
+  </data>
+  <data name="SendEmail.NotLoggedIn.Text" xml:space="preserve">
+    <value>You must be a registered user and logged in to send email.</value>
+  </data>
+  <data name="SendEmail.SendEmail.Text" xml:space="preserve">
+    <value>Send Email</value>
+  </data>
+  <data name="SendEmail.Subject.Text" xml:space="preserve">
+    <value>Subject:</value>
+  </data>
+  <data name="[RESX:NextTopic].Text" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="[RESX:PrevTopic].Text" xml:space="preserve">
+    <value>Prev</value>
+  </data>
+  <data name="Options.Header" xml:space="preserve">
+    <value>Options</value>
+  </data>
+  <data name="[RESX:BreadCrumbSep].Text" xml:space="preserve">
+    <value> &gt; </value>
+  </data>
+  <data name="DisplaynameDrop.Text" xml:space="preserve">
+    <value>Display Name</value>
+  </data>
+  <data name="DropDownSelect.Text" xml:space="preserve">
+    <value>&lt; SELECT GROUP OR FORUM &gt;</value>
+  </data>
+  <data name="Approve.Text" xml:space="preserve">
+    <value>Approve</value>
+  </data>
+  <data name="Cancel.Text" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Reject.Text" xml:space="preserve">
+    <value>Reject</value>
+  </data>
+  <data name="PostedIn.Text" xml:space="preserve">
+    <value>Posted in</value>
+  </data>
+  <data name="[RESX:SubForums].Text" xml:space="preserve">
+    <value>Sub Forums:</value>
+  </data>
+  <data name="EndDate.Text" xml:space="preserve">
+    <value>End Date:</value>
+  </data>
+  <data name="OptionsText.Text" xml:space="preserve">
+    <value>Advanced Options</value>
+  </data>
+  <data name="SearchFrom.Text" xml:space="preserve">
+    <value>From:</value>
+  </data>
+  <data name="SearchPosts.Text" xml:space="preserve">
+    <value>Search Posts</value>
+  </data>
+  <data name="SearchRangeAll.Text" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="SearchRangeDays.Text" xml:space="preserve">
+    <value>Past {0} days</value>
+  </data>
+  <data name="SearchRangeHours.Text" xml:space="preserve">
+    <value>Past {0} hours</value>
+  </data>
+  <data name="SearchUser.Text" xml:space="preserve">
+    <value>Search by User</value>
+  </data>
+  <data name="StartDate.Text" xml:space="preserve">
+    <value>Start Date:</value>
+  </data>
+  <data name="MoveText.Text" xml:space="preserve">
+    <value>Move Topic</value>
+  </data>
+  <data name="drpSearchType.AllKeywords.Text" xml:space="preserve">
+    <value>ALL Keywords</value>
+  </data>
+  <data name="drpSearchType.ANYKeywords.Text" xml:space="preserve">
+    <value>ANY Keyword</value>
+  </data>
+  <data name="drpSearchType.ExactMatch.Text" xml:space="preserve">
+    <value>Exact Match</value>
+  </data>
+  <data name="SearchType.Text" xml:space="preserve">
+    <value>Search Type</value>
+  </data>
+  <data name="AuditAction.Approve.Text" xml:space="preserve">
+    <value>APPROVE</value>
+  </data>
+  <data name="AuditAction.Delete.Text" xml:space="preserve">
+    <value>DELETE</value>
+  </data>
+  <data name="AuditAction.Edit.Text" xml:space="preserve">
+    <value>EDIT</value>
+  </data>
+  <data name="AuditAction.Lock.Text" xml:space="preserve">
+    <value>LOCK</value>
+  </data>
+  <data name="AuditAction.Move.Text" xml:space="preserve">
+    <value>MOVE</value>
+  </data>
+  <data name="AuditAction.Reject.Text" xml:space="preserve">
+    <value>REJECT</value>
+  </data>
+  <data name="AddText.Text" xml:space="preserve">
+    <value>Add New</value>
+  </data>
+  <data name="DailyDigest.Text" xml:space="preserve">
+    <value>Daily Digest</value>
+  </data>
+  <data name="Disabled.Text" xml:space="preserve">
+    <value>Disabled</value>
+  </data>
+  <data name="Instant.Text" xml:space="preserve">
+    <value>Instant</value>
+  </data>
+  <data name="Search.Text" xml:space="preserve">
+    <value>Search:</value>
+  </data>
+  <data name="WeeklyDigest.Text" xml:space="preserve">
+    <value>Weekly Digest</value>
+  </data>
+  <data name="[RESX:BY].Text" xml:space="preserve">
+    <value> by </value>
+  </data>
+  <data name="[RESX:FORUMS].Text" xml:space="preserve">
+    <value>Forums</value>
+  </data>
+  <data name="[RESX:LastPost].Text" xml:space="preserve">
+    <value>Last Post</value>
+  </data>
+  <data name="[RESX:REPLIES].Text" xml:space="preserve">
+    <value>Replies</value>
+  </data>
+  <data name="[RESX:TOPICS].Text" xml:space="preserve">
+    <value>Topics</value>
+  </data>
+  <data name="[RESX:FORUMHEADER].Text" xml:space="preserve">
+    <value>Forums</value>
+  </data>
+  <data name="[RESX:LASTPOSTHEADER].Text" xml:space="preserve">
+    <value>Last Post</value>
+  </data>
+  <data name="[RESX:REPLIESHEADER].Text" xml:space="preserve">
+    <value>Replies</value>
+  </data>
+  <data name="[RESX:TOPICSHEADER].Text" xml:space="preserve">
+    <value>Topics</value>
+  </data>
+  <data name="Forum.Text" xml:space="preserve">
+    <value>Return to Forum</value>
+  </data>
+  <data name="Topic.Text" xml:space="preserve">
+    <value>Return to Topic</value>
+  </data>
+  <data name="Home.Text" xml:space="preserve">
+    <value>Return to Main Forum Listing</value>
+  </data>
+  <data name="Title.Text" xml:space="preserve">
+    <value>Action Complete</value>
+  </data>
+  <data name="[RESX:Message].Text" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="[RESX:Cancel].Text" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="[RESX:Subject].Text" xml:space="preserve">
+    <value>Subject</value>
+  </data>
+  <data name="[RESX:Submit].Text" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="[RESX:Summary].Text" xml:space="preserve">
+    <value>Summary</value>
+  </data>
+  <data name="[RESX:ConfirmCancel].Text" xml:space="preserve">
+    <value>Are you sure you wish to cancel?</value>
+  </data>
+  <data name="[RESX:CreateNewTopic].Text" xml:space="preserve">
+    <value>Create New Topic</value>
+  </data>
+  <data name="[RESX:Forum].Text" xml:space="preserve">
+    <value>Forum</value>
+  </data>
+  <data name="[RESX:Locked].Text" xml:space="preserve">
+    <value>Locked</value>
+  </data>
+  <data name="[RESX:Pinned].Text" xml:space="preserve">
+    <value>Pinned</value>
+  </data>
+  <data name="[RESX:PostIcons].Text" xml:space="preserve">
+    <value>Post Icons</value>
+  </data>
+  <data name="[RESX:ReplyToTopic].Text" xml:space="preserve">
+    <value>Reply To Topic</value>
+  </data>
+  <data name="[RESX:Smilies].Text" xml:space="preserve">
+    <value>Smilies</value>
+  </data>
+  <data name="[RESX:Topic].Text" xml:space="preserve">
+    <value>Topic</value>
+  </data>
+  <data name="[RESX:PostIconNone].Text" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="[RESX:Preview].Text" xml:space="preserve">
+    <value>Preview</value>
+  </data>
+  <data name="[RESX:ForumSubscribe:FALSE].Text" xml:space="preserve">
+    <value>Click to subscribe to this forum.</value>
+  </data>
+  <data name="[RESX:ForumSubscribe:TRUE].Text" xml:space="preserve">
+    <value>You are subscribed to this forum. Click to unsubscribe.</value>
+  </data>
+  <data name="[RESX:TopicSubscribe:FALSE].Text" xml:space="preserve">
+    <value>Check this box to subscribe to this topic.</value>
+  </data>
+  <data name="[RESX:TopicSubscribe:TRUE].Text" xml:space="preserve">
+    <value>You are subscribed to this topic.</value>
+  </data>
+  <data name="[RESX:Avatar].Text" xml:space="preserve">
+    <value>Avatar</value>
+  </data>
+  <data name="[RESX:Actions].Text" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="[RESX:AdditionalOptions].Text" xml:space="preserve">
+    <value>Additional Options</value>
+  </data>
+  <data name="[RESX:Announce:EndDate].Text" xml:space="preserve">
+    <value>End Date</value>
+  </data>
+  <data name="[RESX:Announce:StartDate].Text" xml:space="preserve">
+    <value>Start Date</value>
+  </data>
+  <data name="[RESX:Announce].Text" xml:space="preserve">
+    <value>Announcement</value>
+  </data>
+  <data name="[RESX:Attachments].Text" xml:space="preserve">
+    <value>Attachments</value>
+  </data>
+  <data name="[RESX:Attacments:Note].Text" xml:space="preserve">
+    <value>Explanation for attachments</value>
+  </data>
+  <data name="[RESX:Confirm:Delete].Text" xml:space="preserve">
+    <value>Are you sure you wish to delete this item?</value>
+  </data>
+  <data name="[RESX:Locked:Note].Text" xml:space="preserve">
+    <value>Check the box to lock this topic.  </value>
+  </data>
+  <data name="[RESX:Pinned:Note].Text" xml:space="preserve">
+    <value>Check the box to pin this topic.  Pinned topics will appear before all others.</value>
+  </data>
+  <data name="[RESX:Subscribe:Note].Text" xml:space="preserve">
+    <value>Check the box to receive email notifications for this topic.</value>
+  </data>
+  <data name="[RESX:Subscribe].Text" xml:space="preserve">
+    <value>Subscribe</value>
+  </data>
+  <data name="[RESX:Upload].Text" xml:space="preserve">
+    <value>Upload</value>
+  </data>
+  <data name="[RESX:Confirm:Lock].Text" xml:space="preserve">
+    <value>Are you sure you wish to Lock this topic?</value>
+  </data>
+  <data name="[RESX:Confirm:Pin].Text" xml:space="preserve">
+    <value>Are you sure you wish to Pin this topic?</value>
+  </data>
+  <data name="[RESX:PostIcons:Note].Text" xml:space="preserve">
+    <value>Select a post icon to help classify your topic.</value>
+  </data>
+  <data name="[RESX:Tags:Note].Text" xml:space="preserve">
+    <value>A tag is a keyword or term associated with the content you are submitting.</value>
+  </data>
+  <data name="[RESX:Tags].Text" xml:space="preserve">
+    <value>Tags</value>
+  </data>
+  <data name="[RESX:Poll:MultipleSelect].Text" xml:space="preserve">
+    <value>Multiple Select</value>
+  </data>
+  <data name="[RESX:Poll:Note].Text" xml:space="preserve">
+    <value>Create a poll by entering a short question followed by 2 or more answers.  Enter one answer per line in the text box below.</value>
+  </data>
+  <data name="[RESX:Poll:Options].Text" xml:space="preserve">
+    <value>Poll Options</value>
+  </data>
+  <data name="[RESX:Poll:Question].Text" xml:space="preserve">
+    <value>Poll Question</value>
+  </data>
+  <data name="[RESX:Poll:SingleSelect].Text" xml:space="preserve">
+    <value>Single Select</value>
+  </data>
+  <data name="[RESX:Poll:Type].Text" xml:space="preserve">
+    <value>Poll Type</value>
+  </data>
+  <data name="[RESX:Polls].Text" xml:space="preserve">
+    <value>Polls</value>
+  </data>
+  <data name="IN.Text" xml:space="preserve">
+    <value>in</value>
+  </data>
+  <data name="[RESX:ActiveTopics].Text" xml:space="preserve">
+    <value>Active Topics</value>
+  </data>
+  <data name="[RESX:MyTopics].Text" xml:space="preserve">
+    <value>My Topics</value>
+  </data>
+  <data name="[RESX:NotRead].Text" xml:space="preserve">
+    <value>Not Read</value>
+  </data>
+  <data name="[RESX:Unanswered].Text" xml:space="preserve">
+    <value>Unanswered</value>
+  </data>
+  <data name="[RESX:ControlPanel].Text" xml:space="preserve">
+    <value>Control Panel</value>
+  </data>
+  <data name="[RESX:Members].Text" xml:space="preserve">
+    <value>Members</value>
+  </data>
+  <data name="[RESX:Moderate].Text" xml:space="preserve">
+    <value>Moderate</value>
+  </data>
+  <data name="[RESX:MyProfile].Text" xml:space="preserve">
+    <value>My Profile</value>
+  </data>
+  <data name="[RESX:Search].Text" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="[RESX:SearchArea].Text" xml:space="preserve">
+    <value>Search Area</value>
+  </data>
+  <data name="[RESX:SearchByUser].Text" xml:space="preserve">
+    <value>Search By User</value>
+  </data>
+  <data name="[RESX:SearchInForums].Text" xml:space="preserve">
+    <value>Search in Forum(s)</value>
+  </data>
+  <data name="[RESX:SearchMatch].Text" xml:space="preserve">
+    <value>Criteria Options</value>
+  </data>
+  <data name="[RESX:SearchTimeFrame].Text" xml:space="preserve">
+    <value>Search Topics From</value>
+  </data>
+  <data name="[RESX:ERROR:Search].Text" xml:space="preserve">
+    <value>The search process has encountered an error.  Please contact the site administrator.</value>
+  </data>
+  <data name="[RESX:ERROR].Text" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="[RESX:SearchNoResults].Text" xml:space="preserve">
+    <value>No topics were found using the criteria you provided.</value>
+  </data>
+  <data name="[RESX:SearchForumsAll].Text" xml:space="preserve">
+    <value>Included Forums: ALL</value>
+  </data>
+  <data name="[RESX:SearchForumsFilter].Text" xml:space="preserve">
+    <value>Included Forums: Filtered</value>
+  </data>
+  <data name="[RESX:TopicSortNewest].Text" xml:space="preserve">
+    <value>Most Recent First</value>
+  </data>
+  <data name="[RESX:TopicSortOldest].Text" xml:space="preserve">
+    <value>Oldest First</value>
+  </data>
+  <data name="[RESX:SortPosts].Text" xml:space="preserve">
+    <value>Sort</value>
+  </data>
+  <data name="[RESX:Status:Answer].Text" xml:space="preserve">
+    <value>Accepted Answer</value>
+  </data>
+  <data name="[RESX:Status:SelectAnswer].Text" xml:space="preserve">
+    <value>Correct Answer?</value>
+  </data>
+  <data name="[RESX:Approved:Note].Text" xml:space="preserve">
+    <value>Check the box to approve this post.</value>
+  </data>
+  <data name="[RESX:Approved].Text" xml:space="preserve">
+    <value>Approved</value>
+  </data>
+  <data name="[RESX:Approve].Text" xml:space="preserve">
+    <value>Approve</value>
+  </data>
+  <data name="[RESX:Delete].Text" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="[RESX:Edit].Text" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="[RESX:MoveApprove].Text" xml:space="preserve">
+    <value>Move &amp; Approve</value>
+  </data>
+  <data name="[RESX:PendingPosts].Text" xml:space="preserve">
+    <value>Pending Content</value>
+  </data>
+  <data name="[RESX:Pending].Text" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="[RESX:Reject].Text" xml:space="preserve">
+    <value>Reject</value>
+  </data>
+  <data name="[RESX:MemberDirectory].Text" xml:space="preserve">
+    <value>Member Directory</value>
+  </data>
+  <data name="[RESX:Notify].Text" xml:space="preserve">
+    <value>Notification</value>
+  </data>
+  <data name="[RESX:ProfileForUser].Text" xml:space="preserve">
+    <value>{0}'s Profile</value>
+  </data>
+  <data name="[RESX:All].Text" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="[RESX:Fax].Text" xml:space="preserve">
+    <value>Fax</value>
+  </data>
+  <data name="[RESX:Subscriptions].Text" xml:space="preserve">
+    <value>Subscriptions</value>
+  </data>
+  <data name="[RESX:Actions:Complete].Text" xml:space="preserve">
+    <value>Complete</value>
+  </data>
+  <data name="[RESX:Actions:PrefUpdated].Text" xml:space="preserve">
+    <value>Your preferences have been saved.</value>
+  </data>
+  <data name="[RESX:Button:Cancel].Text" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="[RESX:Button:Save].Text" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="[RESX:CurrentLocation].Text" xml:space="preserve">
+    <value>Current Location</value>
+  </data>
+  <data name="[RESX:MoveLocation].Text" xml:space="preserve">
+    <value>Move To</value>
+  </data>
+  <data name="[RESX:MoveTopicTitle].Text" xml:space="preserve">
+    <value>Move Topic</value>
+  </data>
+  <data name="[RESX:MoveTopic].Text" xml:space="preserve">
+    <value>Move topic to another forum</value>
+  </data>
+  <data name="[RESX:Label:MyPreferences].Text" xml:space="preserve">
+    <value>My Preferences</value>
+  </data>
+  <data name="[RESX:NewestFirst].Text" xml:space="preserve">
+    <value>Newest First</value>
+  </data>
+  <data name="[RESX:OldestFirst].Text" xml:space="preserve">
+    <value>Oldest First</value>
+  </data>
+  <data name="[RESX:PrefBlockAvatars].Text" xml:space="preserve">
+    <value>Hide Avatars</value>
+  </data>
+  <data name="[RESX:PrefBlockSignatures].Text" xml:space="preserve">
+    <value>Hide Signatures</value>
+  </data>
+  <data name="[RESX:PrefDefaultSort].Text" xml:space="preserve">
+    <value>Sort Order</value>
+  </data>
+  <data name="[RESX:PrefJumpToLastPost].Text" xml:space="preserve">
+    <value>Jump to First Unread Post</value>
+  </data>
+  <data name="[RESX:PrefPageSize].Text" xml:space="preserve">
+    <value>Items Per Page</value>
+  </data>
+  <data name="[RESX:PrefShowReplies].Text" xml:space="preserve">
+    <value>Show Replies</value>
+  </data>
+  <data name="[RESX:PrefSubscriptionType].Text" xml:space="preserve">
+    <value>Subscription Type</value>
+  </data>
+  <data name="[RESX:PrefTopicSubscribe].Text" xml:space="preserve">
+    <value>Subscribe to Topics</value>
+  </data>
+  <data name="[RESX:PrefUseAjax].Text" xml:space="preserve">
+    <value>Use Ajax</value>
+  </data>
+  <data name="[RESX:Actions:ProfileUpdated].Text" xml:space="preserve">
+    <value>Your profile has been updated.</value>
+  </data>
+  <data name="[RESX:Label:AdminSettings].Text" xml:space="preserve">
+    <value>Admin Settings</value>
+  </data>
+  <data name="[RESX:Button:Edit].Text" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="[RESX:DisableAttachments].Text" xml:space="preserve">
+    <value>Disable Attachments</value>
+  </data>
+  <data name="[RESX:DisableAvatar].Text" xml:space="preserve">
+    <value>Disable Avatar</value>
+  </data>
+  <data name="[RESX:DisableSignature].Text" xml:space="preserve">
+    <value>Disable Signature</value>
+  </data>
+  <data name="[RESX:MonitorActivity].Text" xml:space="preserve">
+    <value>Monitor Activity</value>
+  </data>
+  <data name="[RESX:RewardPoints].Text" xml:space="preserve">
+    <value>Reward Points</value>
+  </data>
+  <data name="[RESX:Signature].Text" xml:space="preserve">
+    <value>Signature</value>
+  </data>
+  <data name="[RESX:TrustedUser].Text" xml:space="preserve">
+    <value>Trust Level</value>
+  </data>
+  <data name="[RESX:UserCaption].Text" xml:space="preserve">
+    <value>User Caption</value>
+  </data>
+  <data name="[RESX:Informative].Text" xml:space="preserve">
+    <value>Informative</value>
+  </data>
+  <data name="[RESX:NoStatus].Text" xml:space="preserve">
+    <value> </value>
+  </data>
+  <data name="[RESX:NotResolved].Text" xml:space="preserve">
+    <value>Not Resolved</value>
+  </data>
+  <data name="[RESX:Resolved].Text" xml:space="preserve">
+    <value>Resolved</value>
+  </data>
+  <data name="[RESX:Announcements].Text" xml:space="preserve">
+    <value>Announcements</value>
+  </data>
+  <data name="[RESX:Group].Text" xml:space="preserve">
+    <value>Group</value>
+  </data>
+  <data name="[RESX:Body].Text" xml:space="preserve">
+    <value>Body</value>
+  </data>
+  <data name="[RESX:QuickReply].Text" xml:space="preserve">
+    <value>Quick Reply</value>
+  </data>
+  <data name="[RESX:Quote].Text" xml:space="preserve">
+    <value>Quote</value>
+  </data>
+  <data name="[RESX:Reply].Text" xml:space="preserve">
+    <value>Reply</value>
+  </data>
+  <data name="[RESX:Username].Text" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="[RESX:EmailMessageDefault].Text" xml:space="preserve">
+    <value>I thought you might be interested in reading this web page:
+[TOPICLINK]
+
+From,
+[DISPLAYNAME]</value>
+  </data>
+  <data name="[RESX:EmailMessage].Text" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="[RESX:EmailSubjectDefault].Text" xml:space="preserve">
+    <value>[SUBJECT]</value>
+  </data>
+  <data name="[RESX:EmailSubject].Text" xml:space="preserve">
+    <value>Email Subject</value>
+  </data>
+  <data name="[RESX:RecipientEmail].Text" xml:space="preserve">
+    <value>Recipient Email</value>
+  </data>
+  <data name="[RESX:RecipientName].Text" xml:space="preserve">
+    <value>Recipient Name</value>
+  </data>
+  <data name="[RESX:Send].Text" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="[RESX:Comments].Text" xml:space="preserve">
+    <value>Comments</value>
+  </data>
+  <data name="[RESX:ReasonOptions].Text" xml:space="preserve">
+    <value>Off Topic;Spam;Profanity;Threats;Harassment;Trolling</value>
+  </data>
+  <data name="[RESX:Reason].Text" xml:space="preserve">
+    <value>Reason</value>
+  </data>
+  <data name="[RESX:ReportContent].Text" xml:space="preserve">
+    <value>Report Content</value>
+  </data>
+  <data name="[RESX:Error:FloodControl].Text" xml:space="preserve">
+    <value>You must wait at least {0} seconds between posts</value>
+  </data>
+  <data name="[RESX:SecurityCode].Text" xml:space="preserve">
+    <value>Security Code</value>
+  </data>
+  <data name="[RESX:TopicStatus].Text" xml:space="preserve">
+    <value>Topic Status</value>
+  </data>
+  <data name="[RESX:Confirm:UnLock].Text" xml:space="preserve">
+    <value>Are you sure you wish to un-lock this topic?</value>
+  </data>
+  <data name="[RESX:Confirm:UnPin].Text" xml:space="preserve">
+    <value>Are you sure you wish to un-pin this topic?</value>
+  </data>
+  <data name="[RESX:DeleteTopic].Text" xml:space="preserve">
+    <value>Click to delete this topic</value>
+  </data>
+  <data name="[RESX:EditTopic].Text" xml:space="preserve">
+    <value>Click to edit this topic</value>
+  </data>
+  <data name="[RESX:LockTopic].Text" xml:space="preserve">
+    <value>Click to lock this topic</value>
+  </data>
+  <data name="[RESX:PinTopic].Text" xml:space="preserve">
+    <value>Click to pin this topic</value>
+  </data>
+  <data name="[RESX:UnLockTopic].Text" xml:space="preserve">
+    <value>Click to unlock this topic</value>
+  </data>
+  <data name="[RESX:UnPinTopic].Text" xml:space="preserve">
+    <value>Click to un-pin this topic</value>
+  </data>
+  <data name="[RESX:Error:BlockedFile].Text" xml:space="preserve">
+    <value>File type is not allowed.</value>
+  </data>
+  <data name="[RESX:Error:FileTooLarge].Text" xml:space="preserve">
+    <value>The maximum file size allowed is {0} kb.</value>
+  </data>
+  <data name="[RESX:Avatar:Link].Text" xml:space="preserve">
+    <value>Link to Avatar</value>
+  </data>
+  <data name="[RESX:Avatar:Upload].Text" xml:space="preserve">
+    <value>Upload Avatar</value>
+  </data>
+  <data name="[RESX:JumpToLastRead].Text" xml:space="preserve">
+    <value>Jump to first new post</value>
+  </data>
+  <data name="[RESX:JumpToLastReply].Text" xml:space="preserve">
+    <value>Jump to last post</value>
+  </data>
+  <data name="[RESX:MultiPageTopic].Text" xml:space="preserve">
+    <value>Topic has multiple pages</value>
+  </data>
+  <data name="[RESX:PrivateMessaging].Text" xml:space="preserve">
+    <value>Private Messaging</value>
+  </data>
+  <data name="[RESX:SendPM].Text" xml:space="preserve">
+    <value>Send Private Message</value>
+  </data>
+  <data name="[RESX:Tips:EnablePrivateMessaging].Text" xml:space="preserve">
+    <value>Choose to enable private messaging and the appropriate private messaging module you have installed.</value>
+  </data>
+  <data name="[RESX:PrefBlockAvatars].Help" xml:space="preserve">
+    <value>Select this option if you do not wish to view the avatars of other members.</value>
+  </data>
+  <data name="[RESX:PrefBlockSignatures].Help" xml:space="preserve">
+    <value>Select this option if you do not wish to view the signatures of other members.</value>
+  </data>
+  <data name="[RESX:PrefDefaultSort].Help" xml:space="preserve">
+    <value>Specify the order in which you would like items displayed.</value>
+  </data>
+  <data name="[RESX:PrefJumpToLastPost].Help" xml:space="preserve">
+    <value>You will always be directed to the last reply you read for the topic you are choosing to view.</value>
+  </data>
+  <data name="[RESX:PrefPageSize].Help" xml:space="preserve">
+    <value>Choose the number of items you would like displayed at a time.</value>
+  </data>
+  <data name="[RESX:Tips:PrefShowReplies].Text" xml:space="preserve">
+    <value>Selecting this option will allow you to see all the replies for a given topic while you are composing a reply.</value>
+  </data>
+  <data name="[RESX:PrefTopicSubscribeType].Help" xml:space="preserve">
+    <value>The forum admin may have allowed you to choose different forms of subscriptions.  You can select your desired preference.</value>
+  </data>
+  <data name="[RESX:PrefTopicSubscribe].Help" xml:space="preserve">
+    <value>This will be your default setting when you are creating a topic or adding a reply.  This does not affect forum level subscriptions.</value>
+  </data>
+  <data name="[RESX:Tips:PrefUseAjax].Text" xml:space="preserve">
+    <value>AJAX is programming method to improve the way you interact with the forums.  You can choose whether or not you wish to use this capability.</value>
+  </data>
+  <data name="[RESX:Message:EditIntervalReached].Text" xml:space="preserve">
+    <value>This forum only allows you to edit your post within {0} minutes from the time you created your post.</value>
+  </data>
+  <data name="[RESX:SubmitVote].Text" xml:space="preserve">
+    <value>Submit Your Vote</value>
+  </data>
+  <data name="[RESX:EmailThis].Text" xml:space="preserve">
+    <value>Email to a Friend</value>
+  </data>
+  <data name="[RESX:PrinterFriendly].Text" xml:space="preserve">
+    <value>Printer Friendly</value>
+  </data>
+  <data name="[RESX:RSS].Text" xml:space="preserve">
+    <value>RSS Feed Available</value>
+  </data>
+  <data name="[RESX:ToggleGroup].Text" xml:space="preserve">
+    <value>Toggle Group Display</value>
+  </data>
+  <data name="[RESX:NotAuthorizedReply].Text" xml:space="preserve">
+    <value>You are not authorized to post a reply.</value>
+  </data>
+  <data name="[RESX:NotAuthorizedTopic].Text" xml:space="preserve">
+    <value>You are not authorized to create a new topic.</value>
+  </data>
+  <data name="[RESX:DateCreated].Text" xml:space="preserve">
+    <value>Date Created</value>
+  </data>
+  <data name="[RESX:DisplayName].Text" xml:space="preserve">
+    <value>Display Name</value>
+  </data>
+  <data name="[RESX:EffectiveDate].Text" xml:space="preserve">
+    <value>Effective Date</value>
+  </data>
+  <data name="[RESX:ExpirationDate].Text" xml:space="preserve">
+    <value>Expiration Date</value>
+  </data>
+  <data name="[RESX:LastActive].Text" xml:space="preserve">
+    <value>Last Active</value>
+  </data>
+  <data name="[RESX:LastLogin].Text" xml:space="preserve">
+    <value>Last Login</value>
+  </data>
+  <data name="[RESX:LockedOut].Text" xml:space="preserve">
+    <value>Locked Out</value>
+  </data>
+  <data name="[RESX:MySubscriptions].Text" xml:space="preserve">
+    <value>Subscriptions</value>
+  </data>
+  <data name="[RESX:Name].Text" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="[RESX:RoleName].Text" xml:space="preserve">
+    <value>Role Name</value>
+  </data>
+  <data name="[RESX:SecurityRoles].Text" xml:space="preserve">
+    <value>Security Roles</value>
+  </data>
+  <data name="[RESX:UserAccount].Text" xml:space="preserve">
+    <value>User Account</value>
+  </data>
+  <data name="[RESX:UserId].Text" xml:space="preserve">
+    <value>User Id</value>
+  </data>
+  <data name="[RESX:UserOnLineStatus].Text" xml:space="preserve">
+    <value>User Online</value>
+  </data>
+  <data name="[RESX:TopicReview].Text" xml:space="preserve">
+    <value>Topic Review</value>
+  </data>
+  <data name="[RESX:ADDTHIS].Text" xml:space="preserve">
+    <value>AddThis - Bookmarking and Sharing Button</value>
+  </data>
+  <data name="[RESX:AddToFavorites].Text" xml:space="preserve">
+    <value>Add this to your browser favorites</value>
+  </data>
+  <data name="[RESX:ForumOptions].Text" xml:space="preserve">
+    <value>Tracking Options</value>
+  </data>
+  <data name="[RESX:ForumSubscribe:Disabled].Text" xml:space="preserve">
+    <value>Email notifications are disabled.</value>
+  </data>
+  <data name="[RESX:Label:ForumTracking].Text" xml:space="preserve">
+    <value>Forum Tracking</value>
+  </data>
+  <data name="[RESX:RSSDisabled].Text" xml:space="preserve">
+    <value>RSS Feed is not available.</value>
+  </data>
+  <data name="[RESX:NotTrusted].Text" xml:space="preserve">
+    <value>Not Trusted</value>
+  </data>
+  <data name="[RESX:Trusted].Text" xml:space="preserve">
+    <value>Trusted</value>
+  </data>
+  <data name="[RESX:For].Text" xml:space="preserve">
+    <value>for</value>
+  </data>
+  <data name="[RESX:On].Text" xml:space="preserve">
+    <value>on</value>
+  </data>
+  <data name="[RESX:ReadMoreSmall].Text" xml:space="preserve">
+    <value>(read more)</value>
+  </data>
+  <data name="[RESX:ReadMore].Text" xml:space="preserve">
+    <value>Read More &amp;gt;&amp;gt;</value>
+  </data>
+  <data name="[RESX:Confirm:Reject].Text" xml:space="preserve">
+    <value>Are you sure you wish to reject this message?</value>
+  </data>
+  <data name="[RESX:ProfileVisibility].Text" xml:space="preserve">
+    <value>Profile Visibility</value>
+  </data>
+  <data name="[RESX:Tips:ProfileVisibility].Text" xml:space="preserve">
+    <value>Select what type of users should have access to view other profiles.</value>
+  </data>
+  <data name="[RESX:AllowDownload].Text" xml:space="preserve">
+    <value>Display Link?</value>
+  </data>
+  <data name="[RESX:AttachFiles].Text" xml:space="preserve">
+    <value>Current Attachments</value>
+  </data>
+  <data name="[RESX:CreateThumbnail].Text" xml:space="preserve">
+    <value>Create Thumbnail</value>
+  </data>
+  <data name="[RESX:FileName].Text" xml:space="preserve">
+    <value>File Name</value>
+  </data>
+  <data name="[RESX:FileSize].Text" xml:space="preserve">
+    <value>File Size</value>
+  </data>
+  <data name="[RESX:InsertImage].Text" xml:space="preserve">
+    <value>Insert Image</value>
+  </data>
+  <data name="[RESX:MyFiles].Text" xml:space="preserve">
+    <value>My Files</value>
+  </data>
+  <data name="[RESX:AddAttach].Text" xml:space="preserve">
+    <value>Add File to Post</value>
+  </data>
+  <data name="[RESX:Actions:CreateThumbnail].Text" xml:space="preserve">
+    <value>Create Thumbnail</value>
+  </data>
+  <data name="[RESX:Create].Text" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="[RESX:Height].Text" xml:space="preserve">
+    <value>Height</value>
+  </data>
+  <data name="[RESX:ThumbLink].Text" xml:space="preserve">
+    <value>Link to original image</value>
+  </data>
+  <data name="[RESX:ThumbProportions].Text" xml:space="preserve">
+    <value>Constrain proportions</value>
+  </data>
+  <data name="[RESX:Width].Text" xml:space="preserve">
+    <value>Width</value>
+  </data>
+  <data name="[RESX:Label:AboutMe].Text" xml:space="preserve">
+    <value>About Me</value>
+  </data>
+  <data name="[RESX:Label:MyOrders].Text" xml:space="preserve">
+    <value>My Orders</value>
+  </data>
+  <data name="[RESX:Label:RecentPosts].Text" xml:space="preserve">
+    <value>Recent Posts</value>
+  </data>
+  <data name="[RESX:Label:UserAccount].Text" xml:space="preserve">
+    <value>User Account</value>
+  </data>
+  <data name="[RESX:LastVisit].Text" xml:space="preserve">
+    <value>Last Visit</value>
+  </data>
+  <data name="[RESX:MemberSince].Text" xml:space="preserve">
+    <value>Member Since</value>
+  </data>
+  <data name="[RESX:Private].Text" xml:space="preserve">
+    <value>&lt;i&gt;Private&lt;/i&gt;</value>
+  </data>
+  <data name="[RESX:CompanyName].Text" xml:space="preserve">
+    <value>Company Name</value>
+  </data>
+  <data name="[RESX:Label:HelpDesk].Text" xml:space="preserve">
+    <value>Help Desk</value>
+  </data>
+  <data name="[RESX:Label:OrderHistory].Text" xml:space="preserve">
+    <value>Order History</value>
+  </data>
+  <data name="[RESX:MySettings].Text" xml:space="preserve">
+    <value>My Settings</value>
+  </data>
+  <data name="[RESX:UserSettings].Text" xml:space="preserve">
+    <value>User Settings</value>
+  </data>
+  <data name="[RESX:LastUpdate].Text" xml:space="preserve">
+    <value>Last Activity</value>
+  </data>
+  <data name="[RESX:RankDisplay].Text" xml:space="preserve">
+    <value>Level</value>
+  </data>
+  <data name="[RESX:RankName].Text" xml:space="preserve">
+    <value>Rank</value>
+  </data>
+  <data name="[RESX:ActiveMembers].Text" xml:space="preserve">
+    <value>Top Members</value>
+  </data>
+  <data name="[RESX:PopularTags].Text" xml:space="preserve">
+    <value>Popular Tags</value>
+  </data>
+  <data name="[RESX:QuickLinks].Text" xml:space="preserve">
+    <value>Quick Links</value>
+  </data>
+  <data name="[RESX:RecentDiscussions].Text" xml:space="preserve">
+    <value>Recent Discussions</value>
+  </data>
+  <data name="[RESX:TimeSpan:DayAgo].Text" xml:space="preserve">
+    <value>a day ago</value>
+  </data>
+  <data name="[RESX:TimeSpan:DaysAgo].Text" xml:space="preserve">
+    <value>{0} days ago</value>
+  </data>
+  <data name="[RESX:TimeSpan:HourAgo].Text" xml:space="preserve">
+    <value>an hour ago</value>
+  </data>
+  <data name="[RESX:TimeSpan:HoursAgo].Text" xml:space="preserve">
+    <value>about {0} hours ago</value>
+  </data>
+  <data name="[RESX:TimeSpan:MinuteAgo].Text" xml:space="preserve">
+    <value>a minute ago</value>
+  </data>
+  <data name="[RESX:TimeSpan:MinutesAgo].Text" xml:space="preserve">
+    <value>{0} minutes ago</value>
+  </data>
+  <data name="[RESX:TimeSpan:MonthAgo].Text" xml:space="preserve">
+    <value>a month ago</value>
+  </data>
+  <data name="[RESX:TimeSpan:MonthsAgo].Text" xml:space="preserve">
+    <value>about {0} months ago</value>
+  </data>
+  <data name="[RESX:TimeSpan:SecondAgo].Text" xml:space="preserve">
+    <value>a second ago</value>
+  </data>
+  <data name="[RESX:TimeSpan:SecondsAgo].Text" xml:space="preserve">
+    <value>{0} seconds ago</value>
+  </data>
+  <data name="[RESX:TimeSpan:Today].Text" xml:space="preserve">
+    <value>Today</value>
+  </data>
+  <data name="[RESX:TimeSpan:YearAgo].Text" xml:space="preserve">
+    <value>a year ago</value>
+  </data>
+  <data name="[RESX:TimeSpan:YearsAgo].Text" xml:space="preserve">
+    <value>about {0} years ago</value>
+  </data>
+  <data name="[RESX:TimeSpan:Yesterday].Text" xml:space="preserve">
+    <value>Yesterday</value>
+  </data>
+  <data name="[RESX:Lock].Text" xml:space="preserve">
+    <value>Lock</value>
+  </data>
+  <data name="[RESX:Move].Text" xml:space="preserve">
+    <value>Move</value>
+  </data>
+  <data name="[RESX:IN].Text" xml:space="preserve">
+    <value>in</value>
+  </data>
+  <data name="[RESX:RE].Text" xml:space="preserve">
+    <value>RE:</value>
+  </data>
+  <data name="[RESX:CodeDesc].Text" xml:space="preserve">
+    <value>Code display:[code]code[/code]</value>
+  </data>
+  <data name="[RESX:Code].Text" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="[RESX:ImageDesc].Text" xml:space="preserve">
+    <value>Image display:[img]image[/img]</value>
+  </data>
+  <data name="[RESX:Image].Text" xml:space="preserve">
+    <value>Image</value>
+  </data>
+  <data name="[RESX:Categories].Text" xml:space="preserve">
+    <value>Categories</value>
+  </data>
+  <data name="[RESX:TopicPriority].Text" xml:space="preserve">
+    <value>Sort Priority</value>
+  </data>
+  <data name="[RESX:No].Text" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="[RESX:Yes].Text" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="[RESX:AT].Text" xml:space="preserve">
+    <value>at</value>
+  </data>
+  <data name="[RESX:Priority].Text" xml:space="preserve">
+    <value>Priority</value>
+  </data>
+  <data name="[RESX:Properties].Text" xml:space="preserve">
+    <value>Properties</value>
+  </data>
+  <data name="[RESX:Status].Text" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="[RESX:TopicQuickEdit].Text" xml:space="preserve">
+    <value>Topic Option Editor</value>
+  </data>
+  <data name="[RESX:Save].Text" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="AlertBody.Text" xml:space="preserve">
+    <value>&lt;b&gt;Reason:&lt;/b&gt; [Reason]&lt;br /&gt;&lt;b&gt;Comments:&lt;/b&gt; [Comment]&lt;hr noshade /&gt;[Post] &lt;br /&gt;&lt;br /&gt;&lt;a href="[URL]" target="_blank"&gt;[URL]&lt;/a&gt;&lt;br /&gt;&lt;br /&gt;</value>
+  </data>
+  <data name="AlertSubject.Text" xml:space="preserve">
+    <value>A post by [DisplayName] has been flagged for review</value>
+  </data>
+  <data name="NotificationBodyReply.Text" xml:space="preserve">
+    <value>[Post]</value>
+  </data>
+  <data name="NotificationSubjectReply.Text" xml:space="preserve">
+    <value>[DisplayName] has posted a reply to [TopicSubject]</value>
+  </data>
+  <data name="NotificationBodyTopic.Text" xml:space="preserve">
+    <value>[Post]</value>
+  </data>
+  <data name="NotificationSubjectTopic.Text" xml:space="preserve">
+    <value>[DisplayName] has created a new topic: [TopicSubject]</value>
+  </data>
+  <data name="ForumEditor.Text" xml:space="preserve">
+    <value>Forum Editor</value>
+  </data>
+  <data name="[RESX:DisplayLink].Text" xml:space="preserve">
+    <value>Display Link?</value>
+  </data>
+  <data name="[RESX:Signature].Help" xml:space="preserve">
+    <value>Please enter a signature that you would like added included with your posts.</value>
+  </data>
+</root>

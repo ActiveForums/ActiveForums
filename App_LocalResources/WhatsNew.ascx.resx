@@ -1,0 +1,246 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="[RESX:AllowURLParams].Text" xml:space="preserve">
+    <value>Allow URL Params</value>
+  </data>
+  <data name="[RESX:CacheTimeOut].Text" xml:space="preserve">
+    <value>Cache timeout</value>
+  </data>
+  <data name="[RESX:EnableRSS].Text" xml:space="preserve">
+    <value>Enable RSS</value>
+  </data>
+  <data name="[RESX:FilterByTag].Text" xml:space="preserve">
+    <value>Filter By Tag</value>
+  </data>
+  <data name="[RESX:HTMLFooter].Text" xml:space="preserve">
+    <value>HTML Footer</value>
+  </data>
+  <data name="[RESX:HTMLHeader].Text" xml:space="preserve">
+    <value>HTML Header</value>
+  </data>
+  <data name="[RESX:HTMLTemplate].Text" xml:space="preserve">
+    <value>Template</value>
+  </data>
+  <data name="[RESX:IgnoreSecurity].Text" xml:space="preserve">
+    <value>Ignore Security</value>
+  </data>
+  <data name="[RESX:IncludeBody].Text" xml:space="preserve">
+    <value>Include Body</value>
+  </data>
+  <data name="[RESX:Minutes].Text" xml:space="preserve">
+    <value>minutes</value>
+  </data>
+  <data name="[RESX:NumberOfItems].Text" xml:space="preserve">
+    <value>Number of Items</value>
+  </data>
+  <data name="[RESX:RandomOrder].Text" xml:space="preserve">
+    <value>Random Order</value>
+  </data>
+  <data name="[RESX:Token:AuthorDisplayName].Text" xml:space="preserve">
+    <value>Displays the user selected name of person who created the post.</value>
+  </data>
+  <data name="[RESX:Token:AuthorFirstName].Text" xml:space="preserve">
+    <value>Displays the first name of the person who created the post.</value>
+  </data>
+  <data name="[RESX:Token:AuthorId].Text" xml:space="preserve">
+    <value>Displays the user id of the person who created the post.</value>
+  </data>
+  <data name="[RESX:Token:AuthorLastName].Text" xml:space="preserve">
+    <value>Displays the last name of the person who created the post.</value>
+  </data>
+  <data name="[RESX:Token:AuthorUserName].Text" xml:space="preserve">
+    <value>Displays the user name of the person who created the post.</value>
+  </data>
+  <data name="[RESX:Token:BodyHTML].Text" xml:space="preserve">
+    <value>Displays the full text of the post with HTML formatting.</value>
+  </data>
+  <data name="[RESX:Token:BodyText].Text" xml:space="preserve">
+    <value>Removes all HTML formatting from the post.</value>
+  </data>
+  <data name="[RESX:Token:BodyXX].Text" xml:space="preserve">
+    <value>Replace the XX with the number of plain text characters that you would like displayed.</value>
+  </data>
+  <data name="[RESX:Token:Date].Text" xml:space="preserve">
+    <value>Displays the date when the post was created.</value>
+  </data>
+  <data name="[RESX:Token:FooterOnly].Text" xml:space="preserve">
+    <value>The following tokens can be used in the Footer section.</value>
+  </data>
+  <data name="[RESX:Token:ForumGroupId].Text" xml:space="preserve">
+    <value>Renders the unique id for the Forum Group for the post.</value>
+  </data>
+  <data name="[RESX:Token:ForumGroupName].Text" xml:space="preserve">
+    <value>Displays the name of the Forum Group for the post.</value>
+  </data>
+  <data name="[RESX:Token:ForumId].Text" xml:space="preserve">
+    <value>Displays the unique id for the Forum where the post is located.</value>
+  </data>
+  <data name="[RESX:Token:ForumName].Text" xml:space="preserve">
+    <value>Displays the name of the Forum for the post.</value>
+  </data>
+  <data name="[RESX:Token:ForumURL].Text" xml:space="preserve">
+    <value>Renders the URL to the forum where the post is located.</value>
+  </data>
+  <data name="[RESX:Token:PostURL].Text" xml:space="preserve">
+    <value>Renders the full URL to the given post.</value>
+  </data>
+  <data name="[RESX:Token:ReplyCount].Text" xml:space="preserve">
+    <value>Renders the number of replies for the topic.</value>
+  </data>
+  <data name="[RESX:Token:ReplyId].Text" xml:space="preserve">
+    <value>Renders the reply id of the post, if it is a reply that is being displayed.</value>
+  </data>
+  <data name="[RESX:Token:RSSIconLink].Text" xml:space="preserve">
+    <value>Displays the default RSS Icon as a hyperlink to the RSS feed.</value>
+  </data>
+  <data name="[RESX:Token:RSSICON].Text" xml:space="preserve">
+    <value>Displays the default RSS Icon.</value>
+  </data>
+  <data name="[RESX:Token:RSSURL].Text" xml:space="preserve">
+    <value>Displays the URL for the RSS feed.</value>
+  </data>
+  <data name="[RESX:Token:SubjectLink].Text" xml:space="preserve">
+    <value>Renders the Subject as a hyperlink to the post.</value>
+  </data>
+  <data name="[RESX:Token:Subject].Text" xml:space="preserve">
+    <value>Displays the Subject of the post.</value>
+  </data>
+  <data name="[RESX:Token:TemplateOnly].Text" xml:space="preserve">
+    <value>The following tokens can be used in the Template section.</value>
+  </data>
+  <data name="[RESX:Token:TopicId].Text" xml:space="preserve">
+    <value>Renders the unique topic id of the post.</value>
+  </data>
+  <data name="[RESX:Token:TopicModuleId].Text" xml:space="preserve">
+    <value>Renders the module id for the instance of the forums where the post is located.</value>
+  </data>
+  <data name="[RESX:Token:TopicsURL].Text" xml:space="preserve">
+    <value>Renders the URL to the topic.</value>
+  </data>
+  <data name="[RESX:Token:TopicTabId].Text" xml:space="preserve">
+    <value>Renders the tab id for the page where the post is located.</value>
+  </data>
+  <data name="[RESX:TopicsOnly].Text" xml:space="preserve">
+    <value>Topics Only</value>
+  </data>
+  <data name="[RESX:Update].Text" xml:space="preserve">
+    <value>Update</value>
+  </data>
+</root>

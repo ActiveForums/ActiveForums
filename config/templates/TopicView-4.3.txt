@@ -1,0 +1,49 @@
+<%@ Register TagPrefix="am" Namespace="DotNetNuke.Modules.ActiveForums.Controls" Assembly="DotNetNuke.Modules.ActiveForums" %>
+[NOTOOLBAR]
+<table class="fcv-table">
+	<tr>
+		<td class="fcv-nav">
+			<div class="fcv-wrap">
+			<am:ForumNavigator PortalId="[PORTALID]" ModuleId="[MODULEID]" TabId="[TABID]" runat="server">
+				<itemtemplate>
+				<ul class="asul">
+			[AF:DIR:FORUMGROUP]
+				<li><span class="afn-group">[AF:DIR:FORUMGROUPNAME]</span>
+				<ul class="afn-groupset">
+				[AF:DIR:FORUM]
+					<li class="afn-forum [AF:DIR:SELECTEDFORUM]"><a href="[AF:DIR:FORUMURL]"><b></b>[AF:DIR:FORUMNAME]</a>
+                    <ul>
+					[AF:DIR:SUBFORUM]
+                        <li class="afn-subforum [AF:DIR:SELECTEDSUBFORUM]"><a href="[AF:DIR:FORUMURL]"><b></b>[AF:DIR:FORUMNAME]</a>
+					[/AF:DIR:SUBFORUM]
+                    </ul>
+					</li>
+				[/AF:DIR:FORUM]
+				</ul>
+				</li>
+			[/AF:DIR:FORUMGROUP]
+			</ul>
+				</itemtemplate>
+			</am:ForumNavigator>
+			</div>
+		</td>
+		<td class="fcv-content">
+			<table class="aftb-topics-grid aftb-topics">
+				<am:TopicNavigator runat="server">
+					<itemtemplate>
+						<div><a href="[TOPICURL]">[TOPICSTATE]</a></div>
+						<div><a href="[TOPICURL]">[SUBJECT]</a></div>
+						<div>[LASTDATE] [RESX:IN] <a href="[FORUMURL]">[FORUMNAME]</a> <span>[RESX:Views]: [VIEWCOUNT] [RESX:REPLIES]: [REPLYCOUNT]</span></div>
+						<div>
+								[RESX:BY] <a href="#">[LASTAUTHORDISPLAYNAME]</a>
+							
+							<div class="aftb-avatar"><div>[AVATAR]</div></div>
+						[REPLIES]
+							<div>[REPLYBODY]</div>
+						[/REPLIES]
+					</itemtemplate>
+				</am:TopicNavigator>
+			</table>
+		</td>
+	</tr>
+</table>

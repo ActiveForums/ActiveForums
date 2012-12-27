@@ -1,0 +1,9 @@
+At [POSTDATE] a message was posted to a thread you were tracking.
+[SUBJECT] by [DISPLAYNAME]
+[BODY]
+To view the complete thread and reply, please visit:
+[LINK]
+You were sent this email because you opted to receive email notifications when someone responded to this thread. To unsubscribe to this thread please visit your user profile page delete this post from your subscribed topics.
+
+Thank you,
+[PORTALNAME]
