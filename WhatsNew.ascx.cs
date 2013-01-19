@@ -31,8 +31,8 @@ namespace DotNetNuke.Modules.ActiveForums
         #endregion
 
         protected override void OnLoad(EventArgs e)
-		{
-			base.OnLoad(e);
+        {
+            base.OnLoad(e);
 
             int timeOffset;
             timeOffset = PortalSettings.TimeZoneOffset;
@@ -78,7 +78,7 @@ namespace DotNetNuke.Modules.ActiveForums
             {
                 Rows = Convert.ToInt32(settings["AFTopPostsNumber"]);
             }
-            if (Convert.ToString(settings["AFTopPostsFormat"])!= null)
+            if (Convert.ToString(settings["AFTopPostsFormat"]) != null)
             {
                 Template = Convert.ToString(settings["AFTopPostsFormat"]);
             }
@@ -122,7 +122,7 @@ namespace DotNetNuke.Modules.ActiveForums
             var db = new Data.Common();
             forumids = db.CheckForumIdsForView(forumids, u.UserRoles);
 
-            IDataReader dr = DataProvider.Instance().GetPosts(PortalId, forumids, TopicsOnly, RandomOrder, Rows, UserId, false, UserInfo.IsSuperUser, Tags);
+            IDataReader dr = DataProvider.Instance().GetPosts(PortalId, forumids, TopicsOnly, RandomOrder, Rows, false, Tags);
             sb.Append(Header);
             int BodyLength = -1;
             string BodyTrim = "";

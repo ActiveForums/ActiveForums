@@ -135,8 +135,8 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
         }
 
         protected override void OnLoad(EventArgs e)
-		{
-			base.OnLoad(e);
+        {
+            base.OnLoad(e);
 
             //'Put user code to initialize the page here
             HttpContext.Current.Response.ContentType = "text/xml";
@@ -226,7 +226,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             DotNetNuke.Entities.Users.UserInfo ui = null;
             ui = DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo();
             bool useFriendly = Utilities.IsRewriteLoaded();
-            IDataReader dr = DataProvider.Instance().GetPosts(PortalId, forumids, true, false, Rows, ui.UserID, IgnoreSecurity, false, tags);
+            IDataReader dr = DataProvider.Instance().GetPosts(PortalId, forumids, true, false, Rows, IgnoreSecurity, tags);
             string sHost = Utilities.GetHost();
             try
             {

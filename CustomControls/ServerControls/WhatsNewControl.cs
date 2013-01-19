@@ -164,8 +164,8 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             }
         }
         protected override void OnLoad(EventArgs e)
-		{
-			base.OnLoad(e);
+        {
+            base.OnLoad(e);
 
             //If TabId = -1 Then
             //    TabId = CInt(Request.QueryString["TabId"])
@@ -228,7 +228,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 }
                 else
                 {
-                    dr = DataProvider.Instance().GetPosts(PortalId, ForumIds, TopicsOnly, RandomOrder, Rows, UserId, false, UserInfo.IsSuperUser, Tags, FilterByUserId);
+                    dr = DataProvider.Instance().GetPosts(PortalId, ForumIds, TopicsOnly, RandomOrder, Rows, false, Tags, FilterByUserId);
                 }
                 bool useFriendly = Utilities.IsRewriteLoaded();
                 string sHost = Utilities.GetHost();
