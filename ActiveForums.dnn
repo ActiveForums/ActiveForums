@@ -1,6 +1,6 @@
 ﻿<dotnetnuke type="Package" version="5.0">
     <packages>
-        <package name="Active Forums" type="Module" version="05.00.02">
+        <package name="Active Forums" type="Module" version="05.00.03">
             <friendlyname>Active Forums</friendlyname>
             <description>Active Forums - Forum module for DotNetNuke</description>
             <iconFile></iconFile>
@@ -13,7 +13,7 @@
             <license src="License.txt"></license>
             <releaseNotes src="ReleaseNotes.txt"></releaseNotes>
             <dependencies>
-                <dependency type="CoreVersion">06.02.00</dependency>
+                <dependency type="CoreVersion">07.00.00</dependency>
             </dependencies>
             <components>
                 <component type="Module">
