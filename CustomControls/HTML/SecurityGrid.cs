@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data;
-
-using DotNetNuke.Entities.Portals;
 using System.Collections.Specialized;
 using System.Text;
+using DotNetNuke.Entities.Portals;
 
 namespace DotNetNuke.Modules.ActiveForums.Controls
 {
 	public class SecurityGrid
 	{
-		public PortalSettings PortalSettings {get; set;}
+		public DotNetNuke.Entities.Portals.PortalSettings PortalSettings {get; set;}
 		public int PortalId
 		{
 			get
@@ -23,7 +20,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 		public string ImagePath {get; set;}
 		public PermissionInfo Security {get; set;}
 		public int PermissionsId {get; set;}
-		public SecurityGrid(PortalSettings ps, bool isReadOnly, string imgPath, PermissionInfo sec, int permId)
+        public SecurityGrid(DotNetNuke.Entities.Portals.PortalSettings ps, bool isReadOnly, string imgPath, PermissionInfo sec, int permId)
 		{
 			PortalSettings = ps;
 			ReadOnly = isReadOnly;

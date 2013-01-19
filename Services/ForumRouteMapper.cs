@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using DotNetNuke.Web.Api;
+﻿using DotNetNuke.Web.Api;
 
 namespace DotNetNuke.Modules.ActiveForums
 {
