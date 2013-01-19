@@ -59,64 +59,77 @@ namespace DotNetNuke.Modules.ActiveForums
             return sb.ToString();
         }
 
-        [DnnAuthorize()]
+
+        //DTO for ToggleSecurity
+        public class ToggleSecurityDTO
+        {
+            public int ModuleId { get; set; }
+            public string Action { get; set; }
+            public int PermissionsId { get; set; }
+            public string SecurityId { get; set; }
+            public int SecurityType { get; set; }
+            public string SecurityKey { get; set; }
+            public string ReturnId { get; set; }
+        }
+
+        [DnnModuleAuthorize]
         [HttpPost]
-        public HttpResponseMessage ToggleSecurity(int ModuleId, string Action, int PermissionsId, string SecurityId, int SecurityType, string SecurityKey, string ReturnId)
+        public HttpResponseMessage ToggleSecurity(ToggleSecurityDTO dto)
         {
             Data.Common db = new Data.Common();
             StringBuilder sb = new StringBuilder();
-            switch (Action)
+            switch (dto.Action)
             {
                 case "delete":
                     {
-                        Permissions.RemoveObjectFromAll(SecurityId, SecurityType, PermissionsId);
+                        Permissions.RemoveObjectFromAll(dto.SecurityId, dto.SecurityType, dto.PermissionsId);
                         return Request.CreateResponse(HttpStatusCode.OK);
                         //return string.Empty;
                     }
                 case "addobject":
                     {
-                        if (SecurityType == 1)
+                        if (dto.SecurityType == 1)
                         {
                             UserController uc = new UserController();
-                            User ui = uc.GetUser(PortalSettings.PortalId, ModuleId, SecurityId);
+                            User ui = uc.GetUser(PortalSettings.PortalId, dto.ModuleId, dto.SecurityId);
                             if (ui != null)
                             {
-                                SecurityId = ui.UserId.ToString();
+                                dto.SecurityId = ui.UserId.ToString();
                             }
                             else
                             {
-                                SecurityId = string.Empty;
+                                dto.SecurityId = string.Empty;
                             }
                         }
                         else
                         {
-                            if (SecurityId.Contains(":"))
+                            if (dto.SecurityId.Contains(":"))
                             {
-                                SecurityType = 2;
+                                dto.SecurityType = 2;
                             }
                         }
-                        if (!(string.IsNullOrEmpty(SecurityId)))
+                        if (!(string.IsNullOrEmpty(dto.SecurityId)))
                         {
-                            string permSet = db.GetPermSet(PermissionsId, "View");
-                            permSet = Permissions.AddPermToSet(SecurityId, SecurityType, permSet);
-                            db.SavePermSet(PermissionsId, "View", permSet);
+                            string permSet = db.GetPermSet(dto.PermissionsId, "View");
+                            permSet = Permissions.AddPermToSet(dto.SecurityId, dto.SecurityType, permSet);
+                            db.SavePermSet(dto.PermissionsId, "View", permSet);
                         }
                         return Request.CreateResponse(HttpStatusCode.OK);
                         //return string.Empty;
                     }
                 default:
                     {
-                        string permSet = db.GetPermSet(PermissionsId, SecurityKey);
-                        if (Action == "remove")
+                        string permSet = db.GetPermSet(dto.PermissionsId, dto.SecurityKey);
+                        if (dto.Action == "remove")
                         {
-                            permSet = Permissions.RemovePermFromSet(SecurityId, SecurityType, permSet);
+                            permSet = Permissions.RemovePermFromSet(dto.SecurityId, dto.SecurityType, permSet);
                         }
                         else
                         {
-                            permSet = Permissions.AddPermToSet(SecurityId, SecurityType, permSet);
+                            permSet = Permissions.AddPermToSet(dto.SecurityId, dto.SecurityType, permSet);
                         }
-                        db.SavePermSet(PermissionsId, SecurityKey, permSet);
-                        return Request.CreateResponse(HttpStatusCode.OK, Action + "|" + ReturnId.ToString());
+                        db.SavePermSet(dto.PermissionsId, dto.SecurityKey, permSet);
+                        return Request.CreateResponse(HttpStatusCode.OK, dto.Action + "|" + dto.ReturnId.ToString());
                         //return Action + "|" + ReturnId.ToString();
                     }
             }

@@ -18,6 +18,7 @@ namespace DotNetNuke.Modules.ActiveForums
         private string _Params = string.Empty;
         private int _forumTabId = -1;
         #endregion
+
         #region Public Properties
         internal User ForumUser
         {

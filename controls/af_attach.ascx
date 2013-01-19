@@ -114,11 +114,11 @@
 		data.FileId = $('#thumb-id').val();
 		data.Height = $('#txtHeight').val();
 		data.Width = $('#txtWidth').val();
-		sf.getAntiForgeryProperty(data);
+		//sf.getAntiForgeryProperty(data);
 
 		$.ajax({
 			type: "POST",
-			url: sf.getServiceRoot('ActiveForums') + "ForumService.ashx/CreateThumbnail",
+			url: sf.getServiceRoot('ActiveForums') + "ForumService/CreateThumbnail",
 			beforeSend: sf.setModuleHeaders,
 			data: data,
 			success: function (data) {
@@ -211,10 +211,10 @@ function getFileTicket(url){
 	var sf = $.ServicesFramework(<%=ModuleId%>);
 	var data = {};
 	data.Url = url;
-	 sf.getAntiForgeryProperty(data);
+	 //sf.getAntiForgeryProperty(data);
 	$.ajax({
 			type: "POST",
-			url: sf.getServiceRoot('ActiveForums') + "ForumService.ashx/EncryptTicket",
+			url: sf.getServiceRoot('ActiveForums') + "ForumService/EncryptTicket",
 			beforeSend: sf.setModuleHeaders,
 			data: data,
 			async: false,

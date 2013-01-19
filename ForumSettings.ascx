@@ -191,10 +191,10 @@
 		var data = {};
 		data.ModuleId = <%=ModuleId%>;
 		var sf = $.ServicesFramework(<%=ModuleId%>);
-		sf.getAntiForgeryProperty(data);
+		//sf.getAntiForgeryProperty(data);
 		$.ajax({
 				type: "POST",
-				url: sf.getServiceRoot('ActiveForums') + "AdminService.ashx/ToggleURLHandler",
+				url: sf.getServiceRoot('ActiveForums') + "AdminService/ToggleURLHandler",
 				beforeSend: sf.setModuleHeaders,
 				data: data,
 				success: function (data) {
