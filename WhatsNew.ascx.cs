@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections;
-using System.Data;
-
-using System.Web.UI.WebControls;
+using System.IO;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Web.UI;
 using DotNetNuke.Entities.Modules;
 
@@ -10,292 +10,209 @@ namespace DotNetNuke.Modules.ActiveForums
 {
     public partial class WhatsNew : PortalModuleBase, IActionable
     {
-        private Forum fi;
+        #region Private Variables
+
+        private User _currentUser;
+        private string _authorizedForums;
+        private WhatsNewModuleSettings _settings;
+
+        #endregion
+
+        #region Properties
+
+        private WhatsNewModuleSettings Settings
+        {
+            get
+            {
+                if (_settings == null)
+                {
+                    var settingsCacheKey = "aftp_" + ModuleId;
+
+                    var moduleSettings = DataCache.CacheRetrieve(settingsCacheKey) as Hashtable;
+                    if (moduleSettings == null)
+                    {
+                        moduleSettings = new ModuleController().GetModuleSettings(ModuleId);
+                        DataCache.CacheStore(settingsCacheKey, moduleSettings);
+                    }
+
+                    _settings = WhatsNewModuleSettings.CreateFromModuleSettings(moduleSettings);
+                }
+                return _settings;
+            }
+        }
+
+        private User CurrentUser
+        {
+            get { return _currentUser ?? (_currentUser = new UserController().GetUser(PortalId, -1)); }
+        }
+
+        private string AuthorizedForums
+        {
+            get
+            {
+                return _authorizedForums ??
+                       (_authorizedForums =
+                        new Data.Common().CheckForumIdsForView(Settings.Forums, CurrentUser.UserRoles));
+            }
+        }
+
+        #endregion
 
         #region DNN Actions
+
         public Entities.Modules.Actions.ModuleActionCollection ModuleActions
         {
             get
             {
-                var Actions = new Entities.Modules.Actions.ModuleActionCollection
+                return new Entities.Modules.Actions.ModuleActionCollection
                                   {
                                       {
-                                          GetNextActionID(), Utilities.GetSharedResource("Configure"),
-                                          Entities.Modules.Actions.ModuleActionType.AddContent, "", "",
+                                          GetNextActionID(), "Edit", /* Utilities.GetSharedResource("Configure") */
+                                          Entities.Modules.Actions.ModuleActionType.EditContent, "", "",
                                           EditUrl(), false, Security.SecurityAccessLevel.Edit, true, false
                                       }
                                   };
-                return Actions;
             }
         }
+
         #endregion
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
 
-            int timeOffset;
-            timeOffset = PortalSettings.TimeZoneOffset;
-            if (UserId > 0)
-            {
-                var dnnUser = Entities.Users.UserController.GetCurrentUserInfo();
-                timeOffset = dnnUser.Profile.TimeZone;
-                if (timeOffset == 0)
-                {
-                    timeOffset = PortalSettings.TimeZoneOffset;
-                }
-            }
-            var lit = new Literal();
-            var sb = new System.Text.StringBuilder();
-            string forumids = "";
-            bool TopicsOnly = false;
-            bool RandomOrder = false;
-            string Header = "";
-            string Template = "";
-            string Footer = "";
-            int Rows = 10;
-            bool bRSS = false;
-            bool bRSSSecurity = false;
-            bool bRSSIncludBody = false;
-            string Tags = "";
-            object obj = DataCache.CacheRetrieve("aftp" + ModuleId);
-            Hashtable settings;
-            if (obj == null)
-            {
-                settings = Entities.Portals.PortalSettings.GetModuleSettings(ModuleId);
-                DataCache.CacheStore("aftp" + ModuleId, settings);
-            }
-            else
-            {
-                settings = (Hashtable)obj;
-            }
+            var dr = DataProvider.Instance().GetPosts(PortalId, AuthorizedForums, Settings.TopicsOnly, Settings.RandomOrder, Settings.Rows, Settings.Tags);
 
-            if (Convert.ToString(settings["AFTopPostsForums"]) != null)
-            {
-                forumids = Convert.ToString(settings["AFTopPostsForums"]);
-            }
-            if (Convert.ToString(settings["AFTopPostsNumber"]) != null)
-            {
-                Rows = Convert.ToInt32(settings["AFTopPostsNumber"]);
-            }
-            if (Convert.ToString(settings["AFTopPostsFormat"]) != null)
-            {
-                Template = Convert.ToString(settings["AFTopPostsFormat"]);
-            }
-            if (Convert.ToString(settings["AFTopPostsHeader"]) != null)
-            {
-                Header = Convert.ToString(settings["AFTopPostsHeader"]);
-            }
-            if (Convert.ToString(settings["AFTopPostsFooter"]) != null)
-            {
-                Footer = Convert.ToString(settings["AFTopPostsFooter"]);
-            }
-            if (Convert.ToString(settings["AFTopPostsTags"]) != null)
-            {
-                Tags = Convert.ToString(settings["AFTopPostsTags"]);
-            }
-            if (Convert.ToString(settings["AFTopPostsRSS"]) != null)
-            {
-                bRSS = Convert.ToBoolean(settings["AFTopPostsRSS"]);
-            }
-            if (Convert.ToString(settings["AFTopPostsTopicsOnly"]) != null)
-            {
-                TopicsOnly = Convert.ToBoolean(settings["AFTopPostsTopicsOnly"]);
-            }
-            if (Convert.ToString(settings["AFTopPostsRandomOrder"]) != null)
-            {
-                RandomOrder = Convert.ToBoolean(settings["AFTopPostsRandomOrder"]);
-            }
-            if (Convert.ToString(settings["AFTopPostsSecurity"]) != null)
-            {
-                bRSSSecurity = Convert.ToBoolean(settings["AFTopPostsSecurity"]);
-            }
-            if (Convert.ToString(settings["AFTopPostsBody"]) != null)
-            {
-                bRSSIncludBody = Convert.ToBoolean(settings["AFTopPostsBody"]);
-            }
-            //If Not CType(Settings["AFTopPostsCache"], String) Is Nothing Then
-            //    txtCache.Text = CType(Settings["AFTopPostsCache"], String)
-            //End If
-            var uc = new UserController();
-            User u = uc.GetUser(PortalId, -1);
-            var db = new Data.Common();
-            forumids = db.CheckForumIdsForView(forumids, u.UserRoles);
+            var sb = new StringBuilder(Settings.Header);
 
-            IDataReader dr = DataProvider.Instance().GetPosts(PortalId, forumids, TopicsOnly, RandomOrder, Rows, false, Tags);
-            sb.Append(Header);
-            int BodyLength = -1;
-            string BodyTrim = "";
-            if (Template.Contains("[BODY:"))
-            {
-                int inStart = (Template.IndexOf("[BODY:", 0) + 1) + 5;
-                int inEnd = (Template.IndexOf("]", inStart - 1) + 1) - 1;
-                string sLength = Template.Substring(inStart, inEnd - inStart);
-                BodyLength = Convert.ToInt32(sLength);
-                BodyTrim = "[BODY:" + BodyLength.ToString() + "]";
-            }
-            bool useFriendly = Utilities.IsRewriteLoaded();
-            string sHost = Utilities.GetHost();
+            var useFriendly = Utilities.IsRewriteLoaded();
+            var sHost = Utilities.GetHost();
+
             try
             {
                 while (dr.Read())
                 {
-                    string sTempTemplate = Template;
-                    string GroupName;
-                    string GroupId;
-                    string TopicTabId;
-                    string TopicModuleId;
-                    string ForumName;
-                    string ForumId;
-                    string Subject;
-                    string UserName;
-                    string PostDate;
-                    string Body;
-                    string BodyHTML;
-                    string DisplayName;
-                    string ReplyCount;
-                    string LastPostDate;
-                    string TopicId;
-                    string ReplyId;
-                    string FirstName;
-                    string LastName;
-                    string AuthorId;
+                    var groupName = Convert.ToString(dr["GroupName"]);
+                    var groupId = Convert.ToInt32(dr["ForumGroupId"]);
+                    var topicTabId = Convert.ToInt32(dr["TabId"]);
+                    var topicModuleId = Convert.ToInt32(dr["ModuleId"]);
+                    var forumName = Convert.ToString(dr["ForumName"]);
+                    var forumId = Convert.ToInt32(dr["ForumId"]);
+                    var subject = Convert.ToString(dr["Subject"]);
+                    var userName = Convert.ToString(dr["AuthorUserName"]);
+                    var firstName = Convert.ToString(dr["AuthorFirstName"]);
+                    var lastName = Convert.ToString(dr["AuthorLastName"]);
+                    var authorId = Convert.ToInt32(dr["AuthorId"]);
+                    var displayName = Convert.ToString(dr["AuthorDisplayName"]);
+                    var postDate = Convert.ToDateTime(dr["DateCreated"]);
+                    var body = Utilities.StripHTMLTag(Convert.ToString(dr["Body"]));
+                    var topicId = Convert.ToInt32(dr["TopicId"]);
+                    var replyId = Convert.ToInt32(dr["ReplyId"]);
+                    var bodyHtml = Convert.ToString(dr["Body"]);
+                    var replyCount = Convert.ToInt32(dr["ReplyCount"]);
 
-                    string sForumUrl;
-                    string sTopicURL;
-                    string sGroupPrefixURL;
+                    var sForumUrl = dr["PrefixURL"].ToString();
+                    var sTopicUrl = dr["TopicURL"].ToString();
+                    var sGroupPrefixUrl = dr["GroupPrefixURL"].ToString();
 
-                    GroupName = Convert.ToString(dr["GroupName"]);
-                    GroupId = Convert.ToString(dr["ForumGroupId"]);
-                    TopicTabId = Convert.ToString(dr["TabId"]);
-                    TopicModuleId = Convert.ToString(dr["ModuleId"]);
-                    ForumName = Convert.ToString(dr["ForumName"]);
-                    ForumId = Convert.ToString(dr["ForumId"]);
-                    Subject = Convert.ToString(dr["Subject"]);
-                    UserName = Convert.ToString(dr["AuthorUserName"]);
-                    FirstName = Convert.ToString(dr["AuthorFirstName"]);
-                    LastName = Convert.ToString(dr["AuthorLastName"]);
-                    AuthorId = Convert.ToString(dr["AuthorId"]);
-                    DisplayName = Convert.ToString(dr["AuthorDisplayName"]);
-                    PostDate = Convert.ToString(dr["DateCreated"]);
-                    Body = Utilities.StripHTMLTag(Convert.ToString(dr["Body"]));
-                    TopicId = Convert.ToString(dr["TopicId"]);
-                    ReplyId = Convert.ToString(dr["ReplyId"]);
-                    BodyHTML = Convert.ToString(dr["Body"]);
-                    ReplyCount = Convert.ToString(dr["ReplyCount"]);
+                    var ts = DataCache.MainSettings(topicModuleId);
+                    var timeOffset = (int)UserInfo.Profile.PreferredTimeZone.GetUtcOffset(postDate).TotalMinutes;
 
-                    sForumUrl = dr["PrefixURL"].ToString();
-                    sTopicURL = dr["TopicURL"].ToString();
-                    sGroupPrefixURL = dr["GroupPrefixURL"].ToString();
+                    // Use a stringBuilder for better performance;
+                    var sbTemplate = new StringBuilder(Settings.Format ?? string.Empty);
 
-                    SettingsInfo ts = DataCache.MainSettings(Convert.ToInt32(TopicModuleId));
-                    sTempTemplate = sTempTemplate.Replace("[FORUMGROUPNAME]", GroupName);
-                    sTempTemplate = sTempTemplate.Replace("[FORUMGROUPID]", GroupId);
-                    sTempTemplate = sTempTemplate.Replace("[TOPICTABID]", TopicTabId);
-                    sTempTemplate = sTempTemplate.Replace("[TOPICMODULEID]", TopicModuleId);
-                    sTempTemplate = sTempTemplate.Replace("[FORUMNAME]", ForumName);
-                    sTempTemplate = sTempTemplate.Replace("[FORUMID]", ForumId);
-                    sTempTemplate = sTempTemplate.Replace("[SUBJECT]", Subject);
-                    sTempTemplate = sTempTemplate.Replace("[AUTHORUSERNAME]", UserName);
-                    sTempTemplate = sTempTemplate.Replace("[AUTHORFIRSTNAME]", FirstName);
-                    sTempTemplate = sTempTemplate.Replace("[AUTHORLASTNAME]", LastName);
-                    sTempTemplate = sTempTemplate.Replace("[AUTHORID]", AuthorId);
-                    sTempTemplate = sTempTemplate.Replace("[AUTHORDISPLAYNAME]", DisplayName);
-                    sTempTemplate = sTempTemplate.Replace("[DATE]", Utilities.GetDate(Convert.ToDateTime(PostDate), Convert.ToInt32(TopicModuleId), timeOffset));
-                    sTempTemplate = sTempTemplate.Replace("[BODY]", Body);
-                    sTempTemplate = sTempTemplate.Replace("[BODYHTML]", BodyHTML);
-                    sTempTemplate = sTempTemplate.Replace("[BODYTEXT]", Utilities.StripHTMLTag(BodyHTML));
-                    if (BodyTrim != string.Empty)
-                    {
-                        if (BodyLength > 0 & Body.Length > BodyLength)
-                        {
-                            sTempTemplate = sTempTemplate.Replace(BodyTrim, Body.Substring(0, BodyLength));
-                        }
-                        else
-                        {
-                            sTempTemplate = sTempTemplate.Replace(BodyTrim, Body);
-                        }
-                    }
+                    sbTemplate = sbTemplate.Replace("[FORUMGROUPNAME]", groupName);
+                    sbTemplate = sbTemplate.Replace("[FORUMGROUPID]", groupId.ToString());
+                    sbTemplate = sbTemplate.Replace("[TOPICTABID]", topicTabId.ToString());
+                    sbTemplate = sbTemplate.Replace("[TOPICMODULEID]", topicModuleId.ToString());
+                    sbTemplate = sbTemplate.Replace("[FORUMNAME]", forumName);
+                    sbTemplate = sbTemplate.Replace("[FORUMID]", forumId.ToString());
+                    sbTemplate = sbTemplate.Replace("[SUBJECT]", subject);
+                    sbTemplate = sbTemplate.Replace("[AUTHORUSERNAME]", userName);
+                    sbTemplate = sbTemplate.Replace("[AUTHORFIRSTNAME]", firstName);
+                    sbTemplate = sbTemplate.Replace("[AUTHORLASTNAME]", lastName);
+                    sbTemplate = sbTemplate.Replace("[AUTHORID]", authorId.ToString());
+                    sbTemplate = sbTemplate.Replace("[AUTHORDISPLAYNAME]", displayName);
+                    sbTemplate = sbTemplate.Replace("[DATE]", Utilities.GetDate(postDate, topicModuleId, timeOffset));
+                    sbTemplate = sbTemplate.Replace("[TOPICID]", topicId.ToString());
+                    sbTemplate = sbTemplate.Replace("[REPLYID]", replyId.ToString());
+                    sbTemplate = sbTemplate.Replace("[REPLYCOUNT]", replyCount.ToString());
 
-                    sTempTemplate = sTempTemplate.Replace("[TOPICID]", TopicId);
-                    sTempTemplate = sTempTemplate.Replace("[REPLYID]", ReplyId);
-                    sTempTemplate = sTempTemplate.Replace("[REPLYCOUNT]", ReplyCount);
-
-                    //Dim Expression As New Text.RegularExpressions.Regex("[{|\(]?[0-9a-fA-F]{8}[-]?([0-9a-fA-F]{4}[-]?){3}[0-9a-fA-F]{12}[\)|}]?$")
-                    //If Expression.IsMatch(Subject) Then
-                    //    Subject = Subject.Replace(Expression.Match(Subject).Value, String.Empty)
-                    //End If
-
-
-
-                    //UserProfiles.GetDisplayName(CInt(AuthorId), ts.UserNameDisplay, False, UserName, FirstName, LastName, DisplayName)
-                    if (useFriendly && !(string.IsNullOrEmpty(sForumUrl) && string.IsNullOrEmpty(sTopicURL)))
+                    if (useFriendly && !(string.IsNullOrEmpty(sForumUrl) && string.IsNullOrEmpty(sTopicUrl)))
                     {
                         var ctlUtils = new ControlUtils();
-                        sTopicURL = ctlUtils.BuildUrl(Convert.ToInt32(TopicTabId), Convert.ToInt32(TopicModuleId), sGroupPrefixURL, sForumUrl, Convert.ToInt32(GroupId), Convert.ToInt32(ForumId), Convert.ToInt32(TopicId), sTopicURL, -1, -1, string.Empty, 1, -1);
-                        sForumUrl = ctlUtils.BuildUrl(Convert.ToInt32(TopicTabId), Convert.ToInt32(TopicModuleId), sGroupPrefixURL, sForumUrl, Convert.ToInt32(GroupId), Convert.ToInt32(ForumId), -1, string.Empty, -1, -1, string.Empty, 1, -1);
+
+                        sTopicUrl = ctlUtils.BuildUrl(topicTabId, topicModuleId, sGroupPrefixUrl, sForumUrl, groupId, forumId, topicId, sTopicUrl, -1, -1, string.Empty, 1, -1);
+                        sForumUrl = ctlUtils.BuildUrl(topicTabId, topicModuleId, sGroupPrefixUrl, sForumUrl, groupId, forumId, -1, string.Empty, -1, -1, string.Empty, 1, -1);
+
                         if (sHost.EndsWith("/") && sForumUrl.StartsWith("/"))
                         {
                             sForumUrl = sForumUrl.Substring(1);
                         }
+
                         if (!(sForumUrl.StartsWith(sHost)))
                         {
                             sForumUrl = sHost + sForumUrl;
                         }
 
-                        if (sHost.EndsWith("/") && sTopicURL.StartsWith("/"))
+                        if (sHost.EndsWith("/") && sTopicUrl.StartsWith("/"))
                         {
-                            sTopicURL = sTopicURL.Substring(1);
-                        }
-                        if (!(sTopicURL.StartsWith(sHost)))
-                        {
-                            sTopicURL = sHost + sTopicURL;
+                            sTopicUrl = sTopicUrl.Substring(1);
                         }
 
-                        if (Convert.ToInt32(ReplyId) == 0)
+                        if (!(sTopicUrl.StartsWith(sHost)))
                         {
-                            sTempTemplate = sTempTemplate.Replace("[POSTURL]", sTopicURL);
-                            sTempTemplate = sTempTemplate.Replace("[SUBJECTLINK]", "<a href=\"" + sTopicURL + "\">" + Subject + "</a>");
+                            sTopicUrl = sHost + sTopicUrl;
+                        }
+
+                        if (Convert.ToInt32(replyId) == 0)
+                        {
+                            sbTemplate = sbTemplate.Replace("[POSTURL]", sTopicUrl);
+                            sbTemplate = sbTemplate.Replace("[SUBJECTLINK]", "<a href=\"" + sTopicUrl + "\">" + subject + "</a>");
                         }
                         else
                         {
-                            if (!(sTopicURL.EndsWith("/")) && !(sTopicURL.EndsWith("aspx")))
+                            if (!(sTopicUrl.EndsWith("/")) && !(sTopicUrl.EndsWith("aspx")))
                             {
-                                sTopicURL += "/";
+                                sTopicUrl += "/";
                             }
-                            sTopicURL += "?afc=" + ReplyId;
-                            sTempTemplate = sTempTemplate.Replace("[POSTURL]", sTopicURL);
-                            if (Request.IsAuthenticated)
-                            {
-                                sTempTemplate = sTempTemplate.Replace("[SUBJECTLINK]", "<a href=\"" + sTopicURL + "\">" + Subject + "</a>");
-                            }
-                            else
-                            {
-                                sTempTemplate = sTempTemplate.Replace("[SUBJECTLINK]", "<a href=\"" + sTopicURL + "\" rel=\"nofollow\">" + Subject + "</a>");
-                            }
+                            sTopicUrl += "?afc=" + replyId;
+                            sbTemplate = sbTemplate.Replace("[POSTURL]", sTopicUrl);
+                            sbTemplate = sbTemplate.Replace("[SUBJECTLINK]", "<a href=\"" + sTopicUrl + "\">" + subject + "</a>");
                         }
-                        sTempTemplate = sTempTemplate.Replace("[TOPICSURL]", sForumUrl);
+
+                        sbTemplate = sbTemplate.Replace("[TOPICSURL]", sForumUrl);
                     }
                     else
                     {
-                        if (Convert.ToInt32(ReplyId) == 0)
+                        if (replyId == 0)
                         {
-                            sTempTemplate = sTempTemplate.Replace("[POSTURL]", Common.Globals.NavigateURL(Convert.ToInt32(TopicTabId), "", new[] { ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + TopicId }));
-                            sTempTemplate = sTempTemplate.Replace("[SUBJECTLINK]", "<a href=\"" + Common.Globals.NavigateURL(Convert.ToInt32(TopicTabId), "", new[] { ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + TopicId }) + "\">" + Subject + "</a>");
+                            sbTemplate = sbTemplate.Replace("[POSTURL]", Common.Globals.NavigateURL(topicTabId, "", new[] { ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.ForumId + "=" + forumId, ParamKeys.TopicId + "=" + topicId }));
+                            sbTemplate = sbTemplate.Replace("[SUBJECTLINK]", "<a href=\"" + Common.Globals.NavigateURL(topicTabId, "", new[] { ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.ForumId + "=" + forumId, ParamKeys.TopicId + "=" + topicId }) + "\">" + subject + "</a>");
                         }
                         else
                         {
-                            sTempTemplate = sTempTemplate.Replace("[POSTURL]", Common.Globals.NavigateURL(Convert.ToInt32(TopicTabId), "", new[] { ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + TopicId, ParamKeys.ContentJumpId + "=" + ReplyId }));
-                            sTempTemplate = sTempTemplate.Replace("[SUBJECTLINK]", "<a href=\"" + Common.Globals.NavigateURL(Convert.ToInt32(TopicTabId), "", new[] { ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + TopicId, ParamKeys.ContentJumpId + "=" + ReplyId }) + "\">" + Subject + "</a>");
+                            sbTemplate = sbTemplate.Replace("[POSTURL]", Common.Globals.NavigateURL(topicTabId, "", new[] { ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.ForumId + "=" + forumId, ParamKeys.TopicId + "=" + topicId, ParamKeys.ContentJumpId + "=" + replyId }));
+                            sbTemplate = sbTemplate.Replace("[SUBJECTLINK]", "<a href=\"" + Common.Globals.NavigateURL(topicTabId, "", new[] { ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.ForumId + "=" + forumId, ParamKeys.TopicId + "=" + topicId, ParamKeys.ContentJumpId + "=" + replyId }) + "\">" + subject + "</a>");
                         }
-                        sTempTemplate = sTempTemplate.Replace("[TOPICSURL]", Common.Globals.NavigateURL(Convert.ToInt32(TopicTabId), "", new[] { ParamKeys.ViewType + "=" + Views.Topics, ParamKeys.ForumId + "=" + ForumId }));
+                        sbTemplate = sbTemplate.Replace("[TOPICSURL]", Common.Globals.NavigateURL(topicTabId, "", new[] { ParamKeys.ViewType + "=" + Views.Topics, ParamKeys.ForumId + "=" + forumId }));
                     }
 
 
-                    sTempTemplate = sTempTemplate.Replace("[FORUMURL]", Common.Globals.NavigateURL(Convert.ToInt32(TopicTabId)));
-                    sb.Append(sTempTemplate);
+                    sbTemplate = sbTemplate.Replace("[FORUMURL]", Common.Globals.NavigateURL(topicTabId));
 
+                    // Do the body replacements last as they are the most likely to contain conflicts.
 
+                    sbTemplate = sbTemplate.Replace("[BODY]", body);
+                    sbTemplate = sbTemplate.Replace("[BODYHTML]", bodyHtml);
+                    sbTemplate = sbTemplate.Replace("[BODYTEXT]", Utilities.StripHTMLTag(bodyHtml));
+
+                    var template = sbTemplate.ToString();
+
+                    // Do this regex replace first before moving on to the simpler ones.
+                    template = Regex.Replace(template, @"\[BODY\:\s*(\d+)\s*\]", m => SafeSubstring(body, int.Parse(m.Groups[1].Value)), RegexOptions.IgnoreCase);
+
+                    sb.Append(template);
                 }
                 dr.Close();
             }
@@ -307,31 +224,45 @@ namespace DotNetNuke.Modules.ActiveForums
                 }
                 sb.Append(ex.StackTrace);
             }
-            string sRSSImage = string.Empty;
-            string sRSSURL = string.Empty;
-            string sRSSIconLink = string.Empty;
-            if (bRSS)
+
+            var sRSSImage = string.Empty;
+            var sRSSUrl = string.Empty;
+            var sRSSIconLink = string.Empty;
+            if (Settings.RSSEnabled)
             {
                 sRSSImage = "<img src=\"" + Page.ResolveUrl("~/DesktopModules/ActiveForums/images/feedicon.gif") + "\" border=\"0\" />";
-                sRSSURL = Page.ResolveUrl("~/desktopmodules/activeforumswhatsnew/feeds.aspx") + "?portalId=" + PortalId + "&tabid=" + TabId.ToString() + "&moduleid=" + ModuleId.ToString();
-                sRSSIconLink = "<a href=\"" + sRSSURL + "\">" + sRSSImage + "</a>";
+                sRSSUrl = Page.ResolveUrl("~/desktopmodules/activeforumswhatsnew/feeds.aspx") + "?portalId=" + PortalId + "&tabid=" + TabId.ToString() + "&moduleid=" + ModuleId.ToString();
+                sRSSIconLink = "<a href=\"" + sRSSUrl + "\">" + sRSSImage + "</a>";
             }
-            Footer = Footer.Replace("[RSSICON]", sRSSImage);
-            Footer = Footer.Replace("[RSSURL]", sRSSURL);
-            Footer = Footer.Replace("[RSSICONLINK]", sRSSIconLink);
 
-            sb.Append(Footer);
-            lit.Text = sb.ToString();
-            Controls.Add(lit);
+            var footer = Settings.Footer;
+
+            footer = footer.Replace("[RSSICON]", sRSSImage);
+            footer = footer.Replace("[RSSURL]", sRSSUrl);
+            footer = footer.Replace("[RSSICONLINK]", sRSSIconLink);
+
+            sb.Append(footer);
+
+            Controls.Add(new LiteralControl(sb.ToString()));
         }
+
         protected override void Render(HtmlTextWriter writer)
         {
-            var stringWriter = new System.IO.StringWriter();
-            HtmlTextWriter htmlWriter = new HtmlTextWriter(stringWriter);
+            var stringWriter = new StringWriter();
+            var htmlWriter = new HtmlTextWriter(stringWriter);
             base.Render(htmlWriter);
-            string html = stringWriter.ToString();
+            var html = stringWriter.ToString();
             html = Utilities.LocalizeControl(html, "WhatsNew");
             writer.Write(html);
         }
+
+        #region Helper Methods
+
+        private static string SafeSubstring(string source, int length)
+        {
+            return (source.Length <= length) ? source : source.Substring(0, length);
+        }
+
+        #endregion
     }
 }

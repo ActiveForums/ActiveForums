@@ -11,74 +11,92 @@ namespace DotNetNuke.Modules.ActiveForums
     public partial class WhatsNewOptions : PortalModuleBase
     {
         #region Event Handlers
+
         protected override void OnLoad(EventArgs e)
-		{
-			base.OnLoad(e);
+        {
+            base.OnLoad(e);
 
             lnkUpdate.Click += lnkUpdate_Click;
+            lnkCancel.Click += lnkCancel_Click;
+
+            chkRSS.CheckedChanged += chkRSS_Change;
 
             Page.ClientScript.RegisterClientScriptInclude("afutils", Page.ResolveUrl("~/DesktopModules/ActiveForums/scripts/afutils.js"));
+
             if (!Page.IsPostBack)
             {
                 LoadForm();
             }
         }
+
         //Private Sub tsTags_Callback(ByVal sender As Object, ByVal e As Modules.ActiveForums.Controls.CallBackEventArgs) Handles tsTags.Callback
         //    tsTags.Datasource = DataProvider.Instance.Tags_Search(PortalId, ModuleId, e.Parameter.ToString + "%")
         //    tsTags.Refresh(e.Output)
         //End Sub
+
         private void lnkUpdate_Click(object sender, EventArgs e)
         {
             try
             {
-                var objModules = new ModuleController();
-
-                // Update Settings
-
                 // Construct Forums 
-                string f = string.Empty;
+                var forums = string.Empty;
                 if (GetNodeCount() != trForums.CheckedNodes.Count)
                 {
                     if (trForums.CheckedNodes.Count > 1)
                     {
-                        f = "";
+                        forums = string.Empty;
                         foreach (TreeNode tr in trForums.CheckedNodes)
                         {
                             if (tr.Value.Contains("F:"))
                             {
-                                f += tr.Value.Split(':')[1] + ":";
+                                forums += tr.Value.Split(':')[1] + ":";
                             }
                         }
                     }
                     else
                     {
-                        string sv = trForums.CheckedNodes[0].Value;
+                        var sv = trForums.CheckedNodes[0].Value;
                         if (sv.Contains("F:"))
                         {
-                            f = sv.Split(':')[1];
+                            forums = sv.Split(':')[1];
                         }
                     }
                 }
-                objModules.UpdateModuleSetting(ModuleId, "AFTopPostsForums", f);
-                objModules.UpdateModuleSetting(ModuleId, "AFTopPostsNumber", txtNumItems.Text);
-                objModules.UpdateModuleSetting(ModuleId, "AFTopPostsFormat", txtTemplate.Text);
-                objModules.UpdateModuleSetting(ModuleId, "AFTopPostsHeader", txtHeader.Text);
-                objModules.UpdateModuleSetting(ModuleId, "AFTopPostsFooter", txtFooter.Text);
-                objModules.UpdateModuleSetting(ModuleId, "AFTopPostsRSS", chkRSS.Checked.ToString());
-                objModules.UpdateModuleSetting(ModuleId, "AFTopPostsTopicsOnly", chkTopicsOnly.Checked.ToString());
-                objModules.UpdateModuleSetting(ModuleId, "AFTopPostsRandomOrder", chkRandomOrder.Checked.ToString());
-                objModules.UpdateModuleSetting(ModuleId, "AFTopPostsTags", txtTags.Text);
+
+                var mc = new ModuleController();
+
+                // Load the current settings
+                var settings = WhatsNewModuleSettings.CreateFromModuleSettings(mc.GetModuleSettings(ModuleId));
+
+                // Update Settings Values
+                settings.Forums = forums;
+
+                int rows;
+                if (int.TryParse(txtNumItems.Text, out rows))
+                    settings.Rows = int.Parse(txtNumItems.Text);
+
+                settings.Format = txtTemplate.Text;
+                settings.Header = txtHeader.Text;
+                settings.Footer = txtFooter.Text;
+                settings.RSSEnabled = chkRSS.Checked;
+                settings.TopicsOnly = chkTopicsOnly.Checked;
+                settings.RandomOrder = chkRandomOrder.Checked;
+                settings.Tags = txtTags.Text;
 
                 if (chkRSS.Checked)
                 {
-                    objModules.UpdateModuleSetting(ModuleId, "AFTopPostsSecurity", chkIgnoreSecurity.Checked.ToString());
-                    objModules.UpdateModuleSetting(ModuleId, "AFTopPostsBody", chkIncludeBody.Checked.ToString());
-                    objModules.UpdateModuleSetting(ModuleId, "AFTopPostsCache", txtCache.Text);
+                    settings.RSSIgnoreSecurity = chkIgnoreSecurity.Checked;
+                    settings.RSSIncludeBody = chkIncludeBody.Checked;
+
+                    int rssCacheTimeout;
+                    if (int.TryParse(txtCache.Text, out rssCacheTimeout))
+                        settings.RSSCacheTimeout = rssCacheTimeout;
                 }
 
+                // Save Settings
+                settings.Save(mc, ModuleId);
 
                 // Redirect back to the portal home page
-                DataCache.CacheClear("aftp" + ModuleId);
                 Response.Redirect(Common.Globals.NavigateURL(), true);
             }
             catch (Exception exc)
@@ -86,175 +104,125 @@ namespace DotNetNuke.Modules.ActiveForums
                 Services.Exceptions.Exceptions.ProcessModuleLoadException(this, exc);
             }
         }
+
+        private void lnkCancel_Click(object sender, EventArgs e)
+        {
+            Response.Redirect(Common.Globals.NavigateURL(), true);
+        }
+
+        private void chkRSS_Change(object sender, EventArgs e)
+        {
+            pnlRSS.Visible = chkRSS.Checked;
+            rqvTxtCache.Enabled = chkRSS.Checked;
+        }
+
         #endregion
+
         #region Private Methods
+
         private int GetNodeCount()
         {
-            int nc = 0;
-            nc += trForums.Nodes.Count;
+            var nc = trForums.Nodes.Count;
             foreach (TreeNode node in trForums.Nodes)
             {
                 nc += 1;
-                if (node.ChildNodes.Count > 0)
+                if (node.ChildNodes.Count <= 0) continue;
+
+                nc += node.ChildNodes.Count;
+                foreach (TreeNode cnode in node.ChildNodes)
                 {
-                    nc += node.ChildNodes.Count;
-                    foreach (TreeNode cnode in node.ChildNodes)
+                    nc += cnode.ChildNodes.Count;
+
+                    if (cnode.ChildNodes.Count <= 0) continue;
+
+                    foreach (TreeNode subnode in cnode.ChildNodes)
                     {
                         nc += cnode.ChildNodes.Count;
-                        if (cnode.ChildNodes.Count > 0)
-                        {
-                            foreach (TreeNode subnode in cnode.ChildNodes)
-                            {
-                                nc += cnode.ChildNodes.Count;
-                            }
-                        }
                     }
                 }
             }
 
             return nc;
         }
+
         private void LoadForm()
         {
-            Hashtable settings = Entities.Portals.PortalSettings.GetModuleSettings(ModuleId);
-            string forumids = "";
-            if (settings == null)
-            {
-                txtHeader.Text = "<div style=\"padding:25px;padding-top:35px;\">";
-                txtTemplate.Text = "<div style=\"padding-bottom:5px;\" class=\"normal\">[SUBJECTLINK]</div>";
-                txtFooter.Text = "[RSSICONLINK]</div>";
-                txtCache.Text = "10";
-            }
-            else if (settings.Count == 0)
-            {
-                txtHeader.Text = "<div style=\"padding:25px;padding-top:35px;\">";
-                txtTemplate.Text = "<div style=\"padding-bottom:5px;\" class=\"normal\">[SUBJECTLINK]</div>";
-                txtFooter.Text = "[RSSICONLINK]</div>";
-                txtCache.Text = "10";
-            }
-            else
-            {
-                if (!(Convert.ToString(settings["AFTopPostsForums"]) == null))
-                {
-                    forumids = Convert.ToString(settings["AFTopPostsForums"]);
-                }
-                if (!(Convert.ToString(settings["AFTopPostsNumber"]) == null))
-                {
-                    txtNumItems.Text = Convert.ToString(settings["AFTopPostsNumber"]);
-                }
-                if (!(Convert.ToString(settings["AFTopPostsFormat"]) == null))
-                {
-                    txtTemplate.Text = Convert.ToString(settings["AFTopPostsFormat"]);
-                }
-                if (!(Convert.ToString(settings["AFTopPostsHeader"]) == null))
-                {
-                    txtHeader.Text = Convert.ToString(settings["AFTopPostsHeader"]);
-                }
-                if (!(Convert.ToString(settings["AFTopPostsFooter"]) == null))
-                {
-                    txtFooter.Text = Convert.ToString(settings["AFTopPostsFooter"]);
-                }
-                if (!(Convert.ToString(settings["AFTopPostsRSS"]) == null))
-                {
-                    chkRSS.Checked = Convert.ToBoolean(settings["AFTopPostsRSS"]);
-                    trRSS.Visible = Convert.ToBoolean(settings["AFTopPostsRSS"]);
-                }
-                if (!(Convert.ToString(settings["AFTopPostsTopicsOnly"]) == null))
-                {
-                    chkTopicsOnly.Checked = Convert.ToBoolean(settings["AFTopPostsTopicsOnly"]);
-                }
-                if (!(Convert.ToString(settings["AFTopPostsTags"]) == null))
-                {
-                    txtTags.Text = Convert.ToString(settings["AFTopPostsTags"]);
-                }
-                if (!(Convert.ToString(settings["AFTopPostsRandomOrder"]) == null))
-                {
-                    chkRandomOrder.Checked = Convert.ToBoolean(settings["AFTopPostsRandomOrder"]);
-                }
-                if (!(Convert.ToString(settings["AFTopPostsSecurity"]) == null))
-                {
-                    chkIgnoreSecurity.Checked = Convert.ToBoolean(settings["AFTopPostsSecurity"]);
-                }
-                if (!(Convert.ToString(settings["AFTopPostsBody"]) == null))
-                {
-                    chkIncludeBody.Checked = Convert.ToBoolean(settings["AFTopPostsBody"]);
-                }
-                if (!(Convert.ToString(settings["AFTopPostsCache"]) == null))
-                {
-                    txtCache.Text = Convert.ToString(settings["AFTopPostsCache"]);
-                }
-            }
+            var moduleSettings = Entities.Portals.PortalSettings.GetModuleSettings(ModuleId);
+            var settings = WhatsNewModuleSettings.CreateFromModuleSettings(moduleSettings);
+
+            txtNumItems.Text = settings.Rows.ToString();
+            txtTemplate.Text = settings.Format;
+            txtHeader.Text = settings.Header;
+            txtFooter.Text = settings.Footer;
+            chkRSS.Checked = settings.RSSEnabled;
+            chkTopicsOnly.Checked = settings.TopicsOnly;
+            chkRandomOrder.Checked = settings.RandomOrder;
+            chkIgnoreSecurity.Checked = settings.RSSIgnoreSecurity;
+            chkIncludeBody.Checked = settings.RSSIncludeBody;
+            txtCache.Text = settings.RSSCacheTimeout.ToString();
+            txtTags.Text = settings.Tags;
 
             BindForumsTree();
-            if (forumids != string.Empty)
-            {
-                CheckNodes(forumids);
-            }
 
+            if (settings.Forums != string.Empty)
+                CheckNodes(settings.Forums);
 
-
-
-
+            pnlRSS.Visible = chkRSS.Checked;
+            rqvTxtCache.Enabled = chkRSS.Checked;
         }
-        private void CheckNodes(string ForumList)
+
+        private void CheckNodes(string forumList)
         {
-            string[] Forums;
-            Forums = ForumList.Split(':');
-            if (Forums != null)
+            var forums = forumList.Split(':');
+
+            //Clear all Nodes
+            ManageCheck(false);
+
+            foreach (var f in forums)
             {
-                //Clear all Nodes
-                ManageCheck(false);
-                if (Forums != null)
+                if (f.Trim() != "")
                 {
-                    foreach (string f in Forums)
-                    {
-                        if (f.Trim() != "")
-                        {
-                            ManageCheck(false, "F:" + f);
-                        }
-                    }
+                    ManageCheck(false, "F:" + f);
                 }
             }
 
         }
+
         private void ManageCheck(bool state, string value = "")
         {
             foreach (TreeNode node in trForums.Nodes)
             {
                 if (!node.Checked)
                 {
-                    node.Checked = Convert.ToBoolean(((node.Value == value) ? true : state));
-                    if (node.Checked)
+                    node.Checked = (node.Value == value || state);
+                    if (node.Checked && node.Parent != null)
                     {
                         node.Parent.Expanded = true;
                     }
                 }
-                if (node.ChildNodes.Count > 0)
-                {
-                    foreach (TreeNode cnode in node.ChildNodes)
-                    {
-                        if (!cnode.Checked)
-                        {
-                            cnode.Checked = Convert.ToBoolean(((cnode.Value == value) ? true : state));
-                            if (cnode.Checked)
-                            {
-                                cnode.Parent.Expanded = true;
-                            }
-                        }
-                        if (cnode.ChildNodes.Count > 0)
-                        {
-                            foreach (TreeNode subnode in cnode.ChildNodes)
-                            {
-                                if (!subnode.Checked)
-                                {
-                                    subnode.Checked = Convert.ToBoolean(((subnode.Value == value) ? true : state));
-                                    if (subnode.Checked)
-                                    {
-                                        subnode.Parent.Expanded = true;
-                                    }
-                                }
 
-                            }
+                if (node.ChildNodes.Count <= 0) continue;
+
+                foreach (TreeNode cnode in node.ChildNodes)
+                {
+                    if (!cnode.Checked)
+                    {
+                        cnode.Checked = (cnode.Value == value || state);
+                        if (cnode.Checked & cnode.Parent != null)
+                        {
+                            cnode.Parent.Expanded = true;
+                        }
+                    }
+
+                    if (cnode.ChildNodes.Count <= 0) continue;
+
+                    foreach (TreeNode subnode in cnode.ChildNodes)
+                    {
+                        if (subnode.Checked) continue;
+                        subnode.Checked = (subnode.Value == value || state);
+                        if (subnode.Checked && subnode.Parent != null)
+                        {
+                            subnode.Parent.Expanded = true;
                         }
                     }
                 }
@@ -264,47 +232,45 @@ namespace DotNetNuke.Modules.ActiveForums
 
         private void BindForumsTree()
         {
-
             var trNodes = new TreeNodeCollection();
             TreeNode trGroupNode = null;
             TreeNode trParentNode = null;
-            TreeNode trNode;
             IDataReader reader = null;
-            var dt = new DataTable("Forums");
-            dt = new DataTable();
+            var dt = new DataTable();
             dt.Load(DataProvider.Instance().PortalForums(PortalId));
 
 
-            string tmpGroup = string.Empty;
-            int i = 0;
+            var tmpGroup = string.Empty;
+            var i = 0;
             foreach (DataRow row in dt.Rows)
             {
                 if (tmpGroup != row["ForumGroupId"].ToString())
                 {
                     trGroupNode = new TreeNode
-                                      {
-                                          Text = row["GroupName"].ToString(),
-                                          ImageUrl = "~/DesktopModules/ActiveForums/images/tree/tree_group.png",
-                                          ShowCheckBox = true,
-                                          SelectAction = TreeNodeSelectAction.None,
-                                          Value = "G:" + row["ForumGroupId"]
-                                      };
+                    {
+                        Text = row["GroupName"].ToString(),
+                        ImageUrl = "~/DesktopModules/ActiveForums/images/tree/tree_group.png",
+                        ShowCheckBox = true,
+                        SelectAction = TreeNodeSelectAction.None,
+                        Value = "G:" + row["ForumGroupId"]
+                    };
                     trGroupNode.Expanded = i == 0;
                     i += 1;
                     tmpGroup = row["ForumGroupId"].ToString();
                     trNodes.Add(trGroupNode);
                 }
+
                 if (Convert.ToInt32(row["ParentForumId"]) == 0)
                 {
-                    trNode = new TreeNode
-                                 {
-                                     Text = row["ForumName"].ToString(),
-                                     ImageUrl = "~/DesktopModules/ActiveForums/images/tree/tree_forum.png",
-                                     ShowCheckBox = true,
-                                     Expanded = false,
-                                     SelectAction = TreeNodeSelectAction.None,
-                                     Value = "F:" + row["ForumId"]
-                                 };
+                    var trNode = new TreeNode
+                    {
+                        Text = row["ForumName"].ToString(),
+                        ImageUrl = "~/DesktopModules/ActiveForums/images/tree/tree_forum.png",
+                        ShowCheckBox = true,
+                        Expanded = false,
+                        SelectAction = TreeNodeSelectAction.None,
+                        Value = "F:" + row["ForumId"]
+                    };
                     if (HasSubForums(Convert.ToInt32(row["ForumId"]), dt))
                     {
                         AddChildNodes(trNode, dt, row);
@@ -326,25 +292,22 @@ namespace DotNetNuke.Modules.ActiveForums
 
 
         }
-        private void AddChildNodes(TreeNode ParentNode, DataTable dt, DataRow dr)
+        private void AddChildNodes(TreeNode parentNode, DataTable dt, DataRow dr)
         {
-            TreeNode tNode;
             foreach (DataRow row in dt.Rows)
             {
-                if (Convert.ToInt32(dr["ForumId"]) == Convert.ToInt32(row["ParentForumId"]))
+                if (Convert.ToInt32(dr["ForumId"]) != Convert.ToInt32(row["ParentForumId"])) continue;
+                var tNode = new TreeNode
                 {
-                    tNode = new TreeNode
-                                {
-                                    Text = row["ForumName"].ToString(),
-                                    ImageUrl = "~/DesktopModules/ActiveForums/images/tree/tree_forum.png",
-                                    ShowCheckBox = true,
-                                    Value = "F:" + row["ForumId"],
-                                    Checked = false,
-                                    SelectAction = TreeNodeSelectAction.None
-                                };
-                    ParentNode.ChildNodes.Add(tNode);
-                    AddChildNodes(tNode, dt, row);
-                }
+                    Text = row["ForumName"].ToString(),
+                    ImageUrl = "~/DesktopModules/ActiveForums/images/tree/tree_forum.png",
+                    ShowCheckBox = true,
+                    Value = "F:" + row["ForumId"],
+                    Checked = false,
+                    SelectAction = TreeNodeSelectAction.None
+                };
+                parentNode.ChildNodes.Add(tNode);
+                AddChildNodes(tNode, dt, row);
             }
         }
         private bool HasSubForums(int ForumId, DataTable dt)

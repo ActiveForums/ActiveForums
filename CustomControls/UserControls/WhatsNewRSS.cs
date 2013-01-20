@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-
 using System.ComponentModel;
 using System.Text;
 using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 using System.Text.RegularExpressions;
+using DotNetNuke.Entities.Modules;
+using DotNetNuke.Entities.Portals;
 
 namespace DotNetNuke.Modules.ActiveForums.Controls
 {
@@ -16,361 +14,340 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
     public class WhatsNewRSS : Control
     {
 
-        private double dblCacheTimeOut;
-        protected override void Render(System.Web.UI.HtmlTextWriter writer)
+        #region Constants
+
+        private const string ModuleIDRequestKey = "moduleid";
+        private const string PortalIDRequestKey = "portalid";
+        private const string TabIDRequestKey = "tabid";
+
+        private const int DefaultModuleID = -1;
+        private const int DefaultPortalID = 0;
+        private const int DefaultTabID = -1;
+
+        private const string CacheKeyTemplate = "aftprss_{0}_{1}";
+
+        private const string XmlHeader = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
+        private const string RSSHeader = "<rss version=\"2.0\" xmlns:atom=\"http://www.w3.org/2005/Atom\" xmlns:cf=\"http://www.microsoft.com/schemas/rss/core/2005\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:slash=\"http://purl.org/rss/1.0/modules/slash/\">";
+
+        #endregion
+
+        #region Private Variables
+
+        private int? _requestTabID;
+        private int? _requestModuleID;
+        private int? _requestPortalID;
+        private WhatsNewModuleSettings _settings;
+        private string _authorizedForums;
+        private User _currentUser;
+        private string _cacheKey;
+
+        #endregion
+
+        #region Properties
+
+        private int RequestTabID
         {
-            int intTabId = -1;
-            int intModuleId = -1;
-            int intPortalId = 0;
-            //Response.Write(intPortalId)
-            if (HttpContext.Current.Request.QueryString["tabid"] != null)
+            get
             {
-                if (SimulateIsNumeric.IsNumeric(HttpContext.Current.Request.QueryString["tabid"]))
+                if (!_requestTabID.HasValue)
                 {
-                    intTabId = Convert.ToInt32(HttpContext.Current.Request.QueryString["tabid"]);
+                    int parsedTabId;
+                    _requestTabID = int.TryParse(HttpContext.Current.Request.QueryString[TabIDRequestKey], out parsedTabId) ? parsedTabId : DefaultTabID;
                 }
+
+                return _requestTabID.Value;
             }
-            if (HttpContext.Current.Request.QueryString["moduleid"] != null)
+        }
+        private int RequestModuleID
+        {
+            get
             {
-                if (SimulateIsNumeric.IsNumeric(HttpContext.Current.Request.QueryString["moduleid"]))
+                if (!_requestModuleID.HasValue)
                 {
-                    intModuleId = Convert.ToInt32(HttpContext.Current.Request.QueryString["moduleid"]);
+                    int parsedModuleID;
+                    _requestModuleID = int.TryParse(HttpContext.Current.Request.QueryString[ModuleIDRequestKey], out parsedModuleID) ? parsedModuleID : DefaultModuleID;
                 }
+
+                return _requestModuleID.Value;
             }
-            if (HttpContext.Current.Request.QueryString["portalid"] != null)
+        }
+        private int RequestPortalID
+        {
+            get
             {
-                if (SimulateIsNumeric.IsNumeric(HttpContext.Current.Request.QueryString["portalid"]))
+                if (!_requestPortalID.HasValue)
                 {
-                    intPortalId = Convert.ToInt32(HttpContext.Current.Request.QueryString["portalid"]);
+                    int parsedPortalID;
+                    _requestPortalID = int.TryParse(HttpContext.Current.Request.QueryString[PortalIDRequestKey], out parsedPortalID) ? parsedPortalID : DefaultPortalID;
                 }
+
+                return _requestPortalID.Value;
             }
-            if (intTabId == -1 || intModuleId == -1)
+        }
+
+        private WhatsNewModuleSettings Settings
+        {
+            get
             {
-                return;
-            }
-            int intPosts = 0;
-            DotNetNuke.Entities.Modules.ModuleController mc = new DotNetNuke.Entities.Modules.ModuleController();
-            Hashtable settings = mc.GetModuleSettings(intModuleId);
-            if (!(Convert.ToString(settings["AFTopPostsNumber"]) == null))
-            {
-                intPosts = Convert.ToInt32(settings["AFTopPostsNumber"]);
-            }
-            else
-            {
-                intPosts = 5;
-            }
-            string sForums = string.Empty;
-            if (!(Convert.ToString(settings["AFTopPostsForums"]) == null))
-            {
-                sForums = Convert.ToString(settings["AFTopPostsForums"]);
-            }
-            bool bolSecurity = false;
-            bool bolBody = false;
-            if (!(Convert.ToString(settings["AFTopPostsSecurity"]) == null))
-            {
-                bolSecurity = Convert.ToBoolean(settings["AFTopPostsSecurity"]);
-            }
-            if (!(Convert.ToString(settings["AFTopPostsBody"]) == null))
-            {
-                bolBody = Convert.ToBoolean(settings["AFTopPostsBody"]);
-            }
-            if (!(Convert.ToString(settings["AFTopPostsCache"]) == null))
-            {
-                dblCacheTimeOut = Convert.ToInt32(settings["AFTopPostsCache"]);
-            }
-            else
-            {
-                dblCacheTimeOut = 30;
-            }
-            //Response.Write(BuildRSS(intPortalId, intTabId, intModuleId, intPosts, sForums, bolSecurity, bolBody))
-            string sOut = string.Empty;
-            if (!(Convert.ToString(settings["AFTopPostsRSS"]) == null))
-            {
-                if (Convert.ToBoolean(settings["AFTopPostsRSS"]) == true)
+                if (_settings == null)
                 {
-                    object obj = DataCache.CacheRetrieve("aftprss" + intModuleId);
-                    if (obj != null)
+                    var settingsCacheKey = "aftp_" + RequestModuleID;
+
+                    var moduleSettings = DataCache.CacheRetrieve(settingsCacheKey) as Hashtable;
+                    if (moduleSettings == null)
                     {
-                        sOut = Convert.ToString(obj);
+                        moduleSettings = new ModuleController().GetModuleSettings(RequestModuleID);
+                        DataCache.CacheStore(settingsCacheKey, moduleSettings);
                     }
-                    else
-                    {
-                        sOut = BuildRSS(intModuleId, intPortalId);
-                    }
+
+                    _settings = WhatsNewModuleSettings.CreateFromModuleSettings(moduleSettings);
                 }
-
+                return _settings;
             }
-
-
-            writer.Write(sOut);
-            base.Render(writer);
         }
-        //Protected Overrides Sub RenderContents(ByVal writer As HtmlTextWriter)
 
-        //End Sub
-        private string WriteElement(string Element, int Indent)
+        private User CurrentUser
         {
-            int InputLength = Element.Trim().Length + 20;
-            StringBuilder sb = new StringBuilder(InputLength);
-            sb.Append(System.Environment.NewLine.PadRight(Indent + 2, '\t'));
-            sb.Append("<").Append(Element).Append(">");
-            return sb.ToString();
+            get { return _currentUser ?? (_currentUser = new UserController().GetUser(RequestPortalID, -1)); }
         }
 
-        private string WriteElement(string Element, string ElementValue, int Indent)
+        private string AuthorizedForums
         {
-            int InputLength = Element.Trim().Length + ElementValue.Trim().Length + 20;
-            StringBuilder sb = new StringBuilder(InputLength);
-            sb.Append(System.Environment.NewLine.PadRight(Indent + 2, '\t'));
-            sb.Append("<").Append(Element).Append(">");
-            sb.Append(CleanXmlString(ElementValue));
-            sb.Append("</").Append(Element).Append(">");
-            return sb.ToString();
+            get
+            {
+                return _authorizedForums ??
+                       (_authorizedForums =
+                        new Data.Common().CheckForumIdsForView(Settings.Forums, CurrentUser.UserRoles));
+            }
         }
 
-        private string CleanXmlString(string XmlString)
+        private string CacheKey
         {
-            XmlString = HttpContext.Current.Server.HtmlEncode(XmlString);
-            return XmlString;
+            get
+            {
+                return _cacheKey ??
+                       (_cacheKey =
+                        string.Format(CacheKeyTemplate, RequestModuleID,
+                                      Settings.RSSIgnoreSecurity ? Settings.Forums : AuthorizedForums));
+            }
         }
+
+        #endregion
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
 
-            //'Put user code to initialize the page here
             HttpContext.Current.Response.ContentType = "text/xml";
             HttpContext.Current.Response.ContentEncoding = Encoding.UTF8;
-
-
-            //HttpContext.Current.Response.Write(sOut)
-
         }
-        private string BuildRSS(int ModuleId, int PortalId)
+
+        protected override void Render(HtmlTextWriter writer)
         {
-
-            Hashtable settings = DotNetNuke.Entities.Portals.PortalSettings.GetModuleSettings(ModuleId);
-            string forumids = string.Empty;
-            bool bolTopicsOnly = false;
-            bool bolRandom = false;
-            int Rows = 10;
-            bool IgnoreSecurity = false;
-            bool IncludeBody = false;
-            bool bRSS = false;
-            string tags = string.Empty;
-            if (!(Convert.ToString(settings["AFTopPostsTopicsOnly"]) == null))
+            if (RequestTabID == DefaultTabID || RequestModuleID == DefaultModuleID || !Settings.RSSEnabled)
             {
-                bolTopicsOnly = Convert.ToBoolean(settings["AFTopPostsTopicsOnly"]);
-            }
-            if (!(Convert.ToString(settings["AFTopPostsRandomOrder"]) == null))
-            {
-                bolRandom = Convert.ToBoolean(settings["AFTopPostsRandomOrder"]);
-            }
-            if (!(Convert.ToString(settings["AFTopPostsForums"]) == null))
-            {
-                forumids = Convert.ToString(settings["AFTopPostsForums"]);
-            }
-            if (!(Convert.ToString(settings["AFTopPostsNumber"]) == null))
-            {
-                Rows = Convert.ToInt32(settings["AFTopPostsNumber"]);
-            }
-            if (!(Convert.ToString(settings["AFTopPostsRSS"]) == null))
-            {
-                bRSS = Convert.ToBoolean(settings["AFTopPostsRSS"]);
+                return;
             }
 
-            if (!(Convert.ToString(settings["AFTopPostsSecurity"]) == null))
-            {
-                IgnoreSecurity = Convert.ToBoolean(settings["AFTopPostsSecurity"]);
-            }
-            if (!(Convert.ToString(settings["AFTopPostsBody"]) == null))
-            {
-                IncludeBody = Convert.ToBoolean(settings["AFTopPostsBody"]);
-            }
-            if (!(Convert.ToString(settings["AFTopPostsTags"]) == null))
-            {
-                tags = Convert.ToString(settings["AFTopPostsTags"]);
-            }
-            int counter = 0;
-            StringBuilder sb = new StringBuilder(1024);
+            // Attempt to load from cache if it's enabled
+            var rss = (Settings.RSSCacheTimeout > 0) ? DataCache.CacheRetrieve(CacheKey) as string : null;
+
+            // Build the RSS if needed
+            rss = rss ?? BuildRSS();
+
+            // Save the rss to cache if it's enabled
+            if (Settings.RSSCacheTimeout > 0)
+                DataCache.CacheStore(CacheKey, rss);
+
+            // Render the output
+            writer.Write(rss);
+            base.Render(writer);
+        }
+
+        #region XML Helpers
+
+        private static string WriteElement(string element, int indent)
+        {
+            var inputLength = element.Trim().Length + 20;
+            var sb = new StringBuilder(inputLength);
+            sb.Append(System.Environment.NewLine.PadRight(indent + 2, '\t'));
+            sb.Append("<").Append(element).Append(">");
+            return sb.ToString();
+        }
+
+        private static string WriteElement(string element, string elementValue, int indent)
+        {
+            var inputLength = element.Trim().Length + elementValue.Trim().Length + 20;
+            var sb = new StringBuilder(inputLength);
+            sb.Append(System.Environment.NewLine.PadRight(indent + 2, '\t'));
+            sb.Append("<").Append(element).Append(">");
+            sb.Append(CleanXmlString(elementValue));
+            sb.Append("</").Append(element).Append(">");
+            return sb.ToString();
+        }
+
+        private static string CleanXmlString(string xmlString)
+        {
+            xmlString = HttpContext.Current.Server.HtmlEncode(xmlString);
+            return xmlString;
+        }
+
+        #endregion
+
+        private string BuildRSS()
+        {
+            const int indent = 2;
+
+            var counter = 0;
+
+            var sb = new StringBuilder(1024);
+
             // build header
-            sb.Append("<?xml version=\"1.0\" encoding=\"utf-8\"?>" + System.Environment.NewLine);
-            sb.Append("<rss version=\"2.0\" xmlns:atom=\"http://www.w3.org/2005/Atom\" xmlns:cf=\"http://www.microsoft.com/schemas/rss/core/2005\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:slash=\"http://purl.org/rss/1.0/modules/slash/\">" + System.Environment.NewLine);
-
-
+            sb.Append(XmlHeader + System.Environment.NewLine);
+            sb.Append(RSSHeader + System.Environment.NewLine);
 
             // build channel
-            DotNetNuke.Entities.Portals.PortalController pc = new DotNetNuke.Entities.Portals.PortalController();
-            DotNetNuke.Entities.Portals.PortalSettings ps = DotNetNuke.Entities.Portals.PortalController.GetCurrentPortalSettings();
-            int offSet = ps.TimeZoneOffset;
-            sb.Append(WriteElement("channel", 1));
-            sb.Append(WriteElement("title", ps.PortalName, 2));
-            sb.Append(WriteElement("link", "http://" + HttpContext.Current.Request.Url.Host, 2));
-            sb.Append(WriteElement("description", ps.PortalName, 2));
-            sb.Append(WriteElement("generator", "ActiveForums  4.1", 2));
-            sb.Append(WriteElement("language", ps.DefaultLanguage, 2));
-            //sb.Append(WriteElement("copyright", ps.FooterText, 2))
-            if (!(ps.LogoFile == string.Empty))
+            var pc = new PortalController();
+            var ps = PortalController.GetCurrentPortalSettings();
+
+            var offSet = ps.TimeZoneOffset;
+
+            sb.Append(WriteElement("channel", indent));
+            sb.Append(WriteElement("title", ps.PortalName, indent));
+            sb.Append(WriteElement("link", "http://" + HttpContext.Current.Request.Url.Host, indent));
+            sb.Append(WriteElement("description", ps.PortalName, indent));
+            sb.Append(WriteElement("generator", "ActiveForums  5.0", indent));
+            sb.Append(WriteElement("language", ps.DefaultLanguage, indent));
+
+            if (ps.LogoFile != string.Empty)
             {
-                string sLogo = "<image><url>http://" + HttpContext.Current.Request.Url.Host + ps.HomeDirectory + ps.LogoFile + "</url>";
+                var sLogo = "<image><url>http://" + HttpContext.Current.Request.Url.Host + ps.HomeDirectory + ps.LogoFile + "</url>";
                 sLogo += "<title>" + ps.PortalName + "</title>";
                 sLogo += "<link>http://" + HttpContext.Current.Request.Url.Host + "</link></image>";
                 sb.Append(sLogo);
             }
+
             sb.Append(WriteElement("copyright", ps.FooterText, 2));
-            //sb.Append(WriteElement("webMaster", ps.Email, 2))
             sb.Append(WriteElement("lastBuildDate", "[LASTBUILDDATE]", 2));
 
-            DateTime LastBuildDate = DateTime.MinValue;
+            var lastBuildDate = DateTime.MinValue;
+
             // build items
-            DotNetNuke.Entities.Users.UserInfo ui = null;
-            ui = DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo();
-            bool useFriendly = Utilities.IsRewriteLoaded();
-            IDataReader dr = DataProvider.Instance().GetPosts(PortalId, forumids, true, false, Rows, IgnoreSecurity, tags);
-            string sHost = Utilities.GetHost();
+
+            var forumids = Settings.RSSIgnoreSecurity ? Settings.Forums : AuthorizedForums;
+
+            var useFriendly = Utilities.IsRewriteLoaded();
+            var dr = DataProvider.Instance().GetPosts(RequestPortalID, forumids, true, false, Settings.Rows, Settings.Tags);
+            var sHost = Utilities.GetHost();
+
             try
             {
                 while (dr.Read())
                 {
-                    int Indent = 2;
-                    string GroupName = string.Empty;
-                    string GroupId = string.Empty;
-                    string TopicTabId = string.Empty;
-                    string TopicModuleId = string.Empty;
-                    string ForumName = string.Empty;
-                    string ForumId = string.Empty;
-                    string Subject = string.Empty;
-                    string UserName = string.Empty;
-                    string PostDate = string.Empty;
-                    string Body = string.Empty;
-                    string BodyHTML = string.Empty;
-                    string DisplayName = string.Empty;
-                    string ReplyCount = string.Empty;
-                    string LastPostDate = string.Empty;
-                    string TopicId = string.Empty;
-                    string ReplyId = string.Empty;
-                    string FirstName = string.Empty;
-                    string LastName = string.Empty;
-                    string AuthorId = string.Empty;
+                    var groupName = Convert.ToString(dr["GroupName"]);
+                    var groupId = Convert.ToInt32(dr["ForumGroupId"]);
+                    var topicTabId = Convert.ToInt32(dr["TabId"]);
+                    var topicModuleId = Convert.ToInt32(dr["ModuleId"]);
+                    var forumName = Convert.ToString(dr["ForumName"]);
+                    var forumId = Convert.ToInt32(dr["ForumId"]);
+                    var subject = Convert.ToString(dr["Subject"]);
+                    var userName = Convert.ToString(dr["AuthorUserName"]);
+                    var postDate = Convert.ToString(dr["DateCreated"]);
+                    var body = Utilities.StripHTMLTag(Convert.ToString(dr["Body"]));
+                    var bodyHtml = Convert.ToString(dr["Body"]);
+                    var displayName = Convert.ToString(dr["AuthorDisplayName"]);
+                    var replyCount = Convert.ToString(dr["ReplyCount"]);
+                    var lastPostDate = string.Empty;
+                    var topicId = Convert.ToInt32(dr["TopicId"]);
+                    var replyId = Convert.ToInt32(dr["ReplyId"]);
+                    var firstName = Convert.ToString(dr["AuthorFirstName"]);
+                    var lastName = Convert.ToString(dr["AuthorLastName"]);
+                    var authorId = Convert.ToInt32(dr["AuthorId"]);
+                    var sForumUrl = Convert.ToString(dr["PrefixURL"]);
+                    var sTopicUrl = Convert.ToString(dr["TopicURL"]);
+                    var sGroupPrefixUrl = Convert.ToString(dr["GroupPrefixURL"]);
 
+                    var dateCreated = Convert.ToDateTime(dr["DateCreated"]).AddMinutes(offSet);
 
-                    string sForumUrl = string.Empty;
-                    string sTopicURL = string.Empty;
-                    string sGroupPrefixURL = string.Empty;
-
-                    GroupName = Convert.ToString(dr["GroupName"]);
-                    GroupId = Convert.ToString(dr["ForumGroupId"]);
-                    TopicTabId = Convert.ToString(dr["TabId"]);
-                    TopicModuleId = Convert.ToString(dr["ModuleId"]);
-                    ForumName = Convert.ToString(dr["ForumName"]);
-                    ForumId = Convert.ToString(dr["ForumId"]);
-                    Subject = Convert.ToString(dr["Subject"]);
-                    UserName = Convert.ToString(dr["AuthorUserName"]);
-                    FirstName = Convert.ToString(dr["AuthorFirstName"]);
-                    LastName = Convert.ToString(dr["AuthorLastName"]);
-                    AuthorId = Convert.ToString(dr["AuthorId"]);
-                    DisplayName = Convert.ToString(dr["AuthorDisplayName"]);
-                    PostDate = Convert.ToString(dr["DateCreated"]);
-                    Body = Utilities.StripHTMLTag(Convert.ToString(dr["Body"]));
-                    TopicId = Convert.ToString(dr["TopicId"]);
-                    ReplyId = Convert.ToString(dr["ReplyId"]);
-                    BodyHTML = Convert.ToString(dr["Body"]);
-                    ReplyCount = Convert.ToString(dr["ReplyCount"]);
-                    //  topicUrl = dr("URL").ToString
-                    sForumUrl = dr["PrefixURL"].ToString();
-                    sTopicURL = dr["TopicURL"].ToString();
-                    sGroupPrefixURL = dr["GroupPrefixURL"].ToString();
-                    if (LastBuildDate == new DateTime())
+                    if (lastBuildDate == DateTime.MinValue || dateCreated > lastBuildDate)
                     {
-                        LastBuildDate = Convert.ToDateTime(dr["DateCreated"]).AddMinutes(offSet);
+                        lastBuildDate = dateCreated;
                     }
-                    else
-                    {
-                        if (Convert.ToDateTime(dr["DateCreated"]).AddMinutes(offSet) > LastBuildDate)
-                        {
-                            LastBuildDate = Convert.ToDateTime(dr["DateCreated"]).AddMinutes(offSet);
-                        }
-                    }
-                    SettingsInfo ts = DataCache.MainSettings(Convert.ToInt32(TopicModuleId));
 
-                    //UserProfiles.GetDisplayName(CInt(AuthorId), ts.UserNameDisplay, False, UserName, FirstName, LastName, DisplayName)
-                    string URL = string.Empty;
-                    if (string.IsNullOrEmpty(sTopicURL) || !useFriendly)
+                    var ts = DataCache.MainSettings(topicModuleId);
+
+                    string url;
+                    if (string.IsNullOrEmpty(sTopicUrl) || !useFriendly)
                     {
-                        string[] Params = { ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + TopicId };
-                        URL = DotNetNuke.Common.Globals.NavigateURL(Convert.ToInt32(TopicTabId), "", Params);
-                        if (URL.IndexOf(HttpContext.Current.Request.Url.Host) == -1)
+                        string[] Params = { ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.ForumId + "=" + forumId, ParamKeys.TopicId + "=" + topicId };
+                        url = Common.Globals.NavigateURL(topicTabId, "", Params);
+                        if (url.IndexOf(HttpContext.Current.Request.Url.Host, StringComparison.CurrentCulture) == -1)
                         {
-                            URL = DotNetNuke.Common.Globals.AddHTTP(HttpContext.Current.Request.Url.Host) + URL;
+                            url = Common.Globals.AddHTTP(HttpContext.Current.Request.Url.Host) + url;
                         }
                     }
                     else
                     {
-                        ControlUtils ctlUtils = new ControlUtils();
-                        sTopicURL = ctlUtils.BuildUrl(Convert.ToInt32(TopicTabId), Convert.ToInt32(TopicModuleId), sGroupPrefixURL, sForumUrl, Convert.ToInt32(GroupId), Convert.ToInt32(ForumId), Convert.ToInt32(TopicId), sTopicURL, -1, -1, string.Empty, 1, -1);
-                        if (sHost.EndsWith("/") && sTopicURL.StartsWith("/"))
+                        var ctlUtils = new ControlUtils();
+                        sTopicUrl = ctlUtils.BuildUrl(topicTabId, topicModuleId, sGroupPrefixUrl, sForumUrl, groupId, forumId, topicId, sTopicUrl, -1, -1, string.Empty, 1, -1);
+                        if (sHost.EndsWith("/") && sTopicUrl.StartsWith("/"))
                         {
                             sHost = sHost.Substring(0, sHost.Length - 1);
                         }
-                        URL = sHost + sTopicURL;
+                        url = sHost + sTopicUrl;
                     }
 
-                    //URL = URL.Replace("&", "&amp;")
-                    sb.Append(WriteElement("item", Indent));
+                    sb.Append(WriteElement("item", indent));
 
-                    sb.Append(WriteElement("title", Subject, Indent + 1));
-                    if (IncludeBody == true)
+                    sb.Append(WriteElement("title", subject, indent + 1));
+                    if (Settings.RSSIncludeBody)
                     {
-                        if (BodyHTML.IndexOf("<body>") > 0)
+                        if (bodyHtml.IndexOf("<body>", StringComparison.CurrentCulture) > 0)
                         {
-                            BodyHTML = TemplateUtils.GetTemplateSection(BodyHTML, "<body>", "</body>");
+                            bodyHtml = TemplateUtils.GetTemplateSection(bodyHtml, "<body>", "</body>");
                         }
-                        if (BodyHTML.Contains("&#91;IMAGE:"))
+                        if (bodyHtml.Contains("&#91;IMAGE:"))
                         {
-                            string strHost = DotNetNuke.Common.Globals.AddHTTP(DotNetNuke.Common.Globals.GetDomainName(HttpContext.Current.Request)) + "/";
-                            string pattern = "(&#91;IMAGE:(.+?)&#93;)";
-                            Regex regExp = new Regex(pattern);
-                            MatchCollection matches = null;
-                            matches = regExp.Matches(BodyHTML);
+                            var strHost = Common.Globals.AddHTTP(Common.Globals.GetDomainName(HttpContext.Current.Request)) + "/";
+                            const string pattern = "(&#91;IMAGE:(.+?)&#93;)";
+                            var regExp = new Regex(pattern);
+                            var matches = regExp.Matches(bodyHtml);
                             foreach (Match match in matches)
                             {
-                                string sImage = "";
-                                sImage = "<img src=\"" + strHost + "DesktopModules/ActiveForums/viewer.aspx?portalid=" + PortalId + "&moduleid=" + ModuleId + "&attachid=" + match.Groups[2].Value + "\" border=\"0\" />";
-                                BodyHTML = BodyHTML.Replace(match.Value, sImage);
+                                var sImage = "<img src=\"" + strHost + "DesktopModules/ActiveForums/viewer.aspx?portalid=" + RequestPortalID + "&moduleid=" + RequestModuleID + "&attachid=" + match.Groups[2].Value + "\" border=\"0\" />";
+                                bodyHtml = bodyHtml.Replace(match.Value, sImage);
                             }
                         }
-                        if (BodyHTML.Contains("&#91;THUMBNAIL:"))
+                        if (bodyHtml.Contains("&#91;THUMBNAIL:"))
                         {
-                            string strHost = DotNetNuke.Common.Globals.AddHTTP(DotNetNuke.Common.Globals.GetDomainName(HttpContext.Current.Request)) + "/";
-                            string pattern = "(&#91;THUMBNAIL:(.+?)&#93;)";
-                            Regex regExp = new Regex(pattern);
-                            MatchCollection matches = null;
-                            matches = regExp.Matches(BodyHTML);
+                            var strHost = Common.Globals.AddHTTP(Common.Globals.GetDomainName(HttpContext.Current.Request)) + "/";
+                            const string pattern = "(&#91;THUMBNAIL:(.+?)&#93;)";
+                            var regExp = new Regex(pattern);
+                            var matches = regExp.Matches(bodyHtml);
                             foreach (Match match in matches)
                             {
-                                string sImage = "";
-                                string thumbId = match.Groups[2].Value.Split(':')[0];
-                                string parentId = match.Groups[2].Value.Split(':')[1];
-                                sImage = "<a href=\"" + strHost + "DesktopModules/ActiveForums/viewer.aspx?portalid=" + PortalId + "&moduleid=" + ModuleId + "&attachid=" + parentId + "\" target=\"_blank\"><img src=\"" + strHost + "DesktopModules/ActiveForums/viewer.aspx?portalid=" + PortalId + "&moduleid=" + ModuleId + "&attachid=" + thumbId + "\" border=\"0\" /></a>";
-                                BodyHTML = BodyHTML.Replace(match.Value, sImage);
+                                var thumbId = match.Groups[2].Value.Split(':')[0];
+                                var parentId = match.Groups[2].Value.Split(':')[1];
+                                var sImage = "<a href=\"" + strHost + "DesktopModules/ActiveForums/viewer.aspx?portalid=" + RequestPortalID + "&moduleid=" + RequestModuleID + "&attachid=" + parentId + "\" target=\"_blank\"><img src=\"" + strHost + "DesktopModules/ActiveForums/viewer.aspx?portalid=" + RequestPortalID + "&moduleid=" + RequestModuleID + "&attachid=" + thumbId + "\" border=\"0\" /></a>";
+                                bodyHtml = bodyHtml.Replace(match.Value, sImage);
                             }
                         }
-                        BodyHTML = BodyHTML.Replace("src=\"/Portals", "src=\"" + DotNetNuke.Common.Globals.AddHTTP(HttpContext.Current.Request.Url.Host) + "/Portals");
-                        BodyHTML = Utilities.ManageImagePath(BodyHTML, DotNetNuke.Common.Globals.AddHTTP(HttpContext.Current.Request.Url.Host));
+                        bodyHtml = bodyHtml.Replace("src=\"/Portals", "src=\"" + Common.Globals.AddHTTP(HttpContext.Current.Request.Url.Host) + "/Portals");
+                        bodyHtml = Utilities.ManageImagePath(bodyHtml, Common.Globals.AddHTTP(HttpContext.Current.Request.Url.Host));
 
-                        sb.Append(WriteElement("description", BodyHTML, Indent + 1));
+                        sb.Append(WriteElement("description", bodyHtml, indent + 1));
                     }
                     else
                     {
-                        sb.Append(WriteElement("description", string.Empty, Indent + 1));
+                        sb.Append(WriteElement("description", string.Empty, indent + 1));
                     }
-                    sb.Append(WriteElement("link", URL, Indent + 1));
-                    sb.Append(WriteElement("comments", URL, Indent + 1));
-                    sb.Append(WriteElement("pubDate", Convert.ToDateTime(PostDate).AddMinutes(offSet).ToString("r"), Indent + 1));
-                    sb.Append(WriteElement("dc:creator", DisplayName, Indent + 1));
-                    sb.Append(WriteElement("guid", URL, Indent + 1));
-                    sb.Append(WriteElement("slash:comments", ReplyCount, Indent + 1));
-                    sb.Append(WriteElement("/item", Indent));
+                    sb.Append(WriteElement("link", url, indent + 1));
+                    sb.Append(WriteElement("comments", url, indent + 1));
+                    sb.Append(WriteElement("pubDate", Convert.ToDateTime(postDate).AddMinutes(offSet).ToString("r"), indent + 1));
+                    sb.Append(WriteElement("dc:creator", displayName, indent + 1));
+                    sb.Append(WriteElement("guid", url, indent + 1));
+                    sb.Append(WriteElement("slash:comments", replyCount, indent + 1));
+                    sb.Append(WriteElement("/item", indent));
 
 
 
@@ -379,8 +356,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 sb.Append("<atom:link href=\"http://" + HttpContext.Current.Request.Url.Host + HttpUtility.HtmlEncode(HttpContext.Current.Request.RawUrl) + "\" rel=\"self\" type=\"application/rss+xml\" />");
                 sb.Append(WriteElement("/channel", 1));
                 sb.Append("</rss>");
-                sb.Replace("[LASTBUILDDATE]", LastBuildDate.ToString("r"));
-                DataCache.CacheStore("aftprss" + ModuleId, sb.ToString(), DateTime.Now.AddMinutes(dblCacheTimeOut));
+                sb.Replace("[LASTBUILDDATE]", lastBuildDate.ToString("r"));
                 return sb.ToString();
             }
             catch (Exception ex)

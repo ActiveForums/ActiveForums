@@ -436,8 +436,12 @@
       <SubType>ASPXCodeBehind</SubType>
     </Content>
     <Content Include="userpref.css" />
-    <Content Include="WhatsNew.ascx" />
-    <Content Include="WhatsNewOptions.ascx" />
+    <Content Include="WhatsNew.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
+    <Content Include="WhatsNewOptions.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <Content Include="ControlPanel.css" />
     <Content Include="controls\admin_categories.ascx" />
     <Content Include="controls\admin_filters.ascx" />
@@ -608,6 +612,7 @@
     </Content>
     <Content Include="config\templates\ForumView-4.3.txt" />
     <Content Include="viewer.aspx" />
+    <Compile Include="class\WhatsNewModuleSettings.cs" />
     <Compile Include="SimulateDateDiff.cs" />
     <Compile Include="SimulateIsNumeric.cs" />
     <Compile Include="ActiveForums.ascx.designer.cs">

@@ -1381,6 +1381,15 @@
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.WhatsNewOptions.pnlRSS">
+            <summary>
+            pnlRSS control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
         <member name="F:DotNetNuke.Modules.ActiveForums.WhatsNewOptions.chkIgnoreSecurity">
             <summary>
             chkIgnoreSecurity control.
@@ -1408,9 +1417,9 @@
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.WhatsNewOptions.RequiredFieldValidator2">
+        <member name="F:DotNetNuke.Modules.ActiveForums.WhatsNewOptions.rqvTxtCache">
             <summary>
-            RequiredFieldValidator2 control.
+            rqvTxtCache control.
             </summary>
             <remarks>
             Auto-generated field.
@@ -1420,6 +1429,15 @@
         <member name="F:DotNetNuke.Modules.ActiveForums.WhatsNewOptions.lnkUpdate">
             <summary>
             lnkUpdate control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.WhatsNewOptions.lnkCancel">
+            <summary>
+            lnkCancel control.
             </summary>
             <remarks>
             Auto-generated field.

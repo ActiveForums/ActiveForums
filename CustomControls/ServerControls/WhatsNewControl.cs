@@ -228,7 +228,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 }
                 else
                 {
-                    dr = DataProvider.Instance().GetPosts(PortalId, ForumIds, TopicsOnly, RandomOrder, Rows, false, Tags, FilterByUserId);
+                    dr = DataProvider.Instance().GetPosts(PortalId, ForumIds, TopicsOnly, RandomOrder, Rows, Tags, FilterByUserId);
                 }
                 bool useFriendly = Utilities.IsRewriteLoaded();
                 string sHost = Utilities.GetHost();

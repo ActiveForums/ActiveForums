@@ -180,7 +180,7 @@ namespace DotNetNuke.Modules.ActiveForums
         #endregion
         #region Top Posts
         public abstract IDataReader PortalForums(int PortalId);
-        public abstract IDataReader GetPosts(int PortalId, string Forums, bool TopicsOnly, bool RandomOrder, int Rows, bool IgnoreSecurity, string Tags, int FilterByUserId = -1);
+        public abstract IDataReader GetPosts(int PortalId, string Forums, bool TopicsOnly, bool RandomOrder, int Rows, string Tags, int FilterByUserId = -1);
         public abstract IDataReader GetPostsByUser(int PortalId, int Rows, bool IsSuperUser, int currentUserId, int FilteredUserid, bool TopicsOnly, string ForumIds);
         #endregion
 
