@@ -163,6 +163,8 @@ namespace DotNetNuke.Modules.ActiveForums
                 if (Request.IsAuthenticated)
                 {
                     btnSubmitLink.OnClientClick = "afQuickSubmit(); return false;";
+
+                    AllowSubscribe = Permissions.HasPerm(ForumInfo.Security.Subscribe, ForumUser.UserRoles);
                 }
                 else
                 {
@@ -171,6 +173,8 @@ namespace DotNetNuke.Modules.ActiveForums
                     reqBody.Text = "<img src=\"" + ImagePath + "/images/warning.png\" />";
                     reqSecurityCode.Text = "<img src=\"" + ImagePath + "/images/warning.png\" />";
                     btnSubmitLink.Click += ambtnSubmit_Click;
+
+                    AllowSubscribe = false;
                 }
 
 
@@ -378,17 +382,25 @@ namespace DotNetNuke.Modules.ActiveForums
             //Check if is subscribed
             string cachekey = string.Format("AF-FV-{0}-{1}", PortalId, ModuleId);
             DataCache.CacheClearPrefix(cachekey);
-            if (Request.Params["chkSubscribe"] != null)
+
+
+            // Subscribe or unsubscribe if needed
+            if (AllowSubscribe && UserId > 0)
             {
-                if (Request.Params["chkSubscribe"] == "1" && UserId > 0)
+                var subscribe = Request.Params["chkSubscribe"] == "1";
+                var currentlySubscribed = Subscriptions.IsSubscribed(PortalId, ForumModuleId, ForumId, TopicId, SubscriptionTypes.Instant, UserId);
+
+                if (subscribe != currentlySubscribed)
                 {
-                    if (!(Subscriptions.IsSubscribed(PortalId, ForumModuleId, ForumId, TopicId, SubscriptionTypes.Instant, UserId)))
-                    {
-                        SubscriptionController sc = new SubscriptionController();
-                        sc.Subscription_Update(PortalId, ForumModuleId, ForumId, TopicId, 1, UserId, ForumUser.UserRoles);
-                    }
+                    // Will need to update this to support multiple subscrition types later
+                    // Subscription_Update works as a toggle, so you only call it if you want to change the value.
+                    var sc = new SubscriptionController();
+                    sc.Subscription_Update(PortalId, ForumModuleId, ForumId, TopicId, 1, UserId, ForumUser.UserRoles);
                 }
             }
+
+
+
             ControlUtils ctlUtils = new ControlUtils();
             TopicsController tc = new TopicsController();
             TopicInfo ti = tc.Topics_Get(PortalId, ForumModuleId, TopicId, ForumId, -1, false);
