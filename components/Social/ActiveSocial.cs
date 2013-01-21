@@ -62,7 +62,7 @@ namespace DotNetNuke.Modules.ActiveForums
                 }
             }
             ji.Summary = Summary;
-            ji.Body = Body;
+            ji.Body = Utilities.StripHTMLTag(Body);
             ji.JournalTypeId = 5;
             ji.ObjectKey = string.Format("{0}:{1}", ForumId.ToString(), TopicId.ToString());
             if (JournalController.Instance.GetJournalItemByKey(PortalId, ji.ObjectKey) != null)
@@ -103,26 +103,7 @@ namespace DotNetNuke.Modules.ActiveForums
             JournalController.Instance.SaveJournalItem(ji, -1);
 
 
-            //If GetActiveSocialStatus(PortalId) < 1 Then
-            //    Exit Sub
-            //End If
-            //Try
-            //    Dim ai As Object = Nothing
-            //    Dim asm As System.Reflection.Assembly
-            //    asm = System.Reflection.Assembly.Load("Active.Modules.Social")
-            //    Dim ac As Object = Nothing
-            //    ac = asm.CreateInstance("Active.Modules.Social.API.Journal")
-            //    Dim MainSettings As SettingsInfo = DataCache.MainSettings(ModuleId)
-            //    Dim roles As String = String.Empty
-            //    If Not String.IsNullOrEmpty(ReadRoles) Then
-            //        If ReadRoles.Contains("|") Then
-            //            roles = ReadRoles.Substring(0, ReadRoles.IndexOf("|") - 1)
-            //        End If
-            //    End If
-            //    ac.AddProfileItem(New Guid(MainSettings.ActiveSocialTopicsKey), UserId, URL, Subject, Summary, Body, SecurityOption, roles)
-            //Catch ex As Exception
-
-            //End Try
+           
         }
         public void AddReplyToJournal(int PortalId, int ModuleId, int ForumId, int TopicId, int ReplyId, int UserId, string URL, string Subject, string Summary, string Body, int SecurityOption, string ReadRoles, int SocialGroupId)
         {
@@ -146,7 +127,7 @@ namespace DotNetNuke.Modules.ActiveForums
                     }
                 }
                 ji.Summary = Summary;
-                ji.Body = Body;
+                ji.Body = Utilities.StripHTMLTag(Body);
                 ji.JournalTypeId = 6;
                 ji.ObjectKey = string.Format("{0}:{1}:{2}", ForumId.ToString(), TopicId.ToString(), ReplyId.ToString());
                 if (JournalController.Instance.GetJournalItemByKey(PortalId, ji.ObjectKey) != null)
