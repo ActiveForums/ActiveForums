@@ -41,7 +41,7 @@
       <InstallInclude Include="**\*.aspx" />
       <InstallInclude Include="**\*.js" />
       <InstallInclude Include="**\*.config" />
-      <InstallInclude Include="**\*.txt"  Exclude="**\obj\**;**\_ReSharper*\**;**\Documentation\License.txt;**\Documentation\ReleaseNotes.txt;" />
+      <InstallInclude Include="**\*.txt"  Exclude="**\obj\**;**\_ReSharper*\**;**\Documentation\License.txt;**\Documentation\ReleaseNotes.txt;**\WhatsNew.ascx;**\WhatsNewOptions.ascx;**\WhatsNewResources.zip;" />
       <InstallInclude Include="**\images\*.*" />
       <InstallInclude Include="**\ranks\*.*" />
       <InstallInclude Include="**\emoticons\*.*" />
@@ -61,7 +61,7 @@
       <SourceInclude Include="**\*.xml" Exclude="**\obj\**;**\_ReSharper*\**;**\bin\**;" />
       <SourceInclude Include="**\*.aspx" />
       <SourceInclude Include="**\*.js" />
-      <SourceInclude Include="**\*.txt" Exclude="**\obj\**;**\_ReSharper*\**;**\Documentation\License.txt;**\Documentation\ReleaseNotes.txt;" />
+      <SourceInclude Include="**\*.txt" Exclude="**\obj\**;**\_ReSharper*\**;**\Documentation\License.txt;**\Documentation\ReleaseNotes.txt;**\WhatsNew.ascx;**\WhatsNewOptions.ascx;**\WhatsNewResources.zip;" />
       <SourceInclude Include="**\images\*.*" />
       <SourceInclude Include="**\emoticons\*.*" />
       <SourceInclude Include="**\*.vb" />
@@ -85,6 +85,18 @@
       <Output TaskParameter="Include" ItemName="PackageTxtFiles" />
     </CreateItem>
 
+    <CreateItem Include="**\WhatsNew.ascx">
+      <Output TaskParameter="Include" ItemName="WhatsNewFiles" />
+    </CreateItem>
+
+    <CreateItem Include="**\WhatsNewOptions.ascx">
+      <Output TaskParameter="Include" ItemName="WhatsNewFiles" />
+    </CreateItem>
+
+    <CreateItem Include="**\WhatsNewResources.zip">
+      <Output TaskParameter="Include" ItemName="WhatsNewFiles" />
+    </CreateItem>
+
 
     <CreateItem Include="**\*.sqldataprovider" Exclude="**\Tests\TestDatabase\*.SqlDataProvider" >
       <Output TaskParameter="Include" ItemName="SqlDataProviderFiles" />
@@ -94,6 +106,7 @@
     <Copy SourceFiles="@(SqlDataProviderFiles)" DestinationFolder="$(MSBuildProjectDirectory)\Package" />
     <Copy SourceFiles="@(PackageManifestFiles)" DestinationFolder="$(MSBuildProjectDirectory)\Package" />
     <Copy SourceFiles="@(PackageTxtFiles)" DestinationFolder="$(MSBuildProjectDirectory)\Package" />
+    <Copy SourceFiles="@(WhatsNewFiles)" DestinationFolder="$(MSBuildProjectDirectory)\Package" />
     
     
     <!-- create the INSTALL RESOURCES.ZIP file -->

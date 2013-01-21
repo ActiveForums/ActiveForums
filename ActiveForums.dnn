@@ -63,6 +63,7 @@
                                     </moduleControl>
                                 </moduleControls>
                             </moduleDefinition>
+                         
                         </moduleDefinitions>
                     </desktopModule>
                 </component>
@@ -292,5 +293,83 @@
                 </component>
             </components>
         </package>
+      <package name="Active Forums What's New" type="Module" version="5.0.3">
+        <friendlyName>Active Forums What's New</friendlyName>
+        <foldername>ActiveForumsWhatsNew</foldername>
+        <description>Display the most recent topics or replies from selected forums on any page within your site.</description>
+        <iconFile />
+        <owner>
+          <name>DotNetNuke Active Forums Module</name>
+          <organization>DotNetNuke Corporation</organization>
+          <url>activeforums.codeplex.com</url>
+          <email />
+        </owner>
+        <license src="License.txt"></license>
+        <releaseNotes src="ReleaseNotes.txt"></releaseNotes>
+        <dependencies>
+          <dependency type="CoreVersion">07.00.00</dependency>
+        </dependencies>
+        <components>
+          <component type="Module">
+            <desktopModule>
+              <moduleName>Active Forums What's New</moduleName>
+              <foldername>ActiveForumsWhatsNew</foldername>
+              <businessControllerClass />
+              <supportedFeatures />
+              <moduleDefinitions>
+                <moduleDefinition>
+                  <friendlyName>Active Forums What's New</friendlyName>
+                  <definitionName>Active Forums What's New</definitionName>
+                  <defaultCacheTime>0</defaultCacheTime>
+                  <moduleControls>
+                    <moduleControl>
+                      <controlKey />
+                      <controlSrc>DesktopModules/ActiveForumsWhatsNew/WhatsNew.ascx</controlSrc>
+                      <supportsPartialRendering>False</supportsPartialRendering>
+                      <controlTitle>Active Forums What's New</controlTitle>
+                      <controlType>View</controlType>
+                      <iconFile />
+                      <helpUrl />
+                      <supportsPopUps>False</supportsPopUps>
+                      <viewOrder>0</viewOrder>
+                    </moduleControl>
+                    <moduleControl>
+                      <controlKey>EDIT</controlKey>
+                      <controlSrc>DesktopModules/ActiveForumsWhatsNew/WhatsNewOptions.ascx</controlSrc>
+                      <supportsPartialRendering>False</supportsPartialRendering>
+                      <controlTitle>Options</controlTitle>
+                      <controlType>Edit</controlType>
+                      <iconFile />
+                      <helpUrl />
+                      <supportsPopUps>False</supportsPopUps>
+                      <viewOrder>0</viewOrder>
+                    </moduleControl>
+                  </moduleControls>
+                </moduleDefinition>
+              </moduleDefinitions>
+            </desktopModule>
+          </component>
+          <component type="File">
+            <files>
+              <basePath>DesktopModules\ActiveForumsWhatsNew</basePath>
+              <file>
+                <name>WhatsNew.ascx</name>
+              </file>
+              <file>
+                <name>WhatsNewOptions.ascx</name>
+              </file>
+            </files>
+          </component>
+          <component type="ResourceFile">
+            <resourceFiles>
+              <basePath>DesktopModules\ActiveForumsWhatsNew</basePath>
+              <resourceFile>
+                <name>WhatsNewResources.zip</name>
+                <sourceFileName>WhatsNewResources.zip</sourceFileName>
+              </resourceFile>
+            </resourceFiles>
+          </component>
+        </components>
+      </package>
     </packages>
 </dotnetnuke>

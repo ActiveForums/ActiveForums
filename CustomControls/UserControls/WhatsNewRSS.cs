@@ -227,7 +227,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 sb.Append(sLogo);
             }
 
-            sb.Append(WriteElement("copyright", ps.FooterText, 2));
+            sb.Append(WriteElement("copyright", ps.FooterText.Replace("[year]",DateTime.Now.Year.ToString()), 2));
             sb.Append(WriteElement("lastBuildDate", "[LASTBUILDDATE]", 2));
 
             var lastBuildDate = DateTime.MinValue;
