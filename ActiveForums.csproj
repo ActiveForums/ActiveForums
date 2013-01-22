@@ -285,6 +285,7 @@
     <Content Include="scripts\amlib.js" />
     <Content Include="scripts\blank.html" />
     <Content Include="scripts\calendar.css" />
+    <Content Include="scripts\ck_editor.js" />
     <Content Include="scripts\fck_editor.js" />
     <Content Include="scripts\jquery.disable.text.select.pack.js" />
     <Content Include="scripts\jquery.history.js" />

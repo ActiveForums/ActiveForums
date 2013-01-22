@@ -179,7 +179,11 @@ namespace DotNetNuke.Modules.ActiveForums
                 {
                     Page.ClientScript.RegisterClientScriptInclude("afeditor", Page.ResolveUrl("~/desktopmodules/activeforums/scripts/telerik_editor.js"));
                 }
-                else if (_prov.DefaultProvider.ToLowerInvariant().Contains("fck"))
+                else if (_prov.DefaultProvider.Contains("CKHtmlEditorProvider"))
+                {
+                    Page.ClientScript.RegisterClientScriptInclude("afeditor", Page.ResolveUrl("~/desktopmodules/activeforums/scripts/ck_editor.js"));
+                }
+                else if (_prov.DefaultProvider.Contains("FckHtmlEditorProvider"))
                 {
                     Page.ClientScript.RegisterClientScriptInclude("afeditor", Page.ResolveUrl("~/desktopmodules/activeforums/scripts/fck_editor.js"));
                 }
