@@ -12,12 +12,12 @@ namespace DotNetNuke.Modules.ActiveForums
     public class ForumServiceController : DnnApiController
     {
         [DnnAuthorize()]
-        public HttpResponseMessage CreateThumbnail(int FileId, int Height, int Width)
+        public HttpResponseMessage CreateThumbnail(CreateThumbnailDTO dto)
         {
             IFileManager _fileManager = FileManager.Instance;
             IFolderManager _folderManager = FolderManager.Instance;
 
-            IFileInfo _file = _fileManager.GetFile(FileId);
+            IFileInfo _file = _fileManager.GetFile(dto.FileId);
 
             if (_file == null)
             {
@@ -31,10 +31,10 @@ namespace DotNetNuke.Modules.ActiveForums
             {
                 ext = "." + ext;
             }
-            string sizedPhoto = _file.FileName.Replace(ext, "_" + Width.ToString(CultureInfo.InvariantCulture) + "x" + Height.ToString(CultureInfo.InvariantCulture) + ext);
+            string sizedPhoto = _file.FileName.Replace(ext, "_" + dto.Width.ToString(CultureInfo.InvariantCulture) + "x" + dto.Height.ToString(CultureInfo.InvariantCulture) + ext);
 
             IFileInfo newPhoto = _fileManager.AddFile(_folder, sizedPhoto, _fileManager.GetFileContent(_file));
-            sizedPhoto = ImageUtils.CreateImage(newPhoto.PhysicalPath, Height, Width);
+            sizedPhoto = ImageUtils.CreateImage(newPhoto.PhysicalPath, dto.Height, dto.Width);
             newPhoto = _fileManager.UpdateFile(newPhoto);
 
             return Request.CreateResponse(HttpStatusCode.OK, newPhoto.ToJson());
@@ -42,9 +42,21 @@ namespace DotNetNuke.Modules.ActiveForums
         }
 
         [DnnAuthorize()]
-        public string EncryptTicket(string Url)
+        public string EncryptTicket(EncryptTicketDTO dto)
         {
-            return UrlUtils.EncryptParameter(UrlUtils.GetParameterValue(Url));
+            return UrlUtils.EncryptParameter(UrlUtils.GetParameterValue(dto.Url));
+        }
+
+        public class CreateThumbnailDTO
+        {
+            public int FileId { get; set; }
+            public int Height { get; set; }
+            public int Width { get; set; }
+        }
+
+        public class EncryptTicketDTO
+        {
+            public string Url { get; set; }
         }
     }
 }

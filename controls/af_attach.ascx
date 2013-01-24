@@ -181,7 +181,7 @@
 				title: '<%=DotNetNuke.UI.Utilities.ClientAPI.GetSafeJSString(LocalizeString("Title.Text"))%>',
 				cancelText: 'Cancel',
 				attachText: 'Attach',
-				getItemsServiceUrl: sf.getServiceRoot('InternalServices') + 'UserFile.ashx/GetItems',
+				getItemsServiceUrl: sf.getServiceRoot('InternalServices') + 'UserFile/GetItems',
 				nameHeaderText: '<%=DotNetNuke.UI.Utilities.ClientAPI.GetSafeJSString(LocalizeString("Name.Header"))%>',
 				typeHeaderText: '<%=DotNetNuke.UI.Utilities.ClientAPI.GetSafeJSString(LocalizeString("Type.Header"))%>',
 				lastModifiedHeaderText: '<%=DotNetNuke.UI.Utilities.ClientAPI.GetSafeJSString(LocalizeString("LastModified.Header"))%>',

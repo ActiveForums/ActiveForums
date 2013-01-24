@@ -12,12 +12,18 @@ namespace DotNetNuke.Modules.ActiveForums
     [ValidateAntiForgeryToken()]
     public class AdminServiceController : DnnApiController
     {
+        // DTO for ToggleUrlHandler
+        public class ToggleUrlHandlerDTO
+        {
+            public int ModuleId { get; set; }
+        }
+
         [DnnAuthorize()]
-        public HttpResponseMessage ToggleURLHandler(int ModuleId)
+        public HttpResponseMessage ToggleURLHandler(ToggleUrlHandlerDTO dto)
         {
             Entities.Modules.ModuleController objModules = new Entities.Modules.ModuleController();
             SettingsInfo objSettings = new SettingsInfo();
-            objSettings.MainSettings = objModules.GetModuleSettings(ModuleId);
+            objSettings.MainSettings = objModules.GetModuleSettings(dto.ModuleId);
             ConfigUtils cfg = new ConfigUtils();
             bool success = false;
             if (Utilities.IsRewriteLoaded())
@@ -32,27 +38,40 @@ namespace DotNetNuke.Modules.ActiveForums
             }
         }
 
+        //DTO for RunMaintenance
+        public class RunMaintenanceDTO
+        {
+            public int ModuleId { get; set; }
+            public int ForumId { get; set; }
+            public int olderThan { get; set; }
+            public int byUserId { get; set; }
+            public int lastActive { get; set; }
+            public bool withNoReplies { get; set; }
+            public bool dryRun { get; set; }
+        }
+
         [DnnAuthorize()]
-        public HttpResponseMessage RunMaintenance(int ModuleId, int ForumId, int olderThan, int byUserId, int lastActive, bool withNoReplies, bool dryRun)
+        public HttpResponseMessage RunMaintenance(RunMaintenanceDTO dto)
         {
             Entities.Modules.ModuleController objModules = new Entities.Modules.ModuleController();
             SettingsInfo objSettings = new SettingsInfo();
-            objSettings.MainSettings = objModules.GetModuleSettings(ModuleId);
-            int rows = DataProvider.Instance().Forum_Maintenance(ForumId, olderThan, lastActive, byUserId, withNoReplies, dryRun, objSettings.DeleteBehavior);
-            if (dryRun)
+            objSettings.MainSettings = objModules.GetModuleSettings(dto.ModuleId);
+            int rows = DataProvider.Instance().Forum_Maintenance(dto.ForumId, dto.olderThan, dto.lastActive, dto.byUserId, dto.withNoReplies, dto.dryRun, objSettings.DeleteBehavior);
+            if (dto.dryRun)
             {
-                return Request.CreateResponse(HttpStatusCode.OK, new { Result = string.Format(Utilities.GetSharedResource("[RESX:Maint:DryRunResults]", true), rows.ToString()) }.ToJson());
+                return Request.CreateResponse(HttpStatusCode.OK, new { Result = string.Format(Utilities.GetSharedResource("[RESX:Maint:DryRunResults]", true), rows.ToString()) });
                 //return Json(new { Result = string.Format(Utilities.GetSharedResource("[RESX:Maint:DryRunResults]", true), rows.ToString()) });
             }
             else
             {
-                return Request.CreateResponse(HttpStatusCode.OK, new { Result = Utilities.GetSharedResource("[RESX:ProcessComplete]", true) }.ToJson());
+                return Request.CreateResponse(HttpStatusCode.OK, new { Result = Utilities.GetSharedResource("[RESX:ProcessComplete]", true) });
+
                 //return Json(new { Result = Utilities.GetSharedResource("[RESX:ProcessComplete]", true) });
             }
         }
 
         [DnnAuthorize()]
-        public string GetSecurityGrid(int GroupId, int ForumId)
+        public string GetSecurityGrid(int GroupId, int ForumId)  // Needs DTO
         {
             StringBuilder sb = new StringBuilder();
 
