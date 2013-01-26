@@ -15,7 +15,7 @@
 <div class="fileUploadArea">
 	<div class="jpa" id="tbar-attach-Area">
 		<span id="tbar-photoText">attach</span> <a href="#" id="photoFromSite">Browse From Site</a>
-		<span>|</span> <span class="browser-upload-btn">Upload<input type="file" name="files[]" /></span>
+		<span>|</span> <span class="browser-upload-btn">Upload <span style="position:relative;"></span><input type="file" name="files[]" /></span>
 	</div>
 	<div id="itemUpload">
 		<div class="fileupload-error dnnFormMessage dnnFormValidationSummary" style="display: none;">
@@ -35,7 +35,7 @@
 		</div>
 	</div>
 </div>
-<div id="attachments">
+<div id="attachments" style="clear:left;">
 	<table>
 		<thead>
 			<tr>
@@ -122,6 +122,9 @@
 			beforeSend: sf.setModuleHeaders,
 			data: data,
 			success: function (data) {
+
+			    data = $.parseJSON(data);
+
 				 if (editorType == 0) {
 					amaf_insertHTML('[THUMBNAIL:' + data.FileId + ':' + $('#thumb-id').val() + ']');
 				 }else{
@@ -152,7 +155,8 @@
 			$('.fileUploadArea').dnnUserFileUpload({
 				maxFileSize: maxUploadSize,
 				serverErrorMessage: 'Some Error Message',
-				addImageServiceUrl: sf.getServiceRoot('ActiveForums') + 'FileUpload.ashx/UploadFile',
+				addImageServiceUrl: sf.getServiceRoot('Journal') + 'FileUpload/UploadFile',
+				beforeSend: sf.setModuleHeaders,
 				callback: function (file) {
 					var $previewArea = $('.filePreviewArea');
 					var fileId = -1;
@@ -169,7 +173,7 @@
 							getFileTicket('FileId=' + this.parentNode.id);
 
 						}
-					});
+					}); 
 					 $('#' + fileId + ' .createThumb').click(function(){
 						$('#thumb-id').val(this.parentNode.id);
 						$('#divThumbnail').dialog('open');

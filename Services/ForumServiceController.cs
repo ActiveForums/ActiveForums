@@ -38,7 +38,6 @@ namespace DotNetNuke.Modules.ActiveForums
             newPhoto = _fileManager.UpdateFile(newPhoto);
 
             return Request.CreateResponse(HttpStatusCode.OK, newPhoto.ToJson());
-            //return Json(newPhoto);
         }
 
         [DnnAuthorize()]
