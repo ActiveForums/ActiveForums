@@ -502,22 +502,25 @@ namespace DotNetNuke.Modules.ActiveForums
 
 				string PMUrl = string.Empty;
 				string PMLink = string.Empty;
-				if (up.UserId > 0)
+				if (up.UserId > 0 && CurrentUserId >= 0 && up.UserId != CurrentUserId)
 				{
 					switch (MainSettings.PMType)
 					{
-						case PMTypes.AM:
-							PMUrl = Common.Globals.NavigateURL(MainSettings.PMTabId, "", new[] {"anon=y", "sendto=" + up.UserId});
-							PMLink = "<a href=\"" + PMUrl + "\"><img src=\"" + ImagePath + "/icon_pm.png\" alt=\"[RESX:SendPM]\" border=\"0\" /></a>";
-							break;
+						case PMTypes.Core:
+                            PMLink = "<img class='ComposeMessage' data-recipient='{ \"id\": \"user-" + up.UserId + "\", \"name\": \"" + HttpUtility.JavaScriptStringEncode(up.DisplayName) + "\"}' src='" + ImagePath + "/images/icon_pm.png' alt=\"[RESX:SendPM]\" title=\"[RESX:SendPM]\" border=\"0\" /></a>";
+					        break;
+                        //case PMTypes.AM:
+						//	PMUrl = Common.Globals.NavigateURL(MainSettings.PMTabId, "", new[] {"anon=y", "sendto=" + up.UserId});
+                        //	PMLink = "<a href=\"" + PMUrl + "\"><img src=\"" + ImagePath + "/images/icon_pm.png\" alt=\"[RESX:SendPM]\" border=\"0\" /></a>";
+						//	break;
 						case PMTypes.Ventrian:
 							PMUrl = Common.Globals.NavigateURL(MainSettings.PMTabId, "", new[] {"type=compose", "sendto=" + up.UserId});
-							PMLink = "<a href=\"" + PMUrl + "\"><img src=\"" + ImagePath + "/icon_pm.png\" alt=\"[RESX:SendPM]\" border=\"0\" /></a>";
+                            PMLink = "<a href=\"" + PMUrl + "\"><img src=\"" + ImagePath + "/images/icon_pm.png\" alt=\"[RESX:SendPM]\" border=\"0\" /></a>";
 							break;
-						case PMTypes.Social:
-							PMUrl = Common.Globals.NavigateURL(MainSettings.PMTabId, "", new[] {"senduid=" + up.UserId});
-							PMLink = "<a href=\"" + PMUrl + "\"><img src=\"" + ImagePath + "/icon_pm.png\" alt=\"[RESX:SendPM]\" border=\"0\" /></a>";
-							break;
+						//case PMTypes.Social:
+						//	PMUrl = Common.Globals.NavigateURL(MainSettings.PMTabId, "", new[] {"senduid=" + up.UserId});
+                        //	PMLink = "<a href=\"" + PMUrl + "\"><img src=\"" + ImagePath + "/images/icon_pm.png\" alt=\"[RESX:SendPM]\" border=\"0\" /></a>";
+						//	break;
 					}
 				}
 

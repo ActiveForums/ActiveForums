@@ -60,10 +60,10 @@ namespace DotNetNuke.Modules.ActiveForums
 	}
 	public enum PMTypes: int
 	{
-		Disabled,
-		AM,
-		Ventrian,
-		Social
+		Disabled = 0,
+		Core = 1,
+		Ventrian = 2
+		//Social = 3
 	}
 	public enum SpecialTokenTypes: int
 	{

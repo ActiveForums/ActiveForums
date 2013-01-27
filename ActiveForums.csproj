@@ -98,6 +98,10 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ClientDependency.Core, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\ClientDependency.Core.dll</HintPath>
+    </Reference>
     <Reference Include="DotNetNuke, Version=7.0.0.1586, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\DotNetNuke.dll</HintPath>
@@ -232,6 +236,9 @@
     <Content Include="controls\af_polls.ascx" />
     <Content Include="controls\af_pollvote.ascx" />
     <Content Include="controls\af_sendto.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
+    <Content Include="controls\af_topicscripts.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
     <Content Include="controls\htmlcontrols\movetopic.ascx" />
@@ -615,6 +622,13 @@
     <Content Include="config\templates\ForumView-4.3.txt" />
     <Content Include="viewer.aspx" />
     <Compile Include="class\WhatsNewModuleSettings.cs" />
+    <Compile Include="controls\af_topicscripts.ascx.cs">
+      <DependentUpon>af_topicscripts.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="controls\af_topicscripts.ascx.designer.cs">
+      <DependentUpon>af_topicscripts.ascx</DependentUpon>
+    </Compile>
     <Compile Include="SimulateDateDiff.cs" />
     <Compile Include="SimulateIsNumeric.cs" />
     <Compile Include="ActiveForums.ascx.designer.cs">

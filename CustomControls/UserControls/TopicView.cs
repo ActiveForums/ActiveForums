@@ -935,12 +935,18 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     }
 
                 }
+
                 //Dim sPage As String = "function afPageTopic(page){"
                 //sPage &= "af_showLoad();window.scrollTo(0,0);"
                 //sPage &= cbTopicLoader.ClientID & ".Callback(page);"
                 //sPage &= "};"
                 //Page.ClientScript.RegisterClientScriptBlock(Page.GetType, "aftopicpg", sPage, True)
                 BuildPager();
+
+                // Add Topic Scripts
+                var ctlTopicScripts = (af_topicscripts)(LoadControl("~/DesktopModules/ActiveForums/controls/af_topicscripts.ascx"));
+                ctlTopicScripts.ModuleConfiguration = ModuleConfiguration;
+                Controls.Add(ctlTopicScripts);
             }
 
 
@@ -1391,7 +1397,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 sOutput = sOutput.Replace("[AF:LABEL:TAGS]", tagList);
             }
             //Perform Profile Related replacements
-            sOutput = TemplateUtils.ParseProfileTemplate(sOutput, up, PortalId, ModuleId, ImagePath, CurrentUserType, true, UserPrefHideAvatars, UserPrefHideSigs, IPAddress, TimeZoneOffset);
+            sOutput = TemplateUtils.ParseProfileTemplate(sOutput, up, PortalId, ModuleId, ImagePath, CurrentUserType, true, UserPrefHideAvatars, UserPrefHideSigs, IPAddress, UserProfile.ProfileModes.View, UserId, TimeZoneOffset);
 
             if (bModDelete || ((bDelete && AuthorId == UserId && bLocked == false) & ((ReplyId == 0 && ReplyCount == 0) | ReplyId > 0)))
             {

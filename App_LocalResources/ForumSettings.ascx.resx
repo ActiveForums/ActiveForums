@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AddThisUsername.Help" xml:space="preserve">
     <value>Easily add social bookmarking capabilities to your site. Visit &lt;a href="http://www.addthis.com" target="_blank"&gt;www.addthis.com&lt;/a&gt; to create an account then enter the account name in the textbox.</value>
@@ -404,5 +404,26 @@
   </data>
   <data name="Width.Text" xml:space="preserve">
     <value>Width</value>
+  </data>
+  <data name="MessagingCore.Text" xml:space="preserve">
+    <value>Default Messaging</value>
+  </data>
+  <data name="MessagingDisabled.Text" xml:space="preserve">
+    <value>Disabled</value>
+  </data>
+  <data name="MessagingTab.Text" xml:space="preserve">
+    <value>Messaging Tab</value>
+  </data>
+  <data name="MessagingType.Text" xml:space="preserve">
+    <value>Messaging Type</value>
+  </data>
+  <data name="MessagingVentrian.Text" xml:space="preserve">
+    <value>Ventrian Messages</value>
+  </data>
+  <data name="MessagingTab.Help" xml:space="preserve">
+    <value>Select the tab containing the private message module</value>
+  </data>
+  <data name="MessagingType.Help" xml:space="preserve">
+    <value>Select a private messaging system.</value>
   </data>
 </root>

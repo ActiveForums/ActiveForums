@@ -4,6 +4,42 @@
         <name>DotNetNuke.Modules.ActiveForums</name>
     </assembly>
     <members>
+        <member name="F:DotNetNuke.Modules.ActiveForums.Controls.af_topicscripts.DnnJsInclude1">
+            <summary>
+            DnnJsInclude1 control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.Controls.af_topicscripts.DnnCssInclude1">
+            <summary>
+            DnnCssInclude1 control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.Controls.af_topicscripts.DnnJsInclude3">
+            <summary>
+            DnnJsInclude3 control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.Controls.af_topicscripts.DnnCssInclude4">
+            <summary>
+            DnnCssInclude4 control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
         <member name="F:DotNetNuke.Modules.ActiveForums.ActiveForums.plhAF">
             <summary>
             plhAF control.
@@ -993,6 +1029,42 @@
         <member name="F:DotNetNuke.Modules.ActiveForums.Controls.ForumSettings.drpProfileType">
             <summary>
             drpProfileType control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.Controls.ForumSettings.lblMessagingType">
+            <summary>
+            lblMessagingType control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.Controls.ForumSettings.drpMessagingType">
+            <summary>
+            drpMessagingType control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.Controls.ForumSettings.lblMessagingTab">
+            <summary>
+            lblMessagingTab control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.Controls.ForumSettings.drpMessagingTab">
+            <summary>
+            drpMessagingTab control.
             </summary>
             <remarks>
             Auto-generated field.

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Web.UI.WebControls;
+using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Framework;
 using System.Text;
 using System.Xml;
@@ -14,6 +15,8 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 		protected override void OnLoad(EventArgs e)
 		{
 			base.OnLoad(e);
+
+            ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
 
 			ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
 
@@ -58,7 +61,8 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 
 
 		}
-		#region Base Method Implementations
+
+	    #region Base Method Implementations
 
 		/// -----------------------------------------------------------------------------
 		/// <summary>
@@ -151,7 +155,6 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 			{
 				bool fullTextCurrent = FullTextSearch;
 
-
 				Theme = drpThemes.SelectedItem.Value;
 				Mode = drpMode.SelectedItem.Value;
 				TemplateId = Convert.ToInt32(drpTemplates.SelectedItem.Value);
@@ -167,6 +170,11 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 				FriendlyURLs = Convert.ToBoolean(rdEnableURLRewriter.SelectedItem.Value);
 				FullTextSearch = Convert.ToBoolean(rdFullTextSearch.SelectedItem.Value);
 				MailQueue = Convert.ToBoolean(rdMailQueue.SelectedItem.Value);
+
+			    MessagingType = Convert.ToInt32(drpMessagingType.SelectedItem.Value);
+
+                if(drpMessagingTab.SelectedItem != null)
+			        MessagingTabId = Convert.ToInt32(drpMessagingTab.SelectedItem.Value);              
 
 				PrefixURLBase = txtURLPrefixBase.Text;
 				PrefixURLCategory = txtURLPrefixCategory.Text;
@@ -216,6 +224,9 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 					Services.Exceptions.Exceptions.ProcessModuleLoadException(this, ex);
 				}
 
+                // Clear out the cache
+                DataCache.ClearSettingsCache(ModuleId);
+
 			}
 			catch (Exception exc) //Module failed to load
 			{
@@ -241,29 +252,51 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 			drpThemes.DataSource = di.GetDirectories();
 			drpThemes.DataBind();
 		}
-		private void BindPrivateMessaging()
-		{
 
-			var mc = new Entities.Modules.ModuleController();
-			var tc = new Entities.Tabs.TabController();
-			Entities.Tabs.TabInfo ti;
-			foreach (Entities.Modules.ModuleInfo mi in mc.GetModules(PortalId))
-			{
-				if (mi.DesktopModule.ModuleName.Contains("Active Social") && mi.IsDeleted == false)
-				{
-					ti = tc.GetTab(mi.TabID, PortalId, false);
-					if (ti != null)
-					{
-						if (ti.IsDeleted == false)
-						{
-							drpProfileType.Items.Add(new ListItem(ti.TabName + " - Active Social", "3"));
 
-						}
-					}
-				}
-			}
-		}
-		private void BindForumGroups()
+        private void BindPrivateMessaging()
+        {
+            var selectedMessagingType = drpMessagingType.Items.FindByValue(MessagingType.ToString());
+            if (selectedMessagingType != null)
+                selectedMessagingType.Selected = true;
+
+            BindPrivateMessagingTab();
+        }
+
+        private void BindPrivateMessagingTab()
+        {
+            drpMessagingTab.Items.Clear();
+            drpMessagingTab.ClearSelection();
+
+            var mc = new Entities.Modules.ModuleController();
+            var tc = new TabController();
+
+            foreach (Entities.Modules.ModuleInfo mi in mc.GetModules(PortalId))
+            {
+                if (!mi.DesktopModule.ModuleName.Contains("DnnForge - PrivateMessages") || mi.IsDeleted)
+                    continue;
+
+                var ti = tc.GetTab(mi.TabID, PortalId, false);
+                if (ti != null && !ti.IsDeleted)
+                {
+                    drpMessagingTab.Items.Add(new ListItem
+                    {
+                        Text = ti.TabName + " - Ventrian Messages",
+                        Value = ti.TabID.ToString(),
+                        Selected = ti.TabID == MessagingTabId
+                    });
+                }
+            }
+
+            if (drpMessagingTab.Items.Count == 0)
+            {
+                drpMessagingTab.Items.Add(new ListItem("No Messaging Tabs Found", "-1"));
+                drpMessagingTab.Enabled = false;
+            }
+
+        }
+		
+        private void BindForumGroups()
 		{
 			using (IDataReader dr = DataProvider.Instance().Forums_List(PortalId, ModuleId, -1, -1, false))
 			{

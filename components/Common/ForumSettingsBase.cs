@@ -141,6 +141,32 @@ namespace DotNetNuke.Modules.ActiveForums
 			}
 		}
 
+        public int MessagingType
+        {
+            get
+            {
+                return GetIntegerSetting(SettingKeys.PMType, 0);
+            }
+            set
+            {
+                Settings[SettingKeys.PMType] = value;
+                objModules.UpdateModuleSetting(ModuleId, SettingKeys.PMType, value.ToString());
+            }
+        }
+
+        public int MessagingTabId
+        {
+            get
+            {
+                return GetIntegerSetting(SettingKeys.PMTabId, 0);
+            }
+            set
+            {
+                Settings[SettingKeys.PMTabId] = value;
+                objModules.UpdateModuleSetting(ModuleId, SettingKeys.PMTabId, value.ToString());
+            }
+        }
+
 		public int Signatures
 		{
 			get
