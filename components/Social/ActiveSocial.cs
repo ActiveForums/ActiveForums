@@ -108,7 +108,7 @@ namespace DotNetNuke.Modules.ActiveForums
         public void AddReplyToJournal(int PortalId, int ModuleId, int ForumId, int TopicId, int ReplyId, int UserId, string URL, string Subject, string Summary, string Body, int SecurityOption, string ReadRoles, int SocialGroupId)
         {
             //make sure that this is a User before trying to create a journal item, you can't post a JI without
-            if (UserId < 0)
+            if (UserId > 0)
             {
                 var ji = new JournalItem
                              {
