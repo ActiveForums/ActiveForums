@@ -30,7 +30,7 @@ namespace DotNetNuke.Modules.ActiveForums
         public const string DefaultTags = "";
         public const string DefaultHeader = "<div style=\"padding:25px;padding-top:35px;\">";
         public const string DefaultFooter = "[RSSICONLINK]</div>";
-        public const string DefaultFormat = "<div style=\"padding-bottom:5px;\" class=\"normal\">[SUBJECTLINK]</div>";
+        public const string DefaultFormat = "<div style=\"padding-bottom:5px;\" class=\"Normal\">[SUBJECTLINK]</div>";
 
         public int Rows { get; set; }
         public string Forums { get; set; }

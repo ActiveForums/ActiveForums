@@ -53,7 +53,7 @@
                 </tr>
                 <tr>
                     <td class="NormalBold" valign="top">[RESX:EnableRSS]:</td>
-                    <td class="normal" valign="top"><asp:CheckBox ID="chkRSS" runat="server" AutoPostBack="True" /></td>
+                    <td class="Normal" valign="top"><asp:CheckBox ID="chkRSS" runat="server" AutoPostBack="True" /></td>
                 </tr>
                 <tr id="trRSS" runat="server">
                     <td class="Normal" valign="top"></td>

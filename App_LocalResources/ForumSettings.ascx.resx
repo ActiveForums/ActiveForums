@@ -426,4 +426,7 @@
   <data name="MessagingType.Help" xml:space="preserve">
     <value>Select a private messaging system.</value>
   </data>
+  <data name="ControlTitle_settings.Text" xml:space="preserve">
+    <value>Active Forums Settings</value>
+  </data>
 </root>
