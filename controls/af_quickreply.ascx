@@ -71,7 +71,7 @@ function afQuickSubmit() {
 						<input type="button" class="afButton" accesskey="i" name="afBold" value="<%=ItalicsText%>"  style="font-weight:bold;" onclick="insertCode('[i] [/i]');" onmouseover="window.status='<%=ItalicsDesc%>';  return true;" onmouseout="window.status=''; return true;" />
 						<input type="button" class="afButton" accesskey="u" name="afBold" value="<%=UnderlineText%>" style="font-weight:bold;" onclick="insertCode('[u] [/u]');" onmouseover="window.status='<%=UnderlineDesc%>';  return true;" onmouseout="window.status=''; return true;" />
 						<input type="button" class="afButton" accesskey="q" name="afBold" value="<%=QuoteText%>" style="font-weight:bold;" onclick="insertQuote();" onmouseover="window.status='<%=QuoteDesc%>';  return true;" onmouseout="window.status=''; return true;" />
-                        <input type="button" class="afButton" accesskey="m" name="afBold" value="<%=ImageText%>" style="font-weight:bold;" onclick="insertCode('[img] [/img]');" onmouseover="window.status='<%=ImageDesc%>';  return true;" onmouseout="window.status=''; return true;" />
+						<input type="button" class="afButton" accesskey="m" name="afBold" value="<%=ImageText%>" style="font-weight:bold;" onclick="insertCode('[img] [/img]');" onmouseover="window.status='<%=ImageDesc%>';  return true;" onmouseout="window.status=''; return true;" />
 						<input type="button" class="afButton" accesskey="c" name="afBold" value="<%=CodeText%>" style="font-weight:bold;" onclick="insertCode('[code] [/code]');" onmouseover="window.status='<%=CodeDesc%>';  return true;" title='<%=CodeDesc%>' onmouseout="window.status=''; return true;" />
 						</div>
 						<textarea id="txtBody" name="txtBody" class="aftextbox" style="height:120px" rows="5" cols="250"></textarea></td>
@@ -95,7 +95,7 @@ function afQuickSubmit() {
 				<tr>
 					<td align="center" colspan="3">
 					<div class="amtbwrapper" style="text-align:center;">
-								<div style="margin-left:0 auto;margin-right:0 auto;min-width:50px;max-width:60px;">
+								<div style="margin:0px auto;min-width:50px;max-width:60px;">
 								<%
 								if (device.IsMobile)
 								{
