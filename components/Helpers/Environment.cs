@@ -35,9 +35,12 @@ namespace DotNetNuke.Modules.ActiveForums
 									css = cssObject.ToString();
 								}
 							}
-
-
-							string sText = o.ToString();
+                            string sText = string.Empty;
+                            if (o != null)
+                            {
+                                sText = o.ToString();
+                            }
+							
 							string sBread = string.Empty;
 							foreach (string s in bcText)
 							{
