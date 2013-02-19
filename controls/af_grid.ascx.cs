@@ -348,7 +348,7 @@ namespace DotNetNuke.Modules.ActiveForums
             string sPollImage = "";
             if (PostType == "POLL")
             {
-                sPollImage = "<img src=\"" + Page.ResolveUrl("~/DesktopModules/ActiveForums/themes/" + MainSettings.Theme + "/poll.gif") + "\" align=\"absmiddle\" border=\"0\" alt=\"[RESX:Poll]\" />";
+                sPollImage = "<img src=\"" + Page.ResolveUrl("~/DesktopModules/ActiveForums/themes/" + MainSettings.Theme + "/images/poll.gif") + "\" align=\"absmiddle\" border=\"0\" alt=\"[RESX:Poll]\" />";
             }
             ControlUtils ctlUtils = new ControlUtils();
             string sTopicURL = string.Empty;
@@ -361,11 +361,11 @@ namespace DotNetNuke.Modules.ActiveForums
             {
                 if (sTopicURL.EndsWith("/"))
                 {
-                    sOut += "<a href=\"" + sTopicURL + "?" + ParamKeys.FirstNewPost + "=" + LastReplyRead + "\" rel=\"nofollow\"><img src=\"" + Page.ResolveUrl("~/DesktopModules/ActiveForums/themes/" + MainSettings.Theme + "/miniarrow_down.png") + "\" style=\"vertical-align:middle;\" alt=\"[RESX:JumpToLastRead]\" border=\"0\" class=\"afminiarrow\" /></a>";
+                    sOut += "<a href=\"" + sTopicURL + "?" + ParamKeys.FirstNewPost + "=" + LastReplyRead + "\" rel=\"nofollow\"><img src=\"" + Page.ResolveUrl("~/DesktopModules/ActiveForums/themes/" + MainSettings.Theme + "/images/miniarrow_down.png") + "\" style=\"vertical-align:middle;\" alt=\"[RESX:JumpToLastRead]\" border=\"0\" class=\"afminiarrow\" /></a>";
                 }
                 else
                 {
-                    sOut += "<a href=\"" + NavigateUrl(TabId, "", new string[] { ParamKeys.ForumId + "=" + ForumID, ParamKeys.TopicId + "=" + TopicId, ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.FirstNewPost + "=" + LastReplyRead }) + "\" rel=\"nofollow\"><img src=\"" + Page.ResolveUrl("~/DesktopModules/ActiveForums/themes/" + MainSettings.Theme + "/miniarrow_down.png") + "\" style=\"vertical-align:middle;\" alt=\"[RESX:JumpToLastRead]\" border=\"0\" class=\"afminiarrow\" /></a>";
+                    sOut += "<a href=\"" + NavigateUrl(TabId, "", new string[] { ParamKeys.ForumId + "=" + ForumID, ParamKeys.TopicId + "=" + TopicId, ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.FirstNewPost + "=" + LastReplyRead }) + "\" rel=\"nofollow\"><img src=\"" + Page.ResolveUrl("~/DesktopModules/ActiveForums/themes/" + MainSettings.Theme + "/images/miniarrow_down.png") + "\" style=\"vertical-align:middle;\" alt=\"[RESX:JumpToLastRead]\" border=\"0\" class=\"afminiarrow\" /></a>";
                 }
 
             }

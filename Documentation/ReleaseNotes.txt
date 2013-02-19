@@ -28,6 +28,7 @@
 	<p>
 		<ul>
 			<li><a href="http://activeforums.codeplex.com/workitem/1778" target="_blank">Item 1778</a> - Migrate 6.2 MVC based web services to 7.0 WebAPI based web services</li>
+			<li>Fixed missing icons for Theme on the active threads and search pages</li>
 		</ul>
 	</p>
         <p class="Owner">

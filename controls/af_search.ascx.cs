@@ -719,7 +719,7 @@ namespace DotNetNuke.Modules.ActiveForums
          
             string sPollImage = "";
             if (PostType == "POLL") {
-                sPollImage = "<img src=\"" + Page.ResolveUrl("~/DesktopModules/ActiveForums/themes/" + MainSettings.Theme + "/poll.gif") + "\" align=absmiddle border=0 />";
+                sPollImage = "<img src=\"" + Page.ResolveUrl("~/DesktopModules/ActiveForums/themes/" + MainSettings.Theme + "/images/poll.gif") + "\" align=absmiddle border=0 />";
             }
             string sOut = null;
             string[] Params = { ParamKeys.ForumId + "=" + ForumID, ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.TopicId + "=" + TopicId, ParamKeys.ContentJumpId + "=" + ContentId };
