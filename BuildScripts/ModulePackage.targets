@@ -64,9 +64,8 @@
       <SourceInclude Include="**\*.txt" Exclude="**\obj\**;**\_ReSharper*\**;**\Documentation\License.txt;**\Documentation\ReleaseNotes.txt;**\WhatsNew.ascx;**\WhatsNewOptions.ascx;**\WhatsNewResources.zip;" />
       <SourceInclude Include="**\images\*.*" />
       <SourceInclude Include="**\emoticons\*.*" />
-      <SourceInclude Include="**\*.vb" />
-      <SourceInclude Include="**\*.vb.designer" />
-      <SourceInclude Include="**\*.vbproj" />
+      <SourceInclude Include="**\*.cs" />
+      <SourceInclude Include="**\*.csproj" />
       <SourceInclude Include="**\*.targets" />
       <SourceInclude Include="**\*.sln" />
 	  <SourceInclude Include="**\Tests\*.*" />

@@ -272,7 +272,6 @@
     <EmbeddedResource Include="CustomControls\Resources\MenuButton.js" />
     <EmbeddedResource Include="CustomControls\Resources\Validation.js" />
     <EmbeddedResource Include="CustomControls\Resources\spacer.gif" />
-    <Content Include="DNN7.txt" />
     <Content Include="Documentation\License.txt" />
     <Content Include="Documentation\ReleaseNotes.txt" />
     <Content Include="ForumEditor.ascx" />
