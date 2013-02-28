@@ -28,6 +28,15 @@
 	<p>
 		<ul>
 			<li><a href="http://activeforums.codeplex.com/workitem/1778" target="_blank">Item 1778</a> - Migrate 6.2 MVC based web services to 7.0 WebAPI based web services</li>
+			<li><a href="http://activeforums.codeplex.com/workitem/1767" target="_blank">Item 1767</a> - Post HTML making it in to journal entries</li>
+			<li><a href="http://activeforums.codeplex.com/workitem/1762" target="_blank">Item 1762</a> - Quick Reply does not adhere to auto-subscribe settings</li>
+			<li><a href="http://activeforums.codeplex.com/workitem/1789" target="_blank">Item 1789</a> - Add CKEditor support</li>
+			<li><a href="http://activeforums.codeplex.com/workitem/1801" target="_blank">Item 1801</a> - Attachments in DNN 7</li>
+			<li><a href="http://activeforums.codeplex.com/workitem/1805" target="_blank">Item 1805</a> - Add "Send Message" button to profile info</li>
+			<li>Saving settings now clears the cache</li>
+			<li>Whot's New Module available again</li>
+			<li>Minor CSS tweaks</li>
+			<li>Fixed bug that prevented replies from shoing in the journal</li>
 			<li>Fixed missing icons for Theme on the active threads and search pages</li>
 		</ul>
 	</p>
