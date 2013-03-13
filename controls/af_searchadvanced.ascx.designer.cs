@@ -10,150 +10,204 @@
 namespace DotNetNuke.Modules.ActiveForums {
     
     
-    public partial class af_search {
+    public partial class af_searchadvanced {
         
         /// <summary>
-        /// PagerTop control.
+        /// litOptions control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::DotNetNuke.Modules.ActiveForums.Controls.PagerNav PagerTop;
+        protected global::System.Web.UI.WebControls.Literal litOptions;
         
         /// <summary>
-        /// phKeywords control.
+        /// lblSearch control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder phKeywords;
+        protected global::System.Web.UI.WebControls.Label lblSearch;
         
         /// <summary>
-        /// rptKeywords control.
+        /// txtSearch control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptKeywords;
+        protected global::System.Web.UI.WebControls.TextBox txtSearch;
         
         /// <summary>
-        /// phUsername control.
+        /// drpSearchColumns control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder phUsername;
+        protected global::System.Web.UI.WebControls.DropDownList drpSearchColumns;
         
         /// <summary>
-        /// litUserName control.
+        /// drpSearchType control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litUserName;
+        protected global::System.Web.UI.WebControls.DropDownList drpSearchType;
         
         /// <summary>
-        /// phTag control.
+        /// lblUserName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder phTag;
+        protected global::System.Web.UI.WebControls.Label lblUserName;
         
         /// <summary>
-        /// litTag control.
+        /// txtUserName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litTag;
+        protected global::System.Web.UI.WebControls.TextBox txtUserName;
         
         /// <summary>
-        /// litSearchDuration control.
+        /// lblTags control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litSearchDuration;
+        protected global::System.Web.UI.WebControls.Label lblTags;
         
         /// <summary>
-        /// litSearchAge control.
+        /// txtTags control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litSearchAge;
+        protected global::System.Web.UI.WebControls.TextBox txtTags;
         
         /// <summary>
-        /// litSearchTitle control.
+        /// btnSearch control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litSearchTitle;
+        protected global::System.Web.UI.WebControls.Button btnSearch;
         
         /// <summary>
-        /// pnlMessage control.
+        /// btnReset control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlMessage;
+        protected global::System.Web.UI.HtmlControls.HtmlButton btnReset;
         
         /// <summary>
-        /// litMessage control.
+        /// litAdditionalOptions control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litMessage;
+        protected global::System.Web.UI.WebControls.Literal litAdditionalOptions;
         
         /// <summary>
-        /// rptPosts control.
+        /// lblForums control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptPosts;
+        protected global::System.Web.UI.WebControls.Label lblForums;
         
         /// <summary>
-        /// rptTopics control.
+        /// lbForums control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptTopics;
+        protected global::System.Web.UI.WebControls.ListBox lbForums;
         
         /// <summary>
-        /// PagerBottom control.
+        /// lblSearchDays control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::DotNetNuke.Modules.ActiveForums.Controls.PagerNav PagerBottom;
+        protected global::System.Web.UI.WebControls.Label lblSearchDays;
         
         /// <summary>
-        /// litRecordCount control.
+        /// drpSearchDays control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litRecordCount;
+        protected global::System.Web.UI.WebControls.DropDownList drpSearchDays;
+        
+        /// <summary>
+        /// lblResultType control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblResultType;
+        
+        /// <summary>
+        /// drpResultType control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList drpResultType;
+        
+        /// <summary>
+        /// lblSortType control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSortType;
+        
+        /// <summary>
+        /// drpSort control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList drpSort;
+        
+        /// <summary>
+        /// btnSearch2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSearch2;
+        
+        /// <summary>
+        /// btnReset2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlButton btnReset2;
     }
 }

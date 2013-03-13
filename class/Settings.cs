@@ -222,7 +222,7 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 				catch (Exception ex)
 				{
-					return "hh:mm tt";
+					return "h:mm tt";
 				}
 			}
 		}

@@ -1,75 +1,63 @@
 ﻿using System;
-using DotNetNuke.Modules.ActiveForums.Controls;
+using DotNetNuke.Entities.Modules;
+using DotNetNuke.Entities.Modules.Actions;
 
 namespace DotNetNuke.Modules.ActiveForums
 {
-    public partial class ActiveForums : ForumBase, Entities.Modules.IActionable
+    public partial class ActiveForums : ForumBase, IActionable
     {
-
-
         #region DNN Actions
-        public Entities.Modules.Actions.ModuleActionCollection ModuleActions
+
+        public ModuleActionCollection ModuleActions
         {
             get
             {
-                var Actions = new Entities.Modules.Actions.ModuleActionCollection
-                                  {
-                                      {
-                                          GetNextActionID(), Utilities.GetSharedResource("[RESX:ControlPanel]"),
-                                          Entities.Modules.Actions.ModuleActionType.AddContent, "", "", EditUrl(), false,
-                                          Security.SecurityAccessLevel.Edit, true, false
-                                      }
-                                  };
-                //Actions.Add(GetNextActionID, Utilities.GetSharedResource("ForumEditor"), Entities.Modules.Actions.ModuleActionType.AddContent, "", "", EditUrl("ForumEditor"), False, Security.SecurityAccessLevel.Edit, True, False)
-                return Actions;
+                var actions = new ModuleActionCollection
+                {
+                    {
+                        GetNextActionID(), Utilities.GetSharedResource("[RESX:ControlPanel]"),
+                        ModuleActionType.AddContent, string.Empty, string.Empty, EditUrl(), false,
+                        Security.SecurityAccessLevel.Edit, true, false
+                    }
+                };
+
+                return actions;
             }
         }
+
         #endregion
 
         #region Event Handlers
 
         protected override void  OnLoad(EventArgs e)
         {
- 	         base.OnLoad(e);
+            base.OnLoad(e);
 
-            string defaultView = "classic";
-            if (Settings["amafDefaultView"] != null)
+            // If the forum instance is on the user profile page, load the users prefs control
+            if (PortalSettings.UserTabId == PortalSettings.ActiveTab.ParentId)
             {
-                if (!(string.IsNullOrEmpty(Settings["amafDefaultView"].ToString())))
-                {
-                    defaultView = Settings["amafDefaultView"].ToString();
-                }
-            }
-            if (!Page.IsPostBack)
-            {
-                plhAF.Controls.Clear();
-            }
+                int userId;
 
-            if (defaultView.ToLowerInvariant() == "advanced")
-            {
-                var ctl2 = (ControlsBase)(LoadControl("~/desktopmodules/activeforums/advanced.ascx"));
-                ctl2.ModuleConfiguration = ModuleConfiguration;
-                plhAF.Controls.Add(ctl2);
-            }
-            else if (PortalSettings.UserTabId == PortalSettings.ActiveTab.ParentId)
-            {
-                int userId = Request.QueryString["UserId"] == null ? UserInfo.UserID : Convert.ToInt32(Request.QueryString["UserId"]);
+                userId = int.TryParse(Request.QueryString["UserId"], out userId) ? userId : UserInfo.UserID;
+
+                // Users can only view thier own settings unless they are admin.
                 if (userId == UserInfo.UserID || UserInfo.IsInRole(PortalSettings.AdministratorRoleName))
                 {
-                    var ctl2 = (SettingsBase)(LoadControl("~/desktopmodules/activeforums/controls/profile_mypreferences.ascx"));
-                    ctl2.ModuleConfiguration = ModuleConfiguration;
-                    ctl2.LocalResourceFile = "~/desktopmodules/activeforums/app_localresources/sharedresources.resx";
-                    plhAF.Controls.Add(ctl2);
+                    var userPrefsCtl = (SettingsBase)(LoadControl("~/desktopmodules/activeforums/controls/profile_mypreferences.ascx"));
+                    userPrefsCtl.ModuleConfiguration = ModuleConfiguration;
+                    userPrefsCtl.LocalResourceFile = "~/desktopmodules/activeforums/app_localresources/sharedresources.resx";
+                    plhAF.Controls.Add(userPrefsCtl);
                 }
-            }
-            else
-            {
-                var ctl = (ForumBase)(LoadControl("~/desktopmodules/activeforums/classic.ascx"));
-                ctl.ModuleConfiguration = ModuleConfiguration;
-                plhAF.Controls.Add(ctl);
-            }
-        }
 
+                return;
+            }
+
+            // Otherwise, just load the normal forum control
+            var ctl = (ForumBase)(LoadControl("~/desktopmodules/activeforums/classic.ascx"));
+            ctl.ModuleConfiguration = ModuleConfiguration;
+            plhAF.Controls.Add(ctl);
+
+        }
 
         #endregion
     }

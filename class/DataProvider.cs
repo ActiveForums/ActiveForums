@@ -86,15 +86,17 @@ namespace DotNetNuke.Modules.ActiveForums
         public abstract void Reply_UpdateStatus(int PortalId, int ModuleId, int TopicId, int ReplyId, int UserId, int StatusId, bool IsMod);
         public abstract void Reply_Delete(int ForumId, int TopicId, int ReplyId, int DelBehavior);
         #endregion
+        
         #region Search
-        public abstract DataSet Search_Standard(int PortalId, int ModuleId, int UserId, int ForumId, bool IsSuper, int RowIndex, int MaxRows, string SearchString, int MatchType, int SearchField, int Timespan, int AuthorId, string Author, string Forums, string Tags, string ForumsAllowed);
-        public abstract IDataReader Search_DotNetNuke(int ModuleId);
+        
+        public abstract DataSet Search(int portalId, int moduleId, int userId, int searchId, int rowIndex, int maxRows, string searchString, int matchType, int searchField, int timespan, int authorId, string author, string forums, string tags, int resultType, int sort, int maxCacheHours, bool fullText);
+        public abstract int Search_ManageFullText(bool enabled);
+        public abstract int Search_GetFullTextStatus();
 
-        public abstract DataSet Search_FullText(int PortalId, int ModuleId, int UserId, int ForumId, bool IsSuper, int RowIndex, int MaxRows, string SearchString, int MatchType, int SearchField, int Timespan, int AuthorId, string Author, string Forums, string Tags, string ForumsAllowed);
-        public abstract int Search_ManageFullText(bool Enabled);
-
+        public abstract IDataReader Search_DotNetNuke(int moduleId);
 
         #endregion
+        
         #region Security
         public abstract void Security_Delete(int SecuredId, int ObjectId, int SecureAction, int SecureType, int ObjectType);
         public abstract IDataReader Security_Get(int SecuredId, int ObjectId, int SecureType);

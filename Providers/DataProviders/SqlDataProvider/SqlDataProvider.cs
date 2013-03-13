@@ -389,29 +389,31 @@ namespace DotNetNuke.Modules.ActiveForums
         }
 
         #endregion
+        
         #region Search
-        public override DataSet Search_Standard(int PortalId, int ModuleId, int UserId, int ForumId, bool IsSuper, int RowIndex, int MaxRows, string SearchString, int MatchType, int SearchField, int Timespan, int AuthorId, string Author, string Forums, string Tags, string ForumsAllowed)
+        
+        public override IDataReader Search_DotNetNuke(int moduleId)
         {
-            return SqlHelper.ExecuteDataset(ConnectionString, DatabaseOwner + ObjectQualifier + "activeforums_Search_Standard", PortalId, ModuleId, UserId, ForumId, IsSuper, RowIndex, MaxRows, SearchString, MatchType, SearchField, Timespan, AuthorId, Author, Forums, Tags, ForumsAllowed);
-        }
-        public override IDataReader Search_DotNetNuke(int ModuleId)
-        {
-            return SqlHelper.ExecuteReader(ConnectionString, DatabaseOwner + ObjectQualifier + "activeforums_Search_GetSearchItems", ModuleId);
+            return SqlHelper.ExecuteReader(ConnectionString, DatabaseOwner + ObjectQualifier + "activeforums_Search_GetSearchItems", moduleId);
         }
 
-
-        public override DataSet Search_FullText(int PortalId, int ModuleId, int UserId, int ForumId, bool IsSuper, int RowIndex, int MaxRows, string SearchString, int MatchType, int SearchField, int Timespan, int AuthorId, string Author, string Forums, string Tags, string ForumsAllowed)
+        public override DataSet Search(int portalId, int moduleId, int userId, int searchId, int rowIndex, int maxRows, string searchString, int matchType, int searchField, int timespan, int authorId, string author, string forums, string tags, int resultType, int sort, int maxCacheHours, bool fullText)
         {
-            return SqlHelper.ExecuteDataset(ConnectionString, DatabaseOwner + ObjectQualifier + "activeforums_Search_FullText", PortalId, ModuleId, UserId, ForumId, IsSuper, RowIndex, MaxRows, SearchString, MatchType, SearchField, Timespan, AuthorId, Author, Forums, Tags, ForumsAllowed);
+            return SqlHelper.ExecuteDataset(ConnectionString, DatabaseOwner + ObjectQualifier + "activeforums_Search", portalId, moduleId,userId, searchId, rowIndex, maxRows, searchString, matchType, searchField, timespan, authorId, author, forums, tags, resultType, sort, maxCacheHours, fullText);
         }
-        public override int Search_ManageFullText(bool Enabled)
+        
+        public override int Search_ManageFullText(bool enabled)
         {
-            return Convert.ToInt32(SqlHelper.ExecuteScalar(ConnectionString, DatabaseOwner + ObjectQualifier + "activeforums_Search_ManageFullText", Enabled));
+            return Convert.ToInt32(SqlHelper.ExecuteScalar(ConnectionString, DatabaseOwner + ObjectQualifier + "activeforums_Search_ManageFullText", enabled));
         }
 
-
+        public override int Search_GetFullTextStatus()
+        {
+            return Convert.ToInt32(SqlHelper.ExecuteScalar(ConnectionString, DatabaseOwner + ObjectQualifier + "activeforums_Search_GetFullTextStatus"));
+        }
 
         #endregion
+
         #region Security
         public override void Security_Delete(int SecuredId, int ObjectId, int SecureAction, int SecureType, int ObjectType)
         {

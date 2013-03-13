@@ -535,16 +535,16 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                                 }
                                 if (string.IsNullOrEmpty(sURL))
                                 {
-                                    string[] Params = { ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + TopicId, ParamKeys.ViewType + "=" + Views.Topic };
+                                    var @params = new List<string> { ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + TopicId, ParamKeys.ViewType + "=" + Views.Topic };
                                     if (MainSettings.UseShortUrls)
                                     {
-                                        Params = new string[] { ParamKeys.TopicId + "=" + TopicId };
+                                        @params = new List<string> { ParamKeys.TopicId + "=" + TopicId };
                                     }
                                     if (intPages > 1 && NoPaging == false)
                                     {
-                                        Params = Utilities.AddParams(ParamKeys.PageJumpId + "=" + intPages, Params);
+                                        @params.Add(ParamKeys.PageJumpId + "=" + intPages);
                                     }
-                                    sURL = Utilities.NavigateUrl(TabId, "", Params) + sTarget;
+                                    sURL = Utilities.NavigateUrl(TabId, "", @params.ToArray()) + sTarget;
                                 }
 
                                 Response.Redirect(sURL);
@@ -571,16 +571,16 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                                 }
                                 if (string.IsNullOrEmpty(sURL))
                                 {
-                                    string[] Params = { ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + TopicId, ParamKeys.ViewType + "=" + Views.Topic };
+                                    var @params = new List<string> { ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + TopicId, ParamKeys.ViewType + "=" + Views.Topic };
                                     if (MainSettings.UseShortUrls)
                                     {
-                                        Params = new string[] { ParamKeys.TopicId + "=" + TopicId };
+                                        @params = new List<string> { ParamKeys.TopicId + "=" + TopicId };
                                     }
                                     if (intPages > 1 && NoPaging == false)
                                     {
-                                        Params = Utilities.AddParams(ParamKeys.PageId + "=" + intPages, Params);
+                                        @params.Add(ParamKeys.PageId + "=" + intPages);
                                     }
-                                    sURL = Utilities.NavigateUrl(TabId, "", Params) + sTarget;
+                                    sURL = Utilities.NavigateUrl(TabId, "", @params.ToArray()) + sTarget;
                                 }
 
                                 Response.Status = "301 Moved Permanently";
@@ -1057,12 +1057,12 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 //TODO: Check for owner
                 if (bReply)
                 {
-                    string[] Params = { ParamKeys.ViewType + "=post", ParamKeys.TopicId + "=" + TopicId, ParamKeys.ForumId + "=" + ForumId };
+                    var @params = new List<string> { ParamKeys.ViewType + "=post", ParamKeys.TopicId + "=" + TopicId, ParamKeys.ForumId + "=" + ForumId };
                     if (SocialGroupId > 0)
                     {
-                        Params = Utilities.AddParams("GroupId=" + SocialGroupId, Params);
+                        @params.Add("GroupId=" + SocialGroupId);
                     }
-                    sOutput = sOutput.Replace("[ADDREPLY]", "<a href=\"" + Utilities.NavigateUrl(TabId, "", Params) + "\" class=\"dnnPrimaryAction\">[RESX:AddReply]</a>");
+                    sOutput = sOutput.Replace("[ADDREPLY]", "<a href=\"" + Utilities.NavigateUrl(TabId, "", @params.ToArray()) + "\" class=\"dnnPrimaryAction\">[RESX:AddReply]</a>");
                     sOutput = sOutput.Replace("[QUICKREPLY]", "<asp:placeholder id=\"plhQuickReply\" runat=\"server\" />");
                 }
                 else

@@ -253,11 +253,16 @@
     <Content Include="controls\af_topicscripts.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
+    <Content Include="controls\af_searchadvanced.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <Content Include="controls\htmlcontrols\movetopic.ascx" />
     <Content Include="controls\htmlcontrols\quickedit.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
-    <Content Include="controls\profile_adminsettings.ascx" />
+    <Content Include="controls\profile_adminsettings.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <Content Include="controls\profile_mypreferences.ascx" />
     <Content Include="App_LocalResources\ForumSettings.ascx.resx" />
     <Content Include="App_LocalResources\ForumEditor.ascx.resx" />
@@ -305,7 +310,9 @@
     <Content Include="scripts\blank.html" />
     <Content Include="scripts\calendar.css" />
     <Content Include="scripts\ck_editor.js" />
+    <Content Include="scripts\jquery-forumSelector.js" />
     <Content Include="scripts\fck_editor.js" />
+    <Content Include="scripts\jquery-searchPopup.js" />
     <Content Include="scripts\jquery.disable.text.select.pack.js" />
     <Content Include="scripts\jquery.history.js" />
     <Content Include="scripts\jquery.listreorder.js" />
@@ -414,6 +421,19 @@
     <Content Include="themes\_default\images\topic_split.gif" />
     <Content Include="themes\_default\images\topic_subscriptions.gif" />
     <Content Include="themes\_default\images\topic_whosread.gif" />
+    <Content Include="themes\_default\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="themes\_default\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="themes\_default\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="themes\_default\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="themes\_default\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="themes\_default\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="themes\_default\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="themes\_default\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="themes\_default\images\ui-icons_222222_256x240.png" />
+    <Content Include="themes\_default\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="themes\_default\images\ui-icons_454545_256x240.png" />
+    <Content Include="themes\_default\images\ui-icons_888888_256x240.png" />
+    <Content Include="themes\_default\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="themes\_default\images\upload16.png" />
     <Content Include="themes\_default\images\warning.gif" />
     <Content Include="themes\_default\images\warning.png" />
@@ -452,6 +472,8 @@
     <None Include="sql\04.02.05.SqlDataProvider" />
     <None Include="sql\04.02.07.SqlDataProvider" />
     <None Include="sql\04.03.00.SqlDataProvider" />
+    <Content Include="themes\_default\jquery-ui.css" />
+    <Content Include="themes\_default\jquery-ui.min.css" />
     <Content Include="themes\_default\templates\_Master.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
@@ -483,7 +505,9 @@
     </Content>
     <Content Include="controls\af_modreport.ascx" />
     <Content Include="controls\af_polledit.ascx" />
-    <Content Include="controls\af_search.ascx" />
+    <Content Include="controls\af_search.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <Content Include="controls\af_topicsort.ascx" />
     <Content Include="controls\af_topicstatus.ascx">
       <SubType>ASPXCodeBehind</SubType>
@@ -517,7 +541,7 @@
       <SubType>Form</SubType>
     </Content>
     <Content Include="controls\af_searchquick.ascx">
-      <SubType>Form</SubType>
+      <SubType>ASPXCodeBehind</SubType>
     </Content>
     <Content Include="controls\af_quickreply.ascx">
       <SubType>ASPXCodeBehind</SubType>
@@ -632,6 +656,7 @@
     </Content>
     <Content Include="config\templates\ForumView-4.3.txt" />
     <Content Include="viewer.aspx" />
+    <Compile Include="class\ParamBuilder.cs" />
     <Compile Include="class\WhatsNewModuleSettings.cs" />
     <Compile Include="controls\af_topicscripts.ascx.cs">
       <DependentUpon>af_topicscripts.ascx</DependentUpon>
@@ -639,6 +664,13 @@
     </Compile>
     <Compile Include="controls\af_topicscripts.ascx.designer.cs">
       <DependentUpon>af_topicscripts.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="controls\af_searchadvanced.ascx.cs">
+      <DependentUpon>af_searchadvanced.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="controls\af_searchadvanced.ascx.designer.cs">
+      <DependentUpon>af_searchadvanced.ascx</DependentUpon>
     </Compile>
     <Compile Include="SimulateDateDiff.cs" />
     <Compile Include="SimulateIsNumeric.cs" />
@@ -654,6 +686,7 @@
     </Compile>
     <Compile Include="ActiveForumViewer.ascx.cs">
       <DependentUpon>ActiveForumViewer.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="ActiveForumViewerSettings.ascx.designer.cs">
       <DependentUpon>ActiveForumViewerSettings.ascx</DependentUpon>
@@ -1243,6 +1276,7 @@
     </None>
     <None Include="config\templates\BlogsView.txt" />
     <None Include="sql\05.00.01.SqlDataProvider" />
+    <None Include="sql\05.00.04.SqlDataProvider" />
     <None Include="WhatsNewResources.zip" />
   </ItemGroup>
   <ItemGroup>

@@ -296,6 +296,7 @@ namespace DotNetNuke.Modules.ActiveForums
             if (InheritModuleCSS == false)
             {
                 ClientResourceManager.RegisterStyleSheet(this.Page, "~/DesktopModules/ActiveForums/themes/" + MainSettings.Theme + "/module.css");
+                ClientResourceManager.RegisterStyleSheet(this.Page, "~/DesktopModules/ActiveForums/themes/" + MainSettings.Theme + "/jquery-ui.min.css");
                 if (Request.QueryString["asg"] != null)
                 {
                     ClientResourceManager.RegisterStyleSheet(this.Page, "~/DesktopModules/ActiveForums/module.css");
@@ -316,6 +317,11 @@ namespace DotNetNuke.Modules.ActiveForums
                 lang = "en-US";
             }
 
+            Framework.jQuery.RequestRegistration();
+            Framework.jQuery.RequestUIRegistration();
+
+            ClientResourceManager.RegisterScript(this.Page, "~/desktopmodules/activeforums/scripts/jquery-searchPopup.js");
+
             ClientResourceManager.RegisterScript(this.Page, "~/desktopmodules/activeforums/scripts/json2009.min.js");
             ClientResourceManager.RegisterScript(this.Page, "~/desktopmodules/activeforums/scripts/afcommon.js");
             ClientResourceManager.RegisterScript(this.Page, "~/desktopmodules/activeforums/scripts/afutils.js");
@@ -334,6 +340,10 @@ namespace DotNetNuke.Modules.ActiveForums
             {
                 sb.AppendLine("setInterval('amaf_pinger()',120000);");
             }
+            
+            // Wire up the required jquery plugins: Search Popup
+            sb.AppendLine("$(document).ready(function () { $('.aftb-search').afSearchPopup(); });");
+                        
             Page.ClientScript.RegisterStartupScript(Page.GetType(), "afscripts", sb.ToString(), true);
 
 
@@ -356,7 +366,7 @@ namespace DotNetNuke.Modules.ActiveForums
             HtmlTextWriter htmlWriter = new HtmlTextWriter(stringWriter);
             base.Render(htmlWriter);
             string html = stringWriter.ToString();
-            html = Utilities.ParseToolBar(html, TabId, ForumModuleId, UserId, CurrentUserType);
+            html = Utilities.ParseToolBar(html, TabId, ForumModuleId, UserId, CurrentUserType, ForumId);
             html = Utilities.LocalizeControl(html);
             writer.Write(html);
         }

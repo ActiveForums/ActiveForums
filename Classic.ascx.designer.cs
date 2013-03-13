@@ -7,43 +7,36 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-
-namespace DotNetNuke.Modules.ActiveForums
-{
-
-	public partial class Classic
-	{
-
-		///<summary>
-		///plhToolbar control.
-		///</summary>
-		///<remarks>
-		///Auto-generated field.
-		///To modify move field declaration from designer file to code-behind file.
-		///</remarks>
-		protected global::System.Web.UI.WebControls.PlaceHolder plhToolbar;
-
-		///<summary>
-		///plhLoader control.
-		///</summary>
-		///<remarks>
-		///Auto-generated field.
-		///To modify move field declaration from designer file to code-behind file.
-		///</remarks>
-		protected global::System.Web.UI.WebControls.PlaceHolder plhLoader;
-
-		///<summary>
-		///litOutput control.
-		///</summary>
-		///<remarks>
-		///Auto-generated field.
-		///To modify move field declaration from designer file to code-behind file.
-		///</remarks>
-		protected global::System.Web.UI.WebControls.Literal litOutput;
-	}
+namespace DotNetNuke.Modules.ActiveForums {
+    
+    
+    public partial class Classic {
+        
+        /// <summary>
+        /// plhToolbar control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder plhToolbar;
+        
+        /// <summary>
+        /// plhLoader control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder plhLoader;
+        
+        /// <summary>
+        /// litOutput control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litOutput;
+    }
 }

@@ -23,6 +23,16 @@
 <div class="License">
    <h3>Release Notes</h3>
    <p class="Owner">
+	<b>Version 05.00.04</b><br /><br />
+	</p>
+	<p>
+		<ul>
+			<li><a href="http://activeforums.codeplex.com/workitem/1830" target="_blank">Item 1830</a> - Full-text search doesn't work as expected</li>
+			<li>Redesigned Search UI</li>
+			<li>Added JQuery UI Theme to Default Theme (.ActiveForums scope)</li>
+		</ul>
+	</p>
+   <p class="Owner">
 	<b>Version 05.00.03</b><br /><br />
 	</p>
 	<p>

@@ -1,16 +1,16 @@
-//© 2004 - 2010 ActiveModules, Inc. All Rights Reserved
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data;
+using System.Globalization;
+using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.IO;
-//ORIGINAL LINE: Imports System.Web.HttpContext
-
 using System.Web;
 using System.Reflection;
 using System.Web.UI.WebControls;
-using System.Threading;
+using DotNetNuke.Common.Utilities;
+using DotNetNuke.Entities.Tabs;
 
 namespace DotNetNuke.Modules.ActiveForums
 {
@@ -23,137 +23,121 @@ namespace DotNetNuke.Modules.ActiveForums
                 return "~/DesktopModules/ActiveForums/";
             }
         }
+
         /// <summary>
         /// Calculates a friendly display string based on an input timespan
         /// </summary>
-        public static string HumanFriendlyDate(DateTime DisplayDate, int InstanceId, int TimeZoneOffset)
+        public static string HumanFriendlyDate(DateTime displayDate, int instanceId, int timeZoneOffset)
         {
-            DateTime newDate = DateTime.Parse(GetDate(DisplayDate, InstanceId, TimeZoneOffset));
+            var newDate = DateTime.Parse(GetDate(displayDate, instanceId, timeZoneOffset));
             var ts = new TimeSpan(DateTime.Now.Ticks - newDate.Ticks);
-            double delta = ts.TotalSeconds;
+            var delta = ts.TotalSeconds;
             if (delta <= 1)
-            {
                 return GetSharedResource("[RESX:TimeSpan:SecondAgo]");
-            }
+
             if (delta < 60)
-            {
                 return string.Format(GetSharedResource("[RESX:TimeSpan:SecondsAgo]"), ts.Seconds);
-            }
+
             if (delta < 120)
-            {
                 return GetSharedResource("[RESX:TimeSpan:MinuteAgo]");
-            }
+
             if (delta < (45 * 60))
-            {
                 return string.Format(GetSharedResource("[RESX:TimeSpan:MinutesAgo]"), ts.Minutes);
-            }
+
             if (delta < (90 * 60))
-            {
                 return GetSharedResource("[RESX:TimeSpan:HourAgo]");
-            }
+
             if (delta < (24 * 60 * 60))
-            {
                 return string.Format(GetSharedResource("[RESX:TimeSpan:HoursAgo]"), ts.Hours);
-            }
+
             if (delta < (48 * 60 * 60))
-            {
                 return GetSharedResource("[RESX:TimeSpan:DayAgo]");
-            }
+
             if (delta < (72 * 60 * 60))
-            {
                 return string.Format(GetSharedResource("[RESX:TimeSpan:DaysAgo]"), ts.Days);
-            }
+
             if (delta < Convert.ToDouble(new TimeSpan(24 * 32, 0, 0).TotalSeconds))
-            {
                 return GetSharedResource("[RESX:TimeSpan:MonthAgo]");
-            }
+
             if (delta < Convert.ToDouble(new TimeSpan(((24 * 30) * 11), 0, 0).TotalSeconds))
-            {
-                return string.Format(GetSharedResource("[RESX:TimeSpan:MonthsAgo]"), Math.Ceiling(ts.Days / 30.0).ToString());
-            }
+                return string.Format(GetSharedResource("[RESX:TimeSpan:MonthsAgo]"), Math.Ceiling(ts.Days / 30.0));
+
             if (delta < Convert.ToDouble(new TimeSpan(((24 * 30) * 18), 0, 0).TotalSeconds))
-            {
                 return GetSharedResource("[RESX:TimeSpan:YearAgo]");
-            }
-            return string.Format(GetSharedResource("[RESX:TimeSpan:YearsAgo]"), Math.Ceiling(ts.Days / 365.0).ToString());
-            //Else
-            //   Return ts.TotalDays.ToString
+
+            return string.Format(GetSharedResource("[RESX:TimeSpan:YearsAgo]"), Math.Ceiling(ts.Days / 365.0));
+
         }
-        internal static string ParseTokenConfig(string Template, string group, ControlsConfig config)
+
+        internal static string ParseTokenConfig(string template, string group, ControlsConfig config)
         {
-            if (string.IsNullOrEmpty(Template))
-            {
+            if (string.IsNullOrEmpty(template))
                 return string.Empty;
-            }
-            if (!(Template.Contains(Globals.ControlRegisterTag)))
-            {
-                Template = Globals.ControlRegisterTag + Template;
-            }
-            Template = ParseSpacer(Template);
-            var li = new List<Token>();
+
+            if (!(template.Contains(Globals.ControlRegisterTag)))
+                template = Globals.ControlRegisterTag + template;
+
+            template = ParseSpacer(template);
+
             var tc = new TokensController();
-            li = tc.TokensList(group);
+
+            var li = tc.TokensList(group);
             if (li != null)
-            {
-                foreach (Token tk in li)
-                {
-                    Template = Template.Replace(tk.TokenTag, tk.TokenReplace);
-                }
-            }
-            Template = Template.Replace("[PARAMKEYS:GROUPID]", ParamKeys.GroupId);
-            Template = Template.Replace("[PARAMKEYS:FORUMID]", ParamKeys.ForumId);
-            Template = Template.Replace("[PARAMKEYS:TOPICID]", ParamKeys.TopicId);
-            Template = Template.Replace("[PARAMKEYS:VIEWTYPE]", ParamKeys.ViewType);
-            Template = Template.Replace("[PARAMKEYS:QUOTEID]", ParamKeys.QuoteId);
-            Template = Template.Replace("[PARAMKEYS:REPLYID]", ParamKeys.ReplyId);
-            Template = Template.Replace("[VIEWS:TOPICS]", Views.Topics);
-            Template = Template.Replace("[VIEWS:TOPIC]", Views.Topic);
-            Template = Template.Replace("[PAGEID]", config.PageId.ToString());
-            Template = Template.Replace("[SITEID]", config.SiteId.ToString());
-            Template = Template.Replace("[INSTANCEID]", config.InstanceId.ToString());
-            return Template;
+                template = li.Aggregate(template, (current, tk) => current.Replace(tk.TokenTag, tk.TokenReplace));
+
+            template = template.Replace("[PARAMKEYS:GROUPID]", ParamKeys.GroupId);
+            template = template.Replace("[PARAMKEYS:FORUMID]", ParamKeys.ForumId);
+            template = template.Replace("[PARAMKEYS:TOPICID]", ParamKeys.TopicId);
+            template = template.Replace("[PARAMKEYS:VIEWTYPE]", ParamKeys.ViewType);
+            template = template.Replace("[PARAMKEYS:QUOTEID]", ParamKeys.QuoteId);
+            template = template.Replace("[PARAMKEYS:REPLYID]", ParamKeys.ReplyId);
+            template = template.Replace("[VIEWS:TOPICS]", Views.Topics);
+            template = template.Replace("[VIEWS:TOPIC]", Views.Topic);
+            template = template.Replace("[PAGEID]", config.PageId.ToString());
+            template = template.Replace("[SITEID]", config.SiteId.ToString());
+            template = template.Replace("[INSTANCEID]", config.InstanceId.ToString());
+
+            return template;
         }
-        internal static string ParseSecurityTokens(string Template, string userRoles)
+
+        internal static string ParseSecurityTokens(string template, string userRoles)
         {
-            string sKey = "";
-            string sReplace = "";
-            string pattern = "(\\[AF:SECURITY:(.+?):(.+?)\\])(.|\\n)*?(\\[/AF:SECURITY:(.+?):(.+?)\\])";
+            const string pattern = @"(\[AF:SECURITY:(.+?):(.+?)\])(.|\n)*?(\[/AF:SECURITY:(.+?):(.+?)\])";
+
+            var sKey = string.Empty;
+            var sReplace = string.Empty;
+            
             var regExp = new Regex(pattern);
-            MatchCollection matches;
-            matches = regExp.Matches(Template);
+            var matches = regExp.Matches(template);
             foreach (Match match in matches)
             {
-                string sRoles = match.Groups[3].Value;
+                var sRoles = match.Groups[3].Value;
                 if (Permissions.HasAccess(sRoles, userRoles))
                 {
-                    Template = Template.Replace(match.Groups[1].Value, string.Empty);
-                    Template = Template.Replace(match.Groups[5].Value, string.Empty);
+                    template = template.Replace(match.Groups[1].Value, string.Empty);
+                    template = template.Replace(match.Groups[5].Value, string.Empty);
                 }
                 else
                 {
-                    Template = Template.Replace(match.Value, string.Empty);
-                    //Template = Template.Replace(match.Value.Replace("[AF:SECURITY:", "[/AF:SECURITY:"), String.Empty)
+                    template = template.Replace(match.Value, string.Empty);
                 }
             }
-            return Template;
+            return template;
         }
-        internal static string GetTemplate(string FilePath)
-        {
-            string sPath = FilePath;
-            if (!(sPath.Contains("\\\\")) && !(sPath.Contains(":\\")))
-            {
-                sPath = HttpContext.Current.Server.MapPath(FilePath);
-            }
-            //If sPath.Contains("~/") Then
 
-            //End If
-            string sContents = string.Empty;
-            StreamReader objStreamReader;
+        internal static string GetTemplate(string filePath)
+        {
+            var sPath = filePath;
+
+            if (!(sPath.Contains(@"\\")) && !(sPath.Contains(@":\")))
+                sPath = HttpContext.Current.Server.MapPath(filePath);
+
+            var sContents = string.Empty;
             if (File.Exists(sPath))
             {
                 try
                 {
-                    objStreamReader = File.OpenText(sPath);
+                    var objStreamReader = File.OpenText(sPath);
                     sContents = objStreamReader.ReadToEnd();
                     objStreamReader.Close();
                 }
@@ -162,157 +146,113 @@ namespace DotNetNuke.Modules.ActiveForums
                     sContents = exc.Message;
                 }
             }
-            //sContents = "<%@ Register TagPrefix=""af"" Assembly=""Active.Modules.Forums"" Namespace=""DotNetNuke.Modules.ActiveForums.Controls""%>" & sContents
-            //sContents = Utilities.ParseSpacer(sContents)
+
             return sContents;
         }
-        internal static string ParseToolBar(string template, int TabId, int ModuleId, int UserId, CurrentUserTypes CurrentUserType)
+
+        internal static string ParseToolBar(string template, int tabId, int moduleId, int userId, CurrentUserTypes currentUserType, int forumId = 0)
         {
-            SettingsInfo _mainSettings = DataCache.MainSettings(ModuleId);
-            string sMemUrl = "<a href=\"" + NavigateUrl(TabId, "", ParamKeys.ViewType + "=members") + "\">[RESX:Members]</a>";
-            string sProfileURL = string.Empty;
-            string sSettingsURL = string.Empty;
-            //If Current.Request.IsAuthenticated Then
-            //    sProfileURL = "<a href=""" & NavigateUrl(TabId, "", ParamKeys.ViewType & "=profile&uid=" & UserId.ToString) & """>[RESX:MyProfile]</a>"
-
-            //End If
-
-            //If (_mainSettings.ProfileType = ProfileTypes.Advanced Or _mainSettings.ProfileType = ProfileTypes.Social) And _mainSettings.ProfileTabId > 0 Then
-            //    If _mainSettings.ProfileType <> ProfileTypes.Social Then
-            //        sMemUrl = "<a href=""" & NavigateUrl(_mainSettings.ProfileTabId) & """>[RESX:Members]</a>"
-            //    End If
-            //    If Not sProfileURL = String.Empty Then
-            //        If _mainSettings.ProfileType = ProfileTypes.Social Then
-            //            Dim Params() As String = {"asuid=" & UserId}
-            //            sProfileURL = "<a href=""" & NavigateUrl(_mainSettings.ProfileTabId, "", Params) & """>[RESX:MyProfile]</a>"
-            //            sSettingsURL = "<a href=""" & NavigateUrl(TabId, "", ParamKeys.ViewType & "=usersettings&uid=" & UserId.ToString) & """>[RESX:MySettings]</a>"
-            //        Else
-            //            Dim Params() As String = {"uid=" & UserId}
-            //            sProfileURL = "<a href=""" & NavigateUrl(_mainSettings.ProfileTabId, "", Params) & """>[RESX:MyProfile]</a>"
-            //            sSettingsURL = "<a href=""" & NavigateUrl(TabId, "", ParamKeys.ViewType & "=usersettings&uid=" & UserId.ToString) & """>[RESX:MySettings]</a>"
-            //        End If
-
-            //    End If
-            //End If
+            //var mainSettings = DataCache.MainSettings(moduleId);
 
             var ctlUtils = new ControlUtils();
+
             if (HttpContext.Current.Request.IsAuthenticated)
             {
-
-                template = template.Replace("[AF:TB:NotRead]", "<a href=\"" + ctlUtils.BuildUrl(TabId, ModuleId, string.Empty, string.Empty, -1, -1, -1, -1, "notread", 1, -1) + "\">[RESX:NotRead]</a>");
-                template = template.Replace("[AF:TB:MyTopics]", "<a href=\"" + ctlUtils.BuildUrl(TabId, ModuleId, string.Empty, string.Empty, -1, -1, -1, -1, "mytopics", 1, -1) + "\">[RESX:MyTopics]</a>");
-                template = template.Replace("[AF:TB:MyProfile]", sProfileURL);
-                template = template.Replace("[AF:TB:MySettings]", sSettingsURL);
-                if (_mainSettings.MemberListMode == "ENABLEDREG")
-                {
-                    template = template.Replace("[AF:TB:MemberList]", sMemUrl);
-                }
-
-                if (CurrentUserType == CurrentUserTypes.Admin || CurrentUserType == CurrentUserTypes.SuperUser)
-                {
-                    template = template.Replace("[AF:TB:ControlPanel]", "<a href=\"" + NavigateUrl(TabId, "EDIT", "mid=" + ModuleId) + "\">[RESX:ControlPanel]</a>");
-                }
+                template = template.Replace("[AF:TB:NotRead]", string.Format("<a href=\"{0}\">[RESX:NotRead]</a>", ctlUtils.BuildUrl(tabId, moduleId, string.Empty, string.Empty, -1, -1, -1, -1, "notread", 1, -1)));
+                template = template.Replace("[AF:TB:MyTopics]", string.Format("<a href=\"{0}\">[RESX:MyTopics]</a>", ctlUtils.BuildUrl(tabId, moduleId, string.Empty, string.Empty, -1, -1, -1, -1, "mytopics", 1, -1)));
+             
+                if (currentUserType == CurrentUserTypes.Admin || currentUserType == CurrentUserTypes.SuperUser)
+                    template = template.Replace("[AF:TB:ControlPanel]", string.Format("<a href=\"{0}\">[RESX:ControlPanel]</a>",  NavigateUrl(tabId, "EDIT", "mid=" + moduleId)));
                 else
-                {
                     template = template.Replace("[AF:TB:ControlPanel]", string.Empty);
-                }
-                if (CurrentUserType == CurrentUserTypes.ForumMod || CurrentUserType == CurrentUserTypes.SuperUser || CurrentUserType == CurrentUserTypes.Admin)
-                {
-                    template = template.Replace("[AF:TB:ModList]", "<a href=\"" + NavigateUrl(TabId, "", ParamKeys.ViewType + "=modtopics") + "\">[RESX:Moderate]</a>");
-                    if (_mainSettings.MemberListMode == "ENABLEDMOD")
-                    {
-                        template = template.Replace("[AF:TB:MemberList]", sMemUrl);
-                    }
-                }
-                else
-                {
-                    template = template.Replace("[AF:TB:ModList]", string.Empty);
-                }
 
+                if (currentUserType == CurrentUserTypes.ForumMod || currentUserType == CurrentUserTypes.SuperUser || currentUserType == CurrentUserTypes.Admin)
+                    template = template.Replace("[AF:TB:ModList]", string.Format("<a href=\"{0}\">[RESX:Moderate]</a>", NavigateUrl(tabId, "", ParamKeys.ViewType + "=modtopics")));
+                else
+                    template = template.Replace("[AF:TB:ModList]", string.Empty);
             }
             else
             {
                 template = template.Replace("[AF:TB:NotRead]", string.Empty);
                 template = template.Replace("[AF:TB:MyTopics]", string.Empty);
                 template = template.Replace("[AF:TB:ModList]", string.Empty);
-                template = template.Replace("[AF:TB:MyProfile]", string.Empty);
-                template = template.Replace("[AF:TB:MySettings]", string.Empty);
                 template = template.Replace("[AF:TB:ControlPanel]", string.Empty);
-                if (_mainSettings.MemberListMode == "DISABLED")
-                {
-                    template = template.Replace("[AF:TB:MemberList]", string.Empty);
-                }
             }
-            template = template.Replace("[AF:TB:Unanswered]", "<a href=\"" + ctlUtils.BuildUrl(TabId, ModuleId, string.Empty, string.Empty, -1, -1, -1, -1, "unanswered", 1, -1) + "\">[RESX:Unanswered]</a>");
-            template = template.Replace("[AF:TB:ActiveTopics]", "<a href=\"" + ctlUtils.BuildUrl(TabId, ModuleId, string.Empty, string.Empty, -1, -1, -1, -1, "activetopics", 1, -1) + "\">[RESX:ActiveTopics]</a>");
-            template = template.Replace("[AF:TB:Search]", "<a href=\"" + NavigateUrl(TabId, "", ParamKeys.ViewType + "=search") + "\">[RESX:Search]</a>");
-            template = template.Replace("[AF:TB:Forums]", "<a href=\"" + NavigateUrl(TabId) + "\">[RESX:FORUMS]</a>");
+
+            template = template.Replace("[AF:TB:Unanswered]", string.Format("<a href=\"{0}\">[RESX:Unanswered]</a>", ctlUtils.BuildUrl(tabId, moduleId, string.Empty, string.Empty, -1, -1, -1, -1, "unanswered", 1, -1)));
+            template = template.Replace("[AF:TB:ActiveTopics]", string.Format("<a href=\"{0}\">[RESX:ActiveTopics]</a>", ctlUtils.BuildUrl(tabId, moduleId, string.Empty, string.Empty, -1, -1, -1, -1, "activetopics", 1, -1)));
+            template = template.Replace("[AF:TB:Forums]", string.Format("<a href=\"{0}\">[RESX:FORUMS]</a>", NavigateUrl(tabId)));
+
+
+            // Search popup
+            var searchUrl = NavigateUrl(tabId, string.Empty, new[] {ParamKeys.ViewType + "=search", "f=" + forumId});
+            var advancedSearchUrl = NavigateUrl(tabId, string.Empty, new[] {ParamKeys.ViewType + "=searchadvanced", "f=" + forumId});
+            var searchText = forumId > 0 ? "[RESX:SearchSingleForum]" : "[RESX:SearchAllForums]";
+
+            template = template.Replace("[AF:TB:Search]", string.Format(@"<span class='aftb-search' data-searchUrl='{0}'><span class='aftb-search-link'><span>{2}</span><span class='ui-icon ui-icon-triangle-1-s'></span></span><span class='aftb-search-popup'><input type='text' placeholder='Search for...' maxlength='50'><button>[RESX:Search]</button><br /><a href='{1}'>[RESX:SearchAdvanced]</a><input type='radio' name='afsrt' value='0' checked='checked' />[RESX:SearchByTopics]<input type='radio' name='afsrt' value='1' />[RESX:SearchByPosts]</span></span>", HttpUtility.HtmlEncode(searchUrl), HttpUtility.HtmlEncode(advancedSearchUrl), searchText));
+
+
+            // These are no longer used in 5.0
+            template = template.Replace("[AF:TB:MyProfile]", string.Empty);
             template = template.Replace("[AF:TB:MySettings]", string.Empty);
-            if (_mainSettings.MemberListMode == "ENABLED")
-            {
-                template = template.Replace("[AF:TB:MemberList]", sMemUrl);
-            }
             template = template.Replace("[AF:TB:MemberList]", string.Empty);
+
             return template;
         }
-        public static string CleanStringForUrl(string Text)
+
+        public static string CleanStringForUrl(string text)
         {
-            Text = Text.Trim();
-            Text = Text.Replace(":", string.Empty);
-            Text = Regex.Replace(Text, "[^\\w]", "-");
-            Text = Regex.Replace(Text, "([-]+)", "-");
-            if (Text.EndsWith("-"))
-            {
-                Text = Text.Substring(0, Text.Length - 1);
-            }
-            return Text;
+            text = text.Trim();
+            text = text.Replace(":", string.Empty);
+            text = Regex.Replace(text, @"[^\w]", "-");
+            text = Regex.Replace(text, @"([-]+)", "-");
+            if (text.EndsWith("-"))
+                text = text.Substring(0, text.Length - 1);
+
+            return text;
         }
-        public static bool IsTrusted(int ForumTrustLevel, int UserTrustLevel, bool IsTrustedRole)
+
+        public static bool IsTrusted(int forumTrustLevel, int userTrustLevel, bool isTrustedRole)
         {
-            return IsTrusted(ForumTrustLevel, UserTrustLevel, IsTrustedRole, 0, 0);
+            return IsTrusted(forumTrustLevel, userTrustLevel, isTrustedRole, 0, 0);
         }
-        public static bool IsTrusted(int ForumTrustLevel, int UserTrustLevel, bool IsTrustedRole, int AutoTrustLevel, int UserPostCount)
+
+        public static bool IsTrusted(int forumTrustLevel, int userTrustLevel, bool isTrustedRole, int autoTrustLevel, int userPostCount)
         {
-            int trustSum = (ForumTrustLevel + UserTrustLevel);
-            if (ForumTrustLevel == 0 && AutoTrustLevel == 0 && !IsTrustedRole && UserTrustLevel != 1)
-            {
+            var trustSum = (forumTrustLevel + userTrustLevel);
+            if (forumTrustLevel == 0 && autoTrustLevel == 0 && !isTrustedRole && userTrustLevel != 1)
                 return false;
-            }
-            if (UserTrustLevel == 1)
-            {
+
+            if (userTrustLevel == 1)
                 return true;
-            }
-            if (IsTrustedRole && UserTrustLevel != -1)
-            {
+
+            if (isTrustedRole && userTrustLevel != -1)
                 return true;
-            }
-            if (UserPostCount >= AutoTrustLevel && trustSum > 0 & UserTrustLevel != -1)
-            {
+
+            if (userPostCount >= autoTrustLevel && trustSum > 0 & userTrustLevel != -1)
                 return true;
-            }
-            if (UserTrustLevel == -1)
-            {
+
+            if (userTrustLevel == -1)
                 return false;
-            }
+
             if (trustSum > 0)
-            {
                 return true;
-            }
-            if (trustSum == 0 && UserTrustLevel == 0 && IsTrustedRole)
-            {
+
+            if (trustSum == 0 && userTrustLevel == 0 && isTrustedRole)
                 return true;
-            }
-            if (trustSum == 0 && UserTrustLevel == 0 && UserPostCount >= AutoTrustLevel)
-            {
+
+            if (trustSum == 0 && userTrustLevel == 0 && userPostCount >= autoTrustLevel)
                 return true;
-            }
+
             return false;
         }
+
         public static DateTime NullDate()
         {
-            System.Globalization.DateTimeFormatInfo nfi = new System.Globalization.CultureInfo("en-US", false).DateTimeFormat;
+            var nfi = new CultureInfo("en-US", false).DateTimeFormat;
             return DateTime.Parse("1/1/1900", nfi);
         }
+
         public static string GetHost()
         {
             string strHost;
@@ -327,178 +267,156 @@ namespace DotNetNuke.Modules.ActiveForums
             return strHost.ToLowerInvariant();
 
         }
-        public static string NavigateUrl(int TabId)
+
+        public static string NavigateUrl(int tabId)
         {
-            var currParams = new string[0];
+            var currParams = new List<string>();
             if (HttpContext.Current.Request.Params["asgv"] != null)
-            {
-                currParams = AddParams("asgv=" + HttpContext.Current.Request.Params["asgv"], currParams);
-            }
+                currParams.Add("asgv=" + HttpContext.Current.Request.Params["asgv"]);
+
             if (HttpContext.Current.Request.Params["asg"] != null)
-            {
-                currParams = AddParams("asg=" + HttpContext.Current.Request.Params["asg"], currParams);
-            }
-            if (currParams.Length > 0)
-            {
-                return Common.Globals.NavigateURL(TabId, string.Empty, currParams);
-            }
-            return Common.Globals.NavigateURL(TabId);
+                currParams.Add("asg=" + HttpContext.Current.Request.Params["asg"]);
+
+            if (currParams.Count > 0)
+                return Common.Globals.NavigateURL(tabId, string.Empty, currParams.ToArray());
+
+            return Common.Globals.NavigateURL(tabId);
         }
-        public static string NavigateUrl(int TabId, string ControlKey, params string[] AdditionalParameters)
+
+        public static string NavigateUrl(int tabId, string controlKey, params string[] additionalParameters)
         {
-            return NavigateUrl(TabId, ControlKey, string.Empty, -1, AdditionalParameters);
+            return NavigateUrl(tabId, controlKey, string.Empty, -1, additionalParameters);
         }
-        public static string NavigateUrl(int TabId, string ControlKey, string PageName, int portalId, params string[] AdditionalParameters)
+
+        public static string NavigateUrl(int tabId, string controlKey, string pageName, int portalId, params string[] additionalParameters)
         {
-            string[] currParams = AdditionalParameters;
-            if (HttpContext.Current.Request.Params["asgv"] != null)
-            {
-                currParams = AddParams("asgv=" + HttpContext.Current.Request.Params["asgv"], currParams);
-            }
-            if (HttpContext.Current.Request.Params["asg"] != null)
-            {
-                currParams = AddParams("asg=" + HttpContext.Current.Request.Params["asg"], currParams);
-            }
-            string s = Common.Globals.NavigateURL(TabId, ControlKey, currParams);
-            if (portalId == -1 || string.IsNullOrEmpty(PageName))
-            {
+            var currParams = additionalParameters.ToList();
+
+            // TODO: Figure out what these parameters are
+            var asgvParam = HttpContext.Current.Request.Params["asgv"];
+            if (!string.IsNullOrWhiteSpace(asgvParam))
+                currParams.Add("asgv=" + asgvParam);
+
+            var asgParam = HttpContext.Current.Request.Params["asg"];
+            if (!string.IsNullOrWhiteSpace(asgParam))
+                currParams.Add("asg=" + asgParam);
+
+            var s = Common.Globals.NavigateURL(tabId, controlKey, currParams.ToArray());
+            if (portalId == -1 || string.IsNullOrWhiteSpace(pageName))
                 return s;
-            }
-            var tc = new Entities.Tabs.TabController();
-            var ti = tc.GetTab(TabId, portalId, false);
-            string sURL = Common.Globals.ApplicationURL(TabId);
-            foreach (string p in currParams)
-            {
-                sURL += "&" + p;
-            }
-            var _portalSettings = (Entities.Portals.PortalSettings)(HttpContext.Current.Items["PortalSettings"]);
-            PageName = CleanStringForUrl(PageName);
-            s = Common.Globals.FriendlyUrl(ti, sURL, PageName, _portalSettings);
+
+            var tc = new TabController();
+            var ti = tc.GetTab(tabId, portalId, false);
+            var sURL = currParams.Aggregate(Common.Globals.ApplicationURL(tabId), (current, p) => current + ("&" + p));
+
+            var portalSettings = (Entities.Portals.PortalSettings)(HttpContext.Current.Items["PortalSettings"]);
+            pageName = CleanStringForUrl(pageName);
+            s = Common.Globals.FriendlyUrl(ti, sURL, pageName, portalSettings);
             return s;
-        }
-        public static string[] AddParams(string param, string[] currParams)
-        {
-            var tmpParams = new[] { param };
-            //Dim intLength As Integer = tmpParams.Length
-            int currLength = currParams.Length;
-            Array.Resize(ref currParams, (currLength + tmpParams.Length));
-            tmpParams.CopyTo(currParams, currLength);
-            return currParams;
         }
 
         public static void BindEnum(DropDownList pDDL, Type enumType, string pColValue, bool addEmptyValue)
         {
             BindEnum(pDDL, enumType, pColValue, addEmptyValue, false, -1);
         }
-        public static void BindEnum(DropDownList pDDL, Type enumType, string pColValue, bool addEmptyValue, bool Localize, int ExcludeIndex)
+
+        public static void BindEnum(DropDownList pDDL, Type enumType, string pColValue, bool addEmptyValue, bool localize, int excludeIndex)
         {
             pDDL.Items.Clear();
 
-            Array values = Enum.GetValues(enumType);
+            var values = Enum.GetValues(enumType);
 
             if (addEmptyValue)
+                pDDL.Items.Add(new ListItem(string.Empty, "-1"));
+
+            for (var i = 0; i < values.Length; i++)
             {
-                pDDL.Items.Add(new ListItem("", "-1"));
+                if (i == excludeIndex) 
+                    continue;
+                
+                var key = Convert.ToInt32(Enum.Parse(enumType, values.GetValue(i).ToString()));
+                var text = Convert.ToString(Enum.Parse(enumType, values.GetValue(i).ToString()));
+                if (localize)
+                    text = "[RESX:" + text + "]";
+
+                pDDL.Items.Add(new ListItem(text, key.ToString()));
             }
-            for (int i = 0; i < values.Length; i++)
-            {
-                if (i != ExcludeIndex)
-                {
-                    int key = Convert.ToInt32(Enum.Parse(enumType, values.GetValue(i).ToString()));
-                    string text = Convert.ToString(Enum.Parse(enumType, values.GetValue(i).ToString()));
-                    if (Localize)
-                    {
-                        text = "[RESX:" + text + "]";
-                    }
-                    pDDL.Items.Add(new ListItem(text, key.ToString()));
-                }
-            }
-            if (pColValue != "")
-            {
+
+            if (pColValue != string.Empty)
                 pDDL.SelectedValue = Enum.Parse(enumType, pColValue).ToString();
-            }
         }
-        internal static string PrepareForEdit(int PortalId, int ModuleId, string ThemePath, string Text, bool AllowHTML, EditorTypes EditorType)
+
+        internal static string PrepareForEdit(int portalId, int moduleId, string themePath, string text, bool allowHTML, EditorTypes editorType)
         {
-            if (!AllowHTML)
+            if (!allowHTML)
             {
-                Text = Text.Replace("&#91;", "[");
-                Text = Text.Replace("&#93;", "]");
-                Text = Text.Replace("<br>", System.Environment.NewLine);
-                Text = Text.Replace("<br />", System.Environment.NewLine);
-                Text = Text.Replace("<BR>", System.Environment.NewLine);
-                Text = RemoveFilterWords(PortalId, ModuleId, ThemePath, Text);
-                //Text = Utilities.StripHTMLTag(Text)
-                return Text;
+                text = text.Replace("&#91;", "[");
+                text = text.Replace("&#93;", "]");
+                text = text.Replace("<br>", System.Environment.NewLine);
+                text = text.Replace("<br />", System.Environment.NewLine);
+                text = text.Replace("<BR>", System.Environment.NewLine);
+                text = RemoveFilterWords(portalId, moduleId, themePath, text);
+
+                return text;
             }
-            if (AllowHTML && EditorType == EditorTypes.TEXTBOX)
+
+            if (editorType == EditorTypes.TEXTBOX)
             {
-                Text = Text.Replace("&#91;", "[");
-                Text = Text.Replace("&#93;", "]");
-                Text = Text.Replace("<br>", System.Environment.NewLine);
-                Text = Text.Replace("<br />", System.Environment.NewLine);
-                Text = Text.Replace("<BR>", System.Environment.NewLine);
-                Text = RemoveFilterWords(PortalId, ModuleId, ThemePath, Text);
-                return Text;
+                text = text.Replace("&#91;", "[");
+                text = text.Replace("&#93;", "]");
+                text = text.Replace("<br>", System.Environment.NewLine);
+                text = text.Replace("<br />", System.Environment.NewLine);
+                text = text.Replace("<BR>", System.Environment.NewLine);
+                text = RemoveFilterWords(portalId, moduleId, themePath, text);
+                
+                return text;
             }
-            return Text;
+
+            return text;
         }
 
         public static string AutoLinks(string text, string currentSite)
         {
-            string original = text;
+            var original = text;
             if (!(string.IsNullOrEmpty(text)))
             {
+                const string encodedHref = "&lt;a.*?href=[\"'](?<url>.*?)[\"'].*?&gt;(http.*?)&lt;/a&gt;";
+                const string regHref = "<a.*?href=[\"'](?<url>.*?)[\"'].*?>(?<http>http.*?)</a>";
 
-                string regHref = "<a.*?href=[\"'](?<url>.*?)[\"'].*?>(?<http>http.*?)</a>";
-                foreach (Match m in Regex.Matches(text, "&lt;a.*?href=[\"'](?<url>.*?)[\"'].*?&gt;(http.*?)&lt;/a&gt;", RegexOptions.IgnoreCase))
-                {
+                foreach (Match m in Regex.Matches(text, encodedHref, RegexOptions.IgnoreCase))
                     text = text.Replace(m.Value, HttpUtility.HtmlDecode(m.Value));
-                }
-                foreach (Match m in Regex.Matches(text, regHref, RegexOptions.IgnoreCase))
-                {
-                    text = text.Replace(m.Value, m.Groups["http"].Value.Contains("...") ? m.Groups["url"].Value : m.Groups["http"].Value);
-                }
-                if (string.IsNullOrEmpty(text))
-                {
-                    return original;
-                }
-                //text = Regex.Replace(text, regHref, "$1")
-                string outSite = "<a href=\"{0}\" target=\"_blank\" rel=\"nofollow\">{1}</a>";
-                string inSite = "<a href=\"{0}\">{1}</a>";
-                string url;
-                string urlText;
-                foreach (Match m in Regex.Matches(text, "http://([\\w+?\\.\\w+])+([a-zA-Z0-9\\~\\!\\@\\#\\$\\%\\^\\&amp;\\*\\(\\)_\\-\\=\\+\\\\\\/\\?\\.\\:\\;\\'\\,]*)?", RegexOptions.IgnoreCase))
-                {
-                    url = m.Value;
-                    if (url.ToLowerInvariant().Contains("jpg") | url.ToLowerInvariant().Contains("gif") | url.ToLowerInvariant().Contains("png") | url.ToLowerInvariant().Contains("jpeg"))
-                    {
-                        break;
-                    }
 
-                    int xStart = 0;
+                foreach (Match m in Regex.Matches(text, regHref, RegexOptions.IgnoreCase))
+                    text = text.Replace(m.Value, m.Groups["http"].Value.Contains("...") ? m.Groups["url"].Value : m.Groups["http"].Value);
+
+                if (string.IsNullOrEmpty(text))
+                    return original;
+
+                const string outSite = "<a href=\"{0}\" target=\"_blank\" rel=\"nofollow\">{1}</a>";
+                const string inSite = "<a href=\"{0}\">{1}</a>";
+                foreach (Match m in Regex.Matches(text, @"http://([\w+?\.\w+])+([a-zA-Z0-9\~\!\@\\#\$\%\^\&amp;\*\(\)_\-\=\+\\\/\?\.\:\;\'\,]*)?", RegexOptions.IgnoreCase))
+                {
+                    var url = m.Value;
+                    if (url.ToLowerInvariant().Contains("jpg") || url.ToLowerInvariant().Contains("gif") || url.ToLowerInvariant().Contains("png") || url.ToLowerInvariant().Contains("jpeg"))
+                        break;
+
+                    var xStart = 0;
                     if ((m.Index - 10) > 0)
-                    {
                         xStart = m.Index - 10;
-                    }
+
                     if (text.Substring(xStart, 10).ToLowerInvariant().Contains("href"))
-                    {
                         break;
-                    }
+
                     if (text.Substring(xStart, 10).ToLowerInvariant().Contains("src"))
-                    {
                         break;
-                    }
+
                     if (text.Substring(xStart, 10).ToLowerInvariant().Contains("="))
-                    {
                         break;
-                    }
-                    urlText = m.Value;
+
+                    var urlText = m.Value;
                     if (urlText.Length > 47)
-                    {
                         urlText = m.Value.Substring(0, 35) + "..." + m.Value.Substring(m.Value.Length - 10);
 
-                    }
                     text = text.Replace(m.Value, url.ToLowerInvariant().Contains(currentSite.ToLowerInvariant()) ? string.Format(inSite, url, urlText) : string.Format(outSite, url, urlText));
                 }
                 if (string.IsNullOrEmpty(text))
@@ -509,89 +427,72 @@ namespace DotNetNuke.Modules.ActiveForums
             return text;
         }
 
-        public static string CleanString(int PortalId, string Text, bool AllowHTML, EditorTypes EditorType, bool UseFilter, bool AllowScript, int ModuleId, string ThemePath, bool ProcessEmoticons)
+        public static string CleanString(int portalId, string text, bool allowHTML, EditorTypes editorType, bool useFilter, bool allowScript, int moduleId, string themePath, bool processEmoticons)
         {
-            string sClean = Text;
-            sClean = HttpContext.Current.Server.HtmlDecode(sClean);
+            var sClean = HttpContext.Current.Server.HtmlDecode(text);
             if (sClean != string.Empty)
             {
-
-                if (AllowHTML)
-                {
-                    //sClean = Regex.Replace(sClean, Utilities.GetCaseInsensitiveSearch("<a href="), "<a href=")
-                }
-                else
-                {
+                if (!allowHTML)
                     sClean = HTMLEncode(sClean);
-                }
-                sClean = EditorType == EditorTypes.TEXTBOX ? CleanTextBox(PortalId, sClean, AllowHTML, UseFilter, ModuleId, ThemePath, ProcessEmoticons) : CleanEditor(PortalId, sClean, UseFilter, ModuleId, ThemePath, ProcessEmoticons);
 
-                var regExp = new Regex("(<a [^>]*>)(?'url'(\\S*?))(</a>)", RegexOptions.IgnoreCase);
-                MatchCollection matches;
-                matches = regExp.Matches(sClean);
+                sClean = editorType == EditorTypes.TEXTBOX ? CleanTextBox(portalId, sClean, allowHTML, useFilter, moduleId, themePath, processEmoticons) : CleanEditor(portalId, sClean, useFilter, moduleId, themePath, processEmoticons);
+
+                var regExp = new Regex(@"(<a [^>]*>)(?'url'(\S*?))(</a>)", RegexOptions.IgnoreCase);
+                var matches = regExp.Matches(sClean);
                 foreach (Match match in matches)
                 {
-                    string sNewURL = match.Groups[0].Value;
-                    string sStart = match.Groups[1].Value;
-                    string sText = match.Groups[2].Value;
-                    string sEnd = match.Groups[3].Value;
+                    var sNewURL = match.Groups[0].Value;
+                    var sStart = match.Groups[1].Value;
+                    var sText = match.Groups[2].Value;
+                    var sEnd = match.Groups[3].Value;
+
                     if (sText.Length > 55)
-                    {
                         sClean = sClean.Replace(sNewURL, sStart + sText.Substring(0, 35) + "..." + sText.Substring(sText.Length - 10) + sEnd);
-                        //sClean = sClean.Replace(match.Groups(1).Value, sNewText.Substring(0, 35) & "..." & sNewText.Substring(sNewText.Length - 10))
-                    }
                 }
-                if (AllowScript == false)
+
+                if (!allowScript)
                 {
                     sClean = sClean.Replace("&#91;", "[");
                     sClean = sClean.Replace("&#93;", "]");
                     sClean = XSSFilter(sClean);
                 }
+
                 sClean = sClean.Replace("[", "&#91;");
                 sClean = sClean.Replace("]", "&#93;");
             }
 
             return sClean;
         }
-        private static string CleanTextBox(int PortalId, string Text, bool AllowHTML, bool UseFilter, int ModuleId, string ThemePath, bool ProcessEmoticons)
+
+        private static string CleanTextBox(int portalId, string text, bool allowHTML, bool useFilter, int moduleId, string themePath, bool processEmoticons)
         {
-            string strMessage = Text;
-            strMessage = HTMLDecode(strMessage);
+            var strMessage = HTMLDecode(text);
+
             if (strMessage != string.Empty)
             {
                 if (strMessage.ToUpper().Contains("[CODE]") | strMessage.ToUpper().Contains("<CODE"))
                 {
-                    //Dim intStart As Integer
-                    //Dim intEnd As Integer
-                    //Dim sCode As String
                     var codes = new List<string>();
-                    int i = 0;
-                    Regex objRegEx;
-                    objRegEx = new Regex("(\\[CODE\\](.*?)\\[\\/CODE\\])", RegexOptions.Singleline | RegexOptions.IgnoreCase);
-                    MatchCollection Matches;
-                    Matches = objRegEx.Matches(strMessage);
-                    foreach (Match m in Matches)
+                    var i = 0;
+                    var objRegEx = new Regex(@"(\[CODE\](.*?)\[\/CODE\])", RegexOptions.Singleline | RegexOptions.IgnoreCase);
+                    var matches = objRegEx.Matches(strMessage);
+                    foreach (Match m in matches)
                     {
                         strMessage = strMessage.Replace(m.Value, "[CODEHOLDER" + i + "]");
                         codes.Add(m.Value);
                         i += 1;
                     }
 
-                    //intStart = InStr(strMessage.ToUpper, "<CODE")
-                    //intEnd = InStr(strMessage.ToUpper, "</CODE>") + 7
-                    //sCode = strMessage.Substring(intStart - 1, intEnd - intStart)
-                    //strMessage = Replace(strMessage, sCode, "[CODEHOLDER]")
                     strMessage = Regex.Replace(strMessage, GetCaseInsensitiveSearch("<form"), "&lt;form&gt;");
                     strMessage = Regex.Replace(strMessage, GetCaseInsensitiveSearch("</form>"), "&lt;/form&gt;");
-                    if (UseFilter)
-                    {
-                        strMessage = FilterWords(PortalId, ModuleId, ThemePath, strMessage, ProcessEmoticons);
-                    }
+                    if (useFilter)
+                        strMessage = FilterWords(portalId, moduleId, themePath, strMessage, processEmoticons);
+
                     strMessage = HTMLEncode(strMessage);
                     strMessage = Regex.Replace(strMessage, System.Environment.NewLine, " <br /> ");
-                    //strMessage = Replace(strMessage, "[CODEHOLDER]", sCode)
+
                     i = 0;
-                    foreach (string s in codes)
+                    foreach (var s in codes)
                     {
                         strMessage = strMessage.Replace("[CODEHOLDER" + i + "]", HttpUtility.HtmlEncode(s));
                         i += 1;
@@ -601,14 +502,11 @@ namespace DotNetNuke.Modules.ActiveForums
                 {
                     strMessage = Regex.Replace(strMessage, GetCaseInsensitiveSearch("<form"), "&lt;form&gt;");
                     strMessage = Regex.Replace(strMessage, GetCaseInsensitiveSearch("</form>"), "&lt;/form&gt;");
-                    if (AllowHTML == false)
-                    {
+                    if (!allowHTML)
                         strMessage = HTMLEncode(strMessage);
-                    }
-                    if (UseFilter)
-                    {
-                        strMessage = FilterWords(PortalId, ModuleId, ThemePath, strMessage, ProcessEmoticons);
-                    }
+
+                    if (useFilter)
+                        strMessage = FilterWords(portalId, moduleId, themePath, strMessage, processEmoticons);
 
                     strMessage = Regex.Replace(strMessage, System.Environment.NewLine, " <br /> ");
                 }
@@ -618,34 +516,29 @@ namespace DotNetNuke.Modules.ActiveForums
 
             return strMessage;
         }
-        private static string CleanEditor(int PortalId, string Text, bool UseFilter, int ModuleId, string ThemePath, bool ProcessEmoticons)
+
+        private static string CleanEditor(int portalId, string text, bool useFilter, int moduleId, string themePath, bool processEmoticons)
         {
-            string strMessage = Text;
-            strMessage = HTMLDecode(strMessage);
-            if ((strMessage.ToUpper().IndexOf("<CODE", 0) + 1) > 0)
+            var strMessage = HTMLDecode(text);
+
+            if ((strMessage.ToUpper().IndexOf("<CODE", StringComparison.Ordinal)) >= 0)
             {
-                int intStart;
-                int intEnd;
-                string sCode;
-                intStart = (strMessage.ToUpper().IndexOf("<CODE", 0) + 1);
-                intEnd = (strMessage.ToUpper().IndexOf("</CODE>", 0) + 1) + 7;
-                sCode = strMessage.Substring(intStart - 1, intEnd - intStart);
+                var intStart = strMessage.ToUpper().IndexOf("<CODE", StringComparison.Ordinal);
+                var intEnd = strMessage.ToUpper().IndexOf("</CODE>", StringComparison.Ordinal) + 7;
+                var sCode = strMessage.Substring(intStart, intEnd - intStart);
                 strMessage = strMessage.Replace(sCode, "[CODEHOLDER]");
-                if (UseFilter)
-                {
-                    strMessage = FilterWords(PortalId, ModuleId, ThemePath, strMessage, ProcessEmoticons);
-                }
+                if (useFilter)
+                    strMessage = FilterWords(portalId, moduleId, themePath, strMessage, processEmoticons);
+
                 strMessage = Regex.Replace(strMessage, GetCaseInsensitiveSearch("<form"), "&lt;form&gt;");
                 strMessage = Regex.Replace(strMessage, GetCaseInsensitiveSearch("</form>"), "&lt;/form&gt;");
-                //strMessage = HTMLEncode(strMessage)
+
                 strMessage = strMessage.Replace("[CODEHOLDER]", sCode);
             }
             else
             {
-                if (UseFilter)
-                {
-                    strMessage = FilterWords(PortalId, ModuleId, ThemePath, strMessage, ProcessEmoticons);
-                }
+                if (useFilter)
+                    strMessage = FilterWords(portalId, moduleId, themePath, strMessage, processEmoticons);
 
                 strMessage = Regex.Replace(strMessage, GetCaseInsensitiveSearch("<form"), "&lt;form&gt;");
                 strMessage = Regex.Replace(strMessage, GetCaseInsensitiveSearch("</form>"), "&lt;/form&gt;");
@@ -653,86 +546,60 @@ namespace DotNetNuke.Modules.ActiveForums
             return strMessage;
         }
 
-
         public static string GetCaseInsensitiveSearch(string strSearch)
         {
-            string strReturn = "";
-            char chrCurrent;
-            char chrLower;
-            char chrUpper;
-            int intCounter;
-            for (intCounter = 0; intCounter < strSearch.Length; intCounter++)
+            var strReturn = string.Empty;
+            foreach (var chrCurrent in strSearch)
             {
-                chrCurrent = strSearch[intCounter];
-                chrLower = char.ToLower(chrCurrent);
-                chrUpper = char.ToUpper(chrCurrent);
+                var chrLower = char.ToLower(chrCurrent);
+                var chrUpper = char.ToUpper(chrCurrent);
                 if (chrUpper == chrLower)
-                {
-                    strReturn = strReturn + chrCurrent.ToString();
-                }
+                    strReturn = strReturn + chrCurrent;
                 else
-                {
-                    strReturn = strReturn + "[" + chrLower.ToString() + chrUpper.ToString() + "]";
-                }
+                    strReturn = strReturn + "[" + chrLower + chrUpper + "]";
             }
+
             return strReturn;
         }
-        public static string FilterWords(int PortalId, int ModuleId, string ThemePath, string strMessage, bool ProcessEmoticons, bool RemoveHTML = false)
+
+        public static string FilterWords(int portalId, int moduleId, string themePath, string strMessage, bool processEmoticons, bool removeHTML = false)
         {
-            if (RemoveHTML)
+            if (removeHTML)
             {
-                string newSubject;
-                newSubject = StripHTMLTag(strMessage);
+                var newSubject = StripHTMLTag(strMessage);
                 if (newSubject == string.Empty)
                 {
-                    newSubject = strMessage.Replace("<", "");
-                    newSubject = newSubject.Replace(">", "");
+                    newSubject = strMessage.Replace("<", string.Empty);
+                    newSubject = newSubject.Replace(">", string.Empty);
                 }
                 strMessage = newSubject;
             }
-            //Dim objFilter As FilterInfo
-            IDataReader dr = DataProvider.Instance().Filters_List(PortalId, ModuleId, 0, 100000, "ASC", "FilterId");
+
+            var dr = DataProvider.Instance().Filters_List(portalId, moduleId, 0, 100000, "ASC", "FilterId");
             dr.NextResult();
 
             while (dr.Read())
             {
-                string sReplace = dr["Replace"].ToString();
-                string sFind = dr["Find"].ToString();
+                var sReplace = dr["Replace"].ToString();
+                var sFind = dr["Find"].ToString();
                 switch (dr["FilterType"].ToString().ToUpper())
                 {
                     case "MARKUP":
                         strMessage = strMessage.Replace(sFind, sReplace.Trim());
                         break;
+
                     case "EMOTICON":
-                        if (ProcessEmoticons)
+                        if (processEmoticons)
                         {
-                            if ((sReplace.IndexOf("/emoticons", 0) + 1) > 0)
-                            {
-                                sReplace = "<img src='" + ThemePath + sReplace + "' align=\"absmiddle\"  border=\"0\" />";
-                            }
+                            if (sReplace.IndexOf("/emoticons", StringComparison.Ordinal) >= 0)
+                                sReplace = "<img src='" + themePath + sReplace + "' align=\"absmiddle\" border=\"0\" class=\"afEmoticon\" />";
+
                             strMessage = strMessage.Replace(sFind, sReplace);
                         }
-
                         break;
+
                     case "REGEX":
                         strMessage = Regex.Replace(strMessage, sFind.Trim(), sReplace, RegexOptions.IgnoreCase);
-
-                        //Dim regExp As New Regex(sFind.Trim, RegexOptions.IgnoreCase)
-                        //Dim matches As MatchCollection
-                        //matches = regExp.Matches(strMessage.Trim)
-                        //For Each match As Match In matches
-                        //    Dim i As Integer = 0
-                        //    For Each grp As Group In match.Groups
-                        //        If Not grp.Value = String.Empty Then
-                        //            If sReplace.Contains("{" & i & "}") Then
-                        //                strMessage = strMessage.Replace(match.Groups(0).Value, sReplace.Replace("{" & i & "}", grp.Value))
-                        //            End If
-                        //        End If
-
-                        //        i += 1
-                        //    Next
-                        //Next
-
                         break;
                 }
 
@@ -740,24 +607,26 @@ namespace DotNetNuke.Modules.ActiveForums
             dr.Close();
             return strMessage;
         }
-        public static string RemoveFilterWords(int PortalId, int ModuleId, string ThemePath, string strMessage)
+
+        public static string RemoveFilterWords(int portalId, int moduleId, string themePath, string strMessage)
         {
-            IDataReader dr = DataProvider.Instance().Filters_List(PortalId, ModuleId, 0, 100000, "ASC", "FilterId");
+            var dr = DataProvider.Instance().Filters_List(portalId, moduleId, 0, 100000, "ASC", "FilterId");
             dr.NextResult();
 
             while (dr.Read())
             {
-                string sReplace = dr["Replace"].ToString();
-                string sFind = dr["Find"].ToString();
+                var sReplace = dr["Replace"].ToString();
+                var sFind = dr["Find"].ToString();
                 switch (dr["FilterType"].ToString().ToUpper())
                 {
                     case "MARKUP":
                         strMessage = strMessage.Replace(sReplace, sFind.Trim());
                         break;
+
                     case "EMOTICON":
-                        if ((sReplace.IndexOf("/emoticons", 0) + 1) > 0)
+                        if (sReplace.IndexOf("/emoticons", StringComparison.Ordinal) >= 0)
                         {
-                            sReplace = "<img src='" + ThemePath + sReplace + "' align=\"absmiddle\"  border=\"0\" />";
+                            sReplace = "<img src='" + themePath + sReplace + "' align=\"absmiddle\"  border=\"0\"  class=\"afEmoticon\" />";
                             strMessage = strMessage.Replace(sReplace, sFind);
                         }
                         break;
@@ -769,20 +638,15 @@ namespace DotNetNuke.Modules.ActiveForums
             return strMessage;
         }
 
-
-        public static string ImportFilter(int PortalID, int ModuleID)
+        public static string ImportFilter(int portalID, int moduleID)
         {
             string @out;
-            string myFile;
             try
             {
-                myFile = HttpContext.Current.Server.MapPath("~/DesktopModules/ActiveForums/config/templates/Filters.txt");
+                var myFile = HttpContext.Current.Server.MapPath("~/DesktopModules/ActiveForums/config/templates/Filters.txt");
                 if (File.Exists(myFile))
                 {
                     StreamReader objStreamReader;
-                    string sFind;
-                    string sReplace;
-                    string sType;
                     try
                     {
                         objStreamReader = File.OpenText(myFile);
@@ -792,16 +656,15 @@ namespace DotNetNuke.Modules.ActiveForums
                         @out = exc.Message;
                         return @out;
                     }
-                    string strFilter;
-                    strFilter = objStreamReader.ReadLine();
+                    var strFilter = objStreamReader.ReadLine();
                     while (strFilter != null)
                     {
-                        string[] row = Regex.Split(strFilter, ",,");
-                        sFind = row[0].Substring(1, row[0].Length - 2);
-                        sReplace = row[1].Trim(' ');
+                        var row = Regex.Split(strFilter, ",,");
+                        var sFind = row[0].Substring(1, row[0].Length - 2);
+                        var sReplace = row[1].Trim(' ');
                         sReplace = sReplace.Substring(1, sReplace.Length - 2);
-                        sType = row[2].Substring(1, row[2].Length - 2);
-                        DataProvider.Instance().Filters_Save(PortalID, ModuleID, -1, sFind, sReplace, sType);
+                        var sType = row[2].Substring(1, row[2].Length - 2);
+                        DataProvider.Instance().Filters_Save(portalID, moduleID, -1, sFind, sReplace, sType);
                         strFilter = objStreamReader.ReadLine();
                     }
                     objStreamReader.Close();
@@ -819,26 +682,23 @@ namespace DotNetNuke.Modules.ActiveForums
 
             return @out;
         }
+
         public static bool InputIsValid(string body)
         {
             if (string.IsNullOrEmpty(body))
-            {
                 return false;
-            }
+
             body = body.Trim();
+
             if (string.IsNullOrEmpty(StripHTMLTag(body)) && !(body.ToUpper().Contains("<CODE")))
-            {
                 return false;
-            }
-            if (string.IsNullOrEmpty(body.Replace("&nbsp;", string.Empty)))
-            {
-                return false;
-            }
-            return true;
+
+            return !string.IsNullOrEmpty(body.Replace("&nbsp;", string.Empty));
         }
+
         public static string HTMLEncode(string strMessage = "")
         {
-            if (strMessage != "")
+            if (strMessage != string.Empty)
             {
                 strMessage = strMessage.Replace(">", "&gt;");
                 strMessage = strMessage.Replace("<", "&lt;");
@@ -846,84 +706,78 @@ namespace DotNetNuke.Modules.ActiveForums
 
             return strMessage;
         }
+
         public static string ParsePre(string strMessage)
         {
-            Regex objRegEx;
-            objRegEx = new Regex("<pre>(.*?)</pre>");
+            var objRegEx = new Regex("<pre>(.*?)</pre>");
             strMessage = "<code>" + HTMLDecode(objRegEx.Replace(strMessage, "$1")) + "</code>";
             return strMessage;
         }
+
         public static string HTMLDecode(string strMessage)
         {
             strMessage = strMessage.Replace("&gt;", ">");
             strMessage = strMessage.Replace("&lt;", "<");
             return strMessage;
         }
+
         public static string StripHTMLTag(string sText)
         {
             if (string.IsNullOrEmpty(sText))
-            {
                 return string.Empty;
-            }
-            string pattern = "<(.|\\n)*?>";
+
+            const string pattern = @"<(.|\n)*?>";
             return Regex.Replace(sText, pattern, string.Empty).Trim();
         }
+
         public static bool HasHTML(string sText)
         {
             if (string.IsNullOrEmpty(sText))
-            {
                 return false;
-            }
-            string pattern = "<(.|\\n)*?>";
+
+            const string pattern = @"<(.|\n)*?>";
             return Regex.IsMatch(sText, pattern);
         }
+
         public static string StripTokens(string sText)
         {
             sText = sText.Replace("AF:DIR:", "AFHOLD:");
-            string pattern = "(\\[AF:.+?\\])";
+            const string pattern = @"(\[AF:.+?\])";
             sText = Regex.Replace(sText, pattern, string.Empty);
-            sText = Regex.Replace(sText, "(\\[/AF:.+?\\])", string.Empty);
-            sText = Regex.Replace(sText, "(\\[RESX:.+?\\])", string.Empty);
+            sText = Regex.Replace(sText, @"(\[/AF:.+?\])", string.Empty);
+            sText = Regex.Replace(sText, @"(\[RESX:.+?\])", string.Empty);
             sText = sText.Replace("[ATTACHMENTS]", string.Empty);
             sText = sText.Replace("[MODEDITDATE]", string.Empty);
             sText = sText.Replace("[SIGNATURE]", string.Empty);
             sText = sText.Replace("AFHOLD:", "AF:DIR:");
             return sText;
         }
-        public static string XSSFilter(string sText = "", bool RemoveHTML = false)
+
+        public static string XSSFilter(string sText = "", bool removeHTML = false)
         {
-            //If sText.Contains("&#") Then
-            //    sText = StrongDecode(sText)
-            //End If
-            //If Regex.Match(sText, "<.*&#[a-zA-Z0-9].*>").Success Then
-            //    sText = Regex.Replace(sText, "<.*&#[a-zA-Z0-9].*>", String.Empty)
-            //End If
-            string pattern = "<style.*/*>|</style>|<script.*/*>|</script>|<[a-zA-Z][^>]*=[`'\"]+javascript:\\w+.*[`'\"]+>|<\\w+[^>]*\\son\\w+.*[ /]*>|<[a-zA-Z][^>].*=javascript:.*>|<\\w+[^>]*[\\x00-\\x20]*=[\\x00-\\x20]*[`'\"]*[\\x00-\\x20]*j[\\x00-\\x20]*a[\\x00-\\x20]*v[\\x00-\\x20]*a[\\x00-\\x20]*s[\\x00-\\x20]*c[\\x00-\\x20]*r[\\x00-\\x20]*i[\\x00-\\x20]*p[\\x00-\\x20]*t[\\x00-\\x20]*(.|\\n)*?";
+            const string pattern = "<style.*/*>|</style>|<script.*/*>|</script>|<[a-zA-Z][^>]*=[`'\"]+javascript:\\w+.*[`'\"]+>|<\\w+[^>]*\\son\\w+.*[ /]*>|<[a-zA-Z][^>].*=javascript:.*>|<\\w+[^>]*[\\x00-\\x20]*=[\\x00-\\x20]*[`'\"]*[\\x00-\\x20]*j[\\x00-\\x20]*a[\\x00-\\x20]*v[\\x00-\\x20]*a[\\x00-\\x20]*s[\\x00-\\x20]*c[\\x00-\\x20]*r[\\x00-\\x20]*i[\\x00-\\x20]*p[\\x00-\\x20]*t[\\x00-\\x20]*(.|\\n)*?";
             foreach (Match m in Regex.Matches(sText, pattern, RegexOptions.IgnoreCase))
-            {
                 sText = sText.Replace(m.Value, StrongEncode(m.Value));
-            }
-            //sText = Regex.Replace(sText, pattern, StrongEncode, RegexOptions.IgnoreCase)
-            if (RemoveHTML)
-            {
+
+            if (removeHTML)
                 sText = StripHTMLTag(sText);
-            }
+
             return sText;
         }
+
         public static string StripExecCode(string sText)
         {
-            int i = 0;
+            var i = 0;
             while (i < sText.Length)
             {
-                Match m;
                 var aspTag = new System.Web.RegularExpressions.TagRegex();
-                m = aspTag.Match(sText, i);
+                var m = aspTag.Match(sText, i);
                 if (m.Success)
                 {
                     i = m.Index + m.Length;
-                    string tag = m.Value;
+                    var tag = m.Value;
                     var aspRunAt = new System.Web.RegularExpressions.RunatServerRegex();
-                    Match mInner = aspRunAt.Match(m.Value, 0);
+                    var mInner = aspRunAt.Match(m.Value, 0);
                     if (mInner.Success)
                     {
                         sText = sText.Replace(tag, HttpUtility.HtmlEncode(m.Value));
@@ -933,7 +787,6 @@ namespace DotNetNuke.Modules.ActiveForums
                         {
                             i = m.Index + m.Length;
                             sText = sText.Replace(m.Value, HttpUtility.HtmlEncode(m.Value));
-
                         }
                     }
 
@@ -943,62 +796,38 @@ namespace DotNetNuke.Modules.ActiveForums
                 i += 1;
             }
 
-            //RUNAT SERVER
-            //Dim ServerReg As New System.Web.RegularExpressions.ServerTagsRegex
-
-            //For Each m As Match In ServerReg.Matches(sText)
-            //    sText = sText.Replace(m.Value, HttpUtility.HtmlEncode(m.Value))
-            //Next
-
-            //Dim AspControl As New System.Web.RegularExpressions.TagRegex
-
-            //For Each m As Match In AspControl.Matches(sText)
-            //    sText = sText.Replace(m.Value, HttpUtility.HtmlEncode(m.Value))
-            //Next
-
-
-            //For Each m As Match In Regex.Matches(sText, "runat\W*server.*?>", RegexOptions.IgnoreCase)
-            //    sText = sText.Replace(m.ToString, HttpUtility.HtmlEncode(m.ToString))
-            //    ' sText = sText.Replace(m.ToString, StrongEncode(m.ToString))
-            //Next
-            //CODE
-            foreach (Match m in Regex.Matches(sText, "<%(?!@)(?<code>.*?)%>", RegexOptions.IgnoreCase))
+            foreach (var m in Regex.Matches(sText, "<%(?!@)(?<code>.*?)%>", RegexOptions.IgnoreCase))
             {
                 sText = sText.Replace(m.ToString(), HttpUtility.HtmlEncode(m.ToString().Replace("<br />", System.Environment.NewLine)));
             }
 
-            //SERVER Tags
-            //For Each m As Match In Regex.Matches(sText, "(<(?<tagname>[\w:\.]+)(\s+(?<attrname>\w[-\w:]*)(\s*=\s*""(?<attrval>[^""]*)""|\s*=\s*'(?<attrval>[^']*)'|\s*=\s*(?<attrval><%#.*?%>)|\s*=\s*(?!'|"")(?<attrval>[^\s=/>]*)(?!'|"")|(?<attrval>\s*?)))*\s*(?<empty>/)?>)", RegexOptions.IgnoreCase)
-            //    sText = sText.Replace(m.ToString, HttpUtility.HtmlEncode(m.ToString.Replace("<br />", vbCrLf)))
-            //Next
-            //INCLUDES
-            foreach (Match m in Regex.Matches(sText, "<!--\\s*#(?i:include)\\s*(?<pathtype>[\\w]+)\\s*=\\s*[\"']?(?<filename>[^\\\"']*?)[\"']?\\s*-->", RegexOptions.IgnoreCase))
+            foreach (var m in Regex.Matches(sText, "<!--\\s*#(?i:include)\\s*(?<pathtype>[\\w]+)\\s*=\\s*[\"']?(?<filename>[^\\\"']*?)[\"']?\\s*-->", RegexOptions.IgnoreCase))
             {
                 sText = sText.Replace(m.ToString(), StrongEncode(m.ToString()));
             }
+
             sText = sText.Replace("<!--", "&lt;&#33;&#45;&#45;");
             sText = sText.Replace("-->", "&#45;&#45;&gt;");
+
             return sText;
         }
+
         public static string StrongEncode(string text)
         {
-            string @out = string.Empty;
-            foreach (var s in text.ToCharArray())
-            {
-                @out += "&#" + Convert.ToInt32(s) + ";";
-            }
-            return @out;
+            return text.ToCharArray().Aggregate(string.Empty, (current, s) => current + ("&#" + Convert.ToInt32(s) + ";"));
         }
+
         public static string StrongDecode(string text)
         {
-            string @out = string.Empty;
+            var @out = string.Empty;
             foreach (Match m in Regex.Matches(text, "&#[a-zA-Z0-9];"))
             {
-                string scode = m.Value.Replace("&#", string.Empty).Replace(";", string.Empty);
+                var scode = m.Value.Replace("&#", string.Empty).Replace(";", string.Empty);
                 text = text.Replace(m.Value, scode);
             }
             return text;
         }
+
         public static string CheckSqlString(string input)
         {
             input = input.Replace("\\", "");
@@ -1020,37 +849,31 @@ namespace DotNetNuke.Modules.ActiveForums
             input = input.Replace(";", "");
             input = input.Replace("--", "");
 
-
-            //input = input.Replace("""", """""")
-
             return input;
         }
+
         internal static string CleanName(string name)
         {
-            string currentName = name;
+            var currentName = name;
             if (name == "-1")
-            {
                 return "-1";
-            }
+
             if (string.IsNullOrEmpty(name))
-            {
                 return string.Empty;
-            }
+
             name = name.Trim();
-            char[] chars = "_$%#@!*?;:~`+=()[]{}|\\'<>,/^&\".".ToCharArray();
+            var chars = "_$%#@!*?;:~`+=()[]{}|\\'<>,/^&\".".ToCharArray();
             name = name.Replace(". ", ".");
             name = name.Replace(" .", ".");
             name = name.Replace("- ", "-");
             name = name.Replace(" -", "-");
             name = name.Replace(".", "-");
             name = name.Replace(" ", "-");
-            for (int i = 0; i < chars.Length; i++)
+            for (var i = 0; i < chars.Length; i++)
             {
-                string strChar = chars.GetValue(i).ToString();
+                var strChar = chars.GetValue(i).ToString();
                 if (name.Contains(strChar))
-                {
                     name = name.Replace(strChar, string.Empty);
-                }
             }
             name = name.Replace("--", "-");
             name = name.Replace("---", "-");
@@ -1060,42 +883,37 @@ namespace DotNetNuke.Modules.ActiveForums
             name = name.Replace("---", "-");
             name = name.Replace("--", "-");
             name = name.Trim('-');
-            if (name.Length > 0)
-            {
-                return name;
-            }
-            return currentName;
+
+            return name.Length > 0 ? name : currentName;
         }
+
         internal static bool IsRewriteLoaded()
         {
             try
             {
-                string sConfig = GetFile(HttpContext.Current.Server.MapPath("~/web.config"));
-                if (sConfig.Contains("DotNetNuke.Modules.ActiveForums.ForumsReWriter"))
-                {
-                    return true;
-                }
-                return false;
+                var sConfig = GetFile(HttpContext.Current.Server.MapPath("~/web.config"));
+                return sConfig.Contains("DotNetNuke.Modules.ActiveForums.ForumsReWriter");
             }
             catch (Exception ex)
             {
                 return false;
             }
         }
+
         /// <summary>
         /// Get the template as a string from the specified path
         /// </summary>
-        /// <param name="FilePath">Physical path to file</param>
+        /// <param name="filePath">Physical path to file</param>
         /// <returns>String</returns>
         /// <remarks></remarks>
-        internal static string GetFile(string FilePath)
+        internal static string GetFile(string filePath)
         {
-            string sContents = string.Empty;
-            if (File.Exists(FilePath))
+            var sContents = string.Empty;
+            if (File.Exists(filePath))
             {
                 try
                 {
-                    using (var sr = new StreamReader(FilePath))
+                    using (var sr = new StreamReader(filePath))
                     {
                         sContents = sr.ReadToEnd();
                         sr.Close();
@@ -1108,48 +926,46 @@ namespace DotNetNuke.Modules.ActiveForums
             }
             return sContents;
         }
+
         public static string ManageImagePath(string sHTML)
         {
-            // Dim strHost As String = DotNetNuke.Common.Globals.AddHTTP(DotNetNuke.Common.Globals.GetDomainName(Current.Request)) & "/" 'DotNetNuke.Common.Globals.AddHTTP(Current.Request.Url.Host)
-            string strHost = Common.Globals.AddHTTP(HttpContext.Current.Request.Url.Host);
+            var strHost = Common.Globals.AddHTTP(HttpContext.Current.Request.Url.Host);
             return ManageImagePath(sHTML, strHost);
         }
-        public static string ManageImagePath(string sHTML, string HostURL)
-        {
-            string strHost = HostURL.ToLower(); //DotNetNuke.Common.Globals.AddHTTP(DotNetNuke.Common.Globals.GetDomainName(Current.Request)) & "/"
 
-            int iStart = sHTML.IndexOf("src='/");
+        public static string ManageImagePath(string sHTML, string hostURL)
+        {
+            var strHost = hostURL.ToLower();
+
+            var iStart = sHTML.IndexOf("src='/", StringComparison.Ordinal);
             while (iStart != -1)
             {
                 sHTML = sHTML.Insert(iStart + 5, strHost);
-                iStart = sHTML.IndexOf("src='/");
+                iStart = sHTML.IndexOf("src='/", StringComparison.Ordinal);
             }
-            iStart = sHTML.IndexOf("src=\"/");
+
+            iStart = sHTML.IndexOf("src=\"/", StringComparison.Ordinal);
             while (iStart != -1)
             {
                 sHTML = sHTML.Insert(iStart + 5, strHost);
-                iStart = sHTML.IndexOf("src=\"/");
+                iStart = sHTML.IndexOf("src=\"/", StringComparison.Ordinal);
             }
+
             return sHTML;
-
         }
-        internal static string GetFileContent(string FilePath)
-        {
-            string sPath = FilePath;
-            if (!(sPath.Contains(":\\")) && !(sPath.Contains("\\\\")))
-            {
-                sPath = HttpContext.Current.Server.MapPath(sPath);
-            }
-            //If sPath.Contains("~/") Then
 
-            //End If
-            string sContents = string.Empty;
-            StreamReader objStreamReader;
+        internal static string GetFileContent(string filePath)
+        {
+            var sPath = filePath;
+            if (!(sPath.Contains(@":\")) && !(sPath.Contains(@"\\")))
+                sPath = HttpContext.Current.Server.MapPath(sPath);
+
+            var sContents = string.Empty;
             if (File.Exists(sPath))
             {
                 try
                 {
-                    objStreamReader = File.OpenText(sPath);
+                    var objStreamReader = File.OpenText(sPath);
                     sContents = objStreamReader.ReadToEnd();
                     objStreamReader.Close();
                 }
@@ -1160,93 +976,88 @@ namespace DotNetNuke.Modules.ActiveForums
             }
             return sContents;
         }
-        public static string GetDate(DateTime DisplayDate, int MID, int offset)
+
+        public static string GetDate(DateTime displayDate, int mid, int offset)
         {
             string dateStr;
-            System.Globalization.DateTimeFormatInfo dtFI = new System.Globalization.CultureInfo("en-US", false).DateTimeFormat;
-            dtFI = Thread.CurrentThread.CurrentCulture.DateTimeFormat;
+
             try
             {
-                DateTime newDate;
-
-                int mServerOffSet;
-                int mUserOffSet = 0;
-                SettingsInfo _mainSettings = DataCache.MainSettings(MID);
-                mServerOffSet = _mainSettings.TimeZoneOffset;
-                newDate = DisplayDate.AddMinutes(-mServerOffSet);
+                var mUserOffSet = 0;
+                var mainSettings = DataCache.MainSettings(mid);
+                var mServerOffSet = mainSettings.TimeZoneOffset;
+                var newDate = displayDate.AddMinutes(-mServerOffSet);
 
                 newDate = newDate.AddMinutes(offset);
-                //If Not Current.Session["UserOffSet"] Is Nothing Then
-                //    mUserOffSet = CType(Current.Session["UserOffSet"), Integer]
-                //End If
-                //If mServerOffSet > 0 Then
-                //    newDate = DisplayDate.AddMinutes(-mServerOffSet)
-                //Else
-                //    newDate = DisplayDate.AddMinutes(Math.Abs(mServerOffSet))
-                //End If
-                //newDate = newDate.AddMinutes(mUserOffSet)
-                string dateFormat = _mainSettings.DateFormatString;
-                string timeFormat = _mainSettings.TimeFormatString;
-                string formatString;
-                formatString = dateFormat + " " + timeFormat;
+
+                var dateFormat = mainSettings.DateFormatString;
+                var timeFormat = mainSettings.TimeFormatString;
+                var formatString = dateFormat + " " + timeFormat;
                 try
                 {
                     dateStr = newDate.ToString(formatString);
                 }
                 catch
                 {
-                    dateStr = DisplayDate.ToString();
+                    dateStr = displayDate.ToString();
                 }
                 return dateStr;
             }
             catch (Exception ex)
             {
-                dateStr = DisplayDate.ToString();
+                dateStr = displayDate.ToString();
                 return dateStr;
             }
         }
-        public static string GetLastPostSubject(int LastPostID, int ParentPostID, int ForumID, int TabID, string Subject, int Length, int PageSize, int ReplyCount, bool CanRead)
+
+        public static DateTime GetUserDate(DateTime displayDate, int mid, int offset)
         {
-            var sb = new System.Text.StringBuilder();
-            int PostId = LastPostID;
-            Subject = StripHTMLTag(Subject);
-            Subject = Subject.Replace("[", "&#91");
-            Subject = Subject.Replace("]", "&#93");
-            if (LastPostID != 0)
+            var mainSettings = DataCache.MainSettings(mid);
+            var mServerOffSet = mainSettings.TimeZoneOffset;
+            var newDate = displayDate.AddMinutes(-mServerOffSet);
+
+            return newDate.AddMinutes(offset);
+        }
+
+
+        public static string GetLastPostSubject(int lastPostID, int parentPostID, int forumID, int tabID, string subject, int length, int pageSize, int replyCount, bool canRead)
+        {
+            var sb = new StringBuilder();
+            var postId = lastPostID;
+            subject = StripHTMLTag(subject);
+            subject = subject.Replace("[", "&#91");
+            subject = subject.Replace("]", "&#93");
+            if (lastPostID != 0)
             {
-                if (Subject.Length > Length & Length > 0)
+                if (subject.Length > length & length > 0)
+                    subject = subject.Substring(0, length) + "...";
+
+                if (parentPostID != 0)
+                    lastPostID = parentPostID;
+
+                if (replyCount > 1)
                 {
-                    Subject = Subject.Substring(0, Length) + "...";
-                }
-                if (ParentPostID != 0)
-                {
-                    LastPostID = ParentPostID;
-                }
-                if (ReplyCount > 1)
-                {
-                    int intPages;
-                    intPages = Convert.ToInt32(Math.Ceiling(ReplyCount / (double)PageSize));
-                    if (CanRead)
+                    var intPages = Convert.ToInt32(Math.Ceiling(replyCount / (double)pageSize));
+                    if (canRead)
                     {
-                        string[] Params = { ParamKeys.ForumId + "=" + ForumID, ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.TopicId + "=" + LastPostID, ParamKeys.PageJumpId + "=" + intPages };
-                        sb.Append("<a href=\"" + Common.Globals.NavigateURL(TabID, "", Params) + "#" + PostId + "\" rel=\"nofollow\">" + HTMLEncode(Subject) + "</a>");
+                        string[] Params = { ParamKeys.ForumId + "=" + forumID, ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.TopicId + "=" + lastPostID, ParamKeys.PageJumpId + "=" + intPages };
+                        sb.Append("<a href=\"" + Common.Globals.NavigateURL(tabID, "", Params) + "#" + postId + "\" rel=\"nofollow\">" + HTMLEncode(subject) + "</a>");
                     }
                     else
                     {
-                        sb.Append(HTMLEncode(Subject));
+                        sb.Append(HTMLEncode(subject));
                     }
-
                 }
                 else
                 {
-                    if (CanRead)
+                    if (canRead)
                     {
-                        string[] Params = { ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.ForumId + "=" + ForumID, ParamKeys.TopicId + "=" + LastPostID };
-                        sb.Append("<a href=\"" + Common.Globals.NavigateURL(TabID, "", Params) + "#" + PostId + "\" rel=\"nofollow\">" + HTMLEncode(Subject) + "</a>");
+                        string[] Params = { ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.ForumId + "=" + forumID, ParamKeys.TopicId + "=" + lastPostID };
+                        sb.Append("<a href=\"" + Common.Globals.NavigateURL(tabID, "", Params) + "#" + postId + "\" rel=\"nofollow\">" + HTMLEncode(subject) + "</a>");
                     }
                     else
                     {
-                        sb.Append(HTMLEncode(Subject));
+                        sb.Append(HTMLEncode(subject));
                     }
 
                 }
@@ -1254,287 +1065,250 @@ namespace DotNetNuke.Modules.ActiveForums
             return sb.ToString();
         }
 
-        public static string ParseSpacer(string Template)
+        public static string ParseSpacer(string template)
         {
-            string sOutput;
-            string strHost = Common.Globals.AddHTTP(Common.Globals.GetDomainName(HttpContext.Current.Request)) + "/";
+            var strHost = Common.Globals.AddHTTP(Common.Globals.GetDomainName(HttpContext.Current.Request)) + "/";
+
             if (HttpContext.Current.Request.IsSecureConnection)
-            {
                 strHost = strHost.Replace("http://", "https://");
-            }
-            if ((Template.IndexOf("[SPACER", 0) + 1) > 0)
-            {
-                sOutput = Template;
-                int intStart;
-                int intEnd;
-                int intHeight;
-                int intWidth;
-                string sReplace = "[SPACER:";
-                string sTemp = null;
-                string sImg;
-                intStart = (sOutput.IndexOf("[SPACER:", 0) + 1) + 8;
-                intEnd = (sOutput.IndexOf(":", intStart) + 1);
-                sTemp = sOutput.Substring(intStart - 1, intEnd - intStart);
-                intHeight = Convert.ToInt32(sOutput.Substring(intStart - 1, intEnd - intStart));
-                sTemp = sOutput.Substring(intEnd, ((sOutput.IndexOf("]", intEnd - 1) + 1) - 1) - intEnd);
-                intWidth = Convert.ToInt32(sOutput.Substring(intEnd, ((sOutput.IndexOf("]", intEnd - 1) + 1) - 1) - intEnd));
-                sReplace += intHeight.ToString() + ":" + intWidth.ToString() + "]";
-                sImg = "<img src=\"" + strHost + "DesktopModules/ActiveForums/images/spacer.gif\" alt=\"--\" width=\"" + intWidth + "\" height=\"" + intHeight + "\" />";
-                sOutput = sOutput.Replace(sReplace, sImg);
-                Template = ParseSpacer(sOutput);
-            }
-            return Template;
+
+            var spacerTemplate = string.Format("<img src=\"{0}DesktopModules/ActiveForums/images/spacer.gif\" alt=\"--\" width=\"$1\" height=\"$2\" />", strHost);
+
+            const string expression = @"\[SPACER\:(\d+)\:(\d+)\]";
+
+            return Regex.Replace(template, expression, spacerTemplate, RegexOptions.IgnoreCase);
         }
-        internal static string GetSqlString(string SqlFile)
+
+        internal static string GetSqlString(string sqlFile)
         {
-            string resourceLocation = SqlFile;
-            Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceLocation);
+            var resourceLocation = sqlFile;
+            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceLocation);
+            
+            if (stream == null)
+                return null;
+
             var sr = new StreamReader(stream);
-            string contents = sr.ReadToEnd();
+            var contents = sr.ReadToEnd();
             sr.Close();
             return contents;
         }
+
         public static string LocalizeControl(string controlText)
         {
             return LocalizeControl(controlText, string.Empty, false, false);
         }
 
-        public static string LocalizeControl(string controlText, string ResourceFile)
+        public static string LocalizeControl(string controlText, string resourceFile)
         {
-            return LocalizeControl(controlText, ResourceFile, false, false);
+            return LocalizeControl(controlText, resourceFile, false, false);
         }
-        public static string LocalizeControl(string controlText, bool IsAdmin)
+
+        public static string LocalizeControl(string controlText, bool isAdmin)
         {
-            return LocalizeControl(controlText, string.Empty, IsAdmin, false);
+            return LocalizeControl(controlText, string.Empty, isAdmin, false);
         }
-        public static string LocalizeControl(string controlText, bool IsAdmin, bool scriptSafe)
+
+        public static string LocalizeControl(string controlText, bool isAdmin, bool scriptSafe)
         {
-            return LocalizeControl(controlText, string.Empty, IsAdmin, scriptSafe);
+            return LocalizeControl(controlText, string.Empty, isAdmin, scriptSafe);
         }
-        private static string LocalizeControl(string controlText, string resourceFile, bool IsAdmin, bool scriptSafe)
+
+        private static string LocalizeControl(string controlText, string resourceFile, bool isAdmin, bool scriptSafe)
         {
-            //controlText = controlText.Replace(" & ", " &amp; ")
-            //controlText = controlText.Replace("<BR>", "<br />")
-            //controlText = controlText.Replace("<br>", "<br />")
-            //controlText = controlText.Replace("<P>", "<p>")
-            //controlText = controlText.Replace("</P>", "</p>")
-            //controlText = controlText.Replace("</A>", "</a>")
-            //controlText = controlText.Replace("<P ", "<p ")
-            //controlText = controlText.Replace("</DIV>", "</div>")
-            //controlText = controlText.Replace("<DIV", "<div")
-            //controlText = controlText.Replace(" target=_blank", " target=""_blank""")
             controlText = controlText.Replace(" class=afquote", " class=\"afquote\"");
 
-            int i = 0;
-            int intStart = 0;
-            int intEnd = 0;
-            string sKey;
-            string sReplace;
-            string pattern = "(\\[RESX:.+?\\])";
-            Regex regExp = new Regex(pattern);
-            MatchCollection matches;
-            matches = regExp.Matches(controlText);
+            var i = 0;
+            var intStart = 0;
+            var intEnd = 0;
+            const string pattern = @"(\[RESX:.+?\])";
+            var regExp = new Regex(pattern);
+            var matches = regExp.Matches(controlText);
             foreach (Match match in matches)
             {
-                sKey = match.Value;
-                if (IsAdmin)
-                {
+                var sKey = match.Value;
+                string sReplace;
+
+                if (isAdmin)
                     sReplace = GetSharedResource(match.Value, true);
-                }
                 else if (resourceFile != string.Empty)
-                {
                     sReplace = GetSharedResource(match.Value, resourceFile);
-                }
                 else
-                {
                     sReplace = GetSharedResource(match.Value);
-                }
-                string newValue = match.Value;
+
+                var newValue = match.Value;
                 if (!(string.IsNullOrEmpty(sReplace)))
-                {
                     newValue = sReplace;
-                }
+
                 if (scriptSafe)
                 {
-                    newValue = HttpUtility.HtmlEncode(newValue).Replace("'", "\\'");
-                    newValue = newValue.Replace("[", "\\[").Replace("]", "\\]");
+                    newValue = HttpUtility.HtmlEncode(newValue).Replace("'", @"\'");
+                    newValue = newValue.Replace("[", @"\[").Replace("]", @"\]");
                     newValue = JSON.EscapeJsonString(newValue);
                 }
-                controlText = controlText.Replace(sKey, newValue);
-                //If Not String.IsNullOrEmpty(sReplace) Then
-                //    controlText = controlText.Replace(match.Value, sReplace)
-                //Else
-                //    controlText = controlText.Replace(match.Value, match.Value)
-                //End If
 
+                controlText = controlText.Replace(sKey, newValue);
             }
+
             return controlText;
         }
-        public static string GetSharedResource(string key, string ResourceFile)
+
+        public static string GetSharedResource(string key, string resourceFile)
         {
-            return Services.Localization.Localization.GetString(key, "~/DesktopModules/ActiveForums/App_LocalResources/" + ResourceFile + ".resx");
+            return Services.Localization.Localization.GetString(key, "~/DesktopModules/ActiveForums/App_LocalResources/" + resourceFile + ".resx");
         }
-        public static string GetSharedResource(string key, bool IsAdmin = false)
+
+        public static string GetSharedResource(string key, bool isAdmin = false)
         {
             string sValue;
-            if (IsAdmin)
+            if (isAdmin)
             {
                 sValue = Services.Localization.Localization.GetString(key, "~/DesktopModules/ActiveForums/App_LocalResources/ControlPanel.ascx.resx");
-                if (sValue == string.Empty)
-                {
-                    return key;
-                }
-                return sValue;
+                return sValue == string.Empty ? key : sValue;
             }
+
             sValue = Services.Localization.Localization.GetString(key, "~/DesktopModules/ActiveForums/App_LocalResources/SharedResources.resx");
-            if (sValue == string.Empty)
-            {
-                return key;
-            }
-            return sValue;
+            return sValue == string.Empty ? key : sValue;
         }
-        public static string FormatFileSize(int FileSize)
+
+        public static string FormatFileSize(int fileSize)
         {
             try
             {
-                if (FileSize >= 1073741824)
-                {
-                    return (FileSize / 1024.0 / 1024.0 / 1024.0).ToString("#0.00") + " GB";
-                }
-                if (FileSize >= 1048576)
-                {
-                    return (FileSize / 1024.0 / 1024.0).ToString("#0.00") + " MB";
-                }
-                if (FileSize >= 1024)
-                {
-                    return (FileSize / 1024.0).ToString("#0.00") + " KB";
-                }
-                if (FileSize < 1024)
-                {
-                    return FileSize + " Bytes";
-                }
+                if (fileSize >= 1073741824)
+                    return (fileSize / 1024.0 / 1024.0 / 1024.0).ToString("#0.00") + " GB";
+
+                if (fileSize >= 1048576)
+                    return (fileSize / 1024.0 / 1024.0).ToString("#0.00") + " MB";
+
+                if (fileSize >= 1024)
+                    return (fileSize / 1024.0).ToString("#0.00") + " KB";
+
+                if (fileSize < 1024)
+                    return fileSize + " Bytes";
             }
             catch (Exception ex)
             {
                 return "0 Bytes";
             }
+
             return "0 Bytes";
         }
-        public static object ConvertFromHashTableToObject(Hashtable ht, object InfoObject)
+
+        public static object ConvertFromHashTableToObject(Hashtable ht, object infoObject)
         {
-            Type myType = InfoObject.GetType();
+            var myType = infoObject.GetType();
             var myProperties = myType.GetProperties((BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance));
-            string sKey;
-            string sValue;
-            foreach (PropertyInfo pItem in myProperties)
+            foreach (var pItem in myProperties)
             {
-                sValue = string.Empty;
-                sKey = pItem.Name.ToLower();
+                var sValue = string.Empty;
+                var sKey = pItem.Name.ToLower();
                 foreach (string k in ht.Keys)
                 {
-                    if (k.ToLowerInvariant() == sKey.ToLowerInvariant())
-                    {
-                        sValue = ht[k].ToString();
-                        break;
-                    }
+                    if (k.ToLowerInvariant() != sKey.ToLowerInvariant()) 
+                        continue;
+
+                    sValue = ht[k].ToString();
+                    break;
                 }
 
-                if (!(string.IsNullOrEmpty(sValue)))
+                if (string.IsNullOrEmpty(sValue)) 
+                    continue;
+                
+                object obj = null;
+                switch (pItem.PropertyType.ToString())
                 {
-                    object obj = null;
-                    switch (pItem.PropertyType.ToString())
-                    {
-                        case "System.Int16":
-                            obj = Convert.ToInt32(sValue);
-                            break;
-                        case "System.Int32":
-                            obj = Convert.ToInt32(sValue);
-                            break;
-                        case "System.Int64":
-                            obj = Convert.ToInt64(sValue);
-                            break;
-                        case "System.Single":
-                            obj = Convert.ToSingle(sValue);
-                            break;
-                        case "System.Double":
-                            obj = Convert.ToDouble(sValue);
-                            break;
-                        case "System.Decimal":
-                            obj = Convert.ToDecimal(sValue);
-                            break;
-                        case "System.DateTime":
-                            obj = Convert.ToDateTime(sValue);
-                            break;
-                        case "System.String":
-                        case "System.Char":
-                            obj = Convert.ToString(sValue);
-                            break;
-                        case "System.Boolean":
-                            obj = Convert.ToBoolean(sValue);
-                            break;
-                        case "System.Guid":
-                            obj = new Guid(sValue);
+                    case "System.Int16":
+                        obj = Convert.ToInt32(sValue);
+                        break;
+                    case "System.Int32":
+                        obj = Convert.ToInt32(sValue);
+                        break;
+                    case "System.Int64":
+                        obj = Convert.ToInt64(sValue);
+                        break;
+                    case "System.Single":
+                        obj = Convert.ToSingle(sValue);
+                        break;
+                    case "System.Double":
+                        obj = Convert.ToDouble(sValue);
+                        break;
+                    case "System.Decimal":
+                        obj = Convert.ToDecimal(sValue);
+                        break;
+                    case "System.DateTime":
+                        obj = Convert.ToDateTime(sValue);
+                        break;
+                    case "System.String":
+                    case "System.Char":
+                        obj = Convert.ToString(sValue);
+                        break;
+                    case "System.Boolean":
+                        obj = Convert.ToBoolean(sValue);
+                        break;
+                    case "System.Guid":
+                        obj = new Guid(sValue);
 
-                            break;
-                    }
-                    if (obj != null)
-                    {
-                        InfoObject.GetType().GetProperty(pItem.Name).SetValue(InfoObject, obj, BindingFlags.Public | BindingFlags.NonPublic, null, null, null);
-                    }
-
+                        break;
+                }
+                if (obj != null)
+                {
+                    infoObject.GetType().GetProperty(pItem.Name).SetValue(infoObject, obj, BindingFlags.Public | BindingFlags.NonPublic, null, null, null);
                 }
             }
 
-            return InfoObject;
+            return infoObject;
         }
+
         internal static string GetFileResource(string resourceName)
         {
-            string contents;
-            using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+            string contents = null;
+            using (var s = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
             {
-                using (var sr = new StreamReader(s))
+                if(s != null)
                 {
-                    contents = sr.ReadToEnd();
-                    sr.Close();
+                    using (var sr = new StreamReader(s))
+                    {
+                        contents = sr.ReadToEnd();
+                        sr.Close();
+                    }
+                    s.Close();
                 }
-                s.Close();
             }
             return contents;
         }
-        public static List<Entities.Users.UserInfo> GetListOfModerators(int PortalId, int ForumId)
+
+        public static List<Entities.Users.UserInfo> GetListOfModerators(int portalId, int forumId)
         {
             var rc = new Security.Roles.RoleController();
             var uc = new Entities.Users.UserController();
             var fc = new ForumController();
-            Forum fi = fc.Forums_Get(ForumId, -1, false, true);
+            var fi = fc.Forums_Get(forumId, -1, false, true);
             if (fi == null)
-            {
                 return null;
-            }
+
             var mods = new List<Entities.Users.UserInfo>();
             SubscriptionInfo si = null;
-            string modApprove = fi.Security.ModApprove;
-            string[] modRoles = modApprove.Split('|')[0].Split(';');
-            if (modRoles != null)
-            {
-                foreach (string r in modRoles)
-                {
-                    if (!(string.IsNullOrEmpty(r)))
-                    {
-                        int rid = Convert.ToInt32(r);
-                        string rName = rc.GetRole(rid, PortalId).RoleName;
-                        foreach (Entities.Users.UserRoleInfo usr in rc.GetUserRolesByRoleName(PortalId, rName))
-                        {
-                            var ui = uc.GetUser(PortalId, usr.UserID);
+            var modApprove = fi.Security.ModApprove;
+            var modRoles = modApprove.Split('|')[0].Split(';');
 
-                            if (!(mods.Contains(ui)))
-                            {
-                                mods.Add(ui);
-                            }
-                        }
+            foreach (var r in modRoles)
+            {
+                if (string.IsNullOrEmpty(r)) 
+                    continue;
+
+                var rid = Convert.ToInt32(r);
+                var rName = rc.GetRole(rid, portalId).RoleName;
+                foreach (Entities.Users.UserRoleInfo usr in rc.GetUserRolesByRoleName(portalId, rName))
+                {
+                    var ui = uc.GetUser(portalId, usr.UserID);
+
+                    if (!(mods.Contains(ui)))
+                    {
+                        mods.Add(ui);
                     }
                 }
             }
+
             return mods;
         }
     }

@@ -1,246 +1,89 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-
 using System.ComponentModel;
+using System.Text;
 using System.Web.UI;
 using System.Web;
+using System.Web.UI.WebControls;
 
 namespace DotNetNuke.Modules.ActiveForums.Controls
 {
     [DefaultProperty("Text"), ToolboxData("<{0}:pagernav runat=server></{0}:pagernav>")]
-    public class PagerNav : System.Web.UI.WebControls.WebControl
+    public class PagerNav : WebControl
     {
-        public enum Mode : int
+        public enum Mode
         {
             Links,
             CallBack
         }
-        private int _PageCount;
-        private int _CurrentPage;
-        private string _Text;
-        private int _ForumID = 0;
-        private int _TopicId;
-        private int _TabID;
-        private string _PageText;
-        private string _OfText;
-        private string _View;
-        private string[] _Params;
-        private string _Optional2 = "";
-        private string _ClientScript = "afPage({0});";
-        private Mode _Mode;
-        private bool _useShortUrls = false;
 
-        public bool UseShortUrls
-        {
-            get
-            {
-                return _useShortUrls;
-            }
-            set
-            {
-                _useShortUrls = value;
-            }
-        }
-        public Mode PageMode
-        {
-            get
-            {
-                return _Mode;
-            }
-            set
-            {
-                _Mode = value;
-            }
-        }
-        private string _BaseURL = string.Empty;
-        public string BaseURL
-        {
-            get
-            {
-                return _BaseURL;
-            }
-            set
-            {
-                _BaseURL = value;
-            }
-        }
+        public bool UseShortUrls { get; set; }
+
+        public Mode PageMode { get; set; }
+
+        public string BaseURL { get; set; }
+
         [Bindable(true), Category("Appearance"), DefaultValue("")]
-        public int PageCount
-        {
-            get
-            {
-                return _PageCount;
-            }
+        public int PageCount { get; set; }
 
-            set
-            {
-                _PageCount = value;
-            }
-        }
         [Bindable(true), Category("Appearance"), DefaultValue("")]
-        public int ForumID
-        {
-            get
-            {
-                return _ForumID;
-            }
+        public int ForumID { get; set; }
 
-            set
-            {
-                _ForumID = value;
-            }
-        }
         [Bindable(true), Category("Appearance"), DefaultValue("0")]
-        public int TopicId
-        {
-            get
-            {
-                return _TopicId;
-            }
+        public int TopicId { get; set; }
 
-            set
-            {
-                _TopicId = value;
-            }
-        }
         [Bindable(true), Category("Appearance"), DefaultValue("")]
-        public int TabID
-        {
-            get
-            {
-                return _TabID;
-            }
+        public int TabID { get; set; }
 
-            set
-            {
-                _TabID = value;
-            }
-        }
         [Bindable(true), Category("Appearance"), DefaultValue("")]
-        public string Text
-        {
-            get
-            {
-                return _Text;
-            }
+        public string Text { get; set; }
 
-            set
-            {
-                _Text = value;
-            }
-        }
         [Bindable(true), Category("Appearance"), DefaultValue("")]
-        public string View
-        {
-            get
-            {
-                return _View;
-            }
+        public string View { get; set; }
 
-            set
-            {
-                _View = value;
-            }
-        }
         [Bindable(true), Category("Appearance"), DefaultValue("Page:")]
-        public string PageText
-        {
-            get
-            {
-                return _PageText;
-            }
+        public string PageText { get; set; }
 
-            set
-            {
-                _PageText = value;
-            }
-        }
         [Bindable(true), Category("Appearance"), DefaultValue("of")]
-        public string OfText
-        {
-            get
-            {
-                return _OfText;
-            }
+        public string OfText { get; set; }
 
-            set
-            {
-                _OfText = value;
-            }
-        }
         [Bindable(true), Category("Appearance"), DefaultValue("")]
-        public int CurrentPage
-        {
-            get
-            {
-                return _CurrentPage;
-            }
+        public int CurrentPage { get; set; }
 
-            set
-            {
-                _CurrentPage = value;
-            }
-        }
         [Bindable(true), Category("Appearance"), DefaultValue("")]
-        public string[] Params
-        {
-            get
-            {
-                return _Params;
-            }
+        public string[] Params { get; set; }
 
-            set
-            {
-                _Params = value;
-            }
-        }
         [Bindable(true), Category("Appearance"), DefaultValue("")]
-        public string Optional2
-        {
-            get
-            {
-                return _Optional2;
-            }
+        public string Optional2 { get; set; }
 
-            set
-            {
-                _Optional2 = value;
-            }
-        }
         public string ClientScript
         {
             get
             {
-                return _ClientScript;
-            }
-            set
-            {
-                _ClientScript = value;
+                return "afPage({0});";
             }
         }
 
-        protected override void Render(System.Web.UI.HtmlTextWriter output)
+
+
+        protected override void OnInit(EventArgs e)
         {
-            _Text = RenderPager();
-            output.Write(_Text);
+            base.OnInit(e);
+
+            EnableViewState = false;
         }
+
+        protected override void Render(HtmlTextWriter output)
+        {
+            Text = RenderPager();
+            output.Write(Text);
+        }
+
         public string RenderPager()
         {
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            int iMaxPage = CurrentPage + 2;
-            if (iMaxPage > PageCount)
-            {
-                iMaxPage = PageCount;
-            }
-            int i = 1;
-            int iStart = 1;
-            if (HttpContext.Current.Request.Browser.IsMobileDevice)
-            {
-                PageMode = Mode.Links;
-            }
+            var sb = new StringBuilder();
+
             PageMode = Mode.Links;
+
             if (!(string.IsNullOrEmpty(BaseURL)))
             {
                 if (!(BaseURL.EndsWith("/")))
@@ -252,18 +95,18 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     BaseURL = "/" + BaseURL;
                 }
             }
-            string qs = string.Empty;
+
+            var qs = string.Empty;
             if (HttpContext.Current.Request.QueryString["ts"] != null)
             {
                 qs = "?ts=" + HttpContext.Current.Request.QueryString["ts"];
             }
-            //Dim iEnd As Integer
+
             if (PageCount > 1)
             {
-
                 sb.Append("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"afpager\"><tr>");
                 sb.Append("<td class=\"af_pager\">" + PageText + " " + CurrentPage + " " + OfText + " " + PageCount + "</td>");
-                if (!(CurrentPage == 1))
+                if (CurrentPage != 1)
                 {
                     if (PageMode == Mode.Links)
                     {
@@ -277,20 +120,17 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                             sb.Append("<td class=\"af_pagernumber\" style=\"text-align:center;\"><a href=\"" + BaseURL + qs + "\" title=\"First Page\"> &lt;&lt; </a></td>");
                             sb.Append("<td class=\"af_pagernumber\" style=\"text-align:center;\"><a href=\"" + BaseURL + (CurrentPage - 1) + "/" + qs + "\" title=\"Previous Page\"> &lt; </a></td>");
                         }
-
-
                     }
                     else
                     {
-                        sb.Append("<td class=\"af_pagernumber\" style=\"text-align:center;\"><a href=\"javascript:" + string.Format(ClientScript, "1").ToString() + "\" title=\"First Page\"> &lt;&lt; </a></td>");
-                        sb.Append("<td class=\"af_pagernumber\" style=\"text-align:center;\"><a href=\"javascript:" + string.Format(ClientScript, CurrentPage - 1).ToString() + "\" title=\"Previous Page\"> &lt; </a></td>");
-
+                        sb.Append("<td class=\"af_pagernumber\" style=\"text-align:center;\"><a href=\"javascript:" + string.Format(ClientScript, "1") + "\" title=\"First Page\"> &lt;&lt; </a></td>");
+                        sb.Append("<td class=\"af_pagernumber\" style=\"text-align:center;\"><a href=\"javascript:" + string.Format(ClientScript, CurrentPage - 1) + "\" title=\"Previous Page\"> &lt; </a></td>");
                     }
-
-
-                    //Else
-                    //    iMaxPage = iMaxPage + 1
                 }
+
+                int iStart;
+                int iMaxPage;
+
                 if (CurrentPage <= 3)
                 {
                     iStart = 1;
@@ -306,14 +146,18 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 {
                     iMaxPage = PageCount;
                 }
+
                 if (iMaxPage == PageCount)
                 {
                     iStart = iMaxPage - 4;
                 }
+
                 if (iStart <= 0)
                 {
                     iStart = 1;
                 }
+
+                int i;
                 for (i = iStart; i <= iMaxPage; i++)
                 {
                     if (i == CurrentPage)
@@ -330,31 +174,25 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                             }
                             else
                             {
-
                                 if (i > 1)
-                                {
                                     sb.Append("<td class=\"af_pagernumber\" style=\"text-align:center;\"><a href=\"" + BaseURL + i + "/" + qs + "\">" + i + "</a></td>");
-                                }
                                 else
-                                {
                                     sb.Append("<td class=\"af_pagernumber\" style=\"text-align:center;\"><a href=\"" + BaseURL + qs + "\">" + i + "</a></td>");
-                                }
-
                             }
-
                         }
                         else
                         {
-                            sb.Append("<td class=\"af_pagernumber\" style=\"text-align:center;\"><a href=\"javascript:" + string.Format(ClientScript, i).ToString() + "\">" + i + "</a></td>");
+                            sb.Append("<td class=\"af_pagernumber\" style=\"text-align:center;\"><a href=\"javascript:" + string.Format(ClientScript, i) + "\">" + i + "</a></td>");
                         }
 
                     }
+
                     if (i == PageCount)
-                    {
                         break;
-                    }
+
                 }
-                if (!(CurrentPage == PageCount))
+
+                if (CurrentPage != PageCount)
                 {
                     if (PageMode == Mode.Links)
                     {
@@ -368,97 +206,93 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                             sb.Append("<td class=\"af_pagernumber\" style=\"text-align:center;\"><a href=\"" + BaseURL + (CurrentPage + 1) + "/" + qs + "\" title=\"Next Page\"> &gt;</a></td>");
                             sb.Append("<td class=\"af_pagernumber\" style=\"text-align:center;\"><a href=\"" + BaseURL + PageCount + "/" + qs + "\" title=\"Last Page\"> &gt;&gt;</a></td>");
                         }
-
                     }
                     else
                     {
-                        sb.Append("<td class=\"af_pagernumber\" style=\"text-align:center;\"><a href=\"javascript:" + string.Format(ClientScript, CurrentPage + 1).ToString() + "\" title=\"Next Page\"> &gt;</a></td>");
-                        sb.Append("<td class=\"af_pagernumber\" style=\"text-align:center;\"><a href=\"javascript:" + string.Format(ClientScript, PageCount).ToString() + "\"> &gt;&gt;</a></td>");
+                        sb.Append("<td class=\"af_pagernumber\" style=\"text-align:center;\"><a href=\"javascript:" + string.Format(ClientScript, CurrentPage + 1) + "\" title=\"Next Page\"> &gt;</a></td>");
+                        sb.Append("<td class=\"af_pagernumber\" style=\"text-align:center;\"><a href=\"javascript:" + string.Format(ClientScript, PageCount) + "\"> &gt;&gt;</a></td>");
                     }
-
                 }
+
                 sb.Append("</tr></table>");
             }
+
             return sb.ToString();
         }
-        private string[] BuildParams(string View, int ForumID, int Page, int PostID = 0)
+
+        private string[] BuildParams(string view, int forumID, int page, int postID = 0)
         {
-            string[] Params2 = new string[0];
-            if (View.ToLowerInvariant() == Views.Topics.ToLowerInvariant())
+            string[] params2;
+            if (view.ToLowerInvariant() == Views.Topics.ToLowerInvariant())
             {
-                if (Page > 1)
+                if (page > 1)
                 {
-                    Params2 = new string[] { ParamKeys.ViewType + "=" + View, ParamKeys.ForumId + "=" + ForumID, ParamKeys.PageId + "=" + Page };
+                    params2 = new[] { ParamKeys.ViewType + "=" + view, ParamKeys.ForumId + "=" + forumID, ParamKeys.PageId + "=" + page };
                 }
                 else
                 {
-                    Params2 = new string[] { ParamKeys.ViewType + "=" + View, ParamKeys.ForumId + "=" + ForumID };
+                    params2 = new[] { ParamKeys.ViewType + "=" + view, ParamKeys.ForumId + "=" + forumID };
                 }
 
-                if (UseShortUrls && Page > 1)
+                if (UseShortUrls && page > 1)
                 {
-                    Params2 = new string[] { ParamKeys.ForumId + "=" + ForumID, ParamKeys.PageId + "=" + Page };
+                    params2 = new[] { ParamKeys.ForumId + "=" + forumID, ParamKeys.PageId + "=" + page };
                 }
-                else if (UseShortUrls && Page == 1)
+                else if (UseShortUrls && page == 1)
                 {
-                    Params2 = new string[] { ParamKeys.ForumId + "=" + ForumID };
+                    params2 = new[] { ParamKeys.ForumId + "=" + forumID };
                 }
                 if (Params != null)
                 {
-                    int intLength = Params2.Length;
-                    Array.Resize(ref Params2, (intLength + Params.Length));
-                    Params.CopyTo(Params2, intLength);
+                    var intLength = params2.Length;
+                    Array.Resize(ref params2, (intLength + Params.Length));
+                    Params.CopyTo(params2, intLength);
                 }
 
             }
-            else if (View.ToLowerInvariant() == Views.Topic.ToLowerInvariant())
+            else if (view.ToLowerInvariant() == Views.Topic.ToLowerInvariant())
             {
-                if (Page > 1)
+                if (page > 1)
                 {
-                    Params2 = new string[] { ParamKeys.ViewType + "=" + View, ParamKeys.ForumId + "=" + ForumID, ParamKeys.TopicId + "=" + PostID, ParamKeys.PageId + "=" + Page };
+                    params2 = new[] { ParamKeys.ViewType + "=" + view, ParamKeys.ForumId + "=" + forumID, ParamKeys.TopicId + "=" + postID, ParamKeys.PageId + "=" + page };
                 }
                 else
                 {
-                    Params2 = new string[] { ParamKeys.ViewType + "=" + View, ParamKeys.ForumId + "=" + ForumID, ParamKeys.TopicId + "=" + PostID };
+                    params2 = new[] { ParamKeys.ViewType + "=" + view, ParamKeys.ForumId + "=" + forumID, ParamKeys.TopicId + "=" + postID };
                 }
 
-                if (UseShortUrls && Page > 1)
+                if (UseShortUrls && page > 1)
                 {
-                    Params2 = new string[] { ParamKeys.TopicId + "=" + PostID, ParamKeys.PageId + "=" + Page };
+                    params2 = new[] { ParamKeys.TopicId + "=" + postID, ParamKeys.PageId + "=" + page };
                 }
-                else if (UseShortUrls && Page == 1)
+                else if (UseShortUrls && page == 1)
                 {
-                    Params2 = new string[] { ParamKeys.TopicId + "=" + PostID };
+                    params2 = new[] { ParamKeys.TopicId + "=" + postID };
                 }
                 if (Params != null)
                 {
-                    int intLength = Params2.Length;
-                    Array.Resize(ref Params2, (intLength + Params.Length));
-                    Params.CopyTo(Params2, intLength);
+                    var intLength = params2.Length;
+                    Array.Resize(ref params2, (intLength + Params.Length));
+                    Params.CopyTo(params2, intLength);
                 }
             }
             else
             {
                 if (Params != null)
                 {
-                    Params2 = new string[] { ParamKeys.ViewType + "=" + View, ParamKeys.PageId + "=" + Page };
-                    int intLength = Params2.Length;
-                    Array.Resize(ref Params2, (intLength + Params.Length));
-                    Params.CopyTo(Params2, intLength);
+                    params2 = new[] { ParamKeys.ViewType + "=" + view, ParamKeys.PageId + "=" + page };
+                    var intLength = params2.Length;
+                    Array.Resize(ref params2, (intLength + Params.Length));
+                    Params.CopyTo(params2, intLength);
                 }
                 else
                 {
-                    Params2 = new string[] { ParamKeys.ViewType + "=" + View, ParamKeys.PageId + "=" + Page };
+                    params2 = new[] { ParamKeys.ViewType + "=" + view, ParamKeys.PageId + "=" + page };
                 }
             }
-            return Params2;
+            return params2;
         }
 
-        protected override void OnInit(EventArgs e)
-		{
-			base.OnInit(e);
 
-            this.EnableViewState = false;
-        }
     }
 }

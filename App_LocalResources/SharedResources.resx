@@ -784,16 +784,16 @@
     <value>Search Area</value>
   </data>
   <data name="[RESX:SearchByUser].Text" xml:space="preserve">
-    <value>Search By User</value>
+    <value>Username:</value>
   </data>
   <data name="[RESX:SearchInForums].Text" xml:space="preserve">
-    <value>Search in Forum(s)</value>
+    <value>Search in Forum(s):</value>
   </data>
   <data name="[RESX:SearchMatch].Text" xml:space="preserve">
     <value>Criteria Options</value>
   </data>
   <data name="[RESX:SearchTimeFrame].Text" xml:space="preserve">
-    <value>Search Topics From</value>
+    <value>Search Posts From:</value>
   </data>
   <data name="[RESX:ERROR:Search].Text" xml:space="preserve">
     <value>The search process has encountered an error.  Please contact the site administrator.</value>
@@ -802,13 +802,13 @@
     <value>Error</value>
   </data>
   <data name="[RESX:SearchNoResults].Text" xml:space="preserve">
-    <value>No topics were found using the criteria you provided.</value>
+    <value>No results were found using the criteria you provided.</value>
   </data>
   <data name="[RESX:SearchForumsAll].Text" xml:space="preserve">
     <value>Included Forums: ALL</value>
   </data>
-  <data name="[RESX:SearchForumsFilter].Text" xml:space="preserve">
-    <value>Included Forums: Filtered</value>
+  <data name="[RESX:SearchResultType].Text" xml:space="preserve">
+    <value>Show Results as:</value>
   </data>
   <data name="[RESX:TopicSortNewest].Text" xml:space="preserve">
     <value>Most Recent First</value>
@@ -1458,5 +1458,86 @@ From,
   </data>
   <data name="[RESX:Signature].Help" xml:space="preserve">
     <value>Please enter a signature that you would like added included with your posts.</value>
+  </data>
+  <data name="[RESX:SearchAdvanced].Text" xml:space="preserve">
+    <value>Advanced Search</value>
+  </data>
+  <data name="[RESX:SearchByPosts].Text" xml:space="preserve">
+    <value>Posts</value>
+  </data>
+  <data name="[RESX:SearchByTopics].Text" xml:space="preserve">
+    <value>Topics</value>
+  </data>
+  <data name="[RESX:SearchKeywords].Text" xml:space="preserve">
+    <value>Keyword(s):</value>
+  </data>
+  <data name="[RESX:Reset].Text" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="[RESX:SearchAllForums].Text" xml:space="preserve">
+    <value>Search Forums</value>
+  </data>
+  <data name="[RESX:SearchByTag].Text" xml:space="preserve">
+    <value>Tags:</value>
+  </data>
+  <data name="[RESX:SearchOptionsAdditional].Text" xml:space="preserve">
+    <value>Additional Options</value>
+  </data>
+  <data name="[RESX:SearchOptions].Text" xml:space="preserve">
+    <value>Search for Posts</value>
+  </data>
+  <data name="[RESX:SearchSingleForum].Text" xml:space="preserve">
+    <value>Search Forum</value>
+  </data>
+  <data name="[RESX:SearchAge].Text" xml:space="preserve">
+    <value> - Generated {0:0.0} minutes ago.</value>
+  </data>
+  <data name="[RESX:SearchDuration].Text" xml:space="preserve">
+    <value>Search took {0:0.00} seconds</value>
+  </data>
+  <data name="[RESX:SearchRecords].Text" xml:space="preserve">
+    <value>Results {0} - {1} of {2}</value>
+  </data>
+  <data name="[RESX:SearchSort].Text" xml:space="preserve">
+    <value>Sort Results by:</value>
+  </data>
+  <data name="[RESX:SearchTitle].Text" xml:space="preserve">
+    <value>Search Results</value>
+  </data>
+  <data name="SearchBy.Text" xml:space="preserve">
+    <value>By:</value>
+  </data>
+  <data name="SearchForum.Text" xml:space="preserve">
+    <value>Forum:</value>
+  </data>
+  <data name="SearchLastReply.Text" xml:space="preserve">
+    <value>Last Reply:</value>
+  </data>
+  <data name="SearchModify.Text" xml:space="preserve">
+    <value>Modify Search</value>
+  </data>
+  <data name="SearchPosted.Text" xml:space="preserve">
+    <value>Posted:</value>
+  </data>
+  <data name="SearchPostTime.Text" xml:space="preserve">
+    <value>{0} @ {1}</value>
+  </data>
+  <data name="SearchReplies.Text" xml:space="preserve">
+    <value>Replies:</value>
+  </data>
+  <data name="SearchTopic.Text" xml:space="preserve">
+    <value>Topic:</value>
+  </data>
+  <data name="SearchViews.Text" xml:space="preserve">
+    <value>Views:</value>
+  </data>
+  <data name="Started.Text" xml:space="preserve">
+    <value>Started</value>
+  </data>
+  <data name="Today.Text" xml:space="preserve">
+    <value>Today</value>
+  </data>
+  <data name="Yesterday.Text" xml:space="preserve">
+    <value>Yesterday</value>
   </data>
 </root>

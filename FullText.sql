@@ -1,10 +1,18 @@
-﻿if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}{objectQualifier}activeforums_Search_ManageFullText') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+﻿
+if exists (select * from {databaseOwner}{objectQualifier}sysobjects where id = object_id(N'{databaseOwner}{objectQualifier}activeforums_Search_ManageFullText') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
 drop procedure {databaseOwner}{objectQualifier}activeforums_Search_ManageFullText
 GO
-if exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}{objectQualifier}activeforums_Search_FullText') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+if exists (select * from {databaseOwner}{objectQualifier}sysobjects where id = object_id(N'{databaseOwner}{objectQualifier}activeforums_Search_FullText') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
 drop procedure {databaseOwner}{objectQualifier}activeforums_Search_FullText
 GO
-CREATE PROCEDURE {databaseOwner}{objectQualifier}activeforums_Search_ManageFullText
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Search_ManageFullText]
 @Enable bit
 AS
 DECLARE @FullTextEnabled bit
@@ -26,15 +34,18 @@ If @Enable = 1
 			IF OBJECTPROPERTY(object_id('{databaseOwner}{objectQualifier}activeforums_Content'),'TableHasActiveFulltextIndex') = 0
 				BEGIN
 					
-					IF  NOT EXISTS (SELECT * FROM sysfulltextcatalogs ftc WHERE ftc.name = N'{objectQualifier}activeforums_Catalog')
+					IF  NOT EXISTS (SELECT * FROM sysfulltextcatalogs ftc WHERE ftc.name = N'activeforums_Catalog')
 						BEGIN
-							exec sp_fulltext_catalog '{objectQualifier}activeforums_Catalog', 'create'
+							exec sp_fulltext_catalog 'activeforums_Catalog', 'create'
 						END					
-					exec sp_fulltext_table N'{databaseOwner}{objectQualifier}activeforums_Content', N'create', N'{objectQualifier}activeforums_Catalog', N'PK_{objectQualifier}activeforums_Content'
+					exec sp_fulltext_table N'{databaseOwner}{objectQualifier}activeforums_Content', N'create', N'activeforums_Catalog', N'PK_activeforums_Content'
 					exec sp_fulltext_column N'{databaseOwner}{objectQualifier}activeforums_Content', N'Subject', N'add', 1033  
 					exec sp_fulltext_column N'{databaseOwner}{objectQualifier}activeforums_Content', N'Body', N'add', 1033  
 					exec sp_fulltext_table N'{databaseOwner}{objectQualifier}activeforums_Content', N'activate'
-					exec sp_fulltext_catalog '{objectQualifier}activeforums_Catalog', 'start_full'
+					exec sp_fulltext_table '{databaseOwner}{objectQualifier}activeforums_Content', 'start_change_tracking'
+					exec sp_fulltext_table '{databaseOwner}{objectQualifier}activeforums_Content', 'start_background_updateindex'
+					--exec sp_fulltext_catalog 'activeforums_Catalog', 'start_full'
+					
 				END
 		END
 	SELECT @FullTextEnabled
@@ -48,110 +59,199 @@ ELSE
 		SELECT @Enable
 	END
 GO
-CREATE PROCEDURE {databaseOwner}{objectQualifier}activeforums_Search_FullText
+
+
+
+
+
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Search_FullText]
+
 	@PortalId int,
 	@ModuleId int,
 	@UserId int,
-	@ForumId int,
-	@IsSuperUser bit,
-	@RowIndex int = 0,
-	@MaxRows int = 20,
-	@SearchString nvarchar(200), 
-	@MatchType int = 0,
-	@SearchField int = 0,--0=Subject&Body, 1= Subject, 2=Body
+	@SearchString nvarchar(200), -- String of 1 or more search terms, all separated by spaces
+	@MatchType int = 0, -- 0 = match any, 1 = match all, 2 = exact match of entire expression only
+	@SearchField int = 0, -- 0 = Subject & Body, 1 = Subject, 2 =Body
 	@Timespan int = 0,
 	@AuthorId int = 0,
-	@Author nvarchar(200),
-	@Forums varchar(8000),
-	@Tags nvarchar(400),
-	@ForumsAllowed nvarchar(1000)
-as
-DECLARE @BodyRank int
-DECLARE @SubjectRank int
-SET @BodyRank = 1
-SET @SubjectRank = 1
-If @SearchField = 1
-	SET @BodyRank = NULL
-If @SearchField = 2
-	SET @SubjectRank = NULL
-IF @AuthorId = 0 AND @Author != ''
+	@Forums nvarchar(max), -- Intersection of forums allowed and forums requested
+	@Tags nvarchar(400), -- Comma delmited tags
+	@ResultType int = 0, -- 0 = topics, 1 = posts
+	@Sort int = 0 -- 0 = relevance then post date (last), 1 = post date (last)
+
+AS
+
+-- Temp table to store our full text search results
+
+
+-- Parse out the Words
+
+DECLARE @Word nvarchar(200)
+DECLARE @WordTable table (Word nvarchar(200) NOT NULL)
+DECLARE @WordCount int = 0
+
+IF @SearchString IS NOT NULL AND @SearchString <> ''
+BEGIN
+	IF(@MatchType = 2)
+		INSERT INTO @WordTable VALUES(@SearchString) 
+	ELSE
+		INSERT INTO @WordTable
+		SELECT string
+		FROM {databaseOwner}{objectQualifier}activeforums_Functions_SplitText(@SearchString, ',')
+	
+	SET @WordCount = (SELECT COUNT(*) from @WordTable)
+END
+
+-- If we dont' have any words, no point in doing the search
+IF @WordCount = 0
+BEGIN
+	DECLARE @emptyResults TABLE (rn int, tid int, cid int, mcpt decimal(15,4))
+	SELECT * FROM @emptyResults
+	RETURN
+END
+
+
+-- Parse out the Tags
+
+DECLARE @Tag nvarchar(400)
+DECLARE @TagTable table (Tag nvarchar(400) NOT NULL)
+DECLARE @TagCount int = 0
+
+IF @Tags IS NOT NULL AND @Tags <> ''
+BEGIN
+	INSERT INTO @TagTable
+	SELECT string
+	FROM {databaseOwner}{objectQualifier}activeforums_Functions_SplitText(@Tags, ',')
+	
+	SET @TagCount = (SELECT COUNT(*) from @TagTable)
+END
+
+-- Build our contains statement
+
+DECLARE @Contains nvarchar(4000) = ''
+DECLARE @Delimiter nvarchar(5) = ' OR ';
+DECLARE @CurrentWord nvarchar(200) = NULL
+
+IF @MatchType = 1
+	SET @Delimiter = ' AND '
+
+DECLARE WordCursor CURSOR FOR SELECT Word FROM @WordTable
+OPEN WordCursor
+	FETCH NEXT FROM WordCursor INTO @CurrentWord
+	WHILE @@FETCH_STATUS = 0
 	BEGIN
-		DECLARE @DisplayOpt varchar(50)
-		SELECT @DisplayOpt = SettingValue FROM {databaseOwner}{objectQualifier}activeforums_Settings WHERE ModuleId = @ModuleId AND SettingName = 'USERNAMEDISPLAY'
-		If @DisplayOpt = 'Fullname' 
-			SET @DisplayOpt = 'FirstName  + '' '' + LastName '
-		DECLARE @sql nvarchar(2000)
-		SET @sql = N'SELECT @RET = UserId FROM {databaseOwner}{objectQualifier}Users WHERE ' + @DisplayOpt + ' = ''' + @Author + ''''
-		print @sql
-		exec sp_executesql @stmt = @sql, @params = N'@RET as INT OUTPUT', @ret = @AuthorId OUTPUT;
-		if @AuthorId = 0 SET @AuthorId = -1
+		IF @Contains <> ''
+			SET @Contains = @Contains + @Delimiter
+		
+		SET @Contains = @Contains + '"' + @CurrentWord + '"'	
+			
+		FETCH NEXT FROM WordCursor INTO @CurrentWord
 	END
-DECLARE @RowCount int
---DECLARE @tmpResults TABLE (resultid int identity(1,1),topicid int, matchpct decimal(15,4))
-DECLARE @tmpResults TABLE (resultid int identity(1,1),topicid int,contentid int, matchpct decimal(15,4))
+CLOSE WordCursor
+DEALLOCATE WordCursor
+
+
+-- Grab our full text results
+
+DECLARE @tmpResults TABLE (tid int, cid int, mcpt decimal(15,4))	
+
 IF @SearchField = 0
-	BEGIN
-INSERT INTO @tmpResults(topicid,contentid, matchpct)			
-	Select c.topicid,c.contentid, b.[RANK] as MatchPct
-			FROM {databaseOwner}{objectQualifier}vw_activeforums_TopicView C INNER JOIN
-			{databaseOwner}{objectQualifier}activeforums_Functions_Split(@ForumsAllowed,';') as fs ON fs.id = c.ForumId INNER JOIN
-			FREETEXTTABLE({databaseOwner}{objectQualifier}activeforums_Content, (Body,[Subject]), @SearchString,200) as B ON C.ContentId = B.[KEY]
-			WHERE c.ModuleId = @ModuleId
-			
-	END
-IF @SearchField = 1
-BEGIN
-INSERT INTO @tmpResults(topicid,contentid, matchpct)			
-	Select c.topicid,c.contentid, b.[RANK] as MatchPct
-			FROM {databaseOwner}{objectQualifier}vw_activeforums_TopicView C INNER JOIN
-			{databaseOwner}{objectQualifier}activeforums_Functions_Split(@ForumsAllowed,';') as fs ON fs.id = c.ForumId INNER JOIN
-			FREETEXTTABLE({databaseOwner}{objectQualifier}activeforums_Content, ([Subject]), @SearchString,200) as B ON C.ContentId = B.[KEY]
-			WHERE c.ModuleId = @ModuleId
 
+	INSERT INTO @tmpResults			
+		SELECT c.topicid ,c.contentid, b.[RANK] as MatchPct
+		FROM {databaseOwner}{objectQualifier}vw_activeforums_TopicView C INNER JOIN
+			{databaseOwner}{objectQualifier}activeforums_Functions_Split(@Forums,':') as fs ON fs.id = c.ForumId INNER JOIN
+			CONTAINSTABLE({databaseOwner}{objectQualifier}activeforums_Content, (Body,[Subject]), @Contains, 1000) as B ON C.ContentId = B.[KEY]
+		WHERE c.ModuleId = @ModuleId			
 
-			
-	END
+ELSE IF @SearchField = 1
+
+	INSERT INTO @tmpResults		
+		SELECT c.topicid,c.contentid, b.[RANK] as MatchPct
+		FROM {databaseOwner}{objectQualifier}vw_activeforums_TopicView C INNER JOIN
+			{databaseOwner}{objectQualifier}activeforums_Functions_Split(@Forums,':') as fs ON fs.id = c.ForumId INNER JOIN
+			CONTAINSTABLE({databaseOwner}{objectQualifier}activeforums_Content, ([Subject]), @Contains, 1000) as B ON C.ContentId = B.[KEY]
+		WHERE c.ModuleId = @ModuleId		
+
 IF @SearchField = 2
+
+	INSERT INTO @tmpResults
+		SELECT c.topicid,c.contentid, b.[RANK] as MatchPct
+		FROM {databaseOwner}{objectQualifier}vw_activeforums_TopicView C INNER JOIN
+			{databaseOwner}{objectQualifier}activeforums_Functions_Split(@Forums,':') as fs ON fs.id = c.ForumId INNER JOIN
+			CONTAINSTABLE({databaseOwner}{objectQualifier}activeforums_Content, (Body), @Contains, 1000) as B ON C.ContentId = B.[KEY]
+		WHERE c.ModuleId = @ModuleId
+
+
+IF @ResultType = 1
 BEGIN
-			INSERT INTO @tmpResults(topicid,contentid, matchpct)
-	Select c.topicid,c.contentid, b.[RANK] as MatchPct
-			FROM {databaseOwner}{objectQualifier}vw_activeforums_TopicView C INNER JOIN
-			{databaseOwner}{objectQualifier}activeforums_Functions_Split(@ForumsAllowed,';') as fs ON fs.id = c.ForumId INNER JOIN
-			FREETEXTTABLE({databaseOwner}{objectQualifier}activeforums_Content, (Body), @SearchString,200) as B ON C.ContentId = B.[KEY]
-			WHERE c.ModuleId = @ModuleId
+
+	-- Get our main result set
+	SELECT TOP 1000 
+		ROW_NUMBER() OVER (ORDER BY CASE @Sort WHEN 1 THEN DateCreated ELSE hits.mcpt END DESC, DateCreated DESC) as rn, 
+		TopicId as tid, 
+		ContentId as cid, 
+		hits.mcpt as mcpt
+	FROM (
+			SELECT  t.topicid,
+				 t.contentid, 
+				 c.DateCreated	
+			FROM {databaseOwner}{objectQualifier}vw_activeforums_TopicView AS T INNER JOIN 
+				{databaseOwner}{objectQualifier}activeforums_Forums as F ON T.ForumId = F.ForumId INNER JOIN
+				{databaseOwner}{objectQualifier}activeforums_ForumTopics FT on T.TopicId = FT.TopicId INNER JOIN
+				{databaseOwner}{objectQualifier}activeforums_Functions_Split(@Forums,':') as fs ON fs.id = f.ForumId INNER JOIN
+				{databaseOwner}{objectQualifier}activeforums_Content AS C ON T.ContentId = C.ContentId
+			WHERE T.PortalId = @PortalId AND T.ModuleId = @ModuleId AND 
+				(@TimeSpan = 0 OR DATEDIFF(hh,c.DateCreated,GetDate()) <= @TimeSpan) AND
+				(@AuthorId = 0 OR T.AuthorId = @AuthorId) AND
+				(@TagCount = 0 OR  T.TopicId IN (
+					SELECT TopicId FROM {databaseOwner}{objectQualifier}activeforums_Tags INNER JOIN
+						{databaseOwner}{objectQualifier}activeforums_Topics_Tags ON {databaseOwner}{objectQualifier}activeforums_Tags.TagId = {databaseOwner}{objectQualifier}activeforums_Topics_Tags.TagId INNER JOIN
+						@TagTable TT ON TT.Tag = {databaseOwner}{objectQualifier}activeforums_Tags.TagName)) 
+		) AS results INNER JOIN
+			@tmpResults as hits ON results.contentid = hits.cid
+
+	RETURN	
+END
+
+IF @ResultType = 0
+BEGIN
+
+	-- Get our main result set
+	SELECT TOP 1000 
+		ROW_NUMBER() OVER (ORDER BY CASE @Sort WHEN 1 THEN MAX(LastReplyDate) ELSE MAX(hits.mcpt) END DESC, MAX(LastReplyDate) DESC) as rn, 
+		TopicId as tid, 
+		MAX(ContentId) as cid, 
+		MAX(hits.mcpt) as mcpt
+	FROM (
+			SELECT  t.topicid, 
+				t.contentid, 
+				CASE WHEN rc.DateCreated IS NULL THEN c.DateCreated ELSE rc.DateCreated END  as LastReplyDate		
+			FROM {databaseOwner}{objectQualifier}vw_activeforums_TopicView AS T INNER JOIN 
+				{databaseOwner}{objectQualifier}activeforums_Forums as F ON T.ForumId = F.ForumId INNER JOIN
+				{databaseOwner}{objectQualifier}activeforums_ForumTopics FT on T.TopicId = FT.TopicId INNER JOIN
+				{databaseOwner}{objectQualifier}activeforums_Functions_Split(@Forums,':') as fs ON fs.id = f.ForumId INNER JOIN
+				{databaseOwner}{objectQualifier}activeforums_Content AS C ON T.ContentId = C.ContentId  LEFT OUTER JOIN -- Left outer joins to get last reply date
+				{databaseOwner}{objectQualifier}activeforums_Replies as R on FT.LastReplyId = r.ReplyId LEFT OUTER JOIN
+				{databaseOwner}{objectQualifier}activeforums_Content as RC on R.ContentId = rc.ContentId 
+			WHERE T.PortalId = @PortalId AND T.ModuleId = @ModuleId AND 
+			(@TimeSpan = 0 OR DATEDIFF(hh,CASE WHEN rc.DateCreated IS NULL THEN c.DateCreated ELSE rc.DateCreated END,GetDate()) <= @TimeSpan) AND
+			(@AuthorId = 0 OR T.AuthorId = @AuthorId) AND
+			(@TagCount = 0 OR  T.TopicId IN (
+				SELECT TopicId FROM {databaseOwner}{objectQualifier}activeforums_Tags INNER JOIN
+					{databaseOwner}{objectQualifier}activeforums_Topics_Tags ON {databaseOwner}{objectQualifier}activeforums_Tags.TagId = {databaseOwner}{objectQualifier}activeforums_Topics_Tags.TagId INNER JOIN
+					@TagTable TT ON TT.Tag = {databaseOwner}{objectQualifier}activeforums_Tags.TagName))
+		) AS results INNER JOIN
+			@tmpResults as hits ON results.contentid = hits.cid
+	GROUP BY TopicID
+
+	RETURN	
+END
 
 
-			
-	END
+GO
 
---declare @topics TABLE (topicid int unique, matchpct decimal(15,4), rownum int)
-declare @topics TABLE (topicid int,contentid int, matchpct decimal(15,4), rownum int)
-INSERT INTO @topics(topicid,contentid, matchpct,rownum)
-		SELECT hits.TopicId,hits.ContentId, hits.MatchPct, ROW_NUMBER() OVER (ORDER BY DateCreated DESC, hits.MatchPct DESC) as rownum FROM
-				(
-					SELECT  t.topicid,t.datecreated,t.contentid			
-					FROM         {databaseOwner}{objectQualifier}vw_activeforums_TopicView AS T INNER JOIN
-					{databaseOwner}{objectQualifier}activeforums_Content AS C ON T.ContentId = C.ContentId 
-					WHERE 
-						
-						(@TimeSpan = 0 OR DATEDIFF(hh,T.DateCreated,GetDate()) <= @TimeSpan) AND
-						(@AuthorId = 0 OR T.AuthorId = @AuthorId) AND
-						(@ForumId <= 0 OR T.ForumId =  @ForumId) AND
-						(@Tags = '' OR (@Tags <> '' AND T.TopicId IN (
-														SELECT TopicId FROM {databaseOwner}{objectQualifier}activeforums_Tags INNER JOIN
-														{databaseOwner}{objectQualifier}activeforums_Topics_Tags ON {databaseOwner}{objectQualifier}activeforums_Tags.TagId = {databaseOwner}{objectQualifier}activeforums_Topics_Tags.TagId
-														WHERE	{databaseOwner}{objectQualifier}activeforums_Tags.TagName = @Tags))) AND
-						(@SearchString <> '' OR @Tags <> '') AND
-						
-						(@Forums = '' OR T.ForumId IN (SELECT id FROM {databaseOwner}{objectQualifier}activeforums_Functions_Split(@Forums,':')))
-			) as results INNER JOIN @tmpResults as hits ON results.contentid = hits.contentid
-SELECT Count(*) from @topics
-SELECT T.PortalId, T.ModuleId, T.ForumId, T.ForumName, T.TopicId, T.ReplyId, IsNull(T.Subject,'') as Subject,
-	 T.Summary, T.AuthorId, IsNull(T.AuthorName,'') as AuthorName, IsNull(T.Username,'') as UserName, IsNull(T.FirstName,'') as FirstName, 
-		IsNull(T.LastName,'') as LastName, IsNull(T.DisplayName,'') as DisplayName, T.DateCreated, 
-                      T.DateUpdated, T.ContentId, TopicIcon, StatusId, TopicType, IsPinned, IsLocked, ViewCount, ReplyCount,IsNull(c.Body,'') as Body FROM         
-			{databaseOwner}{objectQualifier}vw_activeforums_TopicView AS T INNER JOIN
-					@topics AS r ON T.contentid = r.contentid INNER JOIN
-					{databaseOwner}{objectQualifier}activeforums_Content as c ON c.ContentId = t.ContentId
-WHERE rownum > @RowIndex AND rownum <= (@RowIndex + @MaxRows)
-ORDER BY  T.DateCreated DESC,MatchPct DESC
+
+
+

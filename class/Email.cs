@@ -203,9 +203,9 @@ namespace DotNetNuke.Modules.ActiveForums
 			                     SmtpAuthentication = Convert.ToString(_portalSettings.HostSettings["SMTPAuthentication"])
 			                 };
 
-#if SKU_ENTERPRISE
+//#if SKU_ENTERPRISE
 			oEmail.UseQueue = MainSettings.MailQueue;
-#endif
+//#endif
 			var objThread = new System.Threading.Thread(oEmail.Send);
 			objThread.Start();
 
@@ -440,7 +440,7 @@ namespace DotNetNuke.Modules.ActiveForums
 				string strDistributionList = "";
 				Subject = Subject.Replace("&#91;", "[");
 				Subject = Subject.Replace("&#93;", "]");
-#if SKU_ENTERPRISE
+//#if SKU_ENTERPRISE
 				if (UseQueue)
 				{
 					foreach (SubscriptionInfo si in Recipients)
@@ -466,7 +466,7 @@ namespace DotNetNuke.Modules.ActiveForums
 						}
 					}
 				}
-#else
+/*#else
                 foreach (SubscriptionInfo si in Recipients)
 				{
 					if (si.Email != "")
@@ -476,7 +476,7 @@ namespace DotNetNuke.Modules.ActiveForums
 						intMessages += 1;
 					}
 				}
-#endif
+#endif*/
 
 
 			}

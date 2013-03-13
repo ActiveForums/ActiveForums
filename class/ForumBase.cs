@@ -1,24 +1,23 @@
-//© 2004 - 2008 ActiveModules, Inc. All Rights Reserved
-//ORIGINAL LINE: Imports System.Web.HttpContext
-
 using System;
-using System.Web;
+using System.Collections.Generic;
 using System.Xml;
+using DotNetNuke.Services.Localization;
 
 namespace DotNetNuke.Modules.ActiveForums
 {
     public class ForumBase : SettingsBase
     {
+        #region Private Member Variables
 
-        private int _ForumId = -1;
-        private string _ForumIds = string.Empty;
-        private int _ForumGroupId = -1;
+        private int? _forumId;
+        private string _forumIds = string.Empty;
+        private int? _forumGroupId;
         private int _parentForumId = -1;
-        private int _PostId;
-        private int _TopicId = -1;
-        private int _ReplyId;
-        private int _QuoteId;
-        private bool _bolJumpToLastPost = false;
+        private int? _postId;
+        private int? _topicId; // = -1;
+        private int? _replyId;
+        private int? _quoteId;
+        private bool? _jumpToLastPost;
         private string _defaultView = Views.ForumView;
         private int _defaultForumViewTemplateId = -1;
         private int _defaultTopicsViewTemplateId = -1;
@@ -28,23 +27,21 @@ namespace DotNetNuke.Modules.ActiveForums
         private Forum _foruminfo;
         private XmlDocument _forumData;
 
+        #endregion
+
+        #region Public Properties
 
         public XmlDocument ForumData
         {
             get
             {
-                var db = new Data.ForumsDB();
-                if (ControlConfig != null)
-                {
-                    return db.ForumListXML(ControlConfig.SiteId, ControlConfig.InstanceId);
-                }
-                return db.ForumListXML(PortalId, ModuleId);
-            }
-            set
-            {
-                _forumData = value;
+                if(_forumData == null)
+                    return ControlConfig != null ? ForumsDB.ForumListXML(ControlConfig.SiteId, ControlConfig.InstanceId) : ForumsDB.ForumListXML(PortalId, ModuleId); 
+
+                return _forumData;
             }
 
+            set { _forumData = value; }
         }
 
         public ControlsConfig ControlConfig { get; set; }
@@ -56,17 +53,19 @@ namespace DotNetNuke.Modules.ActiveForums
                 return Page.ResolveUrl("~/DesktopModules/ActiveForums/themes/" + MainSettings.Theme + "/");
             }
         }
+
         public string ForumIds
         {
             get
             {
-                return _ForumIds;
+                return _forumIds;
             }
             set
             {
-                _ForumIds = value;
+                _forumIds = value;
             }
         }
+
         public int DefaultForumViewTemplateId
         {
             get
@@ -78,6 +77,7 @@ namespace DotNetNuke.Modules.ActiveForums
                 _defaultForumViewTemplateId = value;
             }
         }
+
         public string TemplatePath
         {
             get
@@ -103,6 +103,7 @@ namespace DotNetNuke.Modules.ActiveForums
                 _defaultTopicsViewTemplateId = value;
             }
         }
+
         public int DefaultTopicViewTemplateId
         {
             get
@@ -114,6 +115,7 @@ namespace DotNetNuke.Modules.ActiveForums
                 _defaultTopicViewTemplateId = value;
             }
         }
+
         public string DefaultView
         {
             get
@@ -130,7 +132,7 @@ namespace DotNetNuke.Modules.ActiveForums
 
         public bool InheritModuleCSS { get; set; }
 
-        public bool bolJumpToLastPost
+        public bool JumpToLastPost
         {
             get
             {
@@ -138,214 +140,239 @@ namespace DotNetNuke.Modules.ActiveForums
                 {
                     return false;
                 }
-                if (Session["JumpToLastPost"] != null)
+
+                if(!_jumpToLastPost.HasValue)
                 {
-                    return Convert.ToBoolean(Session["JumpToLastPost"]);
+                    _jumpToLastPost = UserController.GetUser(PortalId, UserId).Profile.PrefJumpLastPost;
                 }
-                //TODO:Fix this
-                //Dim objUserDetails As New UserDetailsController
-                //Dim objUser As UserDetailsInfo = objUserDetails.ActiveForums_GetUserDetails(UserId, PortalId)
-                //If Not objUser Is Nothing Then
-                //    Return objUser.JumpLastPost
-                //Else
-                return false;
-                //End If
+
+                return _jumpToLastPost.Value;
             }
         }
+
         public DateTime UserLastAccess
         {
             get
             {
-                if (Request.IsAuthenticated)
-                {
-                    if (Session[UserId.ToString() + ModuleId.ToString() + "LastAccess"] == null)
-                    {
-                        return Utilities.NullDate();
-                    }
-                    return Convert.ToDateTime(Session[UserId.ToString() + ModuleId.ToString() + "LastAccess"]);
-                }
-                return Utilities.NullDate();
+                if (!Request.IsAuthenticated)
+                    return Utilities.NullDate();
+
+                var lastAccess = Session[UserId.ToString() + ModuleId + "LastAccess"];
+                return  lastAccess == null ? Utilities.NullDate() : Convert.ToDateTime(lastAccess);
             }
             set
             {
-                Session[UserId.ToString() + ModuleId.ToString() + "LastAccess"] = value;
+                Session[UserId.ToString() + ModuleId + "LastAccess"] = value;
             }
         }
+
         public int PostId
         {
             get
             {
-                int tempPostId = 0;
-                if (tempPostId < 1)
+                // If the id has already been set, return it.
+                if(_postId.HasValue)
+                    return _postId.Value;
+
+                // If there is no id in the query string, set it to the default value and return it.
+                var queryPostId = Request.QueryString[ParamKeys.PostId];
+                if(string.IsNullOrWhiteSpace(queryPostId))
                 {
-                    if (Request.QueryString[ParamKeys.PostId] != null)
-                    {
-                        if ((Request.Params[ParamKeys.PostId].IndexOf("#", 0) + 1) > 0)
-                        {
-                            _PostId = Convert.ToInt32(Request.Params[ParamKeys.PostId].Substring(0, (Request.Params[ParamKeys.PostId].IndexOf("#", 0) + 1) - 1));
-                        }
-                        else
-                        {
-                            _PostId = Convert.ToInt32(Request.QueryString[ParamKeys.PostId]);
-                        }
-                    }
+                    _postId = 0;
+                    return _postId.Value;
                 }
-                return _PostId;
+
+                // If there is a hash tag in the query value, remove it and anything after it before parsing.
+                var hashIndex = queryPostId.IndexOf("#", 0, StringComparison.Ordinal);
+                if (hashIndex >= 0)
+                    queryPostId = queryPostId.Substring(0, hashIndex);
+
+                // Try to parse the id, if it doesn't work, return the default value.
+                int parsedPostId;
+                _postId = int.TryParse(queryPostId, out parsedPostId) ? parsedPostId : 0;
+
+                return _postId.Value;
             }
         }
+
         public int TopicId
         {
             get
             {
-                int tempTopicId = 0;
-                if (tempTopicId < 1)
-                {
-                    if (Request.QueryString[ParamKeys.TopicId] != null)
-                    {
-                        if ((Request.Params[ParamKeys.TopicId].IndexOf("#", 0) + 1) > 0)
-                        {
-                            _TopicId = Convert.ToInt32(Request.Params[ParamKeys.TopicId].Substring(0, (Request.Params[ParamKeys.TopicId].IndexOf("#", 0) + 1) - 1));
-                        }
-                        else if (SimulateIsNumeric.IsNumeric(Request.QueryString[ParamKeys.TopicId]))
-                        {
-                            _TopicId = Convert.ToInt32(Request.QueryString[ParamKeys.TopicId]);
-                        }
-                    }
-                    else if (Request.Params["postid"] != null)
-                    {
-                        if (SimulateIsNumeric.IsNumeric(Request.Params["postid"]))
-                        {
-                            _TopicId = Convert.ToInt32(Request.Params["postid"]);
-                        }
+                // If the id has already been set, return it.
+                if (_topicId.HasValue)
+                    return _topicId.Value;
 
-                    }
+                // If there is no id in the query string, set it to the default value and return it.
+                var queryTopicId = Request.QueryString[ParamKeys.TopicId];
+                if(string.IsNullOrWhiteSpace(queryTopicId))
+                {
+                    _topicId = PostId > 0 ? PostId : -1; // If we have no topic id, but we do have a post id, use that instead.  Need to track down where this is used.
+                    return _topicId.Value;
                 }
-                return _TopicId;
+
+                // If there is a hash tag in the query value, remove it and anything after it before parsing.
+                var hashIndex = queryTopicId.IndexOf("#", 0, StringComparison.Ordinal);
+                if (hashIndex >= 0)
+                    queryTopicId = queryTopicId.Substring(0, hashIndex);
+
+                // Try to parse the id, if it doesn't work, return the default value.
+                int parsedTopicId;
+                _topicId = int.TryParse(queryTopicId, out parsedTopicId) ? parsedTopicId : -1;
+
+                return _topicId.Value;
             }
             set
             {
-                _TopicId = value;
+                _topicId = value;
             }
         }
+
         public int ReplyId
         {
             get
             {
-                int tempReplyId = 0;
-                if (tempReplyId < 1)
+                // If the id has already been set, return it.
+                if (_replyId.HasValue)
+                    return _replyId.Value;
+
+                // If there is no id in the query string, set it to the default value and return it.
+                var queryReplyId = Request.QueryString[ParamKeys.ReplyId];
+                if (string.IsNullOrWhiteSpace(queryReplyId))
                 {
-                    if (Request.QueryString[ParamKeys.ReplyId] != null)
-                    {
-                        if ((Request.Params[ParamKeys.ReplyId].IndexOf("#", 0) + 1) > 0)
-                        {
-                            _ReplyId = Convert.ToInt32(Request.Params[ParamKeys.ReplyId].Substring(0, (Request.Params[ParamKeys.ReplyId].IndexOf("#", 0) + 1) - 1));
-                        }
-                        else
-                        {
-                            _ReplyId = Convert.ToInt32(Request.QueryString[ParamKeys.ReplyId]);
-                        }
-                    }
+                    _replyId = 0;
+                    return _replyId.Value;
                 }
-                return _ReplyId;
+
+                // If there is a hash tag in the query value, remove it and anything after it before parsing.
+                var hashIndex = queryReplyId.IndexOf("#", 0, StringComparison.Ordinal);
+                if (hashIndex >= 0)
+                    queryReplyId = queryReplyId.Substring(0, hashIndex);
+
+                // Try to parse the id, if it doesn't work, return the default value.
+                int parsedReplyId;
+                _replyId = int.TryParse(queryReplyId, out parsedReplyId) ? parsedReplyId : 0;
+
+                return _replyId.Value;
             }
             set
             {
-                _ReplyId = value;
+                _replyId = value;
             }
         }
+
         public int QuoteId
         {
             get
             {
-                int tempQuoteId = 0;
-                if (tempQuoteId < 1)
+                // If the id has already been set, return it.
+                if (_quoteId.HasValue)
+                    return _quoteId.Value;
+
+                // If there is no id in the query string, set it to the default value and return it.
+                var queryQuoteId = Request.QueryString[ParamKeys.QuoteId];
+                if (string.IsNullOrWhiteSpace(queryQuoteId))
                 {
-                    if (Request.QueryString[ParamKeys.QuoteId] != null)
-                    {
-                        if ((Request.Params[ParamKeys.QuoteId].IndexOf("#", 0) + 1) > 0)
-                        {
-                            _QuoteId = Convert.ToInt32(Request.Params[ParamKeys.QuoteId].Substring(0, (Request.Params[ParamKeys.QuoteId].IndexOf("#", 0) + 1) - 1));
-                        }
-                        else
-                        {
-                            _QuoteId = Convert.ToInt32(Request.QueryString[ParamKeys.QuoteId]);
-                        }
-                    }
+                    _quoteId = 0;
+                    return _quoteId.Value;
                 }
-                return _QuoteId;
+
+                // If there is a hash tag in the query value, remove it and anything after it before parsing.
+                var hashIndex = queryQuoteId.IndexOf("#", 0, StringComparison.Ordinal);
+                if (hashIndex >= 0)
+                    queryQuoteId = queryQuoteId.Substring(0, hashIndex);
+
+                // Try to parse the id, if it doesn't work, return the default value.
+                int parsedQuoteId;
+                _quoteId = int.TryParse(queryQuoteId, out parsedQuoteId) ? parsedQuoteId : 0;
+
+                return _quoteId.Value;
             }
             set
             {
-                _QuoteId = value;
+                _quoteId = value;
             }
         }
+
         public int ForumId
         {
             get
             {
-                if (_ForumId < 1)
-                {
-                    if (Request.Params[ParamKeys.ForumId] != null)
-                    {
-                        if (SimulateIsNumeric.IsNumeric(Request.Params[ParamKeys.ForumId]))
-                        {
-                            _ForumId = Convert.ToInt32(Request.Params[ParamKeys.ForumId]);
-                        }
+                // If the id has already been set, return it.
+                if (_forumId.HasValue)
+                    return _forumId.Value;
 
-                    }
-                    else if (Request.Params["forumid"] != null)
-                    {
-                        if (SimulateIsNumeric.IsNumeric(Request.Params["forumid"]))
-                        {
-                            _ForumId = Convert.ToInt32(Request.Params["forumid"]);
-                        }
-                    }
-                }
-                if (_ForumId < 1 & TopicId > 0)
+                // Set out default value
+                _forumId = -1;
+
+                // If there is an id in the query string, parse it
+                var queryForumId = Request.QueryString[ParamKeys.ForumId];
+                if (!string.IsNullOrWhiteSpace(queryForumId))
                 {
-                    if (HttpContext.Current.Items["AFID" + TopicId.ToString()] == null)
+                    // Try to parse the id, if it doesn't work, return the default value.
+                    int parsedForumId;
+                    _forumId = int.TryParse(queryForumId, out parsedForumId) ? parsedForumId : 0;
+                }
+
+                // If we don't have a forum id at this point, try and pull it from "forumid" in the query string
+                if (_forumId < 1)
+                {
+                    queryForumId = Request.QueryString["forumid"];
+                    if (!string.IsNullOrWhiteSpace(queryForumId))
                     {
-                        var fdb = new Data.ForumsDB();
-                        _ForumId = fdb.Forum_GetByTopicId(TopicId);
-                        if (_ForumId > 0)
-                        {
-                            HttpContext.Current.Items.Add("AFID" + TopicId.ToString(), _ForumId);
-                        }
-                    }
-                    else
-                    {
-                        _ForumId = Convert.ToInt32(HttpContext.Current.Items["AFID" + TopicId.ToString()]);
+                        // Try to parse the id, if it doesn't work, return the default value.
+                        int parsedForumId;
+                        _forumId = int.TryParse(queryForumId, out parsedForumId) ? parsedForumId : 0;
                     }
                 }
-                return _ForumId;
+
+                // If we still don't have a forum id, but we have a topic id, look up the forum id
+                if (_forumId < 1 & TopicId > 0)
+                {
+                   _forumId = ForumsDB.Forum_GetByTopicId(TopicId);
+                }
+
+                return _forumId.Value;
             }
             set
             {
-                _ForumId = value;
+                _forumId = value;
             }
         }
+
         public int ForumGroupId
         {
             get
             {
-                if (_ForumGroupId < 1)
+                // If the id has already been set, return it.
+                if (_forumGroupId.HasValue)
+                    return _forumGroupId.Value;
+
+                // If there is no id in the query string, set it to the default value and return it.
+                var queryForumGroupId = Request.QueryString[ParamKeys.GroupId];
+                if (string.IsNullOrWhiteSpace(queryForumGroupId))
                 {
-                    if (Request.Params[ParamKeys.GroupId] != null)
-                    {
-                        _ForumGroupId = Convert.ToInt32(Request.Params[ParamKeys.GroupId]);
-                    }
+                    _forumGroupId = -1;
+                    return _forumGroupId.Value;
                 }
-                if (_ForumGroupId < 1 & ForumId > 0 && ForumInfo != null)
-                {
-                    _ForumGroupId = ForumInfo.ForumGroupId;
-                }
-                return _ForumGroupId;
+
+                // If there is a hash tag in the query value, remove it and anything after it before parsing.
+                var hashIndex = queryForumGroupId.IndexOf("#", 0, StringComparison.Ordinal);
+                if (hashIndex >= 0)
+                    queryForumGroupId = queryForumGroupId.Substring(0, hashIndex);
+
+                // Try to parse the id, if it doesn't work, return the default value.
+                int parsedForumGroupId;
+                _forumGroupId = int.TryParse(queryForumGroupId, out parsedForumGroupId) ? parsedForumGroupId : 0;
+
+                return _forumGroupId.Value;
             }
             set
             {
-                _ForumGroupId = value;
+                _forumGroupId = value;
             }
         }
+
         public int ParentForumId
         {
             get
@@ -357,6 +384,7 @@ namespace DotNetNuke.Modules.ActiveForums
                 _parentForumId = value;
             }
         }
+
         public string TemplateFile
         {
             get
@@ -368,49 +396,20 @@ namespace DotNetNuke.Modules.ActiveForums
                 _templateFile = value;
             }
         }
+
         public Forum ForumInfo
         {
-            get
+            get 
             {
-                var fc = new ForumController();
-                _foruminfo = fc.Forums_Get(PortalId, ForumModuleId, ForumId, UserId, true, true, TopicId);
-                return _foruminfo;
+                return _foruminfo ?? (_foruminfo = ForumController.Forums_Get(PortalId, ForumModuleId, ForumId, UserId, true, true, TopicId));
             }
             set
             {
                 _foruminfo = value;
             }
         }
-        public int SocialGroupId { get; set; }
 
-        protected string GetSharedResource(string key)
-        {
-            return Services.Localization.Localization.GetString(key, "~/DesktopModules/ActiveForums/App_LocalResources/SharedResources.resx");
-        }
-        internal bool isHTMLPermitted(HTMLPermittedUsers permittedMode, bool UserIsTrusted, bool UserIsModerator)
-        {
-            if (permittedMode == HTMLPermittedUsers.AllUsers)
-            {
-                return true;
-            }
-            if (permittedMode == HTMLPermittedUsers.AuthenticatedUsers && Request.IsAuthenticated)
-            {
-                return true;
-            }
-            if (permittedMode == HTMLPermittedUsers.TrustedUsers && UserIsTrusted)
-            {
-                return true;
-            }
-            if (permittedMode == HTMLPermittedUsers.Moderators && UserIsModerator)
-            {
-                return true;
-            }
-            if (permittedMode == HTMLPermittedUsers.Administrators && HasModulePermission("EDIT"))
-            {
-                return true;
-            }
-            return false;
-        }
+        public int SocialGroupId { get; set; }
 
         public bool CanRead
         {
@@ -419,6 +418,7 @@ namespace DotNetNuke.Modules.ActiveForums
                 return SecurityCheck("read");
             }
         }
+
         public bool CanView
         {
             get
@@ -426,6 +426,7 @@ namespace DotNetNuke.Modules.ActiveForums
                 return SecurityCheck("view");
             }
         }
+
         public bool CanCreate
         {
             get
@@ -433,6 +434,7 @@ namespace DotNetNuke.Modules.ActiveForums
                 return SecurityCheck("create");
             }
         }
+
         public bool CanReply
         {
             get
@@ -440,37 +442,67 @@ namespace DotNetNuke.Modules.ActiveForums
                 return SecurityCheck("reply");
             }
         }
-        //Public Sub New()
-        //    Me.LicensePath = "~/DesktopModules/ActiveForums"
-        //    Me.ProductKey = "AFKey"
-        //End Sub
+
+        #endregion
+
+        #region Helper Methods
+
         private bool SecurityCheck(string secType)
         {
             if (ForumUser == null)
             {
                 return false;
             }
-            //Logger.Log(secType)
+
             var xNode = ForumData.SelectSingleNode("//forums/forum[@forumid='" + ForumId + "']/security/" + secType);
 
             if (xNode == null)
             {
                 return false;
             }
-            string secRoles = xNode.InnerText;
+
+            var secRoles = xNode.InnerText;
+
             return Permissions.HasPerm(secRoles, ForumUser.UserRoles);
         }
 
+        protected string GetSharedResource(string key)
+        {
+            return Localization.GetString(key, "~/DesktopModules/ActiveForums/App_LocalResources/SharedResources.resx");
+        }
 
+        internal bool IsHtmlPermitted(HTMLPermittedUsers permittedMode, bool userIsTrusted, bool userIsModerator)
+        {
+            if (permittedMode == HTMLPermittedUsers.AllUsers)
+                return true;
+
+            if (permittedMode == HTMLPermittedUsers.AuthenticatedUsers && Request.IsAuthenticated)
+                return true;
+
+            if (permittedMode == HTMLPermittedUsers.TrustedUsers && userIsTrusted)
+                return true;
+
+            if (permittedMode == HTMLPermittedUsers.Moderators && userIsModerator)
+                return true;
+
+            if (permittedMode == HTMLPermittedUsers.Administrators && HasModulePermission("EDIT"))
+                return true;
+
+            return false;
+        }
+
+        #endregion
 
         protected override void OnLoad(EventArgs e)
 		{
 			base.OnLoad(e);
 
+            // If printmode, simply exit.
             if (Request.QueryString["dnnprintmode"] != null)
-            {
                 return;
-            }
+
+            // Do a conversion if needed 
+            // TODO: Figure out what's happening here
             if (ModuleId > 0)
             {
                 if (MainSettings.NeedsConversion)
@@ -484,84 +516,83 @@ namespace DotNetNuke.Modules.ActiveForums
                 }
             }
 
-            string sURL = string.Empty;
-            string[] p = new string[0];
-            if (TopicId > 0 & (Request.Params[ParamKeys.ViewType] == Views.Topic))
+            var p = new List<string>();
+
+            var viewType = Request.Params[ParamKeys.ViewType];
+
+            // Topic View
+            if (TopicId > 0 && (viewType == Views.Topic))
             {
-                p = new[] { ParamKeys.TopicId + "=" + TopicId };
-                if (Request.Params[ParamKeys.FirstNewPost] != null)
+                p.Add(ParamKeys.TopicId + "=" + TopicId);
+
+                var firstNewPost = Request.Params[ParamKeys.FirstNewPost];
+                if(!string.IsNullOrWhiteSpace(firstNewPost))
+                    p.Add(ParamKeys.FirstNewPost + "=" + firstNewPost);
+
+                var contentJumpId = Request.Params[ParamKeys.ContentJumpId];
+                if (!string.IsNullOrWhiteSpace(contentJumpId))
+                    p.Add(ParamKeys.ContentJumpId + "=" + contentJumpId);
+
+                var pageId = Request.Params[ParamKeys.PageId];
+                if (!string.IsNullOrWhiteSpace(pageId))
                 {
-                    p = Utilities.AddParams(ParamKeys.FirstNewPost + "=" + Request.Params[ParamKeys.FirstNewPost], p);
+                    int parsedPageId;
+                    if(int.TryParse(pageId, out parsedPageId) && parsedPageId > 1)
+                        p.Add(ParamKeys.PageId + "=" + pageId);
                 }
-                if (Request.Params[ParamKeys.ContentJumpId] != null)
+
+                var pageJumpId = Request.Params[ParamKeys.PageJumpId];
+                if (!string.IsNullOrWhiteSpace(pageJumpId))
                 {
-                    p = Utilities.AddParams(ParamKeys.ContentJumpId + "=" + Request.Params[ParamKeys.ContentJumpId], p);
+                    int parsedPageJumpId;
+                    if (int.TryParse(pageJumpId, out parsedPageJumpId) && parsedPageJumpId > 1)
+                        p.Add(ParamKeys.PageJumpId + "=" + pageJumpId);
                 }
-                if (Request.QueryString[ParamKeys.PageId] != null)
+
+                var sort = Request.QueryString[ParamKeys.Sort];
+                if(!string.IsNullOrWhiteSpace(sort) && Request.IsAuthenticated)
                 {
-                    if (SimulateIsNumeric.IsNumeric(Request.QueryString[ParamKeys.PageId]))
-                    {
-                        if (Convert.ToInt32(Request.QueryString[ParamKeys.PageId]) > 1)
-                        {
-                            p = Utilities.AddParams(ParamKeys.PageId + "=" + Request.QueryString[ParamKeys.PageId], p);
-                        }
-                    }
-                }
-                if (Request.QueryString[ParamKeys.PageJumpId] != null & Request.IsAuthenticated)
-                {
-                    if (SimulateIsNumeric.IsNumeric(Request.QueryString[ParamKeys.PageJumpId]))
-                    {
-                        if (Convert.ToInt32(Request.QueryString[ParamKeys.PageJumpId]) > 1)
-                        {
-                            p = Utilities.AddParams(ParamKeys.PageId + "=" + Request.QueryString[ParamKeys.PageJumpId], p);
-                        }
-                    }
-                }
-                if (Request.QueryString[ParamKeys.Sort] != null & Request.IsAuthenticated)
-                {
-                    string sSort = Request.QueryString[ParamKeys.Sort].ToUpperInvariant();
-                    if (sSort == "ASC" || sSort == "DESC")
-                    {
-                        p = Utilities.AddParams(ParamKeys.Sort + "=" + sSort, p);
-                    }
+                    sort = sort.ToUpperInvariant();
+                    if(sort == "ASC" || sort == "DESC")
+                        p.Add(ParamKeys.Sort + "=" + sort);
                 }
             }
-            else if (ForumId > 0 && Request.Params[ParamKeys.ViewType] == Views.Topics)
+
+            // Topics View
+            else if (ForumId > 0 && viewType == Views.Topics)
             {
-                p = new[] { ParamKeys.ForumId + "=" + ForumId };
-                if (Request.QueryString[ParamKeys.PageId] != null)
+                p.Add(ParamKeys.ForumId + "=" + ForumId);
+
+                var pageId = Request.Params[ParamKeys.PageId];
+                if (!string.IsNullOrWhiteSpace(pageId))
                 {
-                    if (SimulateIsNumeric.IsNumeric(Request.QueryString[ParamKeys.PageId]))
-                    {
-                        if (Convert.ToInt32(Request.QueryString[ParamKeys.PageId]) > 1)
-                        {
-                            p = Utilities.AddParams(ParamKeys.PageId + "=" + Request.QueryString[ParamKeys.PageId], p);
-                        }
-                    }
+                    int parsedPageId;
+                    if (int.TryParse(pageId, out parsedPageId) && parsedPageId > 1)
+                        p.Add(ParamKeys.PageId + "=" + pageId);
                 }
-                if (Request.QueryString[ParamKeys.PageJumpId] != null & Request.IsAuthenticated)
+
+                var pageJumpId = Request.Params[ParamKeys.PageJumpId];
+                if (!string.IsNullOrWhiteSpace(pageJumpId))
                 {
-                    if (SimulateIsNumeric.IsNumeric(Request.QueryString[ParamKeys.PageJumpId]))
-                    {
-                        if (Convert.ToInt32(Request.QueryString[ParamKeys.PageJumpId]) > 1)
-                        {
-                            p = Utilities.AddParams(ParamKeys.PageJumpId + "=" + Request.QueryString[ParamKeys.PageJumpId], p);
-                        }
-                    }
+                    int parsedPageJumpId;
+                    if (int.TryParse(pageJumpId, out parsedPageJumpId) && parsedPageJumpId > 1)
+                        p.Add(ParamKeys.PageJumpId + "=" + pageJumpId);
                 }
             }
-            if (p.Length > 0)
-            {
-                sURL = Utilities.NavigateUrl(TabId, "", p);
-            }
-            if (!(string.IsNullOrEmpty(sURL)))
-            {
-                Response.Clear();
-                Response.Status = "301 Moved Permanently";
-                Response.AddHeader("Location", sURL);
-                Response.End();
-            }
-        }
+
+
+            if (p.Count <= 0) 
+                return;
+            
+            var sURL = Utilities.NavigateUrl(TabId, string.Empty, p.ToArray());
+            if (string.IsNullOrEmpty(sURL))
+                return;
+
+            Response.Clear();
+            Response.Status = "301 Moved Permanently";
+            Response.AddHeader("Location", sURL);
+            Response.End();
+		}
     }
 }
 

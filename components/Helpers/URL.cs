@@ -1,165 +1,136 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-
-namespace DotNetNuke.Modules.ActiveForums
+﻿namespace DotNetNuke.Modules.ActiveForums
 {
 	public class URL
 	{
-		public static string ForumLink(int TabId, Forum fi)
+		public static string ForumLink(int tabId, Forum fi)
 		{
-			SettingsInfo _mainSettings = DataCache.MainSettings(fi.ModuleId);
-			string sURL = string.Empty;
-			if (string.IsNullOrEmpty(fi.PrefixURL) || ! _mainSettings.URLRewriteEnabled)
+			var mainSettings = DataCache.MainSettings(fi.ModuleId);
+			
+            var sURL = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(fi.PrefixURL) || !mainSettings.URLRewriteEnabled)
 			{
-				sURL = Utilities.NavigateUrl(TabId, string.Empty, ParamKeys.ForumId + "=" + fi.ForumID.ToString());
+				sURL = Utilities.NavigateUrl(tabId, string.Empty, ParamKeys.ForumId + "=" + fi.ForumID);
 			}
 			else
 			{
-				if (! (string.IsNullOrEmpty(_mainSettings.PrefixURLBase)))
+				if (!(string.IsNullOrWhiteSpace(mainSettings.PrefixURLBase)))
 				{
-					sURL = "/" + _mainSettings.PrefixURLBase;
+					sURL = "/" + mainSettings.PrefixURLBase;
 				}
-				if (! (string.IsNullOrEmpty(fi.ForumGroup.PrefixURL)))
+
+                if (!(string.IsNullOrWhiteSpace(fi.ForumGroup.PrefixURL)))
 				{
 					sURL += "/" + fi.ForumGroup.PrefixURL;
 				}
+
 				sURL += "/" + fi.PrefixURL + "/";
 			}
-			string sHost = Utilities.GetHost();
+
+			var sHost = Utilities.GetHost();
 			if (! (sURL.StartsWith(sHost)))
 			{
 				if (sHost.EndsWith("/"))
-				{
 					sHost = sHost.Substring(0, sHost.Length - 1);
-				}
+
 				sURL = sHost + sURL;
 			}
+
 			return sURL;
 		}
-		public static string TopicLink(int TabId, int ModuleId, TopicInfo ti)
-		{
-			Data.Common db = new Data.Common();
-			string sURL = string.Empty;
-			SettingsInfo _mainSettings = DataCache.MainSettings(ModuleId);
-			if (string.IsNullOrEmpty(ti.URL) || ! _mainSettings.URLRewriteEnabled)
+
+		public static string TopicLink(int tabId, int moduleId, TopicInfo ti)
+		{	
+			string sURL;
+			var mainSettings = DataCache.MainSettings(moduleId);
+
+			if (string.IsNullOrEmpty(ti.URL) || !mainSettings.URLRewriteEnabled)
 			{
-				sURL = Utilities.NavigateUrl(TabId, string.Empty, ParamKeys.TopicId + "=" + ti.TopicId);
+				sURL = Utilities.NavigateUrl(tabId, string.Empty, ParamKeys.TopicId + "=" + ti.TopicId);
 			}
 			else
 			{
-				sURL = "/" + db.GetUrl(ModuleId, -1, -1, ti.TopicId, -1, -1);
+                var db = new Data.Common();
+				sURL = "/" + db.GetUrl(moduleId, -1, -1, ti.TopicId, -1, -1);
 			}
-			string sHost = Utilities.GetHost();
+
+			var sHost = Utilities.GetHost();
 			if (! (sURL.StartsWith(sHost)))
 			{
 				if (sHost.EndsWith("/"))
-				{
 					sHost = sHost.Substring(0, sHost.Length - 1);
-				}
+
 				sURL = sHost + sURL;
 			}
+
 			return sURL;
 		}
-		public static string ReplyLink(int TabId, TopicInfo ti, int UserId, int ReplyId)
+
+		public static string ReplyLink(int tabId, TopicInfo ti, int userId, int replyId)
 		{
-			Data.Common db = new Data.Common();
-			string sURL = Utilities.NavigateUrl(TabId, string.Empty, new string[] {ParamKeys.TopicId + "=" + ti.TopicId, ParamKeys.ContentJumpId + "=" + ReplyId});
+			var sURL = Utilities.NavigateUrl(tabId, string.Empty, new [] { ParamKeys.TopicId + "=" + ti.TopicId, ParamKeys.ContentJumpId + "=" + replyId });
+
 			if (string.IsNullOrEmpty(ti.URL) || ! Utilities.IsRewriteLoaded())
-			{
 				return sURL;
-			}
-			else
+
+            var db = new Data.Common();
+			sURL = db.GetUrl(-1, -1, -1, ti.TopicId, userId, replyId);
+			if (! (string.IsNullOrEmpty(sURL)))
 			{
-				sURL = db.GetUrl(-1, -1, -1, ti.TopicId, UserId, ReplyId);
-				if (! (string.IsNullOrEmpty(sURL)))
-				{
-					string sHost = Utilities.GetHost();
-					if (sURL.StartsWith("/"))
-					{
-						sURL = sURL.Substring(1);
-					}
-					if (! (sHost.EndsWith("/")))
-					{
-						sHost += "/";
-					}
-					sURL = sHost + sURL;
-					if (! (sURL.EndsWith("/")))
-					{
-						sURL += "/";
-					}
-					if (ReplyId > 0)
-					{
-						sURL += "#" + ReplyId.ToString();
-					}
-				}
+				var sHost = Utilities.GetHost();
+				if (sURL.StartsWith("/"))
+					sURL = sURL.Substring(1);
+
+				if (!(sHost.EndsWith("/")))
+					sHost += "/";
+
+				sURL = sHost + sURL;
+				if (! (sURL.EndsWith("/")))
+					sURL += "/";
+
+				if (replyId > 0)
+					sURL += "#" + replyId.ToString();
 			}
+
 			return sURL;
-
-
 		}
-		public static string ForForum(int PageId, int ForumId, string GroupName, string ForumName)
+
+		public static string ForForum(int pageId, int forumId, string groupName, string forumName)
 		{
-			string sURL = Utilities.NavigateUrl(PageId, "", new string[] {ParamKeys.ForumId + "=" + ForumId});
-			sURL = sURL.ToLowerInvariant();
-			string sNewPage = string.Empty;
-			if (! (string.IsNullOrEmpty(GroupName)))
-			{
-				sNewPage = Utilities.CleanStringForUrl(GroupName) + "/";
-			}
-			if (! (string.IsNullOrEmpty(ForumName)))
-			{
-				sNewPage += Utilities.CleanStringForUrl(ForumName);
-			}
+			var sURL = Utilities.NavigateUrl(pageId, string.Empty, ParamKeys.ForumId + "=" + forumId);
+
+			var sNewPage = string.Empty;
+			if (! (string.IsNullOrEmpty(groupName)))
+				sNewPage = Utilities.CleanStringForUrl(groupName) + "/";
+
+			if (! (string.IsNullOrEmpty(forumName)))
+				sNewPage += Utilities.CleanStringForUrl(forumName);
+
 			if (! (string.IsNullOrEmpty(sNewPage)))
-			{
 				sURL = sURL.Replace("default.aspx", sNewPage + ".aspx");
-			}
+
 			return sURL.ToLowerInvariant();
 		}
 
-		public static string ForTopic(int PageId, int PortalId, int ForumId, int TopicId)
+		public static string ForTopic(int pageId, int portalId, int forumId, int topicId)
 		{
-			return ForTopic(PageId, PortalId, ForumId, TopicId, string.Empty, string.Empty, string.Empty, 1);
+			return ForTopic(pageId, portalId, forumId, topicId, string.Empty, string.Empty, string.Empty, 1);
 		}
-		public static string ForTopic(int PageId, int PortalId, int ForumId, int TopicId, string GroupName, string ForumName, string Subject, int PageNumber)
+
+		public static string ForTopic(int pageId, int portalId, int forumId, int topicId, string groupName, string forumName, string subject, int pageNumber)
 		{
-			string sURL = string.Empty;
-			if (PageNumber > 1)
-			{
-				//        sURL = Utilities.NavigateUrl(PageId, "", New String() {ParamKeys.ForumId & "=" & ForumId, ParamKeys.TopicId & "=" & TopicId, ParamKeys.PageId & "=" & PageNumber})
-				sURL = Utilities.NavigateUrl(PageId, "", Subject, PortalId, new string[] {ParamKeys.TopicId + "=" + TopicId, ParamKeys.PageId + "=" + PageNumber});
-			}
+			string sURL;
+
+			if (pageNumber > 1)
+				sURL = Utilities.NavigateUrl(pageId, "", subject, portalId, new [] {ParamKeys.TopicId + "=" + topicId, ParamKeys.PageId + "=" + pageNumber});
 			else
-			{
-				//sURL = Utilities.NavigateUrl(PageId, "", New String() {ParamKeys.ForumId & "=" & ForumId, ParamKeys.TopicId & "=" & TopicId})
-				sURL = Utilities.NavigateUrl(PageId, "", Subject, PortalId, new string[] {ParamKeys.TopicId + "=" + TopicId});
-			}
+				sURL = Utilities.NavigateUrl(pageId, "", subject, portalId, ParamKeys.TopicId + "=" + topicId);
+
 			sURL = sURL.ToLowerInvariant();
-			if (! (sURL.EndsWith(".aspx")))
-			{
+			if (!(sURL.EndsWith(".aspx")))
 				sURL += ".aspx";
-			}
+
 			return sURL;
-			string sNewPage = string.Empty;
-			if (! (string.IsNullOrEmpty(GroupName)))
-			{
-				sNewPage = Utilities.CleanStringForUrl(GroupName) + "/";
-			}
-			if (! (string.IsNullOrEmpty(ForumName)))
-			{
-				sNewPage += Utilities.CleanStringForUrl(ForumName) + "/";
-			}
-			if (! (string.IsNullOrEmpty(Subject)))
-			{
-				sNewPage += Utilities.CleanStringForUrl(Subject);
-			}
-			if (! (string.IsNullOrEmpty(sNewPage)))
-			{
-				sURL = sURL.Replace("default.aspx", sNewPage + ".aspx");
-			}
-			return sURL.ToLowerInvariant();
 		}
 
 	}

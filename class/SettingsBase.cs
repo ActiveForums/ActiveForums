@@ -1,13 +1,12 @@
-//© 2004 - 2008 ActiveModules, Inc. All Rights Reserved
-//ORIGINAL LINE: Imports System.Web.HttpContext
-
 using System;
 using System.Web;
+using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
+using DotNetNuke.Modules.ActiveForums.Data;
 
 namespace DotNetNuke.Modules.ActiveForums
 {
-    public class SettingsBase : Entities.Modules.PortalModuleBase
+    public class SettingsBase : PortalModuleBase
     {
         #region Private Members
         private int _forumModuleId = -1;
@@ -136,6 +135,50 @@ namespace DotNetNuke.Modules.ActiveForums
         }
         #endregion
 
+        public UserController UserController
+        {
+            get
+            {
+                const string userControllerContextKey = "AF|UserController";
+                var userController = HttpContext.Current.Items[userControllerContextKey] as UserController;
+                if (userController == null)
+                {
+                    userController = new UserController();
+                    HttpContext.Current.Items[userControllerContextKey] = userController;
+                }
+                return userController;
+            }
+        }
+
+        public ForumController ForumController
+        {
+            get
+            {
+                const string forumControllerContextKey = "AF|ForumController";
+                var forumController = HttpContext.Current.Items[forumControllerContextKey] as ForumController;
+                if (forumController == null)
+                {
+                    forumController = new ForumController();
+                    HttpContext.Current.Items[forumControllerContextKey] = forumController;
+                }
+                return forumController;
+            }
+        }
+
+        public ForumsDB ForumsDB
+        {
+            get
+            {
+                const string forumsDBContextKey = "AF|ForumsDB";
+                var forumsDB = HttpContext.Current.Items[forumsDBContextKey] as ForumsDB;
+                if (forumsDB == null)
+                {
+                    forumsDB = new ForumsDB();
+                    HttpContext.Current.Items[forumsDBContextKey] = forumsDB;
+                }
+                return forumsDB;
+            }
+        }
 
 
         #region Public Properties - User Preferences
@@ -359,6 +402,12 @@ namespace DotNetNuke.Modules.ActiveForums
         {
             return Utilities.GetDate(DisplayDate, ModuleId, TimeZoneOffset);
         }
+
+        protected DateTime GetUserDate(DateTime displayDate)
+        {
+            return Utilities.GetUserDate(displayDate, ModuleId, TimeZoneOffset);
+        }
+
         protected string GetServerDateTime(DateTime DisplayDate)
         {
             //Dim newDate As Date 

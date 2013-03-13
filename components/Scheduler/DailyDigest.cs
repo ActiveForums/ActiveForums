@@ -6,7 +6,7 @@ using System.Data;
 namespace DotNetNuke.Modules.ActiveForums
 {
 	public class DailyDigest
-#if SKU_ENTERPRISE
+//#if SKU_ENTERPRISE
 		 : DotNetNuke.Services.Scheduling.SchedulerClient
 {
 		public DailyDigest(DotNetNuke.Services.Scheduling.ScheduleHistoryItem objScheduleHistoryItem) : base()
@@ -42,9 +42,9 @@ namespace DotNetNuke.Modules.ActiveForums
 			return elapseMinutes;
 		}
 
-#else
-    {
-#endif
+//#else
+//    {
+//#endif
 
 
 	}

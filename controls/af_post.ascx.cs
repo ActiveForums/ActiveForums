@@ -143,7 +143,7 @@ namespace DotNetNuke.Modules.ActiveForums
             ctlForm.Subscribe = UserPrefTopicSubscribe;
             if (fi.AllowHTML)
             {
-                _allowHTML = isHTMLPermitted(fi.EditorPermittedUsers, UserIsTrusted, canModEdit);
+                _allowHTML = IsHtmlPermitted(fi.EditorPermittedUsers, UserIsTrusted, canModEdit);
             }
             ctlForm.AllowHTML = _allowHTML;
             if (_allowHTML)

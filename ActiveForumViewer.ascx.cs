@@ -1,9 +1,10 @@
 ﻿//INSTANT C# TODO TASK: C# compiler constants cannot be set to explicit values:
 
 
-#if SKU_ENTERPRISE
+//#if SKU_ENTERPRISE
+
+using System;
 using System.Web.UI.WebControls;
-using System.IO;
 
 namespace DotNetNuke.Modules.ActiveForums
 {
@@ -85,4 +86,4 @@ namespace DotNetNuke.Modules.ActiveForums
         #endregion
     }
 }
-#endif
+//#endif

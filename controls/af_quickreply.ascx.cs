@@ -361,7 +361,7 @@ namespace DotNetNuke.Modules.ActiveForums
             string sBody = string.Empty;
             if (AllowHTML)
             {
-                AllowHTML = isHTMLPermitted(ForumInfo.EditorPermittedUsers, IsTrusted, Permissions.HasPerm(ForumInfo.Security.ModEdit, ForumUser.UserRoles));
+                AllowHTML = IsHtmlPermitted(ForumInfo.EditorPermittedUsers, IsTrusted, Permissions.HasPerm(ForumInfo.Security.ModEdit, ForumUser.UserRoles));
             }
             sBody = Utilities.CleanString(PortalId, Request.Form["txtBody"], AllowHTML, EditorTypes.TEXTBOX, UseFilter, AllowScripts, ForumModuleId, ThemePath, ForumInfo.AllowEmoticons);
             DateTime createDate = DateTime.Now;
@@ -472,12 +472,12 @@ namespace DotNetNuke.Modules.ActiveForums
 
 
                 //oEmail.SendEmailToModerators(ForumInfo.ModNotifyTemplateId, PortalId, ForumId, ri.TopicId, ReplyId, ForumModuleId, TabId, String.Empty)
-                string[] Params = { ParamKeys.ForumId + "=" + ForumId, ParamKeys.ViewType + "=confirmaction", "afmsg=pendingmod", ParamKeys.TopicId + "=" + TopicId };
+                var @params = new List<string> { ParamKeys.ForumId + "=" + ForumId, ParamKeys.ViewType + "=confirmaction", "afmsg=pendingmod", ParamKeys.TopicId + "=" + TopicId };
                 if (SocialGroupId > 0)
                 {
-                    Params = Utilities.AddParams("GroupId=" + SocialGroupId, Params);
+                    @params.Add("GroupId=" + SocialGroupId);
                 }
-                Response.Redirect(Utilities.NavigateUrl(TabId, "", Params), false);
+                Response.Redirect(Utilities.NavigateUrl(TabId, "", @params.ToArray()), false);
             }
             else
             {

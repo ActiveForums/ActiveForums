@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-
 using System.ComponentModel;
-using System.Text;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -14,161 +8,70 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
     [DefaultProperty("Text"), ToolboxData("<{0}:MenuButton runat=server></{0}:MenuButton>")]
     public class MenuButton : WebControl
     {
-        #region Declarations
-        private string _Text;
-        private MenuContent _Menu;
-        private string _MenuCss;
-        private int _MenuWidth = 100;
-        private int _MenuHeight = 100;
-        private string _MenuOverflow = "hidden";
-        private int _OffsetLeft = 0;
-        private int _OffsetTop = 16;
-        private int _AnimationSteps = 5;
-        private int _AnimationDelay = 20;
-        public enum ExpandDirections : int
+        public enum ExpandDirections
         {
             DownRight,
             DownLeft,
             UpRight,
             UpLeft
         }
-        private ExpandDirections _ExpandDirection = ExpandDirections.DownRight;
+
+        #region Private Member Variables
+
+        private MenuContent _menu;
+
         #endregion
+
         #region Properties
-        public string Text
-        {
-            get
-            {
-                return _Text;
-            }
-            set
-            {
-                _Text = value;
-            }
-        }
+
         public MenuContent Menu
         {
             get
             {
                 EnsureChildControls();
-                if (_Menu == null)
-                {
-                    _Menu = new MenuContent();
-                }
-                return _Menu;
+                return _menu ?? (_menu = new MenuContent());
             }
             set
             {
-                _Menu = value;
+                _menu = value;
             }
         }
-        public string MenuCss
-        {
-            get
-            {
-                return _MenuCss;
-            }
-            set
-            {
-                _MenuCss = value;
-            }
-        }
-        public int MenuWidth
-        {
-            get
-            {
-                return _MenuWidth;
-            }
-            set
-            {
-                _MenuWidth = value;
-            }
-        }
-        public int MenuHeight
-        {
-            get
-            {
-                return _MenuHeight;
-            }
-            set
-            {
-                _MenuHeight = value;
-            }
-        }
-        public string MenuOverflow
-        {
-            get
-            {
-                return _MenuOverflow;
-            }
-            set
-            {
-                _MenuOverflow = value;
-            }
-        }
-        public int AnimationSteps
-        {
-            get
-            {
-                return _AnimationSteps;
-            }
-            set
-            {
-                _AnimationSteps = value;
-            }
-        }
-        public int AnimationDelay
-        {
-            get
-            {
-                return _AnimationDelay;
-            }
-            set
-            {
-                _AnimationDelay = value;
-            }
-        }
-        public int OffsetLeft
-        {
-            get
-            {
-                return _OffsetLeft;
-            }
-            set
-            {
-                _OffsetLeft = value;
-            }
-        }
-        public int OffsetTop
-        {
-            get
-            {
-                return _OffsetTop;
-            }
-            set
-            {
-                _OffsetTop = value;
-            }
-        }
-        public ExpandDirections ExpandDirection
-        {
-            get
-            {
-                return _ExpandDirection;
-            }
-            set
-            {
-                _ExpandDirection = value;
-            }
-        }
+
+        public string Text { get; set; }
+
+        public string MenuCss { get; set; }
+
+        public int MenuWidth { get; set; }
+
+        public int MenuHeight { get; set; }
+
+        public string MenuOverflow { get; set; }
+
+        public int AnimationSteps { get; set; }
+
+        public int AnimationDelay { get; set; }
+
+        public int OffsetLeft { get; set; }
+
+        public int OffsetTop { get; set; }
+
+        public ExpandDirections ExpandDirection { get; set; }
+
         #endregion
-        protected override void CreateChildControls()
+
+        public MenuButton()
         {
-            //If Not Menu Is Nothing Then
-            //    Controls.Clear()
-            //    Controls.Add(Menu)
-            //End If
+            MenuCss = null;
+            MenuWidth = 100;
+            MenuHeight = 100;
+            MenuOverflow = "hidden";
+            OffsetTop = 16;
+            OffsetLeft = 0;
+            AnimationSteps = 5;
+            AnimationDelay = 20;
+            ExpandDirection = ExpandDirections.DownRight;
         }
+
         protected override void Render(HtmlTextWriter output)
         {
             output.AddAttribute("class", CssClass);
@@ -184,13 +87,14 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             output.AddStyleAttribute("overflow", MenuOverflow);
             output.AddAttribute("id", ClientID + "_div");
             output.RenderBeginTag(HtmlTextWriterTag.Div);
+
             if (Menu != null)
             {
                 Menu.RenderControl(output);
             }
             output.RenderEndTag();
 
-            string script = "<script type=\"text/javascript\">window." + ClientID + "=new ActiveMenuButton('" + ClientID + "'," + MenuWidth + "," + MenuHeight + "," + AnimationSteps + "," + AnimationDelay + "," + OffsetTop + "," + OffsetLeft + "," + ExpandDirection + ");</script>";
+            var script = "<script type=\"text/javascript\">window." + ClientID + "=new ActiveMenuButton('" + ClientID + "'," + MenuWidth + "," + MenuHeight + "," + AnimationSteps + "," + AnimationDelay + "," + OffsetTop + "," + OffsetLeft + "," + (int)ExpandDirection + ");</script>";
             output.Write(script);
         }
 
@@ -198,12 +102,11 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 		{
 			base.OnInit(e);
 
-            if (Menu != null)
-            {
-                Controls.Clear();
-                Controls.Add(Menu);
-            }
-        }
+            if (Menu == null) return;
+
+            Controls.Clear();
+            Controls.Add(Menu);
+		}
 
         protected override void OnLoad(EventArgs e)
 		{
@@ -211,12 +114,12 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 
             if (!(Page.ClientScript.IsClientScriptIncludeRegistered("AMMenu")))
             {
-                Page.ClientScript.RegisterClientScriptInclude("AMMenu", Page.ClientScript.GetWebResourceUrl(this.GetType(), "DotNetNuke.Modules.ActiveForums.CustomControls.Resources.MenuButton.js"));
+                Page.ClientScript.RegisterClientScriptInclude("AMMenu", Page.ClientScript.GetWebResourceUrl(GetType(), "DotNetNuke.Modules.ActiveForums.CustomControls.Resources.MenuButton.js"));
             }
         }
+
+        public class MenuContent : Control { }
     }
 
-    public class MenuContent : Control
-    {
-    }
+
 }

@@ -1,13 +1,9 @@
 //© 2004 - 2007 ActiveModules, Inc. All Rights Reserved
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
 
+// Orphan Control??  Not Currently used - JB
+
+using System;
 using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using DotNetNuke;
 
 namespace DotNetNuke.Modules.ActiveForums
 {
@@ -17,17 +13,16 @@ namespace DotNetNuke.Modules.ActiveForums
         public int MID;
         public int FID;
 
-        #region Controls
-        #endregion
 
         #region Event Handlers
+
         protected override void OnLoad(EventArgs e)
 		{
 			base.OnLoad(e);
 
             try
             {
-                this.ForumModuleId = MID;
+                ForumModuleId = MID;
                 if (ForumId < 1)
                 {
                     ForumId = FID;
@@ -37,41 +32,26 @@ namespace DotNetNuke.Modules.ActiveForums
             }
             catch (Exception exc)
             {
-                DotNetNuke.Services.Exceptions.Exceptions.ProcessModuleLoadException(this, exc);
+                Services.Exceptions.Exceptions.ProcessModuleLoadException(this, exc);
             }
         }
+
         #endregion
 
-        #region  Web Form Designer Generated Code
-
-        //This call is required by the Web Form Designer.
-        [System.Diagnostics.DebuggerStepThrough()]
-        private void InitializeComponent()
-        {
-        }
-
-        //NOTE: The following placeholder declaration is required by the Web Form Designer.
-        //Do not delete or move it.
-        private object designerPlaceholderDeclaration;
 
         protected override void OnInit(EventArgs e)
 		{
 			base.OnInit(e);
 
-            //CODEGEN: This method call is required by the Web Form Designer
-            //Do not modify it using the code editor.
-            this.LocalResourceFile = "~/DesktopModules/ActiveForums/App_LocalResources/SharedResources.resx";
-            InitializeComponent();
+            LocalResourceFile = "~/DesktopModules/ActiveForums/App_LocalResources/SharedResources.resx";
 
-            lnkSearch.Click += new System.EventHandler(lnkSearch_Click);
-
+            lnkSearch.Click += lnkSearch_Click;
         }
 
-        #endregion
 
-        private void lnkSearch_Click(object sender, System.EventArgs e)
+        private void lnkSearch_Click(object sender, EventArgs e)
         {
-            if (!(txtSearch.Text.Trim() == ""))
+            if (txtSearch.Text.Trim() != "")
             {
                 string[] Params = { ParamKeys.ViewType + "=search", ParamKeys.ForumId + "=" + ForumId, "q=" + HttpUtility.UrlEncode(txtSearch.Text.Trim()) };
                 Response.Redirect(NavigateUrl(TabId, "", Params));

@@ -1,267 +1,220 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Text;
 
-using System.Web;
 
 namespace DotNetNuke.Modules.ActiveForums
 {
 	public class ControlUtils
 	{
-		internal string BuildPager(int TabId, int ModuleId, string GroupPrefix, string ForumPrefix, int ForumGroupId, int ForumID, int TagId, int CategoryId, string OtherPrefix, int PageId, int PageCount)
+		public string BuildPager(int tabId, int moduleId, string groupPrefix, string forumPrefix, int forumGroupId, int forumID, int tagId, int categoryId, string otherPrefix, int pageId, int pageCount)
 		{
-			if (PageCount == 1)
-			{
+			if (pageCount == 1)
 				return string.Empty;
-			}
-			int iMaxPage = PageId + 2;
-			if (iMaxPage > PageCount)
-			{
-				iMaxPage = PageCount;
-			}
-			int i = 1;
-			int iStart = 1;
-			if (PageId <= 3)
+
+			int iMaxPage;
+			int iStart;
+
+			if (pageId <= 3)
 			{
 				iStart = 1;
 				iMaxPage = 5;
 			}
 			else
 			{
-				iStart = PageId - 2;
-				iMaxPage = PageId + 2;
+				iStart = pageId - 2;
+				iMaxPage = pageId + 2;
 			}
 
-			if (iMaxPage > PageCount)
-			{
-				iMaxPage = PageCount;
-			}
-			if (iMaxPage == PageCount)
-			{
+			if (iMaxPage > pageCount)
+				iMaxPage = pageCount;
+
+			if (iMaxPage == pageCount)
 				iStart = iMaxPage - 4;
-			}
+
 			if (iStart <= 0)
-			{
 				iStart = 1;
-			}
-			System.Text.StringBuilder sb = new System.Text.StringBuilder();
-			sb.Append("<div class=\"af-pager\"><table>");
-			sb.Append("<tr>");
-			//For x As Integer = 1 To PageCount
-			for (i = iStart; i <= iMaxPage; i++)
+
+			var sb = new StringBuilder();
+			sb.Append("<div class=\"af-pager\"><table><tr>");
+
+			for (var i = iStart; i <= iMaxPage; i++)
 			{
-
-				if (i == PageId)
-				{
-					sb.Append("<td class=\"afpg-current\">");
-					sb.Append("<span>");
-					sb.Append(i);
-					sb.Append("</span>");
-					sb.Append("</td>");
-				}
+				if (i == pageId)
+				    sb.AppendFormat("<td class=\"afpg-current\"><span>{0}</span></td>", i);
 				else
-				{
-					sb.Append("<td class=\"afpg-page\">");
-					sb.Append("<a href=\"" + BuildUrl(TabId, ModuleId, GroupPrefix, ForumPrefix, ForumGroupId, ForumID, TagId, CategoryId, OtherPrefix, i, -1) + "\"><span>");
-					sb.Append(i);
-					sb.Append("</span></a>");
-					sb.Append("</td>");
-				}
+                    sb.AppendFormat("<td class=\"afpg-page\"><a href=\"{0}\"><span>{1}</span></a></td>", BuildUrl(tabId, moduleId, groupPrefix, forumPrefix, forumGroupId, forumID, tagId, categoryId, otherPrefix, i, -1), i);
 
-				if (i == PageCount)
-				{
+				if (i == pageCount)
 					break;
-				}
 			}
-			sb.Append("</tr>");
-			sb.Append("</table></div>");
+
+            sb.Append("</tr></table></div>");
+
 			return sb.ToString();
 		}
-		internal string BuildUrl(int TabId, int ModuleId, string GroupPrefix, string ForumPrefix, int ForumGroupId, int ForumID, int TagId, int CategoryId, string OtherPrefix, int PageId, int SocialGroupId)
+
+		public string BuildUrl(int tabId, int moduleId, string groupPrefix, string forumPrefix, int forumGroupId, int forumID, int tagId, int categoryId, string otherPrefix, int pageId, int socialGroupId)
 		{
-			return BuildUrl(TabId, ModuleId, GroupPrefix, ForumPrefix, ForumGroupId, ForumID, -1, string.Empty, TagId, CategoryId, OtherPrefix, PageId, SocialGroupId);
+			return BuildUrl(tabId, moduleId, groupPrefix, forumPrefix, forumGroupId, forumID, -1, string.Empty, tagId, categoryId, otherPrefix, pageId, socialGroupId);
 		}
-		internal string BuildUrl(int TabId, int ModuleId, string GroupPrefix, string ForumPrefix, int ForumGroupId, int ForumID, int TopicId, string TopicURL, int TagId, int CategoryId, string OtherPrefix, int PageId, int SocialGroupId)
+
+		public string BuildUrl(int tabId, int moduleId, string groupPrefix, string forumPrefix, int forumGroupId, int forumID, int topicId, string topicURL, int tagId, int categoryId, string otherPrefix, int pageId, int socialGroupId)
 		{
-			SettingsInfo _mainSettings = DataCache.MainSettings(ModuleId);
-			string[] @params = {};
-			if (! _mainSettings.URLRewriteEnabled || (((string.IsNullOrEmpty(ForumPrefix) && ForumID > 0 && string.IsNullOrEmpty(GroupPrefix)) | (string.IsNullOrEmpty(ForumPrefix) && string.IsNullOrEmpty(GroupPrefix) && ForumGroupId > 0)) && string.IsNullOrEmpty(OtherPrefix)))
+			var mainSettings = DataCache.MainSettings(moduleId);
+
+		    var @params = new List<string>();
+
+			if (! mainSettings.URLRewriteEnabled || (((string.IsNullOrEmpty(forumPrefix) && forumID > 0 && string.IsNullOrEmpty(groupPrefix)) || (string.IsNullOrEmpty(forumPrefix) && string.IsNullOrEmpty(groupPrefix) && forumGroupId > 0)) && string.IsNullOrEmpty(otherPrefix)))
 			{
-				if (ForumID > 0 && TopicId == -1)
+				if (forumID > 0 && topicId == -1)
+					@params.Add(ParamKeys.ForumId + "=" + forumID);
+
+				else if (forumGroupId > 0 && topicId == -1)
+                    @params.Add(ParamKeys.GroupId + "=" + forumGroupId);
+
+				else if (tagId > 0)
 				{
-					@params = Utilities.AddParams(ParamKeys.ForumId + "=" + ForumID.ToString(), @params);
+					@params.Add("afv=grid");
+					@params.Add("afgt=tags");
+					@params.Add("aftg=" + tagId);
 				}
-				else if (ForumGroupId > 0 && TopicId == -1)
+
+				else if (categoryId > 0)
+					@params.Add("act=" + categoryId);
+
+				else if (! (string.IsNullOrEmpty(otherPrefix)))
 				{
-					@params = Utilities.AddParams(ParamKeys.GroupId + "=" + ForumGroupId.ToString(), @params);
+					@params.Add("afv=grid");
+					@params.Add("afgt=" + otherPrefix);
 				}
-				else if (TagId > 0)
-				{
-					//afv=grid&afgt=tags&aftg=
-					@params = Utilities.AddParams("afv=grid", @params);
-					@params = Utilities.AddParams("afgt=tags", @params);
-					@params = Utilities.AddParams("aftg=" + TagId.ToString(), @params);
+
+				else if (topicId > 0)
+					@params.Add(ParamKeys.TopicId + "=" + topicId);
+
+				if (pageId > 1)
+					@params.Add(ParamKeys.PageId + "=" + pageId);
+
+				if (socialGroupId > 0)
+
+					@params.Add("GroupId=" + socialGroupId);
+
+				return Utilities.NavigateUrl(tabId, string.Empty, @params.ToArray());
+			}
 
 
-				}
-				else if (CategoryId > 0)
-				{
-					@params = Utilities.AddParams("act=" + CategoryId.ToString(), @params);
-				}
-				else if (! (string.IsNullOrEmpty(OtherPrefix)))
-				{
-					@params = Utilities.AddParams("afv=grid", @params);
-					@params = Utilities.AddParams("afgt=" + OtherPrefix, @params);
-				}
-				else if (TopicId > 0)
-				{
-					@params = Utilities.AddParams(ParamKeys.TopicId + "=" + TopicId.ToString(), @params);
-				}
-				if (PageId > 1)
-				{
-					@params = Utilities.AddParams(ParamKeys.PageId + "=" + PageId, @params);
-				}
-				if (SocialGroupId > 0)
-				{
-					@params = Utilities.AddParams("GroupId=" + SocialGroupId, @params);
-				}
-				return Utilities.NavigateUrl(TabId, "", @params);
+		    var sURL = string.Empty;
+		    if (! (string.IsNullOrEmpty(mainSettings.PrefixURLBase)))
+		        sURL += "/" + mainSettings.PrefixURLBase;
+
+		    if (! (string.IsNullOrEmpty(groupPrefix)))
+		        sURL += "/" + groupPrefix;
+
+		    if (! (string.IsNullOrEmpty(forumPrefix)))
+		        sURL += "/" + forumPrefix;
+
+		    if (! (string.IsNullOrEmpty(topicURL)))
+		        sURL += "/" + topicURL;
+
+		    if (tagId > 0)
+		        sURL += "/" + mainSettings.PrefixURLTag + "/" + otherPrefix;
+
+		    else if (categoryId > 0)
+		        sURL += "/" + mainSettings.PrefixURLCategory + "/" + otherPrefix;
+
+		    else if (! (string.IsNullOrEmpty(otherPrefix)) && (tagId == -1 || categoryId == -1))
+		        sURL += "/" + mainSettings.PrefixURLOther + "/" + otherPrefix;
+
+		    if (topicId > 0 && string.IsNullOrEmpty(topicURL))
+		        return Utilities.NavigateUrl(tabId, string.Empty, ParamKeys.TopicId + "=" + topicId);
+
+		    if (pageId > 1)
+		    {
+		        if (string.IsNullOrEmpty(sURL))
+		            return Utilities.NavigateUrl(tabId, string.Empty, ParamKeys.PageId + "=" + pageId);
+
+		        sURL += "/" + pageId.ToString();
+		    }
+		    if (string.IsNullOrEmpty(sURL))
+
+		        return Utilities.NavigateUrl(tabId);
+
+		    return sURL + "/";
+		}
+
+		public string TopicURL(IDataRecord row, int tabId, int moduleId, int pageId = 1)
+		{
+			var mainSettings = DataCache.MainSettings(moduleId);
+
+			var sURL = string.Empty;
+
+			if (!(string.IsNullOrEmpty(row["PrefixURL"].ToString())) && !(string.IsNullOrEmpty(row["URL"].ToString())) && mainSettings.URLRewriteEnabled)
+			{
+				if (! (string.IsNullOrWhiteSpace(mainSettings.PrefixURLBase)))
+					sURL += "/" + mainSettings.PrefixURLBase;
+
+				if (! (string.IsNullOrWhiteSpace(row["GroupPrefixURL"].ToString())))
+					sURL += "/" + row["GroupPrefixURL"];
+
+				sURL += "/" + row["PrefixURL"] + "/" + row["URL"] + "/";
+				if (pageId > 1)
+					sURL += "/" + pageId.ToString() + "/";
 			}
 			else
 			{
-				string sURL = string.Empty;
-				if (! (string.IsNullOrEmpty(_mainSettings.PrefixURLBase)))
-				{
-					sURL += "/" + _mainSettings.PrefixURLBase;
-				}
-				if (! (string.IsNullOrEmpty(GroupPrefix)))
-				{
-					sURL += "/" + GroupPrefix;
-				}
-				if (! (string.IsNullOrEmpty(ForumPrefix)))
-				{
-					sURL += "/" + ForumPrefix;
-				}
-				if (! (string.IsNullOrEmpty(TopicURL)))
-				{
-					sURL += "/" + TopicURL;
-				}
-				if (TagId > 0)
-				{
-					sURL += "/" + _mainSettings.PrefixURLTag + "/" + OtherPrefix;
-				}
-				else if (CategoryId > 0)
-				{
-					sURL += "/" + _mainSettings.PrefixURLCategory + "/" + OtherPrefix;
-				}
-				else if (! (string.IsNullOrEmpty(OtherPrefix)) && (TagId == -1 || CategoryId == -1))
-				{
-					sURL += "/" + _mainSettings.PrefixURLOther + "/" + OtherPrefix;
-				}
-				if (TopicId > 0 && string.IsNullOrEmpty(TopicURL))
-				{
-					return Utilities.NavigateUrl(TabId, "", ParamKeys.TopicId + "=" + TopicId.ToString());
-				}
-				if (PageId > 1)
-				{
-					if (string.IsNullOrEmpty(sURL))
-					{
-						return Utilities.NavigateUrl(TabId, "", ParamKeys.PageId + "=" + PageId);
-					}
-					sURL += "/" + PageId.ToString();
-				}
-				if (string.IsNullOrEmpty(sURL))
-				{
-					return Utilities.NavigateUrl(TabId);
-				}
-				return sURL + "/";
-			}
-		}
-		internal string TopicURL(IDataRecord row, int TabId, int ModuleId, int PageId = 1)
-		{
-			SettingsInfo _mainSettings = DataCache.MainSettings(ModuleId);
-			string sURL = string.Empty;
-			if (! (string.IsNullOrEmpty(row["PrefixURL"].ToString())) && ! (string.IsNullOrEmpty(row["URL"].ToString())) && _mainSettings.URLRewriteEnabled)
-			{
-				if (! (string.IsNullOrEmpty(_mainSettings.PrefixURLBase)))
-				{
-					sURL += "/" + _mainSettings.PrefixURLBase;
-				}
-				if (! (string.IsNullOrEmpty(row["GroupPrefixURL"].ToString())))
-				{
-					sURL += "/" + row["GroupPrefixURL"].ToString();
-				}
-				sURL += "/" + row["PrefixURL"].ToString() + "/" + row["URL"].ToString() + "/";
-				if (PageId > 1)
-				{
-					sURL += "/" + PageId.ToString() + "/";
-				}
-			}
-			else
-			{
-				if (PageId == 1)
-				{
-					sURL = Utilities.NavigateUrl(TabId, "", new string[] {ParamKeys.TopicId + "=" + row["TopicId"].ToString()});
-				}
+				if (pageId == 1)
+					sURL = Utilities.NavigateUrl(tabId, "", ParamKeys.TopicId + "=" + row["TopicId"]);
+
 				else
-				{
-					sURL = Utilities.NavigateUrl(TabId, "", new string[] {ParamKeys.TopicId + "=" + row["TopicId"].ToString(), ParamKeys.PageId + "=" + PageId.ToString()});
-				}
-
+					sURL = Utilities.NavigateUrl(tabId, "", new [] { ParamKeys.TopicId + "=" + row["TopicId"], ParamKeys.PageId + "=" + pageId });
 			}
 			return sURL;
 		}
-		internal string ForumURL(IDataRecord row, int TabId, int ModuleId, int PageId = 1)
-		{
-			return ForumURL(row["GroupPrefixURL"].ToString(), row["PrefixURL"].ToString(), int.Parse(row["ForumID"].ToString()), TabId, ModuleId, PageId);
-		}
-		internal string ForumURL(string GroupPrefix, string ForumPrefix, int ForumId, int TabId, int ModuleId, int PageId = 1)
-		{
-			SettingsInfo _mainSettings = DataCache.MainSettings(ModuleId);
-			string sURL = string.Empty;
 
-			if (! (string.IsNullOrEmpty(ForumPrefix)) && _mainSettings.URLRewriteEnabled)
+		public string ForumURL(IDataRecord row, int tabId, int moduleId, int pageId = 1)
+		{
+			return ForumURL(row["GroupPrefixURL"].ToString(), row["PrefixURL"].ToString(), int.Parse(row["ForumID"].ToString()), tabId, moduleId, pageId);
+		}
+
+		public string ForumURL(string groupPrefix, string forumPrefix, int forumId, int tabId, int moduleId, int pageId = 1)
+		{
+			var mainSettings = DataCache.MainSettings(moduleId);
+
+			var sURL = string.Empty;
+
+			if (!(string.IsNullOrWhiteSpace(forumPrefix)) && mainSettings.URLRewriteEnabled)
 			{
-				if (! (string.IsNullOrEmpty(_mainSettings.PrefixURLBase)))
-				{
-					sURL += "/" + _mainSettings.PrefixURLBase;
-				}
-				if (! (string.IsNullOrEmpty(GroupPrefix)))
-				{
-					sURL += "/" + GroupPrefix;
-				}
-				sURL += "/" + ForumPrefix + "/";
-				if (PageId > 1)
-				{
-					sURL += "/" + PageId.ToString() + "/";
-				}
+                if (!(string.IsNullOrWhiteSpace(mainSettings.PrefixURLBase)))
+					sURL += "/" + mainSettings.PrefixURLBase;
+
+                if (!(string.IsNullOrWhiteSpace(groupPrefix)))
+					sURL += "/" + groupPrefix;
+
+				sURL += "/" + forumPrefix + "/";
+				if (pageId > 1)
+					sURL += "/" + pageId + "/";
 			}
 			else
 			{
-				if (PageId == 1)
-				{
-					sURL = Utilities.NavigateUrl(TabId, "", new string[] {ParamKeys.ForumId + "=" + ForumId.ToString()});
-				}
+				if (pageId == 1)
+					sURL = Utilities.NavigateUrl(tabId, string.Empty, ParamKeys.ForumId + "=" + forumId);
 				else
-				{
-					sURL = Utilities.NavigateUrl(TabId, "", new string[] {ParamKeys.ForumId + "=" + ForumId.ToString(), ParamKeys.PageId + "=" + PageId.ToString()});
-				}
-
+                    sURL = Utilities.NavigateUrl(tabId, string.Empty, new[] { ParamKeys.ForumId + "=" + forumId, ParamKeys.PageId + "=" + pageId });
 			}
 			return sURL;
 		}
-		internal string TopicState(IDataRecord row)
+
+		public string TopicState(IDataRecord row)
 		{
-			string states = string.Empty;
+			var states = string.Empty;
+
 			if (Convert.ToBoolean(row["IsLocked"]))
-			{
 				states += "<span class=\"af-locked\"></span>";
-			}
+
 			if (Convert.ToBoolean(row["IsPinned"]))
-			{
 				states += "<span class=\"af-pinned\"></span>";
-			}
+
 			switch (int.Parse(row["StatusId"].ToString()))
 			{
 				case 0:
@@ -274,9 +227,11 @@ namespace DotNetNuke.Modules.ActiveForums
 					states += "<span class=\"af-status3\"></span>";
 					break;
 			}
+
 			return states;
 		}
-		internal string Pager(int RecordCount, int PageSize, int CurrentPage, int TabId)
+
+		public string Pager(int recordCount, int pageSize, int currentPage, int tabId)
 		{
 			return string.Empty;
 		}

@@ -40,6 +40,204 @@
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_searchadvanced.litOptions">
+            <summary>
+            litOptions control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_searchadvanced.lblSearch">
+            <summary>
+            lblSearch control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_searchadvanced.txtSearch">
+            <summary>
+            txtSearch control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_searchadvanced.drpSearchColumns">
+            <summary>
+            drpSearchColumns control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_searchadvanced.drpSearchType">
+            <summary>
+            drpSearchType control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_searchadvanced.lblUserName">
+            <summary>
+            lblUserName control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_searchadvanced.txtUserName">
+            <summary>
+            txtUserName control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_searchadvanced.lblTags">
+            <summary>
+            lblTags control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_searchadvanced.txtTags">
+            <summary>
+            txtTags control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_searchadvanced.btnSearch">
+            <summary>
+            btnSearch control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_searchadvanced.btnReset">
+            <summary>
+            btnReset control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_searchadvanced.litAdditionalOptions">
+            <summary>
+            litAdditionalOptions control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_searchadvanced.lblForums">
+            <summary>
+            lblForums control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_searchadvanced.lbForums">
+            <summary>
+            lbForums control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_searchadvanced.lblSearchDays">
+            <summary>
+            lblSearchDays control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_searchadvanced.drpSearchDays">
+            <summary>
+            drpSearchDays control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_searchadvanced.lblResultType">
+            <summary>
+            lblResultType control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_searchadvanced.drpResultType">
+            <summary>
+            drpResultType control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_searchadvanced.lblSortType">
+            <summary>
+            lblSortType control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_searchadvanced.drpSort">
+            <summary>
+            drpSort control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_searchadvanced.btnSearch2">
+            <summary>
+            btnSearch2 control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_searchadvanced.btnReset2">
+            <summary>
+            btnReset2 control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
         <member name="F:DotNetNuke.Modules.ActiveForums.ActiveForums.plhAF">
             <summary>
             plhAF control.
@@ -139,7 +337,7 @@
             <summary>
             Get the template as a string from the specified path
             </summary>
-            <param name="FilePath">Physical path to file</param>
+            <param name="filePath">Physical path to file</param>
             <returns>String</returns>
             <remarks></remarks>
         </member>
@@ -2020,151 +2218,97 @@
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.af_search_new.lblHeader">
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_search.PagerTop">
             <summary>
-            lblHeader control.
+            PagerTop control.
             </summary>
             <remarks>
             Auto-generated field.
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.af_search_new.txtSearch">
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_search.phKeywords">
             <summary>
-            txtSearch control.
+            phKeywords control.
             </summary>
             <remarks>
             Auto-generated field.
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.af_search_new.lnkSearch">
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_search.rptKeywords">
             <summary>
-            lnkSearch control.
+            rptKeywords control.
             </summary>
             <remarks>
             Auto-generated field.
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.af_search_new.lblOptions">
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_search.phUsername">
             <summary>
-            lblOptions control.
+            phUsername control.
             </summary>
             <remarks>
             Auto-generated field.
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.af_search_new.litSearchColumns">
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_search.litUserName">
             <summary>
-            litSearchColumns control.
+            litUserName control.
             </summary>
             <remarks>
             Auto-generated field.
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.af_search_new.drpSearchColumns">
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_search.phTag">
             <summary>
-            drpSearchColumns control.
+            phTag control.
             </summary>
             <remarks>
             Auto-generated field.
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.af_search_new.litSearchType">
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_search.litTag">
             <summary>
-            litSearchType control.
+            litTag control.
             </summary>
             <remarks>
             Auto-generated field.
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.af_search_new.drpSearchType">
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_search.litSearchDuration">
             <summary>
-            drpSearchType control.
+            litSearchDuration control.
             </summary>
             <remarks>
             Auto-generated field.
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.af_search_new.litSearchTimeFrame">
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_search.litSearchAge">
             <summary>
-            litSearchTimeFrame control.
+            litSearchAge control.
             </summary>
             <remarks>
             Auto-generated field.
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.af_search_new.litSearchFromText">
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_search.litSearchTitle">
             <summary>
-            litSearchFromText control.
+            litSearchTitle control.
             </summary>
             <remarks>
             Auto-generated field.
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.af_search_new.drpSearchDays">
-            <summary>
-            drpSearchDays control.
-            </summary>
-            <remarks>
-            Auto-generated field.
-            To modify move field declaration from designer file to code-behind file.
-            </remarks>
-        </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.af_search_new.litSearchUserText">
-            <summary>
-            litSearchUserText control.
-            </summary>
-            <remarks>
-            Auto-generated field.
-            To modify move field declaration from designer file to code-behind file.
-            </remarks>
-        </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.af_search_new.txtUserName">
-            <summary>
-            txtUserName control.
-            </summary>
-            <remarks>
-            Auto-generated field.
-            To modify move field declaration from designer file to code-behind file.
-            </remarks>
-        </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.af_search_new.litSearchForums">
-            <summary>
-            litSearchForums control.
-            </summary>
-            <remarks>
-            Auto-generated field.
-            To modify move field declaration from designer file to code-behind file.
-            </remarks>
-        </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.af_search_new.mnShowForums">
-            <summary>
-            mnShowForums control.
-            </summary>
-            <remarks>
-            Auto-generated field.
-            To modify move field declaration from designer file to code-behind file.
-            </remarks>
-        </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.af_search_new.trForums">
-            <summary>
-            trForums control.
-            </summary>
-            <remarks>
-            Auto-generated field.
-            To modify move field declaration from designer file to code-behind file.
-            </remarks>
-        </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.af_search_new.pnlMessage">
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_search.pnlMessage">
             <summary>
             pnlMessage control.
             </summary>
@@ -2173,7 +2317,7 @@
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.af_search_new.litMessage">
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_search.litMessage">
             <summary>
             litMessage control.
             </summary>
@@ -2182,16 +2326,7 @@
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.af_search_new.pnlResults">
-            <summary>
-            pnlResults control.
-            </summary>
-            <remarks>
-            Auto-generated field.
-            To modify move field declaration from designer file to code-behind file.
-            </remarks>
-        </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.af_search_new.rptPosts">
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_search.rptPosts">
             <summary>
             rptPosts control.
             </summary>
@@ -2200,9 +2335,27 @@
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.af_search_new.Pager1">
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_search.rptTopics">
             <summary>
-            Pager1 control.
+            rptTopics control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_search.PagerBottom">
+            <summary>
+            PagerBottom control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_search.litRecordCount">
+            <summary>
+            litRecordCount control.
             </summary>
             <remarks>
             Auto-generated field.
