@@ -180,14 +180,14 @@ namespace DotNetNuke.Modules.ActiveForums
                 btnSearch.Click += btnSearch_Click;
                 btnSearch2.Click += btnSearch_Click;
 
-                txtSearch.Attributes.Add("onkeydown", "if(event.keyCode == 13){document.getElementById('" + btnSearch.ClientID + "').click();}");
-
                 if (Page.IsPostBack) 
                     return;
 
                 // Bind the intial values for the forum
 
                 // Options
+
+                litInputError.Text = GetSharedResource("[RESX:SearchInputError]");
 
                 litOptions.Text = GetSharedResource("[RESX:SearchOptions]");
 
@@ -250,16 +250,39 @@ namespace DotNetNuke.Modules.ActiveForums
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
-            var searchText = txtSearch.Text.Trim();
+            var searchText = txtSearch.Text;
+            var authorUsername = txtUserName.Text;
+            var tags = txtTags.Text;
 
-            if (searchText == string.Empty) 
+            if (string.IsNullOrWhiteSpace(searchText) && string.IsNullOrWhiteSpace(authorUsername) && string.IsNullOrWhiteSpace(tags))
                 return;
             
             // Query
-            searchText = Utilities.XSSFilter(searchText);
-            searchText = Utilities.StripHTMLTag(searchText);
-            searchText = Utilities.CheckSqlString(searchText);
-            searchText = searchText.Trim();
+            if(!string.IsNullOrWhiteSpace(searchText))
+            {
+                searchText = Utilities.XSSFilter(searchText);
+                searchText = Utilities.StripHTMLTag(searchText);
+                searchText = Utilities.CheckSqlString(searchText);
+                searchText = searchText.Trim();  
+            }
+
+            // Author Name
+            if (!string.IsNullOrWhiteSpace(authorUsername))
+            {
+                authorUsername = txtUserName.Text;
+                authorUsername = Utilities.CheckSqlString(authorUsername);
+                authorUsername = Utilities.XSSFilter(authorUsername);
+                authorUsername = authorUsername.Trim();
+            }
+
+            // Tags
+            if (!string.IsNullOrWhiteSpace(tags))
+            {
+                tags = Utilities.XSSFilter(tags);
+                tags = Utilities.StripHTMLTag(tags);
+                tags = Utilities.CheckSqlString(tags);
+                tags = tags.Trim();
+            }
 
             // Search Type, Search Column & Search Days
             var searchType = Convert.ToInt32(drpSearchType.SelectedItem.Value);
@@ -268,27 +291,6 @@ namespace DotNetNuke.Modules.ActiveForums
             var resultType = Convert.ToInt32(drpResultType.SelectedItem.Value);
             var sort = Convert.ToInt32(drpSort.SelectedValue);
             
-            // Author Name
-            var authorUsername = string.Empty;
-            if (!string.IsNullOrWhiteSpace(txtUserName.Text))
-            {
-                authorUsername = txtUserName.Text;
-                authorUsername = Utilities.CheckSqlString(authorUsername);
-                authorUsername = Utilities.XSSFilter(authorUsername);
-                authorUsername = authorUsername.Trim();
-            }
-
-            // Query
-            var tag = txtTags.Text.Trim();
-            if(!string.IsNullOrWhiteSpace(tag))
-            {
-                tag = Utilities.XSSFilter(tag);
-                tag = Utilities.StripHTMLTag(tag);
-                tag = Utilities.CheckSqlString(tag);
-                tag = tag.Trim();  
-            }
-
-
             // Selected Forums
             var forums = string.Empty;
 
@@ -311,8 +313,8 @@ namespace DotNetNuke.Modules.ActiveForums
             if(!string.IsNullOrWhiteSpace(searchText))
                 @params.Add("q=" + Server.UrlEncode(searchText));
 
-            if (!string.IsNullOrWhiteSpace(tag))
-                @params.Add("tg=" + Server.UrlEncode(tag));
+            if (!string.IsNullOrWhiteSpace(tags))
+                @params.Add("tg=" + Server.UrlEncode(tags));
 
             if(searchType > 0)
                 @params.Add("k=" + searchType);

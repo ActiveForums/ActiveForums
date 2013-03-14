@@ -336,7 +336,7 @@ namespace DotNetNuke.Modules.ActiveForums
             _rowIndex = (PageId - 1) * _pageSize;
         
             // If we don't have a search string, tag or user id, there is nothing we can do so exit
-            if (SearchText == string.Empty && Tags == string.Empty && AuthorUserId <= 0) 
+            if (SearchText == string.Empty && Tags == string.Empty && AuthorUsername == String.Empty && AuthorUserId <= 0) 
                 return;
 
             // Build the list of forums to search
@@ -346,7 +346,7 @@ namespace DotNetNuke.Modules.ActiveForums
 
             var fc = new ForumController();
 
-            var sForumsAllowed = fc.GetForumsForUser(ForumUser.UserRoles, PortalId, ModuleId, "CanRead");
+            var sForumsAllowed = fc.GetForumsForUser(ForumUser.UserRoles, PortalId, ModuleId);
             var forumsAllowed = sForumsAllowed.Split(new [] {':',';'}).Where(f => int.TryParse(f, out parseId)).Select(f => parseId).ToList();
             var forumsRequested = Forums.Split(new[] { ':', ';' }).Where(f => int.TryParse(f, out parseId)).Select(f => parseId).ToList();
 
@@ -488,14 +488,17 @@ namespace DotNetNuke.Modules.ActiveForums
             var date = GetUserDate(Convert.ToDateTime(_currentRow["DateCreated"]));
             var currentDate = GetUserDate(DateTime.Now);
 
-            var datePart = date.ToString(MainSettings.DateFormatString);
+            const string dateFormat = "M/d/yyyy"; // MainSettings.DateFormatString;
+            const string timeFormat = "h:mm tt"; // MainSettings.TimeFormatString;
+
+            var datePart = date.ToString(dateFormat);
 
             if (currentDate.Date == date.Date)
                 datePart = GetSharedResource("Today");
             else if (currentDate.AddDays(-1).Date == date.Date)
                 datePart = GetSharedResource("Yesterday");
 
-            return string.Format(GetSharedResource("SearchPostTime"), datePart, date.ToString(MainSettings.TimeFormatString));
+            return string.Format(GetSharedResource("SearchPostTime"), datePart, date.ToString(timeFormat));
         }
 
         public string GetAuthorProfileUrl()
@@ -559,14 +562,17 @@ namespace DotNetNuke.Modules.ActiveForums
             var date = GetUserDate(Convert.ToDateTime(_currentRow["LastReplyDate"]));
             var currentDate = GetUserDate(DateTime.Now);
 
-            var datePart = date.ToString(MainSettings.DateFormatString);
+            const string dateFormat = "M/d/yyyy"; // MainSettings.DateFormatString;
+            const string timeFormat = "h:mm tt"; // MainSettings.TimeFormatString;
+
+            var datePart = date.ToString(dateFormat);
 
             if (currentDate.Date == date.Date)
                 datePart = "Today";
             else if (currentDate.AddDays(-1).Date == date.Date)
                 datePart = "Yesterday";
 
-            return datePart + " @ " + date.ToString(MainSettings.TimeFormatString);
+            return datePart + " @ " + date.ToString(timeFormat);
         }
 
         public string GetPostSnippet()

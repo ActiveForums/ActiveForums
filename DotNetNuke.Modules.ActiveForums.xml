@@ -121,6 +121,15 @@
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_searchadvanced.litInputError">
+            <summary>
+            litInputError control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
         <member name="F:DotNetNuke.Modules.ActiveForums.af_searchadvanced.btnSearch">
             <summary>
             btnSearch control.

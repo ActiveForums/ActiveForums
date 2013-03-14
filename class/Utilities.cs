@@ -1072,7 +1072,7 @@ namespace DotNetNuke.Modules.ActiveForums
             if (HttpContext.Current.Request.IsSecureConnection)
                 strHost = strHost.Replace("http://", "https://");
 
-            var spacerTemplate = string.Format("<img src=\"{0}DesktopModules/ActiveForums/images/spacer.gif\" alt=\"--\" width=\"$1\" height=\"$2\" />", strHost);
+            var spacerTemplate = string.Format("<img src=\"{0}DesktopModules/ActiveForums/images/spacer.gif\" alt=\"--\" width=\"$2\" height=\"$1\" />", strHost);
 
             const string expression = @"\[SPACER\:(\d+)\:(\d+)\]";
 

@@ -94,6 +94,15 @@ namespace DotNetNuke.Modules.ActiveForums {
         protected global::System.Web.UI.WebControls.TextBox txtTags;
         
         /// <summary>
+        /// litInputError control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litInputError;
+        
+        /// <summary>
         /// btnSearch control.
         /// </summary>
         /// <remarks>

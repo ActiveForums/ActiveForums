@@ -1540,4 +1540,7 @@ From,
   <data name="Yesterday.Text" xml:space="preserve">
     <value>Yesterday</value>
   </data>
+  <data name="[RESX:SearchInputError].Text" xml:space="preserve">
+    <value>Please enter a keyword, username or tag.</value>
+  </data>
 </root>

@@ -25,6 +25,7 @@
             <asp:TextBox runat="server" ID="txtTags" />
         </div>
         <div class="af-adv-search-footer">
+            <span class="af-search-input-error"><asp:Literal runat="server" ID="litInputError" /></span>
             <asp:Button runat="server" ID="btnSearch" Text="Search" />
             <button runat="server" id="btnReset" type="reset" />
         </div>
@@ -64,13 +65,16 @@
 
     $(document).ready(function() {
         $('#<%= lbForums.ClientID %>').afForumSelector();
-        $('.af-adv-search-footer').find('input:submit').each(function () { $(this).replaceWith('<button type="submit" name="' + $(this).attr('name') + '" class="' + $(this).attr('class') + '" id="' + $(this).attr('id') + '" >' + $(this).val() + '</button>'); });
-        $('.af-adv-search-footer :submit').button({ icons: { primary: "ui-icon-search" } });
-        $('.af-adv-search-footer :reset').button({ icons: { primary: "ui-icon-refresh" } });
-        $('.af-adv-search-header-collapse').click(function() {
-            $(this).siblings().toggle();
-            $(this).find(".ui-icon").toggleClass("ui-icon-triangle-1-n ui-icon-triangle-1-s");
+        $('.af-adv-search-footer').find('input:submit').each(function() { $(this).replaceWith('<button type="submit" name="' + $(this).attr('name') + '" class="' + $(this).attr('class') + '" id="' + $(this).attr('id') + '" >' + $(this).val() + '</button>');});
+        $('.af-adv-search-footer :submit').button({ icons: { primary: "ui-icon-search" } }).click(function (e) {
+            if (!$('#<%=txtSearch.ClientID%>').val() && !$('#<%=txtUserName.ClientID%>').val() && !$('#<%=txtTags.ClientID%>').val()) {
+                $('.af-search-input-error').show().delay(1500).fadeOut('slow');
+                return false;
+            } 
         });
+        $('.af-adv-search :text').keypress(function (event) { if (event.keyCode == 13) { $('#<%= btnSearch.ClientID%>').click(); } });
+        $('.af-adv-search-footer :reset').button({ icons: { primary: "ui-icon-refresh" } });
+        $('.af-adv-search-header-collapse').click(function() { $(this).siblings().toggle();  $(this).find(".ui-icon").toggleClass("ui-icon-triangle-1-n ui-icon-triangle-1-s"); });
     });
 
 </script>
