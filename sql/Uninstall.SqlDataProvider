@@ -749,6 +749,11 @@ GO
 
 /* 5.0.4 */
 
+/****** Object:  StoredProcedure {databaseOwner}[{objectQualifier}activeforums_Search]    Script Date: 03/14/2013 23:00:40 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_Search]') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Search]
+GO
+
 /****** Object:  StoredProcedure {databaseOwner}[{objectQualifier}activeforums_Search_Standard]    Script Date: 03/12/2013 23:04:43 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_Search_Standard]') AND type in (N'P', N'PC'))
 DROP PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Search_Standard]

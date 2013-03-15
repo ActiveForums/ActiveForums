@@ -1,11 +1,11 @@
-﻿/****** Object:  StoredProcedure {databaseOwner}[{objectQualifier}activeforums_Search_Standard]    Script Date: 03/12/2013 23:04:43 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_Search_Standard]') AND type in (N'P', N'PC'))
-DROP PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Search_Standard]
+﻿/****** Object:  StoredProcedure {databaseOwner}[{objectQualifier}activeforums_Search]    Script Date: 03/14/2013 22:43:53 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_Search]') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Search]
 GO
 
-/****** Object:  StoredProcedure {databaseOwner}[{objectQualifier}activeforums_Search_FullText]    Script Date: 03/12/2013 23:05:18 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_Search_FullText]') AND type in (N'P', N'PC'))
-DROP PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Search_FullText]
+/****** Object:  StoredProcedure {databaseOwner}[{objectQualifier}activeforums_Search_Standard]    Script Date: 03/12/2013 23:04:43 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_Search_Standard]') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Search_Standard]
 GO
 
 /****** Object:  StoredProcedure {databaseOwner}[{objectQualifier}activeforums_Search_GetFullTextStatus]    Script Date: 03/12/2013 23:04:00 ******/
@@ -224,7 +224,7 @@ END
 GO
 
 
-/****** Object:  StoredProcedure {databaseOwner}[{objectQualifier}activeforums_Search_Standard]    Script Date: 03/12/2013 23:12:44 ******/
+/****** Object:  StoredProcedure {databaseOwner}[{objectQualifier}activeforums_Search_Standard]    Script Date: 03/14/2013 22:45:21 ******/
 CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Search_Standard]
 
 	@PortalId int,
@@ -317,6 +317,19 @@ BEGIN
 	RETURN
 END
 
+-- Performance Enhancement
+
+SELECT *
+INTO #forums
+FROM {databaseOwner}{objectQualifier}activeforums_Functions_Split(@Forums,':')
+
+SELECT *
+INTO #tags
+FROM @TagTable
+
+SELECT *
+INTO #words
+FROM @Words
 
 
 -- We have 4 distict paths we can go down to determin the result set depending on whether or not
@@ -336,10 +349,8 @@ BEGIN
 			SELECT  t.topicid,
 				 t.contentid, 
 				 c.DateCreated	
-			FROM         {databaseOwner}{objectQualifier}vw_activeforums_TopicView AS T INNER JOIN 
-				{databaseOwner}{objectQualifier}activeforums_Forums as F ON T.ForumId = F.ForumId INNER JOIN
-				{databaseOwner}{objectQualifier}activeforums_ForumTopics FT on T.TopicId = FT.TopicId INNER JOIN
-				{databaseOwner}{objectQualifier}activeforums_Functions_Split(@Forums,':') as fs ON fs.id = f.ForumId INNER JOIN
+			FROM {databaseOwner}{objectQualifier}vw_activeforums_TopicView AS T INNER JOIN 
+				#forums as fs ON fs.id = t.ForumId INNER JOIN
 				{databaseOwner}{objectQualifier}activeforums_Content AS C ON T.ContentId = C.ContentId
 			WHERE T.PortalId = @PortalId AND T.ModuleId = @ModuleId AND 
 				(@TimeSpan = 0 OR DATEDIFF(hh,c.DateCreated,GetDate()) <= @TimeSpan) AND
@@ -347,12 +358,12 @@ BEGIN
 				(@TagCount = 0 OR  T.TopicId IN (
 					SELECT TopicId FROM {databaseOwner}{objectQualifier}activeforums_Tags INNER JOIN
 						{databaseOwner}{objectQualifier}activeforums_Topics_Tags ON {databaseOwner}{objectQualifier}activeforums_Tags.TagId = {databaseOwner}{objectQualifier}activeforums_Topics_Tags.TagId INNER JOIN
-						@TagTable TT ON TT.Tag = {databaseOwner}{objectQualifier}activeforums_Tags.TagName)) 
+						#tags TT ON TT.Tag = {databaseOwner}{objectQualifier}activeforums_Tags.TagName)) 
 		) AS results INNER JOIN
 		(
 			SELECT ContentId as cid, MatchPct FROM (SELECT C.ContentId, Count(*)  * 1.0 / @WordCount as MatchPct 
 			FROM {databaseOwner}{objectQualifier}activeforums_Content C INNER JOIN 
-				@Words W on 
+				#words W on 
 				CASE @SearchField
 								WHEN 0 THEN ' ' + Convert(nvarchar(max),c.Body) + ' ' + c.Subject + ' '
 								WHEN 1 THEN ' ' + c.Subject + ' '
@@ -379,9 +390,8 @@ BEGIN
 				t.contentid, 
 				CASE WHEN rc.DateCreated IS NULL THEN c.DateCreated ELSE rc.DateCreated END  as LastReplyDate		
 			FROM         {databaseOwner}{objectQualifier}vw_activeforums_TopicView AS T INNER JOIN 
-				{databaseOwner}{objectQualifier}activeforums_Forums as F ON T.ForumId = F.ForumId INNER JOIN
 				{databaseOwner}{objectQualifier}activeforums_ForumTopics FT on T.TopicId = FT.TopicId INNER JOIN
-				{databaseOwner}{objectQualifier}activeforums_Functions_Split(@Forums,':') as fs ON fs.id = f.ForumId INNER JOIN
+				#forums as fs ON fs.id = t.ForumId INNER JOIN
 				{databaseOwner}{objectQualifier}activeforums_Content AS C ON T.ContentId = C.ContentId  LEFT OUTER JOIN -- Left outer joins to get last reply date
 				{databaseOwner}{objectQualifier}activeforums_Replies as R on FT.LastReplyId = r.ReplyId LEFT OUTER JOIN
 				{databaseOwner}{objectQualifier}activeforums_Content as RC on R.ContentId = rc.ContentId 
@@ -391,12 +401,12 @@ BEGIN
 			(@TagCount = 0 OR  T.TopicId IN (
 				SELECT TopicId FROM {databaseOwner}{objectQualifier}activeforums_Tags INNER JOIN
 					{databaseOwner}{objectQualifier}activeforums_Topics_Tags ON {databaseOwner}{objectQualifier}activeforums_Tags.TagId = {databaseOwner}{objectQualifier}activeforums_Topics_Tags.TagId INNER JOIN
-					@TagTable TT ON TT.Tag = {databaseOwner}{objectQualifier}activeforums_Tags.TagName))
+					#tags TT ON TT.Tag = {databaseOwner}{objectQualifier}activeforums_Tags.TagName))
 		) AS results INNER JOIN
 		(
 			SELECT ContentId as cid, MatchPct FROM (SELECT C.ContentId, Count(*)  * 1.0 / @WordCount as MatchPct 
 			FROM {databaseOwner}{objectQualifier}activeforums_Content C INNER JOIN 
-				@Words W on 
+				#words W on 
 				CASE @SearchField
 								WHEN 0 THEN ' ' + Convert(nvarchar(max),c.Body) + ' ' + c.Subject + ' '
 								WHEN 1 THEN ' ' + c.Subject + ' '
@@ -425,9 +435,7 @@ BEGIN
 					t.contentid, 
 					c.DateCreated		
 			FROM {databaseOwner}{objectQualifier}vw_activeforums_TopicView AS T INNER JOIN 
-				{databaseOwner}{objectQualifier}activeforums_Forums as F ON T.ForumId = F.ForumId INNER JOIN
-				{databaseOwner}{objectQualifier}activeforums_ForumTopics FT on T.TopicId = FT.TopicId INNER JOIN
-				{databaseOwner}{objectQualifier}activeforums_Functions_Split(@Forums,':') as fs ON fs.id = f.ForumId INNER JOIN
+				#forums as fs ON fs.id = t.ForumId INNER JOIN
 				{databaseOwner}{objectQualifier}activeforums_Content AS C ON T.ContentId = C.ContentId
 			WHERE T.PortalId = @PortalId AND T.ModuleId = @ModuleId AND 
 				(@TimeSpan = 0 OR DATEDIFF(hh,c.DateCreated,GetDate()) <= @TimeSpan) AND
@@ -435,7 +443,7 @@ BEGIN
 				(@TagCount = 0 OR  T.TopicId IN (
 					SELECT TopicId FROM {databaseOwner}{objectQualifier}activeforums_Tags INNER JOIN
 						{databaseOwner}{objectQualifier}activeforums_Topics_Tags ON {databaseOwner}{objectQualifier}activeforums_Tags.TagId = {databaseOwner}{objectQualifier}activeforums_Topics_Tags.TagId INNER JOIN
-						@TagTable TT ON TT.Tag = {databaseOwner}{objectQualifier}activeforums_Tags.TagName))
+						#tags TT ON TT.Tag = {databaseOwner}{objectQualifier}activeforums_Tags.TagName))
 		) as Results
 			
 	RETURN
@@ -455,9 +463,8 @@ BEGIN
 				t.contentid, 
 				CASE WHEN rc.DateCreated IS NULL THEN c.DateCreated ELSE rc.DateCreated END  as LastReplyDate				
 			FROM {databaseOwner}{objectQualifier}vw_activeforums_TopicView AS T INNER JOIN 
-				{databaseOwner}{objectQualifier}activeforums_Forums as F ON T.ForumId = F.ForumId INNER JOIN
 				{databaseOwner}{objectQualifier}activeforums_ForumTopics FT on T.TopicId = FT.TopicId INNER JOIN
-				{databaseOwner}{objectQualifier}activeforums_Functions_Split(@Forums,':') as fs ON fs.id = f.ForumId INNER JOIN
+				#forums as fs ON fs.id = t.ForumId INNER JOIN
 				{databaseOwner}{objectQualifier}activeforums_Content AS C ON T.ContentId = C.ContentId  LEFT OUTER JOIN -- Left outer joins to get last reply date
 				{databaseOwner}{objectQualifier}activeforums_Replies as R on FT.LastReplyId = r.ReplyId LEFT OUTER JOIN
 				{databaseOwner}{objectQualifier}activeforums_Content as RC on R.ContentId = rc.ContentId 
@@ -467,16 +474,17 @@ BEGIN
 				(@TagCount = 0 OR  T.TopicId IN (
 					SELECT TopicId FROM {databaseOwner}{objectQualifier}activeforums_Tags INNER JOIN
 						{databaseOwner}{objectQualifier}activeforums_Topics_Tags ON {databaseOwner}{objectQualifier}activeforums_Tags.TagId = {databaseOwner}{objectQualifier}activeforums_Topics_Tags.TagId INNER JOIN
-						@TagTable TT ON TT.Tag = {databaseOwner}{objectQualifier}activeforums_Tags.TagName)) 
+						#tags TT ON TT.Tag = {databaseOwner}{objectQualifier}activeforums_Tags.TagName)) 
 		) as Results
 	GROUP BY TopicId	
 			
 	RETURN
 END
+
 GO
 
 
-/****** Object:  StoredProcedure {databaseOwner}[{objectQualifier}activeforums_Search]    Script Date: 03/12/2013 23:13:33 ******/
+/****** Object:  StoredProcedure {databaseOwner}{objectQualifier}[activeforums_Search]    Script Date: 03/12/2013 23:13:33 ******/
 CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Search]
 	
 	@PortalId int,
@@ -547,10 +555,10 @@ BEGIN
 	IF(@SearchId IS NOT NULL)
 	INSERT INTO @tmpResults
 	SELECT
-	   Tbl.Col.value('rn[1]', 'int'), -- row number   
-	   Tbl.Col.value('tid[1]', 'int'), -- topicId 
-	   Tbl.Col.value('cid[1]', 'int'),  -- contentId
-	   Tbl.Col.value('mpct[1]', 'decimal(15,4)') -- matchpct
+	   Tbl.Col.value('@rn[1]', 'int'), -- row number   
+	   Tbl.Col.value('@tid[1]', 'int'), -- topicId 
+	   Tbl.Col.value('@cid[1]', 'int'),  -- contentId
+	   Tbl.Col.value('@mpct[1]', 'decimal(15,4)') -- matchpct
 	FROM @SearchXml.nodes('//row') Tbl(Col)
 	
 END
@@ -589,7 +597,7 @@ BEGIN
 	SET @SearchDuration = DATEDIFF(MS, @SearchStarted, GETDATE())
 
 	-- Store our results in the search cache
-	SET @SearchXML = (SELECT * from @tmpResults FOR XML PATH)
+	SET @SearchXML = (SELECT * from @tmpResults FOR XML RAW)
 	
 	INSERT INTO {databaseOwner}{objectQualifier}activeforums_SearchCache(searchResults, userId, context, duration)
 	VALUES(@SearchXml, @UserId, @Forums, @SearchDuration)
@@ -598,9 +606,12 @@ BEGIN
 	SET @SearchId = SCOPE_IDENTITY();
 END
 
+SELECT *
+INTO #tmpResults
+FROM @tmpResults
 
 -- Select out total row count and search id
-SELECT @SearchId AS SearchId, COUNT(*) AS TotalRecords, @SearchDuration as SearchDuration, @SearchAge as SearchAge from @tmpResults
+SELECT @SearchId AS SearchId, COUNT(*) AS TotalRecords, @SearchDuration as SearchDuration, @SearchAge as SearchAge from #tmpResults
 
 -- Post View
 IF @ResultType = 1
@@ -636,7 +647,7 @@ IF @ResultType = 1
 		CASE WHEN FTT.MaxTopicRead > TT.TopicId OR TT.TopicId IS NULL THEN ISNULL(FTT.MaxTopicRead,0) ELSE TT.TopicId END AS UserLastTopicRead,
 		IsNull(S.Mode,0) AS SubscriptionType,
 		TR.mpct as MatchPct 
-	FROM @TmpResults TR INNER JOIN
+	FROM #TmpResults TR INNER JOIN
 			{databaseOwner}{objectQualifier}activeforums_Topics as T on TR.tid = T.TopicId INNER JOIN
 			{databaseOwner}{objectQualifier}activeforums_ForumTopics FT on T.TopicId = FT.TopicId INNER JOIN
 			{databaseOwner}{objectQualifier}activeforums_Forums as F on F.ForumId = FT.ForumId INNER JOIN
@@ -694,7 +705,7 @@ IF @ResultType = 0
 		CASE WHEN FTT.MaxTopicRead > TT.TopicId OR TT.TopicId IS NULL THEN ISNULL(FTT.MaxTopicRead,0) ELSE TT.TopicId END AS UserLastTopicRead,
 		IsNull(S.Mode,0) AS SubscriptionType,	
 		TR.mpct as MatchPct 		
-	FROM @TmpResults TR INNER JOIN
+	FROM #TmpResults TR INNER JOIN
 			{databaseOwner}{objectQualifier}activeforums_Topics as T on TR.tid = T.TopicId INNER JOIN
 			{databaseOwner}{objectQualifier}activeforums_ForumTopics FT on T.TopicId = FT.TopicId INNER JOIN
 			{databaseOwner}{objectQualifier}activeforums_Forums as F on F.ForumId = FT.ForumId INNER JOIN
@@ -708,7 +719,7 @@ IF @ResultType = 0
 			{databaseOwner}{objectQualifier}activeforums_Subscriptions AS S ON S.ForumId = FT.ForumId AND S.TopicId = T.TopicId and S.UserId = @UserId
 	WHERE rn > @RowIndex AND rn <= (@RowIndex + @MaxRows)
 	ORDER BY rn
-
 GO
+
 
 

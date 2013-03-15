@@ -297,7 +297,7 @@ li.afn-currentforum ul li.afn-subforum a:link,li.afn-currentforum ul li.afn-subf
 div.af-pager table{float:right;}
 div.af-pager table td{padding:2px;}
 
-/* Search Popup */
+/* Search Popup - Added 5.0.4 */
 .aftb-search { position: relative; }
 .aftb-search .aftb-search-link { color: #666666;cursor: pointer; }
 .aftb-search .ui-icon { display: inline-block;vertical-align: middle;}
@@ -305,7 +305,7 @@ div.af-pager table td{padding:2px;}
 .aftb-search .aftb-search-popup input[type=text] { border: solid 1px #aaa;height: 20px;width: 150px;margin: 0px 5px 10px 0px;padding: 1px; }
 .aftb-search .aftb-search-popup a { float: right; color: #555;font-size: 12px;margin: 0px; }
 
-/* Advanced Search */
+/* Advanced Search - Added 5.0.4 */
 .af-adv-search { margin-top: 5px; }
 .af-adv-search span.ui-icon { display: inline-block;vertical-align: middle; }
 .af-adv-search-box { border: solid 1px #999;border-top: none; padding: 0px;margin: 0px; background-color: #f0f0f0;}
@@ -327,7 +327,7 @@ div.af-pager table td{padding:2px;}
 .af-adv-search-list optgroup option { padding: 2px 2px 2px 10px; font-family: Tahoma, Arial, Verdana; }
 .af-search-input-error {display: none; float: left;font-weight: bold;color: firebrick;vertical-align: middle;height: 30px;line-height: 30px; }
 
-/* Search Results */
+/* Search Results - Added 5.0.4 */
 .af-search-pager { float: right; }
 .af-search-header {position: relative; margin: 10px 0px;padding-right: 250px; }
 .af-search-header .af-search-title { font-size: 1.5em; font-weight: bold; margin: 0px;display: inline-block;width: inherit;margin: 0px 10px 0px 0px;}
@@ -344,7 +344,7 @@ div.af-pager table td{padding:2px;}
 .af-search-noresults { text-align: center;padding: 50px 0px; }
 .af-search-results a { font-weight: bold; }
 
-/* Search Result - Posts */
+/* Search Result - Posts - Added 5.0.4 */
 .af-search-results .af-post { border: solid 1px #999; padding: 0px;margin: 4px 0px 0px; background-color: #f0f0f0; }
 .af-search-results .af-post-header { background-color: #ddd; padding:4px 10px; color:#3d3d3d; font-weight: bold; }
 .af-search-results .af-post-header .af-stats { float: right;font-weight: normal;white-space: nowrap; }
@@ -352,7 +352,7 @@ div.af-pager table td{padding:2px;}
 .af-search-results .af-post-header .af-stats span { display: inline-block;width: 50px;text-align: right; }
 .af-search-results .af-post-content { padding: 10px; }
 
-/* Search Results - Topics */
+/* Search Results - Topics - Added 5.0.4 */
 .af-search-results .af-topics { width: 100%; border-collapse: collapse;margin: 0px;padding: 0px; background-color: #f0f0f0; }
 .af-search-results .af-topics tr { border: solid 1px #999;border-top: none; }
 .af-search-results .af-topics td { padding: 10px;vertical-align: top;text-align: left; }

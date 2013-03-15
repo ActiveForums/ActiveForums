@@ -11,15 +11,19 @@ namespace DotNetNuke.Modules.ActiveForums
 
 	public class ForumController
 	{
-		internal string GetForumsForUser(string UserRoles, int PortalId, int ModuleId, string PermissionType = "CanView")
+		public string GetForumsForUser(string userRoles, int portalId, int moduleId, string permissionType = "CanView", bool strict = false)
 		{
+            // Setting strict to true enforces the actual permission
+            // If strict is false, forums will show up in the list if they are not hidden for users
+            // that don't otherwise have access
+
 			var db = new Data.ForumsDB();
-			string forumIds = string.Empty;
-			ForumCollection fc = db.Forums_List(PortalId, ModuleId);
+			var forumIds = string.Empty;
+			var fc = db.Forums_List(portalId, moduleId);
 			foreach (Forum f in fc)
 			{
 				string roles;
-				switch (PermissionType)
+				switch (permissionType)
 				{
 					case "CanView":
 						roles = f.Security.View;
@@ -37,14 +41,18 @@ namespace DotNetNuke.Modules.ActiveForums
 						roles = f.Security.View;
 						break;
 				}
-				bool canView = Permissions.HasPerm(roles, UserRoles);
-				if ((canView || (f.Hidden == false && (PermissionType == "CanView" || PermissionType == "CanRead"))) && f.Active)
+
+				var hasPermissions = Permissions.HasPerm(roles, userRoles);
+
+                if ((hasPermissions || (!strict && !f.Hidden && (permissionType == "CanView" || permissionType == "CanRead"))) && f.Active)
 				{
 					forumIds += f.ForumID + ";";
 				}
 			}
+
 			return forumIds;
 		}
+
 		public Forum GetForum(int PortalId, int ModuleId, int ForumId)
 		{
 			return GetForum(PortalId, ModuleId, ForumId, false);
