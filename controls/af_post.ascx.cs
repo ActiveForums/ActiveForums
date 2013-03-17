@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-
-using DotNetNuke;
 using System.IO;
 using System.Web.UI.WebControls;
 using System.Text.RegularExpressions;
 using System.Text;
 using System.Xml;
+using DotNetNuke.Framework.Providers;
+using DotNetNuke.Modules.ActiveForums.Controls;
 using DotNetNuke.Services.Social.Notifications;
-using DotNetNuke.Services.Localization;
 using DotNetNuke.Framework;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Common.Utilities;
@@ -19,31 +17,29 @@ namespace DotNetNuke.Modules.ActiveForums
 {
     public partial class af_post : ForumBase
     {
-        protected Controls.SubmitForm ctlForm = new Controls.SubmitForm();
-        private bool isApproved = false;
-        public string spinner;
-        public string EditorClientId;
-        public string PreviewText = "";
-        private bool isEdit = false;
-        private Forum fi;
-        private UserProfileInfo ui = new UserProfileInfo();
-        private string MyThemePath = string.Empty;
-        private string sPostBack = string.Empty;
-        private bool UserIsTrusted = false;
+        protected SubmitForm ctlForm = new SubmitForm();
+        private bool _isApproved;
+        public string PreviewText = string.Empty;
+        private bool _isEdit;
+        private Forum _fi;
+        private UserProfileInfo _ui = new UserProfileInfo();
+        private string _themePath = string.Empty;
+        private bool _userIsTrusted;
         private int _contentId = -1;
         private int _authorId = -1;
-        private bool _allowHTML = false;
+        private bool _allowHTML;
         private EditorTypes _editorType = EditorTypes.TEXTBOX;
-        private bool canModEdit = false;
-        private bool canModApprove = false;
-        private bool canEdit = false;
-        private bool canAttach = false;
-        private bool canTrust = false;
-        private bool canLock = false;
-        private bool canPin = false;
-        private bool canAnnounce = false;
+        private bool _canModEdit;
+        private bool _canModApprove;
+        private bool _canEdit;
+        private bool _canAttach;
+        private bool _canTrust;
+        private bool _canLock;
+        private bool _canPin;
+        private bool _canAnnounce;
 
-
+        public string Spinner { get; set; }
+        public string EditorClientId { get; set; }
 
         #region Event Handlers
 
@@ -52,77 +48,63 @@ namespace DotNetNuke.Modules.ActiveForums
 			base.OnInit(e);
 
             ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
-            System.Web.UI.HtmlControls.HtmlGenericControl oLink = new System.Web.UI.HtmlControls.HtmlGenericControl("link");
+            
+            var oLink = new System.Web.UI.HtmlControls.HtmlGenericControl("link");
             oLink.Attributes["rel"] = "stylesheet";
             oLink.Attributes["type"] = "text/css";
             oLink.Attributes["href"] = Page.ResolveUrl("~/DesktopModules/ActiveForums/scripts/calendar.css");
-            System.Web.UI.Control oCSS = this.Page.FindControl("CSS");
+            
+            var oCSS = Page.FindControl("CSS");
             if (oCSS != null)
-            {
-                int iControlIndex = 0;
-                iControlIndex = oCSS.Controls.Count;
                 oCSS.Controls.Add(oLink);
-            }
 
-            fi = this.ForumInfo;
+            _fi = ForumInfo;
             _authorId = UserId;
-            canModEdit = Permissions.HasPerm(fi.Security.ModEdit, ForumUser.UserRoles);
-            canModApprove = Permissions.HasPerm(fi.Security.ModApprove, ForumUser.UserRoles);
-            canEdit = Permissions.HasPerm(fi.Security.Edit, ForumUser.UserRoles);
-            //CanReply = Permissions.HasPerm(fi.Security.Reply, ForumUser.UserRoles)
-            //CanCreate = Permissions.HasPerm(fi.Security.Create, ForumUser.UserRoles)
-            canAttach = Permissions.HasPerm(fi.Security.Attach, ForumUser.UserRoles);
-            canTrust = Permissions.HasPerm(fi.Security.Trust, ForumUser.UserRoles);
-            canLock = Permissions.HasPerm(fi.Security.Lock, ForumUser.UserRoles);
-            canPin = Permissions.HasPerm(fi.Security.Pin, ForumUser.UserRoles);
-            canAnnounce = Permissions.HasPerm(fi.Security.Announce, ForumUser.UserRoles);
-            if (fi == null)
-            {
+            _canModEdit = Permissions.HasPerm(_fi.Security.ModEdit, ForumUser.UserRoles);
+            _canModApprove = Permissions.HasPerm(_fi.Security.ModApprove, ForumUser.UserRoles);
+            _canEdit = Permissions.HasPerm(_fi.Security.Edit, ForumUser.UserRoles);
+            _canAttach = Permissions.HasPerm(_fi.Security.Attach, ForumUser.UserRoles);
+            _canTrust = Permissions.HasPerm(_fi.Security.Trust, ForumUser.UserRoles);
+            _canLock = Permissions.HasPerm(_fi.Security.Lock, ForumUser.UserRoles);
+            _canPin = Permissions.HasPerm(_fi.Security.Pin, ForumUser.UserRoles);
+            _canAnnounce = Permissions.HasPerm(_fi.Security.Announce, ForumUser.UserRoles);
+
+            if (_fi == null)
                 Response.Redirect(NavigateUrl(ForumTabId));
-            }
             else if (Request.Params["action"] != null)
             {
-                if (!canEdit && (Request.Params["action"].ToLowerInvariant() == "te" || Request.Params["action"].ToLowerInvariant() == "re"))
-                {
+                if (!_canEdit && (Request.Params["action"].ToLowerInvariant() == "te" || Request.Params["action"].ToLowerInvariant() == "re"))
                     Response.Redirect(NavigateUrl(ForumTabId));
-                }
             }
+
             if (CanCreate == false && CanReply == false)
-            {
                 Response.Redirect(NavigateUrl(ForumTabId, "", "ctl=login") + "?returnurl=" + Server.UrlEncode(Request.RawUrl));
-            }
 
             if (UserId > 0)
-            {
-                ui = ForumUser.Profile;
-            }
+                _ui = ForumUser.Profile;
             else
             {
-                ui.TopicCount = 0;
-                ui.ReplyCount = 0;
-                ui.RewardPoints = 0;
-                ui.IsMod = false;
-                ui.TrustLevel = -1;
+                _ui.TopicCount = 0;
+                _ui.ReplyCount = 0;
+                _ui.RewardPoints = 0;
+                _ui.IsMod = false;
+                _ui.TrustLevel = -1;
+            }
 
-            }
-            UserIsTrusted = Utilities.IsTrusted((int)fi.DefaultTrustValue, ui.TrustLevel, canTrust, fi.AutoTrustLevel, ui.PostCount);
-            spinner = Page.ResolveUrl("~/DesktopModules/activeforums/themes/" + MainSettings.Theme + "/images/loading.gif");
-            isApproved = Convert.ToBoolean(((fi.IsModerated == true) ? false : true));
-            if (UserIsTrusted || canModApprove)
-            {
-                isApproved = true;
-            }
-            string MyTheme = MainSettings.Theme;
-            MyThemePath = Page.ResolveUrl("~/DesktopModules/ActiveForums/themes/" + MyTheme);
+            _userIsTrusted = Utilities.IsTrusted((int)_fi.DefaultTrustValue, _ui.TrustLevel, _canTrust, _fi.AutoTrustLevel, _ui.PostCount);
+            Spinner = Page.ResolveUrl("~/DesktopModules/activeforums/themes/" + MainSettings.Theme + "/images/loading.gif");
+            _isApproved = !_fi.IsModerated || _userIsTrusted || _canModApprove;
+
+            var myTheme = MainSettings.Theme;
+            _themePath = Page.ResolveUrl("~/DesktopModules/ActiveForums/themes/" + myTheme);
             ctlForm.ID = "ctlForm";
-            ctlForm.PostButton.ImageUrl = MyThemePath + "/images/save32.png";
+            ctlForm.PostButton.ImageUrl = _themePath + "/images/save32.png";
             ctlForm.PostButton.ImageLocation = "TOP";
             ctlForm.PostButton.Height = Unit.Pixel(50);
             ctlForm.PostButton.Width = Unit.Pixel(50);
-            if (canAttach && fi.AllowAttach)
+            if (_canAttach && _fi.AllowAttach)
             {
                 ctlForm.PostButton.ClientSideScript = "af_checkupload();";
-                sPostBack = "GET"; //Page.ClientScript.GetPostBackEventReference(ctlForm.SubmitButton, String.Empty)
                 ctlForm.PostButton.PostBack = false;
             }
             else
@@ -131,7 +113,7 @@ namespace DotNetNuke.Modules.ActiveForums
                 //ctlForm.PostButton.ClientSideScript = Page.ClientScript.GetPostBackEventReference(Me, String.Empty)
                 ctlForm.PostButton.PostBack = false;
             }
-            ctlForm.CancelButton.ImageUrl = MyThemePath + "/images/cancel32.png";
+            ctlForm.CancelButton.ImageUrl = _themePath + "/images/cancel32.png";
             ctlForm.CancelButton.ImageLocation = "TOP";
             ctlForm.CancelButton.PostBack = false;
             ctlForm.CancelButton.ClientSideScript = "javascript:history.go(-1);";
@@ -139,16 +121,16 @@ namespace DotNetNuke.Modules.ActiveForums
             ctlForm.CancelButton.Height = Unit.Pixel(50);
             ctlForm.CancelButton.Width = Unit.Pixel(50);
             ctlForm.CancelButton.ConfirmMessage = GetSharedResource("[RESX:ConfirmCancel]");
-            ctlForm.ModuleConfiguration = this.ModuleConfiguration;
+            ctlForm.ModuleConfiguration = ModuleConfiguration;
             ctlForm.Subscribe = UserPrefTopicSubscribe;
-            if (fi.AllowHTML)
+            if (_fi.AllowHTML)
             {
-                _allowHTML = IsHtmlPermitted(fi.EditorPermittedUsers, UserIsTrusted, canModEdit);
+                _allowHTML = IsHtmlPermitted(_fi.EditorPermittedUsers, _userIsTrusted, _canModEdit);
             }
             ctlForm.AllowHTML = _allowHTML;
             if (_allowHTML)
             {
-                _editorType = fi.EditorType;
+                _editorType = _fi.EditorType;
             }
             else
             {
@@ -160,54 +142,55 @@ namespace DotNetNuke.Modules.ActiveForums
                 _allowHTML = false;
             }
             ctlForm.EditorType = _editorType;
-            ctlForm.ForumInfo = fi;
+            ctlForm.ForumInfo = _fi;
             ctlForm.RequireCaptcha = true;
-            if (_editorType == EditorTypes.TEXTBOX)
+            switch (_editorType)
             {
-                Page.ClientScript.RegisterClientScriptInclude("afeditor", Page.ResolveUrl("~/desktopmodules/activeforums/scripts/text_editor.js"));
-            }
-            else if (_editorType == EditorTypes.ACTIVEEDITOR)
-            {
-                Page.ClientScript.RegisterClientScriptInclude("afeditor", Page.ResolveUrl("~/desktopmodules/activeforums/scripts/active_editor.js"));
-            }
-            else
-            {
-                Framework.Providers.ProviderConfiguration _prov = new Framework.Providers.ProviderConfiguration();
-                _prov = Framework.Providers.ProviderConfiguration.GetProviderConfiguration("htmlEditor");
+                case EditorTypes.TEXTBOX:
+                    Page.ClientScript.RegisterClientScriptInclude("afeditor", Page.ResolveUrl("~/desktopmodules/activeforums/scripts/text_editor.js"));
+                    break;
+                case EditorTypes.ACTIVEEDITOR:
+                    Page.ClientScript.RegisterClientScriptInclude("afeditor", Page.ResolveUrl("~/desktopmodules/activeforums/scripts/active_editor.js"));
+                    break;
+                default:
+                    {
+                        var prov = ProviderConfiguration.GetProviderConfiguration("htmlEditor");
 
-                if (_prov.DefaultProvider.ToLowerInvariant().Contains("telerik") | _prov.DefaultProvider.ToLowerInvariant().Contains("radeditor"))
-                {
-                    Page.ClientScript.RegisterClientScriptInclude("afeditor", Page.ResolveUrl("~/desktopmodules/activeforums/scripts/telerik_editor.js"));
-                }
-                else if (_prov.DefaultProvider.Contains("CKHtmlEditorProvider"))
-                {
-                    Page.ClientScript.RegisterClientScriptInclude("afeditor", Page.ResolveUrl("~/desktopmodules/activeforums/scripts/ck_editor.js"));
-                }
-                else if (_prov.DefaultProvider.Contains("FckHtmlEditorProvider"))
-                {
-                    Page.ClientScript.RegisterClientScriptInclude("afeditor", Page.ResolveUrl("~/desktopmodules/activeforums/scripts/fck_editor.js"));
-                }
-                else
-                {
-                    Page.ClientScript.RegisterClientScriptInclude("afeditor", Page.ResolveUrl("~/desktopmodules/activeforums/scripts/other_editor.js"));
-                }
+                        if (prov.DefaultProvider.ToLowerInvariant().Contains("telerik") | prov.DefaultProvider.ToLowerInvariant().Contains("radeditor"))
+                        {
+                            Page.ClientScript.RegisterClientScriptInclude("afeditor", Page.ResolveUrl("~/desktopmodules/activeforums/scripts/telerik_editor.js"));
+                        }
+                        else if (prov.DefaultProvider.Contains("CKHtmlEditorProvider"))
+                        {
+                            Page.ClientScript.RegisterClientScriptInclude("afeditor", Page.ResolveUrl("~/desktopmodules/activeforums/scripts/ck_editor.js"));
+                        }
+                        else if (prov.DefaultProvider.Contains("FckHtmlEditorProvider"))
+                        {
+                            Page.ClientScript.RegisterClientScriptInclude("afeditor", Page.ResolveUrl("~/desktopmodules/activeforums/scripts/fck_editor.js"));
+                        }
+                        else
+                        {
+                            Page.ClientScript.RegisterClientScriptInclude("afeditor", Page.ResolveUrl("~/desktopmodules/activeforums/scripts/other_editor.js"));
+                        }
+                    }
+                    break;
             }
             if (Request.Params["action"] != null)
             {
                 switch (Request.Params["action"].ToLowerInvariant())
                 {
                     case "te": //Topic Edit
-                        if (canModEdit || (canEdit && Request.IsAuthenticated))
+                        if (_canModEdit || (_canEdit && Request.IsAuthenticated))
                         {
-                            isEdit = true;
+                            _isEdit = true;
                             PrepareTopic();
                             LoadTopic();
                         }
                         break;
                     case "re": //Reply Edit
-                        if (canModEdit || (canEdit && Request.IsAuthenticated))
+                        if (_canModEdit || (_canEdit && Request.IsAuthenticated))
                         {
-                            isEdit = true;
+                            _isEdit = true;
                             PrepareReply();
                             LoadReply();
                         }
@@ -244,7 +227,7 @@ namespace DotNetNuke.Modules.ActiveForums
                     PrepareReply();
                 }
             }
-            if (isEdit && !Request.IsAuthenticated)
+            if (_isEdit && !Request.IsAuthenticated)
             {
                 Response.Redirect(NavigateUrl(ForumTabId));
             }
@@ -254,134 +237,125 @@ namespace DotNetNuke.Modules.ActiveForums
 
             EditorClientId = ctlForm.ClientID;
 
-            ctlForm.BubbleClick += new System.EventHandler(ctlForm_Click);
+            ctlForm.BubbleClick += ctlForm_Click;
             cbPreview.CallbackEvent += cbPreview_Callback;
 
             //Page.ClientScript.RegisterClientScriptInclude("aftags", Page.ResolveUrl("~/desktopmodules/activeforums/scripts/jquery.tokeninput.js"))
         }
-        protected override void OnLoad(EventArgs e)
-		{
-			base.OnLoad(e);
-        }
-        private void ctlForm_Click(object sender, System.EventArgs e)
+
+        private void ctlForm_Click(object sender, EventArgs e)
         {
             Page.Validate();
-            int iFloodInterval = MainSettings.FloodInterval;
+            var iFloodInterval = MainSettings.FloodInterval;
             if (iFloodInterval > 0)
             {
                 if (ForumUser != null)
                 {
                     if (SimulateDateDiff.DateDiff(SimulateDateDiff.DateInterval.Second, ForumUser.Profile.DateLastPost, DateTime.Now) < iFloodInterval)
                     {
-                        Controls.InfoMessage im = new Controls.InfoMessage();
-                        im.Message = "<div class=\"afmessage\">" + string.Format(GetSharedResource("[RESX:Error:FloodControl]"), iFloodInterval) + "</div>";
+                        var im = new InfoMessage { Message = "<div class=\"afmessage\">" + string.Format(GetSharedResource("[RESX:Error:FloodControl]"), iFloodInterval) + "</div>" };
                         plhMessage.Controls.Add(im);
                         return;
                     }
                 }
             }
-            if (Page.IsValid & Utilities.InputIsValid(ctlForm.Body.Trim()) && Utilities.InputIsValid(ctlForm.Subject))
+            if (!Page.IsValid || !Utilities.InputIsValid(ctlForm.Body.Trim()) || !Utilities.InputIsValid(ctlForm.Subject)) 
+                return;
+
+            if (TopicId == -1 || (TopicId > 0 && Request.Params["action"] == "te"))
             {
-                if (TopicId == -1 || (TopicId > 0 && Request.Params["action"] == "te"))
-                {
-                    if (ValidateProperties())
-                    {
-                        SaveTopic();
-                    }
-                }
-                else
-                {
-                    SaveReply();
-                }
+                if (ValidateProperties())
+                    SaveTopic();
+            }
+            else
+            {
+                SaveReply();
             }
         }
+
         private bool ValidateProperties()
         {
             if (ForumInfo.Properties != null && ForumInfo.Properties.Count > 0)
             {
-                foreach (PropertiesInfo p in ForumInfo.Properties)
+                foreach (var p in ForumInfo.Properties)
                 {
                     if (p.IsRequired)
                     {
                         if (Request.Form["afprop-" + p.PropertyId] == null)
-                        {
                             return false;
-                        }
-                        if ((Request.Form["afprop-" + p.PropertyId] != null) && string.IsNullOrEmpty(Request.Form["afprop-" + p.PropertyId].ToString().Trim()))
-                        {
+
+                        if ((Request.Form["afprop-" + p.PropertyId] != null) && string.IsNullOrEmpty(Request.Form["afprop-" + p.PropertyId].Trim()))
                             return false;
-                        }
                     }
-                    if (!(string.IsNullOrEmpty(p.ValidationExpression)) && !(string.IsNullOrEmpty(Request.Form["afprop-" + p.PropertyId].ToString().Trim())))
+
+                    if (!(string.IsNullOrEmpty(p.ValidationExpression)) && !(string.IsNullOrEmpty(Request.Form["afprop-" + p.PropertyId].Trim())))
                     {
-                        bool isMatch = Regex.IsMatch(Request.Form["afprop-" + p.PropertyId].ToString().Trim(), p.ValidationExpression, RegexOptions.IgnoreCase);
+                        var isMatch = Regex.IsMatch(Request.Form["afprop-" + p.PropertyId].Trim(), p.ValidationExpression, RegexOptions.IgnoreCase);
                         if (!isMatch)
-                        {
                             return false;
-                        }
                     }
                 }
                 return true;
             }
             return true;
         }
-        private void cbPreview_Callback(object sender, DotNetNuke.Modules.ActiveForums.Controls.CallBackEventArgs e)
+
+        private void cbPreview_Callback(object sender, CallBackEventArgs e)
         {
             switch (e.Parameters[0].ToLower())
             {
                 case "preview":
-                    string message = e.Parameters[1].ToString();
-                    int TopicTemplateID = 0;
+                    var message = e.Parameters[1];
 
-                    TopicTemplateID = ForumInfo.TopicTemplateId;
+                    var topicTemplateID = ForumInfo.TopicTemplateId;
                     message = Utilities.CleanString(PortalId, message, _allowHTML, _editorType, ForumInfo.UseFilter, ForumInfo.AllowScript, ForumModuleId, ImagePath, ForumInfo.AllowEmoticons);
                     message = Utilities.ManageImagePath(message);
                     var uc = new UserController();
-                    var up = uc.GetUser(PortalId, ForumModuleId, UserId);
-                    if (up == null)
-                    {
-                        up = new User();
-                        up.UserId = -1;
-                        up.UserName = "guest";
-                        up.Profile.TopicCount = 0;
-                        up.Profile.ReplyCount = 0;
-                        up.DateCreated = DateTime.Now;
-
-                    }
-                    message = TemplateUtils.PreviewTopic(TopicTemplateID, PortalId, ForumModuleId, ForumTabId, ForumInfo, UserId, message, ImagePath, up, DateTime.Now, CurrentUserType, TimeZoneOffset);
+                    var up = uc.GetUser(PortalId, ForumModuleId, UserId) ?? new User
+                                                                                {
+                                                                                    UserId = -1,
+                                                                                    UserName = "guest",
+                                                                                    Profile = {TopicCount = 0, ReplyCount = 0},
+                                                                                    DateCreated = DateTime.Now
+                                                                                };
+                    message = TemplateUtils.PreviewTopic(topicTemplateID, PortalId, ForumModuleId, ForumTabId, ForumInfo, UserId, message, ImagePath, up, DateTime.Now, CurrentUserType, TimeZoneOffset);
                     hidPreviewText.Value = message;
                     break;
             }
             hidPreviewText.RenderControl(e.Output);
         }
+
         #endregion
+
         #region Private Methods
+
         private void LoadTopic()
         {
-            ctlForm.EditorMode = DotNetNuke.Modules.ActiveForums.Controls.SubmitForm.EditorModes.EditTopic;
-            TopicInfo ti = null;
-            TopicsController tc = new TopicsController();
-            ti = tc.Topics_Get(PortalId, ForumModuleId, TopicId, ForumId, UserId, true);
+            ctlForm.EditorMode = Modules.ActiveForums.Controls.SubmitForm.EditorModes.EditTopic;
+            var tc = new TopicsController();
+            var ti = tc.Topics_Get(PortalId, ForumModuleId, TopicId, ForumId, UserId, true);
             if (ti == null)
             {
                 Response.Redirect(NavigateUrl(ForumTabId));
             }
-            else if ((ti.Content.AuthorId != this.UserId && canModEdit == false) | (ti.Content.AuthorId == this.UserId && canEdit == false) | (canEdit == false && canModEdit))
+            else if ((ti.Content.AuthorId != UserId && _canModEdit == false) | (ti.Content.AuthorId == UserId && _canEdit == false) | (_canEdit == false && _canModEdit))
             {
                 Response.Redirect(NavigateUrl(ForumTabId));
             }
-            else if (!canModEdit && (ti.Content.AuthorId == this.UserId && canEdit && MainSettings.EditInterval > 0 & SimulateDateDiff.DateDiff(SimulateDateDiff.DateInterval.Minute, ti.Content.DateCreated, DateTime.Now) > MainSettings.EditInterval))
+            else if (!_canModEdit && (ti.Content.AuthorId == UserId && _canEdit && MainSettings.EditInterval > 0 & SimulateDateDiff.DateDiff(SimulateDateDiff.DateInterval.Minute, ti.Content.DateCreated, DateTime.Now) > MainSettings.EditInterval))
             {
-                Controls.InfoMessage im = new Controls.InfoMessage();
-                im.Message = "<div class=\"afmessage\">" + string.Format(GetSharedResource("[RESX:Message:EditIntervalReached]"), MainSettings.EditInterval.ToString()) + "</div>";
+                var im = new InfoMessage
+                                        {
+                                            Message =  "<div class=\"afmessage\">" +  string.Format(GetSharedResource("[RESX:Message:EditIntervalReached]"),  MainSettings.EditInterval) + "</div>"
+                                        };
                 plhMessage.Controls.Add(im);
                 plhContent.Controls.Clear();
             }
             else
             {
                 //User has acccess
-                string sBody = ti.Content.Body;
-                string sSubject = ti.Content.Subject;
+                var sBody = ti.Content.Body;
+                var sSubject = ti.Content.Subject;
                 sBody = Utilities.PrepareForEdit(PortalId, ForumModuleId, ImagePath, sBody, _allowHTML, _editorType);
                 sSubject = Utilities.PrepareForEdit(PortalId, ForumModuleId, ImagePath, sSubject, false, EditorTypes.TEXTBOX);
                 ctlForm.Subject = sSubject;
@@ -397,97 +371,88 @@ namespace DotNetNuke.Modules.ActiveForums
                 ctlForm.IsApproved = ti.IsApproved;
                 ctlForm.StatusId = ti.StatusId;
                 ctlForm.TopicPriority = ti.Priority;
+
                 if (ti.Author.AuthorId > 0)
-                {
                     ctlForm.Subscribe = Subscriptions.IsSubscribed(PortalId, ForumModuleId, ForumId, TopicId, SubscriptionTypes.Instant, ti.Author.AuthorId);
-                }
+
                 _contentId = ti.ContentId;
                 _authorId = ti.Author.AuthorId;
+
                 if (!(string.IsNullOrEmpty(ti.TopicData)))
                 {
-                    List<PropertiesInfo> pl = new List<PropertiesInfo>();
-                    XmlDocument xDoc = new XmlDocument();
+                    var pl = new List<PropertiesInfo>();
+                    var xDoc = new XmlDocument();
                     xDoc.LoadXml(ti.TopicData);
-                    if (xDoc != null)
+ 
+                    XmlNode xRoot = xDoc.DocumentElement;
+                    if (xRoot != null)
                     {
-                        System.Xml.XmlNode xRoot = xDoc.DocumentElement;
-                        System.Xml.XmlNodeList xNodeList = xRoot.SelectNodes("//properties/property");
-                        if (xNodeList.Count > 0)
+                        var xNodeList = xRoot.SelectNodes("//properties/property");
+                        if (xNodeList != null && xNodeList.Count > 0)
                         {
-                            int i = 0;
-                            for (i = 0; i < xNodeList.Count; i++)
+                            for (var i = 0; i < xNodeList.Count; i++)
                             {
-                                string pName = Utilities.HTMLDecode(xNodeList[i].ChildNodes[0].InnerText);
-                                string pValue = Utilities.HTMLDecode(xNodeList[i].ChildNodes[1].InnerText);
-                                int pId = Convert.ToInt32(xNodeList[i].Attributes["id"].Value);
-                                PropertiesInfo p = new PropertiesInfo();
-                                p.Name = pName;
-                                p.DefaultValue = pValue;
-                                p.PropertyId = pId;
+                                var pName = Utilities.HTMLDecode(xNodeList[i].ChildNodes[0].InnerText);
+                                var pValue = Utilities.HTMLDecode(xNodeList[i].ChildNodes[1].InnerText);
+                                var xmlAttributeCollection = xNodeList[i].Attributes;
+                                if (xmlAttributeCollection == null) 
+                                    continue;
+                                var pId = Convert.ToInt32(xmlAttributeCollection["id"].Value);
+                                var p = new PropertiesInfo {Name = pName, DefaultValue = pValue, PropertyId = pId};
                                 pl.Add(p);
                             }
                         }
                     }
+
                     ctlForm.TopicProperties = pl;
                 }
+
                 if (ti.TopicType == TopicTypes.Poll)
                 {
                     //Get Poll
-                    DataSet ds = DataProvider.Instance().Poll_Get(ti.TopicId);
+                    var ds = DataProvider.Instance().Poll_Get(ti.TopicId);
                     if (ds.Tables.Count > 0)
                     {
-                        DataRow pollRow = ds.Tables[0].Rows[0];
+                        var pollRow = ds.Tables[0].Rows[0];
                         ctlForm.PollQuestion = pollRow["Question"].ToString();
                         ctlForm.PollType = pollRow["PollType"].ToString();
 
                         foreach (DataRow dr in ds.Tables[1].Rows)
-                        {
-                            ctlForm.PollOptions += dr["OptionName"].ToString() + System.Environment.NewLine;
-                        }
+                            ctlForm.PollOptions += dr["OptionName"] + System.Environment.NewLine;
                     }
                 }
-                if (!(ti.Content.AuthorId == this.UserId) && canModApprove)
-                {
+
+                if (ti.Content.AuthorId != UserId && _canModApprove)
                     ctlForm.ShowModOptions = true;
-                }
             }
         }
+
         private void LoadReply()
         {
             //Edit a Reply
-            ctlForm.EditorMode = DotNetNuke.Modules.ActiveForums.Controls.SubmitForm.EditorModes.EditReply;
-            ReplyInfo ri = null;
-            ReplyController rc = new ReplyController();
-            ri = rc.Reply_Get(PortalId, ForumModuleId, TopicId, PostId);
+            ctlForm.EditorMode = Modules.ActiveForums.Controls.SubmitForm.EditorModes.EditReply;
+            
+            var rc = new ReplyController();
+            var ri = rc.Reply_Get(PortalId, ForumModuleId, TopicId, PostId);
+            
             if (ri == null)
-            {
-                //Load Reply Not Found
-                //Dim im As New Controls.InfoMessage
-                //im.Message = "<div class=""afmessage"">" & GetSharedResource("[RESX:Message:TopicNotFound]") & "</div>"
-                //plhMessage.Controls.Add(im)
-                //plhContent.Controls.Clear()
                 Response.Redirect(NavigateUrl(ForumTabId));
-            }
-            else if ((ri.Content.AuthorId != this.UserId && canModEdit == false) | (ri.Content.AuthorId == this.UserId && canEdit == false) | (canEdit == false && canModEdit))
-            {
-                //Load Access Denied
-                //Dim im As New Controls.InfoMessage
-                //im.Message = "<div class=""afmessage"">" & GetSharedResource("[RESX:Message:AccessDenied]") & "</div>"
-                //plhMessage.Controls.Add(im)
-                //plhContent.Controls.Clear()
+            else if ((ri.Content.AuthorId != UserId && _canModEdit == false) | (ri.Content.AuthorId == UserId && _canEdit == false) | (_canEdit == false && _canModEdit))
                 Response.Redirect(NavigateUrl(ForumTabId));
-            }
-            else if (!canModEdit && (ri.Content.AuthorId == this.UserId && canEdit && MainSettings.EditInterval > 0 & SimulateDateDiff.DateDiff(SimulateDateDiff.DateInterval.Minute, ri.Content.DateCreated, DateTime.Now) > MainSettings.EditInterval))
+
+            else if (!_canModEdit && (ri.Content.AuthorId == UserId && _canEdit && MainSettings.EditInterval > 0 & SimulateDateDiff.DateDiff(SimulateDateDiff.DateInterval.Minute, ri.Content.DateCreated, DateTime.Now) > MainSettings.EditInterval))
             {
-                Controls.InfoMessage im = new Controls.InfoMessage();
-                im.Message = "<div class=\"afmessage\">" + string.Format(GetSharedResource("[RESX:Message:EditIntervalReached]"), MainSettings.EditInterval.ToString()) + "</div>";
+                var im = new Controls.InfoMessage
+                             {
+                                 Message = "<div class=\"afmessage\">" +  string.Format(GetSharedResource("[RESX:Message:EditIntervalReached]"), MainSettings.EditInterval.ToString()) + "</div>"
+                             };
                 plhMessage.Controls.Add(im);
                 plhContent.Controls.Clear();
             }
             else
             {
-                string sBody = ri.Content.Body;
-                string sSubject = ri.Content.Subject;
+                var sBody = ri.Content.Body;
+                var sSubject = ri.Content.Subject;
                 sBody = Utilities.PrepareForEdit(PortalId, ForumModuleId, ImagePath, sBody, _allowHTML, _editorType);
                 sSubject = Utilities.PrepareForEdit(PortalId, ForumModuleId, ImagePath, sSubject, false, EditorTypes.TEXTBOX);
                 ctlForm.Subject = sSubject;
@@ -495,144 +460,129 @@ namespace DotNetNuke.Modules.ActiveForums
                 ctlForm.IsApproved = ri.IsApproved;
                 _contentId = ri.ContentId;
                 _authorId = ri.Author.AuthorId;
-                if (ri.Author.AuthorId > 0)
-                {
-                    ctlForm.Subscribe = Subscriptions.IsSubscribed(PortalId, ForumModuleId, ForumId, TopicId, SubscriptionTypes.Instant, ri.Author.AuthorId);
-                }
-                if (!(ri.Content.AuthorId == this.UserId) && canModApprove)
-                {
-                    ctlForm.ShowModOptions = true;
-                }
-            }
 
+                if (ri.Author.AuthorId > 0)
+                    ctlForm.Subscribe = Subscriptions.IsSubscribed(PortalId, ForumModuleId, ForumId, TopicId, SubscriptionTypes.Instant, ri.Author.AuthorId);
+
+                if (ri.Content.AuthorId != UserId && _canModApprove)
+                    ctlForm.ShowModOptions = true;
+            }
         }
+
         private void PrepareTopic()
         {
-            string Template = string.Empty;
-            if (fi.TopicFormId == 0)
+            string template;
+            if (_fi.TopicFormId == 0)
             {
-                string myFile = string.Empty;
-                myFile = Request.MapPath(DotNetNuke.Common.Globals.ApplicationPath) + "\\DesktopModules\\ActiveForums\\config\\templates\\TopicEditor.txt";
-                Template = File.ReadAllText(myFile);
+                var myFile = Request.MapPath(Common.Globals.ApplicationPath) + "\\DesktopModules\\ActiveForums\\config\\templates\\TopicEditor.txt";
+                template = File.ReadAllText(myFile);
             }
             else
             {
-                TemplateController tc = new TemplateController();
-                TemplateInfo ti = tc.Template_Get(fi.TopicFormId, PortalId, ForumModuleId);
-                Template = ti.TemplateHTML;
+                var tc = new TemplateController();
+                var ti = tc.Template_Get(_fi.TopicFormId, PortalId, ForumModuleId);
+                template = ti.TemplateHTML;
             }
 
             if (MainSettings.UseSkinBreadCrumb)
             {
-                string sCrumb = "<a href=\"" + NavigateUrl(TabId, "", ParamKeys.GroupId + "=" + ForumInfo.ForumGroupId.ToString()) + "\">" + ForumInfo.GroupName + "</a>|";
+                var sCrumb = "<a href=\"" + NavigateUrl(TabId, "", ParamKeys.GroupId + "=" + ForumInfo.ForumGroupId.ToString()) + "\">" + ForumInfo.GroupName + "</a>|";
                 sCrumb += "<a href=\"" + NavigateUrl(TabId, "", ParamKeys.ForumId + "=" + ForumInfo.ForumID.ToString()) + "\">" + ForumInfo.ForumName + "</a>";
                 if (Environment.UpdateBreadCrumb(Page.Controls, sCrumb))
-                {
-                    Template = Template.Replace("<div class=\"afcrumb\">[AF:LINK:FORUMMAIN] > [AF:LINK:FORUMGROUP] > [AF:LINK:FORUMNAME]</div>", string.Empty);
-                }
+                    template = template.Replace("<div class=\"afcrumb\">[AF:LINK:FORUMMAIN] > [AF:LINK:FORUMGROUP] > [AF:LINK:FORUMNAME]</div>", string.Empty);
             }
 
+            ctlForm.EditorMode = Modules.ActiveForums.Controls.SubmitForm.EditorModes.NewTopic;
 
-            ctlForm.EditorMode = DotNetNuke.Modules.ActiveForums.Controls.SubmitForm.EditorModes.NewTopic;
-
-            if (Permissions.HasPerm(fi.Security.ModApprove, ForumUser.UserRoles))
+            if (Permissions.HasPerm(_fi.Security.ModApprove, ForumUser.UserRoles))
             {
                 ctlForm.ShowModOptions = true;
             }
-            ctlForm.Template = Template;
-            ctlForm.IsApproved = isApproved;
+
+            ctlForm.Template = template;
+            ctlForm.IsApproved = _isApproved;
 
         }
+
         /// <summary>
         /// Prepares the post form for creating a reply.
         /// </summary>
         private void PrepareReply()
         {
-            ctlForm.EditorMode = DotNetNuke.Modules.ActiveForums.Controls.SubmitForm.EditorModes.Reply;
+            ctlForm.EditorMode = Modules.ActiveForums.Controls.SubmitForm.EditorModes.Reply;
 
-            string Template = string.Empty;
-            if (fi.ReplyFormId == 0)
+            string template;
+            if (_fi.ReplyFormId == 0)
             {
-                string myFile = string.Empty;
-                myFile = Request.MapPath(DotNetNuke.Common.Globals.ApplicationPath) + "\\DesktopModules\\ActiveForums\\config\\templates\\ReplyEditor.txt";
-                Template = File.ReadAllText(myFile);
+                var myFile = Request.MapPath(Common.Globals.ApplicationPath) + "\\DesktopModules\\ActiveForums\\config\\templates\\ReplyEditor.txt";
+                template = File.ReadAllText(myFile);
             }
             else
             {
-                TemplateController tc = new TemplateController();
-                TemplateInfo ti = tc.Template_Get(fi.ReplyFormId, PortalId, ForumModuleId);
-                Template = ti.TemplateHTML;
+                var tc = new TemplateController();
+                var ti = tc.Template_Get(_fi.ReplyFormId, PortalId, ForumModuleId);
+                template = ti.TemplateHTML;
             }
-            if (MainSettings.UseSkinBreadCrumb)
-            {
-                Template = Template.Replace("<div class=\"afcrumb\">[AF:LINK:FORUMMAIN] > [AF:LINK:FORUMGROUP] > [AF:LINK:FORUMNAME]</div>", string.Empty);
 
-            }
-            ctlForm.Template = Template;
+            if (MainSettings.UseSkinBreadCrumb)
+                template = template.Replace("<div class=\"afcrumb\">[AF:LINK:FORUMMAIN] > [AF:LINK:FORUMGROUP] > [AF:LINK:FORUMNAME]</div>", string.Empty);
+
+            ctlForm.Template = template;
             if (!(TopicId > 0))
             {
                 //Can't Find Topic
-                Controls.InfoMessage im = new Controls.InfoMessage();
-                im.Message = GetSharedResource("[RESX:Message:LoadTopicFailed]");
+                var im = new InfoMessage { Message = GetSharedResource("[RESX:Message:LoadTopicFailed]") };
                 plhContent.Controls.Add(im);
             }
             else if (!CanReply)
             {
                 //No permission to reply
-                Controls.InfoMessage im = new Controls.InfoMessage();
-                im.Message = GetSharedResource("[RESX:Message:AccessDenied]");
+                var im = new InfoMessage { Message = GetSharedResource("[RESX:Message:AccessDenied]") };
                 plhContent.Controls.Add(im);
             }
             else
             {
-                TopicInfo ti = null;
-                TopicsController tc = new TopicsController();
-                ti = tc.Topics_Get(PortalId, ForumModuleId, TopicId, ForumId, UserId, true);
+                var tc = new TopicsController();
+                var ti = tc.Topics_Get(PortalId, ForumModuleId, TopicId, ForumId, UserId, true);
                 ctlForm.Subject = Utilities.GetSharedResource("[RESX:SubjectPrefix]") + " " + ti.Content.Subject;
                 ctlForm.TopicSubject = ti.Content.Subject;
-                string body = string.Empty;
+                var body = string.Empty;
+
                 if (ti.IsLocked && (CurrentUserType == CurrentUserTypes.Anon || CurrentUserType == CurrentUserTypes.Auth))
-                {
                     Response.Redirect(NavigateUrl(ForumTabId));
-                }
+
                 if (Request.Params[ParamKeys.QuoteId] != null | Request.Params[ParamKeys.ReplyId] != null | Request.Params[ParamKeys.PostId] != null)
                 {
                     //Setup form for Quote or Reply with body display
-                    bool IsQuote = false;
-                    int PostId = 0;
-                    string sPostedBy = Utilities.GetSharedResource("[RESX:PostedBy]") + " {0} {1} {2}";
+                    var isQuote = false;
+                    var postId = 0;
+                    var sPostedBy = Utilities.GetSharedResource("[RESX:PostedBy]") + " {0} {1} {2}";
                     if (Request.Params[ParamKeys.QuoteId] != null)
                     {
-                        IsQuote = true;
+                        isQuote = true;
                         if (SimulateIsNumeric.IsNumeric(Request.Params[ParamKeys.QuoteId]))
-                        {
-                            PostId = Convert.ToInt32(Request.Params[ParamKeys.QuoteId]);
-                        }
+                            postId = Convert.ToInt32(Request.Params[ParamKeys.QuoteId]);
+
                     }
                     else if (Request.Params[ParamKeys.ReplyId] != null)
                     {
                         if (SimulateIsNumeric.IsNumeric(Request.Params[ParamKeys.ReplyId]))
-                        {
-                            PostId = Convert.ToInt32(Request.Params[ParamKeys.ReplyId]);
-                        }
+                            postId = Convert.ToInt32(Request.Params[ParamKeys.ReplyId]);
                     }
                     else if (Request.Params[ParamKeys.PostId] != null)
                     {
                         if (SimulateIsNumeric.IsNumeric(Request.Params[ParamKeys.PostId]))
-                        {
-                            PostId = Convert.ToInt32(Request.Params[ParamKeys.PostId]);
-                        }
-
+                            postId = Convert.ToInt32(Request.Params[ParamKeys.PostId]);
                     }
-                    if (!(PostId == 0))
+
+                    if (postId != 0)
                     {
-                        string userDisplay = MainSettings.UserNameDisplay;
+                        var userDisplay = MainSettings.UserNameDisplay;
                         if (_editorType == EditorTypes.TEXTBOX)
-                        {
                             userDisplay = "none";
-                        }
-                        Content ci = null;
-                        if (PostId == TopicId)
+
+                        Content ci;
+                        if (postId == TopicId)
                         {
                             ti = tc.Topics_Get(PortalId, ForumModuleId, TopicId);
                             ci = ti.Content;
@@ -640,22 +590,22 @@ namespace DotNetNuke.Modules.ActiveForums
                         }
                         else
                         {
-                            ReplyInfo ri = null;
-                            ReplyController rc = new ReplyController();
-                            ri = rc.Reply_Get(PortalId, ForumModuleId, TopicId, PostId);
+                            var rc = new ReplyController();
+                            var ri = rc.Reply_Get(PortalId, ForumModuleId, TopicId, postId);
                             ci = ri.Content;
                             sPostedBy = string.Format(sPostedBy, UserProfiles.GetDisplayName(ForumModuleId, MainSettings.MemberListMode, false, ri.Content.AuthorId, userDisplay, ri.Author), Utilities.GetSharedResource("On.Text"), GetServerDateTime(ri.Content.DateCreated));
                         }
+
                         if (ci != null)
-                        {
                             body = ci.Body;
-                        }
+
                     }
+
                     if (_allowHTML && _editorType != EditorTypes.TEXTBOX)
                     {
                         if (body.ToUpper().Contains("<CODE") | body.ToUpper().Contains("[CODE]"))
                         {
-                            CodeParser objCode = new CodeParser();
+                            var objCode = new CodeParser();
                             body = CodeParser.ParseCode(Utilities.HTMLDecode(body));
                         }
                     }
@@ -663,9 +613,10 @@ namespace DotNetNuke.Modules.ActiveForums
                     {
                         body = Utilities.PrepareForEdit(PortalId, ForumModuleId, ImagePath, body, _allowHTML, _editorType);
                     }
-                    if (IsQuote)
+
+                    if (isQuote)
                     {
-                        ctlForm.EditorMode = DotNetNuke.Modules.ActiveForums.Controls.SubmitForm.EditorModes.Quote;
+                        ctlForm.EditorMode = SubmitForm.EditorModes.Quote;
                         if (_allowHTML && _editorType != EditorTypes.TEXTBOX)
                         {
                             body = "<blockquote>" + System.Environment.NewLine + sPostedBy + System.Environment.NewLine + "<br />" + System.Environment.NewLine + body + System.Environment.NewLine + "</blockquote><br /><br />";
@@ -677,7 +628,7 @@ namespace DotNetNuke.Modules.ActiveForums
                     }
                     else
                     {
-                        ctlForm.EditorMode = DotNetNuke.Modules.ActiveForums.Controls.SubmitForm.EditorModes.ReplyWithBody;
+                        ctlForm.EditorMode = SubmitForm.EditorModes.ReplyWithBody;
                         body = sPostedBy + "<br />" + body;
                     }
                     ctlForm.Body = body;
@@ -685,135 +636,125 @@ namespace DotNetNuke.Modules.ActiveForums
 
                 }
             }
-            if (!(ctlForm.EditorMode == DotNetNuke.Modules.ActiveForums.Controls.SubmitForm.EditorModes.EditReply) && canModApprove)
+            if (ctlForm.EditorMode != SubmitForm.EditorModes.EditReply && _canModApprove)
             {
                 ctlForm.ShowModOptions = false;
             }
         }
+
         private void SaveTopic()
         {
-            bool bSend = true;
-
-            string Subject = string.Empty;
-            string Body = string.Empty;
-            string Summary = string.Empty;
-            Subject = ctlForm.Subject;
-            Body = ctlForm.Body;
-            Subject = Utilities.CleanString(PortalId, Subject, false, EditorTypes.TEXTBOX, ForumInfo.UseFilter, false, ForumModuleId, MyThemePath, false);
-            Body = Utilities.CleanString(PortalId, Body, _allowHTML, _editorType, ForumInfo.UseFilter, ForumInfo.AllowScript, ForumModuleId, MyThemePath, ForumInfo.AllowEmoticons);
-            Summary = ctlForm.Summary;
-            int AuthorId = -1;
-            string AuthorName = string.Empty;
+            var subject = ctlForm.Subject;
+            var body = ctlForm.Body;
+            subject = Utilities.CleanString(PortalId, subject, false, EditorTypes.TEXTBOX, ForumInfo.UseFilter, false, ForumModuleId, _themePath, false);
+            body = Utilities.CleanString(PortalId, body, _allowHTML, _editorType, ForumInfo.UseFilter, ForumInfo.AllowScript, ForumModuleId, _themePath, ForumInfo.AllowEmoticons);
+            var summary = ctlForm.Summary;
+            int authorId;
+            string authorName;
             if (Request.IsAuthenticated)
             {
-                AuthorId = UserInfo.UserID;
+                authorId = UserInfo.UserID;
                 switch (MainSettings.UserNameDisplay.ToUpperInvariant())
                 {
                     case "USERNAME":
-                        AuthorName = UserInfo.Username.Trim(' ');
+                        authorName = UserInfo.Username.Trim(' ');
                         break;
                     case "FULLNAME":
-                        AuthorName = Convert.ToString(UserInfo.FirstName + " " + UserInfo.LastName).Trim(' ');
+                        authorName = Convert.ToString(UserInfo.FirstName + " " + UserInfo.LastName).Trim(' ');
                         break;
                     case "FIRSTNAME":
-                        AuthorName = UserInfo.FirstName.Trim(' ');
+                        authorName = UserInfo.FirstName.Trim(' ');
                         break;
                     case "LASTNAME":
-                        AuthorName = UserInfo.LastName.Trim(' ');
+                        authorName = UserInfo.LastName.Trim(' ');
                         break;
                     case "DISPLAYNAME":
-                        AuthorName = UserInfo.DisplayName.Trim(' ');
+                        authorName = UserInfo.DisplayName.Trim(' ');
                         break;
                     default:
-                        AuthorName = UserInfo.DisplayName;
+                        authorName = UserInfo.DisplayName;
                         break;
                 }
-                //AuthorName = UserInfo.DisplayName
             }
             else
             {
-                AuthorId = -1;
-                AuthorName = Utilities.CleanString(PortalId, ctlForm.AuthorName, false, EditorTypes.TEXTBOX, true, false, ForumModuleId, MyThemePath, false);
-                if (AuthorName.Trim() == string.Empty)
-                {
+                authorId = -1;
+                authorName = Utilities.CleanString(PortalId, ctlForm.AuthorName, false, EditorTypes.TEXTBOX, true, false, ForumModuleId, _themePath, false);
+                if (authorName.Trim() == string.Empty)
                     return;
-                }
             }
-            TopicsController tc = new TopicsController();
-            TopicInfo ti = null;
+
+            var tc = new TopicsController();
+            TopicInfo ti;
+
             if (TopicId > 0)
             {
                 ti = tc.Topics_Get(PortalId, ForumModuleId, TopicId);
                 ti.Content.DateUpdated = DateTime.Now;
-                AuthorId = ti.Author.AuthorId;
-                bSend = false;
+                authorId = ti.Author.AuthorId;
             }
             else
             {
                 ti = new TopicInfo();
-                DateTime dt = DateTime.Now;
+                var dt = DateTime.Now;
                 ti.Content.DateCreated = dt;
                 ti.Content.DateUpdated = dt;
             }
+
             ti.AnnounceEnd = ctlForm.AnnounceEnd;
             ti.AnnounceStart = ctlForm.AnnounceStart;
             ti.Priority = ctlForm.TopicPriority;
-            if (!isEdit)
+
+            if (!_isEdit)
             {
-                ti.Content.AuthorId = AuthorId;
-                ti.Content.AuthorName = AuthorName;
+                ti.Content.AuthorId = authorId;
+                ti.Content.AuthorName = authorName;
                 ti.Content.IPAddress = Request.UserHostAddress;
             }
-            if (Regex.IsMatch(Body, "<CODE([^>]*)>", RegexOptions.IgnoreCase))
+
+            if (Regex.IsMatch(body, "<CODE([^>]*)>", RegexOptions.IgnoreCase))
             {
-                foreach (Match m in Regex.Matches(Body, "<CODE([^>]*)>(.*?)</CODE>", RegexOptions.IgnoreCase))
-                {
-                    Body = Body.Replace(m.Value, m.Value.Replace("<br>", System.Environment.NewLine));
-                }
+                foreach (Match m in Regex.Matches(body, "<CODE([^>]*)>(.*?)</CODE>", RegexOptions.IgnoreCase))
+                    body = body.Replace(m.Value, m.Value.Replace("<br>", System.Environment.NewLine));
             }
+
             if (!(string.IsNullOrEmpty(ForumInfo.PrefixURL)))
             {
-                string cleanSubject = Utilities.CleanName(Subject).ToLowerInvariant();
+                var cleanSubject = Utilities.CleanName(subject).ToLowerInvariant();
                 if (SimulateIsNumeric.IsNumeric(cleanSubject))
-                {
                     cleanSubject = "Topic-" + cleanSubject;
-                }
-                string topicUrl = cleanSubject;
-                string urlPrefix = "/";
+
+                var topicUrl = cleanSubject;
+                var urlPrefix = "/";
+
                 if (!(string.IsNullOrEmpty(ForumInfo.ForumGroup.PrefixURL)))
-                {
                     urlPrefix += ForumInfo.ForumGroup.PrefixURL + "/";
-                }
+
                 if (!(string.IsNullOrEmpty(ForumInfo.PrefixURL)))
-                {
                     urlPrefix += ForumInfo.PrefixURL + "/";
-                }
-                string urlToCheck = urlPrefix + cleanSubject;
-                Data.Topics topicsDb = new Data.Topics();
-                for (int u = 0; u <= 200; u++)
+
+                var urlToCheck = urlPrefix + cleanSubject;
+
+                var topicsDb = new Data.Topics();
+                for (var u = 0; u <= 200; u++)
                 {
-                    int tid = topicsDb.TopicIdByUrl(PortalId, ModuleId, urlToCheck);
+                    var tid = topicsDb.TopicIdByUrl(PortalId, ModuleId, urlToCheck);
                     if (tid > 0 && tid == TopicId)
-                    {
                         break;
-                    }
-                    else if (tid > 0)
-                    {
-                        topicUrl = (u + 1) + "-" + cleanSubject;
-                        urlToCheck = urlPrefix + topicUrl;
-                    }
-                    else
-                    {
+
+                    if (tid <= 0)
                         break;
-                    }
+
+                    topicUrl = (u + 1) + "-" + cleanSubject;
+                    urlToCheck = urlPrefix + topicUrl;
                 }
                 if (topicUrl.Length > 150)
                 {
                     topicUrl = topicUrl.Substring(0, 149);
-                    topicUrl = topicUrl.Substring(0, topicUrl.LastIndexOf("-"));
+                    topicUrl = topicUrl.Substring(0, topicUrl.LastIndexOf("-", StringComparison.Ordinal));
                 }
+
                 ti.TopicUrl = topicUrl;
-                //.URL = topicUrl
             }
             else
             {
@@ -821,48 +762,33 @@ namespace DotNetNuke.Modules.ActiveForums
                 ti.TopicUrl = string.Empty;
             }
 
-            ti.Content.Body = Body; //Utilities.CleanString(PortalId, Body, fi.AllowHTML, fi.EditorType, fi.UseFilter, fi.AllowScript, ForumModuleId, String.Empty)
-            ti.Content.Subject = Subject;
-            ti.Content.Summary = Summary;
-            ti.IsAnnounce = Convert.ToBoolean(((ti.AnnounceEnd != Utilities.NullDate() & ti.AnnounceStart != Utilities.NullDate()) ? true : false));
-            if (canModApprove && fi.IsModerated)
-            {
+            ti.Content.Body = body; //Utilities.CleanString(PortalId, Body, fi.AllowHTML, fi.EditorType, fi.UseFilter, fi.AllowScript, ForumModuleId, String.Empty)
+            ti.Content.Subject = subject;
+            ti.Content.Summary = summary;
+            ti.IsAnnounce = ti.AnnounceEnd != Utilities.NullDate() && ti.AnnounceStart != Utilities.NullDate();
+            
+            if (_canModApprove && _fi.IsModerated)
                 ti.IsApproved = ctlForm.IsApproved;
-            }
             else
-            {
-                ti.IsApproved = isApproved;
-            }
-            bSend = ti.IsApproved;
+                ti.IsApproved = _isApproved;
+
+            bool bSend = ti.IsApproved;
+
             ti.IsArchived = false;
             ti.IsDeleted = false;
-            if (canLock)
-            {
-                ti.IsLocked = ctlForm.Locked;
-            }
-            else
-            {
-                ti.IsLocked = false;
-            }
-            if (canPin)
-            {
-                ti.IsPinned = ctlForm.Pinned;
-            }
-            else
-            {
-                ti.IsPinned = false;
-            }
+            ti.IsLocked = _canLock && ctlForm.Locked;
+            ti.IsPinned = _canPin && ctlForm.Pinned;
             ti.StatusId = ctlForm.StatusId;
             ti.TopicIcon = ctlForm.TopicIcon;
             ti.TopicType = 0;
             if (ForumInfo.Properties != null)
             {
-                StringBuilder tData = new StringBuilder();
+                var tData = new StringBuilder();
                 tData.Append("<topicdata>");
                 tData.Append("<properties>");
-                foreach (PropertiesInfo p in ForumInfo.Properties)
+                foreach (var p in ForumInfo.Properties)
                 {
-                    string pkey = "afprop-" + p.PropertyId.ToString();
+                    var pkey = "afprop-" + p.PropertyId.ToString();
 
                     tData.Append("<property id=\"" + p.PropertyId.ToString() + "\">");
                     tData.Append("<name><![CDATA[");
@@ -893,325 +819,305 @@ namespace DotNetNuke.Modules.ActiveForums
                 SaveAttach(ti.ContentId);
                 if (ti.IsApproved && ti.Author.AuthorId > 0)
                 {
-                    Data.Profiles uc = new Data.Profiles();
+                    var uc = new Data.Profiles();
                     uc.Profile_UpdateTopicCount(PortalId, ti.Author.AuthorId);
                 }
             }
+
             if (Permissions.HasPerm(ForumInfo.Security.Tag, ForumUser.UserRoles))
             {
                 DataProvider.Instance().Tags_DeleteByTopicId(PortalId, ForumModuleId, TopicId);
-                string tagForm = string.Empty;
+                var tagForm = string.Empty;
                 if (Request.Form["txtTags"] != null)
-                {
                     tagForm = Request.Form["txtTags"];
-                }
-                if (!(tagForm == string.Empty))
+
+                if (tagForm != string.Empty)
                 {
-                    string[] Tags = tagForm.Split(',');
-                    foreach (string tag in Tags)
+                    var tags = tagForm.Split(',');
+                    foreach (var tag in tags)
                     {
-                        string sTag = Utilities.CleanString(PortalId, tag.Trim(), false, EditorTypes.TEXTBOX, false, false, ForumModuleId, string.Empty, false);
+                        var sTag = Utilities.CleanString(PortalId, tag.Trim(), false, EditorTypes.TEXTBOX, false, false, ForumModuleId, string.Empty, false);
                         DataProvider.Instance().Tags_Save(PortalId, ForumModuleId, -1, sTag, 0, 1, 0, TopicId, false, -1, -1);
                     }
                 }
             }
+
             if (Permissions.HasPerm(ForumInfo.Security.Categorize, ForumUser.UserRoles))
             {
                 if (Request.Form["amaf-catselect"] != null)
                 {
-                    string[] cats = Request.Form["amaf-catselect"].Split(';');
+                    var cats = Request.Form["amaf-catselect"].Split(';');
                     DataProvider.Instance().Tags_DeleteTopicToCategory(PortalId, ForumModuleId, -1, TopicId);
-                    foreach (string c in cats)
+                    foreach (var c in cats)
                     {
-                        int cid = -1;
-                        if (!(string.IsNullOrEmpty(c)) && SimulateIsNumeric.IsNumeric(c))
-                        {
-                            cid = Convert.ToInt32(c);
-                            if (cid > 0)
-                            {
-                                DataProvider.Instance().Tags_AddTopicToCategory(PortalId, ForumModuleId, cid, TopicId);
-                            }
-                        }
+                        if (string.IsNullOrEmpty(c) || !SimulateIsNumeric.IsNumeric(c)) 
+                            continue;
+
+                        var cid = Convert.ToInt32(c);
+                        if (cid > 0)
+                            DataProvider.Instance().Tags_AddTopicToCategory(PortalId, ForumModuleId, cid, TopicId);
                     }
                 }
             }
 
             if (!String.IsNullOrEmpty(ctlForm.PollQuestion) && !String.IsNullOrEmpty(ctlForm.PollOptions))
             {
-                string sPollQ = ctlForm.PollQuestion.Trim();
-                sPollQ = Utilities.CleanString(PortalId, sPollQ, false, EditorTypes.TEXTBOX, true, false, ForumModuleId, string.Empty, false);
-                int PollId = 0;
-                PollId = DataProvider.Instance().Poll_Save(-1, TopicId, UserId, ctlForm.PollQuestion.Trim(), ctlForm.PollType);
-                if (PollId > 0)
+                //var sPollQ = ctlForm.PollQuestion.Trim();
+                //sPollQ = Utilities.CleanString(PortalId, sPollQ, false, EditorTypes.TEXTBOX, true, false, ForumModuleId, string.Empty, false);
+                var pollId = DataProvider.Instance().Poll_Save(-1, TopicId, UserId, ctlForm.PollQuestion.Trim(), ctlForm.PollType);
+                if (pollId > 0)
                 {
-                    string[] Options = ctlForm.PollOptions.Split(new string[] { System.Environment.NewLine }, StringSplitOptions.None);
+                    var options = ctlForm.PollOptions.Split(new[] { System.Environment.NewLine }, StringSplitOptions.None);
                
-
-                    foreach (string opt in Options)
+                    foreach (string opt in options)
                     {
-                        if (opt.Trim() != "")
+                        if (opt.Trim() != string.Empty)
                         {
                             var value = Utilities.CleanString(PortalId, opt, false, EditorTypes.TEXTBOX, true, false, ForumModuleId, string.Empty, false);
-                            DataProvider.Instance().Poll_Option_Save(-1, PollId, value.Trim(), TopicId);
+                            DataProvider.Instance().Poll_Option_Save(-1, pollId, value.Trim(), TopicId);
                         }
-
                     }
                 }
+
                 ti = tc.Topics_Get(PortalId, ForumModuleId, TopicId, ForumId, -1, false);
                 ti.TopicType = TopicTypes.Poll;
                 tc.TopicSave(PortalId, ti);
             }
+
             try
             {
-                string cachekey = string.Format("AF-FV-{0}-{1}", PortalId, ModuleId);
+                var cachekey = string.Format("AF-FV-{0}-{1}", PortalId, ModuleId);
                 DataCache.CacheClearPrefix(cachekey);
-                if (ctlForm.Subscribe && AuthorId == UserId)
+                if (ctlForm.Subscribe && authorId == UserId)
                 {
-                    if (!(Subscriptions.IsSubscribed(PortalId, ForumModuleId, ForumId, TopicId, SubscriptionTypes.Instant, AuthorId)))
+                    if (!(Subscriptions.IsSubscribed(PortalId, ForumModuleId, ForumId, TopicId, SubscriptionTypes.Instant, authorId)))
                     {
-                        SubscriptionController sc = new SubscriptionController();
-                        sc.Subscription_Update(PortalId, ForumModuleId, ForumId, TopicId, 1, AuthorId, ForumUser.UserRoles);
+                        var sc = new SubscriptionController();
+                        sc.Subscription_Update(PortalId, ForumModuleId, ForumId, TopicId, 1, authorId, ForumUser.UserRoles);
                     }
                 }
-                else if (isEdit)
+                else if (_isEdit)
                 {
-                    bool isSub = Subscriptions.IsSubscribed(PortalId, ForumModuleId, ForumId, TopicId, SubscriptionTypes.Instant, AuthorId);
+                    bool isSub = Subscriptions.IsSubscribed(PortalId, ForumModuleId, ForumId, TopicId, SubscriptionTypes.Instant, authorId);
                     if (isSub && !ctlForm.Subscribe)
                     {
-                        SubscriptionController sc = new SubscriptionController();
-                        sc.Subscription_Update(PortalId, ForumModuleId, ForumId, TopicId, 1, AuthorId, ForumUser.UserRoles);
+                        var sc = new SubscriptionController();
+                        sc.Subscription_Update(PortalId, ForumModuleId, ForumId, TopicId, 1, authorId, ForumUser.UserRoles);
                     }
                 }
-                if (bSend && !isEdit)
-                {
-                    Subscriptions.SendSubscriptions(PortalId, ForumModuleId, ForumTabId, fi, TopicId, 0, ti.Content.AuthorId);
-                }
+
+                if (bSend && !_isEdit)
+                    Subscriptions.SendSubscriptions(PortalId, ForumModuleId, ForumTabId, _fi, TopicId, 0, ti.Content.AuthorId);
+
                 if (ti.IsApproved == false)
                 {
-                    List<Entities.Users.UserInfo> mods = Utilities.GetListOfModerators(PortalId, ForumId);
-                    NotificationType notificationType = NotificationsController.Instance.GetNotificationType("AF-ForumModeration");
-                    string notifySubject = Utilities.GetSharedResource("NotificationSubjectTopic");
+                    var mods = Utilities.GetListOfModerators(PortalId, ForumId);
+                    var notificationType = NotificationsController.Instance.GetNotificationType("AF-ForumModeration");
+                   
+                    var notifySubject = Utilities.GetSharedResource("NotificationSubjectTopic");
                     notifySubject = notifySubject.Replace("[DisplayName]", UserInfo.DisplayName);
                     notifySubject = notifySubject.Replace("[TopicSubject]", ti.Content.Subject);
-                    string notifyBody = Utilities.GetSharedResource("NotificationBodyTopic");
+                   
+                    var notifyBody = Utilities.GetSharedResource("NotificationBodyTopic");
                     notifyBody = notifyBody.Replace("[Post]", ti.Content.Body);
-                    string notificationKey = string.Format("{0}:{1}:{2}:{3}:{4}", TabId, ForumModuleId, ForumId, TopicId, ReplyId);
+                    
+                    var notificationKey = string.Format("{0}:{1}:{2}:{3}:{4}", TabId, ForumModuleId, ForumId, TopicId, ReplyId);
 
-                    Notification notification = new Notification();
-                    notification.NotificationTypeID = notificationType.NotificationTypeId;
-                    notification.Subject = notifySubject;
-                    notification.Body = notifyBody;
-                    notification.IncludeDismissAction = false;
-                    notification.SenderUserID = UserInfo.UserID;
-                    notification.Context = notificationKey;
-
+                    var notification = new Notification
+                                           {
+                                               NotificationTypeID = notificationType.NotificationTypeId,
+                                               Subject = notifySubject,
+                                               Body = notifyBody,
+                                               IncludeDismissAction = false,
+                                               SenderUserID = UserInfo.UserID,
+                                               Context = notificationKey
+                                           };
 
                     NotificationsController.Instance.SendNotification(notification, PortalId, null, mods);
 
-
-
-                    string[] Params = { ParamKeys.ForumId + "=" + ForumId, ParamKeys.ViewType + "=confirmaction", ParamKeys.ConfirmActionId + "=" + ConfirmActions.MessagePending };
-                    Response.Redirect(NavigateUrl(ForumTabId, "", Params), false);
+                    string[] @params = { ParamKeys.ForumId + "=" + ForumId, ParamKeys.ViewType + "=confirmaction", ParamKeys.ConfirmActionId + "=" + ConfirmActions.MessagePending };
+                    Response.Redirect(NavigateUrl(ForumTabId, "", @params), false);
                 }
                 else
                 {
                     if (ti != null)
-                    {
                         ti.TopicId = TopicId;
-                    }
-                    ControlUtils ctlUtils = new ControlUtils();
 
-                    string sUrl = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, ForumInfo.PrefixURL, ForumInfo.ForumGroupId, ForumInfo.ForumID, TopicId, ti.TopicUrl, -1, -1, string.Empty, 1, SocialGroupId);
+                    var ctlUtils = new ControlUtils();
+
+                    var sUrl = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, ForumInfo.PrefixURL, ForumInfo.ForumGroupId, ForumInfo.ForumID, TopicId, ti.TopicUrl, -1, -1, string.Empty, 1, SocialGroupId);
+                    
                     if (sUrl.Contains("~/") || Request.QueryString["asg"] != null)
-                    {
                         sUrl = Utilities.NavigateUrl(ForumTabId, "", ParamKeys.TopicId + "=" + TopicId);
-                    }
 
-                    if (!isEdit)
+                    if (!_isEdit)
                     {
                         try
                         {
-                            Social amas = new Social();
-                            amas.AddTopicToJournal(PortalId, ForumModuleId, ForumId, TopicId, UserId, sUrl, Subject, Summary, Body, ForumInfo.ActiveSocialSecurityOption, ForumInfo.Security.Read, SocialGroupId);
-                            if (Request.QueryString["asg"] == null & !(string.IsNullOrEmpty(MainSettings.ActiveSocialTopicsKey)) && ForumInfo.ActiveSocialEnabled)
+                            var amas = new Social();
+                            amas.AddTopicToJournal(PortalId, ForumModuleId, ForumId, TopicId, UserId, sUrl, subject, summary, body, ForumInfo.ActiveSocialSecurityOption, ForumInfo.Security.Read, SocialGroupId);
+                            if (Request.QueryString["asg"] == null && !(string.IsNullOrEmpty(MainSettings.ActiveSocialTopicsKey)) && ForumInfo.ActiveSocialEnabled)
                             {
                                 // amas.AddTopicToJournal(PortalId, ForumModuleId, ForumId, UserId, sUrl, Subject, Summary, Body, ForumInfo.ActiveSocialSecurityOption, ForumInfo.Security.Read)
                             }
                             else
                             {
-                                amas.AddForumItemToJournal(PortalId, ForumModuleId, UserId, "forumtopic", sUrl, Subject, Body);
+                                amas.AddForumItemToJournal(PortalId, ForumModuleId, UserId, "forumtopic", sUrl, subject, body);
                             }
-
-
                         }
                         catch (Exception ex)
                         {
-                            DotNetNuke.Services.Exceptions.Exceptions.LogException(ex);
+                            Services.Exceptions.Exceptions.LogException(ex);
                         }
                     }
-
-
 
                     Response.Redirect(sUrl, false);
                 }
             }
             catch (Exception ex)
             {
-                DotNetNuke.Services.Exceptions.Exceptions.LogException(ex);
+                Services.Exceptions.Exceptions.LogException(ex);
             }
-
-
         }
+
         private void SaveReply()
         {
-            string Subject = string.Empty;
-            string Body = string.Empty;
-            bool bSend = true;
-            Subject = ctlForm.Subject;
-            Body = ctlForm.Body;
-            Subject = Utilities.CleanString(PortalId, Subject, false, EditorTypes.TEXTBOX, fi.UseFilter, false, ForumModuleId, MyThemePath, false);
-            Body = Utilities.CleanString(PortalId, Body, _allowHTML, _editorType, fi.UseFilter, fi.AllowScript, ForumModuleId, MyThemePath, fi.AllowEmoticons);
-            int AuthorId = -1;
-            string AuthorName = string.Empty;
+            var subject = ctlForm.Subject;
+            var body = ctlForm.Body;
+            subject = Utilities.CleanString(PortalId, subject, false, EditorTypes.TEXTBOX, _fi.UseFilter, false, ForumModuleId, _themePath, false);
+            body = Utilities.CleanString(PortalId, body, _allowHTML, _editorType, _fi.UseFilter, _fi.AllowScript, ForumModuleId, _themePath, _fi.AllowEmoticons);
+            int authorId;
+            string authorName;
             if (Request.IsAuthenticated)
             {
-                AuthorId = UserInfo.UserID;
+                authorId = UserInfo.UserID;
                 switch (MainSettings.UserNameDisplay.ToUpperInvariant())
                 {
                     case "USERNAME":
-                        AuthorName = UserInfo.Username.Trim(' ');
+                        authorName = UserInfo.Username.Trim(' ');
                         break;
                     case "FULLNAME":
-                        AuthorName = Convert.ToString(UserInfo.FirstName + " " + UserInfo.LastName).Trim(' ');
+                        authorName = Convert.ToString(UserInfo.FirstName + " " + UserInfo.LastName).Trim(' ');
                         break;
                     case "FIRSTNAME":
-                        AuthorName = UserInfo.FirstName.Trim(' ');
+                        authorName = UserInfo.FirstName.Trim(' ');
                         break;
                     case "LASTNAME":
-                        AuthorName = UserInfo.LastName.Trim(' ');
+                        authorName = UserInfo.LastName.Trim(' ');
                         break;
                     case "DISPLAYNAME":
-                        AuthorName = UserInfo.DisplayName.Trim(' ');
+                        authorName = UserInfo.DisplayName.Trim(' ');
                         break;
                     default:
-                        AuthorName = UserInfo.DisplayName;
+                        authorName = UserInfo.DisplayName;
                         break;
                 }
             }
             else
             {
-                AuthorId = -1;
-                AuthorName = Utilities.CleanString(PortalId, ctlForm.AuthorName, false, EditorTypes.TEXTBOX, true, false, ForumModuleId, MyThemePath, false);
-                if (AuthorName.Trim() == string.Empty)
-                {
+                authorId = -1;
+                authorName = Utilities.CleanString(PortalId, ctlForm.AuthorName, false, EditorTypes.TEXTBOX, true, false, ForumModuleId, _themePath, false);
+                if (authorName.Trim() == string.Empty)
                     return;
-                }
             }
 
-            TopicsController tc = new TopicsController();
-            ReplyController rc = new ReplyController();
-            ReplyInfo ri = null;
+            var tc = new TopicsController();
+            var rc = new ReplyController();
+            ReplyInfo ri;
+            
             if (PostId > 0)
             {
                 ri = rc.Reply_Get(PortalId, ForumModuleId, TopicId, PostId);
                 ri.Content.DateUpdated = DateTime.Now;
-                bSend = false;
             }
             else
             {
                 ri = new ReplyInfo();
-                DateTime dt = DateTime.Now;
+                var dt = DateTime.Now;
                 ri.Content.DateCreated = dt;
                 ri.Content.DateUpdated = dt;
-                //AuthorId = ri.Author.AuthorId
             }
-            if (!isEdit)
+
+            if (!_isEdit)
             {
-                ri.Content.AuthorId = AuthorId;
-                ri.Content.AuthorName = AuthorName;
+                ri.Content.AuthorId = authorId;
+                ri.Content.AuthorName = authorName;
                 ri.Content.IPAddress = Request.UserHostAddress;
             }
-            if (Regex.IsMatch(Body, "<CODE([^>]*)>", RegexOptions.IgnoreCase))
+
+            if (Regex.IsMatch(body, "<CODE([^>]*)>", RegexOptions.IgnoreCase))
             {
-                foreach (Match m in Regex.Matches(Body, "<CODE([^>]*)>(.*?)</CODE>", RegexOptions.IgnoreCase))
-                {
-                    Body = Body.Replace(m.Value, m.Value.Replace("<br>", System.Environment.NewLine));
-                }
-
-
+                foreach (Match m in Regex.Matches(body, "<CODE([^>]*)>(.*?)</CODE>", RegexOptions.IgnoreCase))
+                    body = body.Replace(m.Value, m.Value.Replace("<br>", System.Environment.NewLine));
             }
-            ri.Content.Body = Body;
-            ri.Content.Subject = Subject;
+
+            ri.Content.Body = body;
+            ri.Content.Subject = subject;
             ri.Content.Summary = string.Empty;
-            if (ctlForm.IsApproved != null && canModApprove && ri.Content.AuthorId != this.UserId)
-            {
+
+            if (_canModApprove && ri.Content.AuthorId != UserId)
                 ri.IsApproved = ctlForm.IsApproved;
-            }
             else
-            {
-                ri.IsApproved = isApproved;
-            }
-            bSend = ri.IsApproved;
+                ri.IsApproved = _isApproved;
+
+            var bSend = ri.IsApproved;
             ri.IsDeleted = false;
             ri.StatusId = ctlForm.StatusId;
             ri.TopicId = TopicId;
-            int tmpReplyId = -1;
-            tmpReplyId = rc.Reply_Save(PortalId, ri);
+            var tmpReplyId = rc.Reply_Save(PortalId, ri);
             ri = rc.Reply_Get(PortalId, ForumModuleId, TopicId, tmpReplyId);
             SaveAttach(ri.ContentId);
             //tc.ForumTopicSave(ForumID, TopicId, ReplyId)
-            string cachekey = string.Format("AF-FV-{0}-{1}", PortalId, ModuleId);
+            var cachekey = string.Format("AF-FV-{0}-{1}", PortalId, ModuleId);
             DataCache.CacheClearPrefix(cachekey);
             try
             {
-                if (ctlForm.Subscribe && AuthorId == UserId)
+                if (ctlForm.Subscribe && authorId == UserId)
                 {
-                    if (!(Subscriptions.IsSubscribed(PortalId, ForumModuleId, ForumId, TopicId, SubscriptionTypes.Instant, AuthorId)))
+                    if (!(Subscriptions.IsSubscribed(PortalId, ForumModuleId, ForumId, TopicId, SubscriptionTypes.Instant, authorId)))
                     {
-                        SubscriptionController sc = new SubscriptionController();
-                        sc.Subscription_Update(PortalId, ForumModuleId, ForumId, TopicId, 1, AuthorId, ForumUser.UserRoles);
+                        var sc = new SubscriptionController();
+                        sc.Subscription_Update(PortalId, ForumModuleId, ForumId, TopicId, 1, authorId, ForumUser.UserRoles);
                     }
                 }
-                else if (isEdit)
+                else if (_isEdit)
                 {
-                    bool isSub = Subscriptions.IsSubscribed(PortalId, ForumModuleId, ForumId, TopicId, SubscriptionTypes.Instant, AuthorId);
+                    var isSub = Subscriptions.IsSubscribed(PortalId, ForumModuleId, ForumId, TopicId, SubscriptionTypes.Instant, authorId);
                     if (isSub && !ctlForm.Subscribe)
                     {
-                        SubscriptionController sc = new SubscriptionController();
-                        sc.Subscription_Update(PortalId, ForumModuleId, ForumId, TopicId, 1, AuthorId, ForumUser.UserRoles);
+                        var sc = new SubscriptionController();
+                        sc.Subscription_Update(PortalId, ForumModuleId, ForumId, TopicId, 1, authorId, ForumUser.UserRoles);
                     }
                 }
-                if (bSend && !isEdit)
+                if (bSend && !_isEdit)
                 {
-                    Subscriptions.SendSubscriptions(PortalId, ForumModuleId, ForumTabId, fi, TopicId, tmpReplyId, ri.Content.AuthorId);
+                    Subscriptions.SendSubscriptions(PortalId, ForumModuleId, ForumTabId, _fi, TopicId, tmpReplyId, ri.Content.AuthorId);
                 }
                 if (ri.IsApproved == false)
                 {
-                    Email oEmail = new Email();
+                    var oEmail = new Email();
                     oEmail.SendEmailToModerators(ForumInfo.ModNotifyTemplateId, PortalId, ForumId, ri.TopicId, tmpReplyId, ForumModuleId, ForumTabId, string.Empty);
-                    string[] Params = { ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + TopicId, ParamKeys.ViewType + "=confirmaction", ParamKeys.ConfirmActionId + "=" + ConfirmActions.MessagePending };
-                    Response.Redirect(Utilities.NavigateUrl(ForumTabId, "", Params), false);
+                    string[] @params = { ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + TopicId, ParamKeys.ViewType + "=confirmaction", ParamKeys.ConfirmActionId + "=" + ConfirmActions.MessagePending };
+                    Response.Redirect(Utilities.NavigateUrl(ForumTabId, "", @params), false);
                 }
                 else
                 {
-                    ControlUtils ctlUtils = new ControlUtils();
-                    TopicInfo ti = tc.Topics_Get(PortalId, ForumModuleId, TopicId, ForumId, -1, false);
-                    string fullURL = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, ForumInfo.PrefixURL, ForumInfo.ForumGroupId, ForumInfo.ForumID, TopicId, ti.TopicUrl, -1, -1, string.Empty, 1, SocialGroupId);
+                    var ctlUtils = new ControlUtils();
+                    var ti = tc.Topics_Get(PortalId, ForumModuleId, TopicId, ForumId, -1, false);
+                    var fullURL = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, ForumInfo.PrefixURL, ForumInfo.ForumGroupId, ForumInfo.ForumID, TopicId, ti.TopicUrl, -1, -1, string.Empty, 1, SocialGroupId);
+                    
                     if (fullURL.Contains("~/") || Request.QueryString["asg"] != null)
-                    {
-                        fullURL = Utilities.NavigateUrl(ForumTabId, "", new string[] { ParamKeys.TopicId + "=" + TopicId, ParamKeys.ContentJumpId + "=" + tmpReplyId });
-                    }
+                        fullURL = Utilities.NavigateUrl(ForumTabId, "", new[] { ParamKeys.TopicId + "=" + TopicId, ParamKeys.ContentJumpId + "=" + tmpReplyId });
+                    
                     if (fullURL.EndsWith("/"))
-                    {
                         fullURL += "?" + ParamKeys.ContentJumpId + "=" + tmpReplyId;
-                    }
 
-                    if (!isEdit)
+                    if (!_isEdit)
                     {
                         try
                         {
-                            Social amas = new Social();
-                            amas.AddReplyToJournal(PortalId, ForumModuleId, ForumId, TopicId, ReplyId, UserId, fullURL, Subject, string.Empty, Body, ForumInfo.ActiveSocialSecurityOption, ForumInfo.Security.Read, SocialGroupId);
+                            var amas = new Social();
+                            amas.AddReplyToJournal(PortalId, ForumModuleId, ForumId, TopicId, ReplyId, UserId, fullURL, subject, string.Empty, body, ForumInfo.ActiveSocialSecurityOption, ForumInfo.Security.Read, SocialGroupId);
                             //If Request.QueryString["asg"] Is Nothing And Not String.IsNullOrEmpty(MainSettings.ActiveSocialTopicsKey) And ForumInfo.ActiveSocialEnabled And Not ForumInfo.ActiveSocialTopicsOnly Then
                             //    amas.AddReplyToJournal(PortalId, ForumModuleId, ForumId, TopicId, ReplyId, UserId, fullURL, Subject, String.Empty, Body, ForumInfo.ActiveSocialSecurityOption, ForumInfo.Security.Read)
                             //Else
@@ -1222,56 +1128,48 @@ namespace DotNetNuke.Modules.ActiveForums
                         }
                         catch (Exception ex)
                         {
-                            DotNetNuke.Services.Exceptions.Exceptions.LogException(ex);
+                            Services.Exceptions.Exceptions.LogException(ex);
                         }
 
                     }
                     Response.Redirect(fullURL);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }
         }
-        private void SaveAttach(int ContentId)
+
+        private void SaveAttach(int contentId)
         {
-            string AttachIds = hidAttachIds.Value;
-            IFileManager _fileManager = FileManager.Instance;
+            var attachIds = hidAttachIds.Value;
+            var fileManager = FileManager.Instance;
 
+            if (attachIds == string.Empty) 
+                return;
 
-
-            if (!(AttachIds == string.Empty))
+            foreach (var attachid in attachIds.Split(';'))
             {
-                foreach (string attachid in AttachIds.Split(';'))
-                {
-                    if (!(attachid.Trim() == string.Empty))
-                    {
-                        int tmpAttachId = Convert.ToInt32(attachid);
-                        IFileInfo _file = _fileManager.GetFile(tmpAttachId);
-                        Data.AttachController adb = new Data.AttachController();
-                        if (_file == null)
-                        {
-                            adb.SaveToContent(ContentId, tmpAttachId, null, null, false, null);
-                        }
-                        else
-                        {
-                            string fileUrl = "~/LinkClick.aspx?fileticket={0}";
-                            string url = Page.ResolveUrl("~/LinkClick.aspx?fileid=" + _file.FileId);
-                            fileUrl = string.Format(fileUrl, UrlUtils.EncryptParameter(UrlUtils.GetParameterValue(url)));
-                            adb.SaveToContent(ContentId, tmpAttachId, fileUrl, _file.FileName, true, _file.ContentType);
-                        }
+                if (attachid.Trim() == string.Empty) 
+                    continue;
+                    
+                var tmpAttachId = Convert.ToInt32(attachid);
+                var file = fileManager.GetFile(tmpAttachId);
+                var adb = new Data.AttachController();
 
-                    }
+                if (file == null)
+                    adb.SaveToContent(contentId, tmpAttachId, null, null, false, null);
+                else
+                {
+                    var fileUrl = "~/LinkClick.aspx?fileticket={0}";
+                    var url = Page.ResolveUrl("~/LinkClick.aspx?fileid=" + file.FileId);
+                    fileUrl = string.Format(fileUrl, UrlUtils.EncryptParameter(UrlUtils.GetParameterValue(url)));
+                    adb.SaveToContent(contentId, tmpAttachId, fileUrl, file.FileName, true, file.ContentType);
                 }
             }
-
-
-
         }
 
         #endregion
-
-
     }
 }

@@ -136,15 +136,6 @@ namespace DotNetNuke.Modules.ActiveForums
 		public const string DeleteBehavior = "DELETEBEHAVIOR";
 		public const string ProdKey = "AMFORUMS";
 
-#if SKU_ENTERPRISE
-		public const string ProdSku = "AF43ENT";
-#elif SKU_STANDARD
-		public const string ProdSku = "AF43STD";
-#elif SKU_EXPRESS
-		public const string ProdSku = "AF43EXP";
-#elif SKU_LITE
-		public const string ProdSku = "AF43LITE";
-#endif
 		public const string EnablePoints = "ENABLEPOINTS";
 		public const string TopicPointValue = "TOPICPOINTVALUE";
 		public const string ReplyPointValue = "REPLYPOINTVALUE";
@@ -232,7 +223,6 @@ namespace DotNetNuke.Modules.ActiveForums
 		public const string ActiveSocialEnabled = "AMASON";
 		public const string ActiveSocialTopicsOnly = "AMASTO";
 		public const string ActiveSocialSecurityOption = "AMASSEC";
-
 
 		public const string MCEnabled = "MCENABLED";
 		public const string MCUrl = "MCURL";

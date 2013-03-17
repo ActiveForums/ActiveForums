@@ -5,43 +5,17 @@ using System.Collections.Generic;
 
 namespace DotNetNuke.Modules.ActiveForums
 {
-
-
 	public class Forum
-	{
+    {
+        #region AF Forums DB Fields
 
-#region AF Forums DB Fields
-
-	    private int _PortalId = -1;
-		private int _TabId = -1;
-	    private int _permissionsId = -1;
-
-	    public int ForumID { get; set; }
+        public int ForumID { get; set; }
 
 	    public int ModuleId { get; set; }
 
-	    public int PortalId
-		{
-			get
-			{
-				return _PortalId;
-			}
-			set
-			{
-				_PortalId = value;
-			}
-		}
-		public int TabId
-		{
-			get
-			{
-				return _TabId;
-			}
-			set
-			{
-				_TabId = value;
-			}
-		}
+        public int PortalId { get; set; }
+
+        public int TabId { get; set; }
 
 	    public int ForumGroupId { get; set; }
 
@@ -75,34 +49,14 @@ namespace DotNetNuke.Modules.ActiveForums
 
 	    public int LastReplyId { get; set; }
 
-	    public int PermissionsId
-		{
-			get
-			{
-				return _permissionsId;
-			}
-			set
-			{
-				_permissionsId = value;
-			}
-		}
+        public int PermissionsId { get; set; }
 
 	    public bool InheritSecurity { get; set; }
 
 	    public ForumGroupInfo ForumGroup { get; set; }
 
-	    private string _PrefixURL = string.Empty;
-		public string PrefixURL
-		{
-			get
-			{
-				return _PrefixURL;
-			}
-			set
-			{
-				_PrefixURL = value;
-			}
-		}
+        public string PrefixURL { get; set; }
+
 		public string ForumURL
 		{
 			get
@@ -110,46 +64,33 @@ namespace DotNetNuke.Modules.ActiveForums
 				return URL.ForumLink(TabId, this);
 			}
 		}
-		public string TopicUrl {get; set;}
-		public ForumCollection SubForums {get; set;}
-		public List<PropertiesInfo> Properties {get; set;}
-		public int SocialGroupId {get; set;}
-		public bool HasProperties {get; set;}
-#endregion
-#region Settings & Security
+
+		public string TopicUrl { get; set; }
+
+		public ForumCollection SubForums { get; set; }
+
+		public List<PropertiesInfo> Properties { get; set; }
+
+		public int SocialGroupId { get; set; }
+
+		public bool HasProperties { get; set; }
+
+        #endregion
+
+        #region Settings & Security
 
 	    public PermissionInfo Security { get; set; }
 
-	    private Hashtable _ForumSettings = new Hashtable();
-		public Hashtable ForumSettings
-		{
-			get
-			{
-				return _ForumSettings;
-			}
-			set
-			{
-				_ForumSettings = value;
-			}
-		}
+        public Hashtable ForumSettings { get; set; }
 
-#endregion
+        #endregion
 
-#region Last Post
+        #region Last Post
 
-	    private string _LastUsername;
 	    public DateTime LastRead { get; set; }
 
 	    public DateTime LastPostDateTime { get; set; }
 
-	    //Public Property LastUserName() As String
-		//    Get
-		//        Return _LastUsername
-		//    End Get
-		//    Set(ByVal Value As String)
-		//        _LastUsername = Value
-		//    End Set
-		//End Property
 	    public int LastPostUserID { get; set; }
 
 	    public string LastPostUserName { get; set; }
@@ -168,13 +109,19 @@ namespace DotNetNuke.Modules.ActiveForums
 
 	    #endregion
         
-		private bool _IsModerated;
-		private bool _AllowRSS;
+		private bool _isModerated;
+		private bool _allowRSS;
 
 
 	    // initialization
 		public Forum()
 		{
+		    PortalId = -1;
+		    TabId = -1;
+		    PermissionsId = -1;
+		    PrefixURL = string.Empty;
+            ForumSettings = new Hashtable();
+
 			Security = new PermissionInfo();
 		}
 
@@ -185,24 +132,20 @@ namespace DotNetNuke.Modules.ActiveForums
 	    public bool AllowAttach
 		{
 			get
-			{
-				try
-				{
-					return Convert.ToBoolean(_ForumSettings[ForumSettingKeys.AllowAttach]);
-				}
-				catch (Exception ex)
-				{
-					return false;
-				}
+            {
+                bool value;
+		        var obj = ForumSettings[ForumSettingKeys.AllowAttach];
+                return (obj != null && bool.TryParse(obj.ToString(), out value)) && value;
 			}
 		}
+
 		public bool AllowEmoticons
 		{
 			get
 			{
 				try
 				{
-					return Convert.ToBoolean(_ForumSettings[ForumSettingKeys.AllowEmoticons]);
+					return Convert.ToBoolean(ForumSettings[ForumSettingKeys.AllowEmoticons]);
 				}
 				catch (Exception ex)
 				{
@@ -210,13 +153,14 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public bool AllowHTML
 		{
 			get
 			{
 				try
 				{
-					return Convert.ToBoolean(_ForumSettings[ForumSettingKeys.AllowHTML]);
+					return Convert.ToBoolean(ForumSettings[ForumSettingKeys.AllowHTML]);
 				}
 				catch (Exception ex)
 				{
@@ -224,13 +168,14 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public bool AllowPostIcon
 		{
 			get
 			{
 				try
 				{
-					return Convert.ToBoolean(_ForumSettings[ForumSettingKeys.AllowPostIcon]);
+					return Convert.ToBoolean(ForumSettings[ForumSettingKeys.AllowPostIcon]);
 				}
 				catch (Exception ex)
 				{
@@ -238,17 +183,18 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public bool AllowRSS
 		{
 			get
 			{
 				try
 				{
-				    if (_AllowRSS == false)
+				    if (_allowRSS == false)
 					{
-						return Convert.ToBoolean(_ForumSettings[ForumSettingKeys.AllowRSS]);
+						return Convert.ToBoolean(ForumSettings[ForumSettingKeys.AllowRSS]);
 					}
-				    return _AllowRSS;
+				    return _allowRSS;
 				}
 				catch (Exception ex)
 				{
@@ -257,16 +203,17 @@ namespace DotNetNuke.Modules.ActiveForums
 			}
 			set
 			{
-				_AllowRSS = value;
+				_allowRSS = value;
 			}
 		}
+
 		public bool AllowScript
 		{
 			get
 			{
 				try
 				{
-					return Convert.ToBoolean(_ForumSettings[ForumSettingKeys.AllowScript]);
+					return Convert.ToBoolean(ForumSettings[ForumSettingKeys.AllowScript]);
 				}
 				catch (Exception ex)
 				{
@@ -274,13 +221,14 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public bool AllowSubscribe
 		{
 			get
 			{
 				try
 				{
-					return Convert.ToBoolean(_ForumSettings[ForumSettingKeys.AllowSubscribe]);
+					return Convert.ToBoolean(ForumSettings[ForumSettingKeys.AllowSubscribe]);
 				}
 				catch (Exception ex)
 				{
@@ -288,13 +236,14 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public int AttachCount
 		{
 			get
 			{
 				try
 				{
-					return Convert.ToInt32(_ForumSettings[ForumSettingKeys.AttachCount]);
+					return Convert.ToInt32(ForumSettings[ForumSettingKeys.AttachCount]);
 				}
 				catch (Exception ex)
 				{
@@ -302,17 +251,18 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public int AttachMaxHeight
 		{
 			get
 			{
 				try
 				{
-				    if (_ForumSettings[ForumSettingKeys.AttachMaxHeight].ToString() == string.Empty)
+				    if (ForumSettings[ForumSettingKeys.AttachMaxHeight].ToString() == string.Empty)
 					{
 						return 500;
 					}
-				    return Convert.ToInt32(_ForumSettings[ForumSettingKeys.AttachMaxHeight]);
+				    return Convert.ToInt32(ForumSettings[ForumSettingKeys.AttachMaxHeight]);
 				}
 				catch (Exception ex)
 				{
@@ -320,13 +270,14 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public int AttachMaxSize
 		{
 			get
 			{
 				try
 				{
-					return Convert.ToInt32(_ForumSettings[ForumSettingKeys.AttachMaxSize]);
+					return Convert.ToInt32(ForumSettings[ForumSettingKeys.AttachMaxSize]);
 				}
 				catch (Exception ex)
 				{
@@ -334,17 +285,18 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public int AttachMaxWidth
 		{
 			get
 			{
 				try
 				{
-				    if (_ForumSettings[ForumSettingKeys.AttachMaxWidth].ToString() == string.Empty)
+				    if (ForumSettings[ForumSettingKeys.AttachMaxWidth].ToString() == string.Empty)
 					{
 						return 500;
 					}
-				    return Convert.ToInt32(_ForumSettings[ForumSettingKeys.AttachMaxWidth]);
+				    return Convert.ToInt32(ForumSettings[ForumSettingKeys.AttachMaxWidth]);
 				}
 				catch (Exception ex)
 				{
@@ -352,13 +304,14 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public AttachStores AttachStore
 		{
 			get
 			{
 				try
 				{
-					return (AttachStores)(Convert.ToInt32(Enum.Parse(typeof(AttachStores), Convert.ToString(_ForumSettings[ForumSettingKeys.AttachStore].ToString().ToUpper()))));
+					return (AttachStores)(Convert.ToInt32(Enum.Parse(typeof(AttachStores), Convert.ToString(ForumSettings[ForumSettingKeys.AttachStore].ToString().ToUpper()))));
 				}
 				catch (Exception ex)
 				{
@@ -366,13 +319,14 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public string AttachTypeAllowed
 		{
 			get
 			{
 				try
 				{
-					return Convert.ToString(_ForumSettings[ForumSettingKeys.AttachTypeAllowed]);
+					return Convert.ToString(ForumSettings[ForumSettingKeys.AttachTypeAllowed]);
 				}
 				catch (Exception ex)
 				{
@@ -380,13 +334,14 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public bool AttachUniqueFileNames
 		{
 			get
 			{
 				try
 				{
-					return Convert.ToBoolean(_ForumSettings[ForumSettingKeys.AttachUniqueFileNames]);
+					return Convert.ToBoolean(ForumSettings[ForumSettingKeys.AttachUniqueFileNames]);
 				}
 				catch (Exception ex)
 				{
@@ -394,13 +349,14 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public string EditorHeight
 		{
 			get
 			{
 				try
 				{
-					return Convert.ToString(_ForumSettings[ForumSettingKeys.EditorHeight]);
+					return Convert.ToString(ForumSettings[ForumSettingKeys.EditorHeight]);
 				}
 				catch (Exception ex)
 				{
@@ -408,13 +364,14 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public int EditorStyle
 		{
 			get
 			{
 				try
 				{
-					return Convert.ToInt32(_ForumSettings[ForumSettingKeys.EditorStyle]);
+					return Convert.ToInt32(ForumSettings[ForumSettingKeys.EditorStyle]);
 				}
 				catch (Exception ex)
 				{
@@ -422,13 +379,14 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public string EditorToolBar
 		{
 			get
 			{
 				try
 				{
-					return Convert.ToString(_ForumSettings[ForumSettingKeys.EditorToolbar]);
+					return Convert.ToString(ForumSettings[ForumSettingKeys.EditorToolbar]);
 				}
 				catch (Exception ex)
 				{
@@ -436,13 +394,14 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public EditorTypes EditorType
 		{
 			get
 			{
 				try
 				{
-					return (EditorTypes)(Convert.ToInt32(_ForumSettings[ForumSettingKeys.EditorType]));
+					return (EditorTypes)(Convert.ToInt32(ForumSettings[ForumSettingKeys.EditorType]));
 				}
 				catch (Exception ex)
 				{
@@ -450,13 +409,14 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public HTMLPermittedUsers EditorPermittedUsers
 		{
 			get
 			{
 				try
 				{
-					return (HTMLPermittedUsers)(Convert.ToInt32(_ForumSettings[ForumSettingKeys.EditorPermittedUsers]));
+					return (HTMLPermittedUsers)(Convert.ToInt32(ForumSettings[ForumSettingKeys.EditorPermittedUsers]));
 				}
 				catch (Exception ex)
 				{
@@ -464,13 +424,14 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public string EditorWidth
 		{
 			get
 			{
 				try
 				{
-					return Convert.ToString(_ForumSettings[ForumSettingKeys.EditorWidth]);
+					return Convert.ToString(ForumSettings[ForumSettingKeys.EditorWidth]);
 				}
 				catch (Exception ex)
 				{
@@ -478,13 +439,14 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public string EmailAddress
 		{
 			get
 			{
 				try
 				{
-					return Convert.ToString(_ForumSettings[ForumSettingKeys.EmailAddress]);
+					return Convert.ToString(ForumSettings[ForumSettingKeys.EmailAddress]);
 				}
 				catch (Exception ex)
 				{
@@ -492,13 +454,14 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public bool IndexContent
 		{
 			get
 			{
 				try
 				{
-					return Convert.ToBoolean(_ForumSettings[ForumSettingKeys.IndexContent]);
+					return Convert.ToBoolean(ForumSettings[ForumSettingKeys.IndexContent]);
 				}
 				catch (Exception ex)
 				{
@@ -513,7 +476,7 @@ namespace DotNetNuke.Modules.ActiveForums
 			{
 				try
 				{
-					return Convert.ToBoolean(_ForumSettings[ForumSettingKeys.IsModerated]);
+					return Convert.ToBoolean(ForumSettings[ForumSettingKeys.IsModerated]);
 				}
 				catch (Exception ex)
 				{
@@ -521,13 +484,14 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public int TopicsTemplateId
 		{
 			get
 			{
 				try
 				{
-					return Convert.ToInt32(_ForumSettings[ForumSettingKeys.TopicsTemplateId]);
+					return Convert.ToInt32(ForumSettings[ForumSettingKeys.TopicsTemplateId]);
 				}
 				catch (Exception ex)
 				{
@@ -535,13 +499,14 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public int TopicTemplateId
 		{
 			get
 			{
 				try
 				{
-					return Convert.ToInt32(_ForumSettings[ForumSettingKeys.TopicTemplateId]);
+					return Convert.ToInt32(ForumSettings[ForumSettingKeys.TopicTemplateId]);
 				}
 				catch (Exception ex)
 				{
@@ -549,13 +514,15 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public int TopicFormId
 		{
 			get
 			{
 				try
 				{
-					return Convert.ToInt32(_ForumSettings[ForumSettingKeys.TopicFormId]);
+
+					return Convert.ToInt32(ForumSettings[ForumSettingKeys.TopicFormId]);
 				}
 				catch (Exception ex)
 				{
@@ -563,13 +530,14 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public int ReplyFormId
 		{
 			get
 			{
 				try
 				{
-					return Convert.ToInt32(_ForumSettings[ForumSettingKeys.ReplyFormId]);
+					return Convert.ToInt32(ForumSettings[ForumSettingKeys.ReplyFormId]);
 				}
 				catch (Exception ex)
 				{
@@ -577,13 +545,14 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public int QuickReplyFormId
 		{
 			get
 			{
 				try
 				{
-					return Convert.ToInt32(_ForumSettings[ForumSettingKeys.QuickReplyFormId]);
+					return Convert.ToInt32(ForumSettings[ForumSettingKeys.QuickReplyFormId]);
 				}
 				catch (Exception ex)
 				{
@@ -591,13 +560,14 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public int ProfileTemplateId
 		{
 			get
 			{
 				try
 				{
-					return Convert.ToInt32(_ForumSettings[ForumSettingKeys.ProfileTemplateId]);
+					return Convert.ToInt32(ForumSettings[ForumSettingKeys.ProfileTemplateId]);
 				}
 				catch (Exception ex)
 				{
@@ -605,13 +575,14 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public bool UseFilter
 		{
 			get
 			{
 				try
 				{
-					return Convert.ToBoolean(_ForumSettings[ForumSettingKeys.UseFilter]);
+					return Convert.ToBoolean(ForumSettings[ForumSettingKeys.UseFilter]);
 				}
 				catch (Exception ex)
 				{
@@ -619,13 +590,14 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public int AutoTrustLevel
 		{
 			get
 			{
 				try
 				{
-					return Convert.ToInt32(_ForumSettings[ForumSettingKeys.AutoTrustLevel]);
+					return Convert.ToInt32(ForumSettings[ForumSettingKeys.AutoTrustLevel]);
 				}
 				catch (Exception ex)
 				{
@@ -633,13 +605,14 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public TrustTypes DefaultTrustValue
 		{
 			get
 			{
 				try
 				{
-					return (TrustTypes)(Convert.ToInt32(_ForumSettings[ForumSettingKeys.DefaultTrustValue]));
+					return (TrustTypes)(Convert.ToInt32(ForumSettings[ForumSettingKeys.DefaultTrustValue]));
 				}
 				catch (Exception ex)
 				{
@@ -647,13 +620,14 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public int ModApproveTemplateId
 		{
 			get
 			{
 				try
 				{
-					return Convert.ToInt32(_ForumSettings[ForumSettingKeys.ModApproveTemplateId]);
+					return Convert.ToInt32(ForumSettings[ForumSettingKeys.ModApproveTemplateId]);
 				}
 				catch (Exception ex)
 				{
@@ -661,13 +635,14 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public int ModRejectTemplateId
 		{
 			get
 			{
 				try
 				{
-					return Convert.ToInt32(_ForumSettings[ForumSettingKeys.ModRejectTemplateId]);
+					return Convert.ToInt32(ForumSettings[ForumSettingKeys.ModRejectTemplateId]);
 				}
 				catch (Exception ex)
 				{
@@ -675,13 +650,14 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public int ModMoveTemplateId
 		{
 			get
 			{
 				try
 				{
-					return Convert.ToInt32(_ForumSettings[ForumSettingKeys.ModMoveTemplateId]);
+					return Convert.ToInt32(ForumSettings[ForumSettingKeys.ModMoveTemplateId]);
 				}
 				catch (Exception ex)
 				{
@@ -689,13 +665,14 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public int ModDeleteTemplateId
 		{
 			get
 			{
 				try
 				{
-					return Convert.ToInt32(_ForumSettings[ForumSettingKeys.ModDeleteTemplateId]);
+					return Convert.ToInt32(ForumSettings[ForumSettingKeys.ModDeleteTemplateId]);
 				}
 				catch (Exception ex)
 				{
@@ -703,13 +680,14 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public int ModNotifyTemplateId
 		{
 			get
 			{
 				try
 				{
-					return Convert.ToInt32(_ForumSettings[ForumSettingKeys.ModNotifyTemplateId]);
+					return Convert.ToInt32(ForumSettings[ForumSettingKeys.ModNotifyTemplateId]);
 				}
 				catch (Exception ex)
 				{
@@ -717,13 +695,14 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public bool AllowTags
 		{
 			get
 			{
 				try
 				{
-					return Convert.ToBoolean(_ForumSettings[ForumSettingKeys.AllowTags]);
+					return Convert.ToBoolean(ForumSettings[ForumSettingKeys.AllowTags]);
 				}
 				catch (Exception ex)
 				{
@@ -731,15 +710,16 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public bool ActiveSocialEnabled
 		{
 			get
 			{
-			    if (_ForumSettings.ContainsKey(ForumSettingKeys.ActiveSocialEnabled))
+			    if (ForumSettings.ContainsKey(ForumSettingKeys.ActiveSocialEnabled))
 				{
 					try
 					{
-						return Convert.ToBoolean(_ForumSettings[ForumSettingKeys.ActiveSocialEnabled]);
+						return Convert.ToBoolean(ForumSettings[ForumSettingKeys.ActiveSocialEnabled]);
 					}
 					catch (Exception ex)
 					{
@@ -749,15 +729,16 @@ namespace DotNetNuke.Modules.ActiveForums
 			    return false;
 			}
 		}
+
 		public bool ActiveSocialTopicsOnly
 		{
 			get
 			{
-			    if (_ForumSettings.ContainsKey(ForumSettingKeys.ActiveSocialTopicsOnly))
+			    if (ForumSettings.ContainsKey(ForumSettingKeys.ActiveSocialTopicsOnly))
 				{
 					try
 					{
-						return Convert.ToBoolean(_ForumSettings[ForumSettingKeys.ActiveSocialTopicsOnly]);
+						return Convert.ToBoolean(ForumSettings[ForumSettingKeys.ActiveSocialTopicsOnly]);
 					}
 					catch (Exception ex)
 					{
@@ -767,27 +748,21 @@ namespace DotNetNuke.Modules.ActiveForums
 			    return false;
 			}
 		}
+
 		public int ActiveSocialSecurityOption
 		{
 			get
 			{
-			    if (_ForumSettings.ContainsKey(ForumSettingKeys.ActiveSocialSecurityOption))
-				{
-					try
-					{
-						return Convert.ToInt32(_ForumSettings[ForumSettingKeys.ActiveSocialSecurityOption]);
-					}
-					catch (Exception ex)
-					{
-						return 1;
-					}
-				}
+			    if (ForumSettings.ContainsKey(ForumSettingKeys.ActiveSocialSecurityOption))
+			    {
+			        int value;
+                    return int.TryParse(ForumSettings[ForumSettingKeys.ActiveSocialSecurityOption].ToString(), out value) ? value : 1;
+			    }
 			    return 1;
 			}
 		}
 
 	    public int CustomFieldType { get; set; }
-
 
 	    public bool AutoSubscribeEnabled
 		{
@@ -795,7 +770,7 @@ namespace DotNetNuke.Modules.ActiveForums
 			{
 				try
 				{
-					return Convert.ToBoolean(_ForumSettings[ForumSettingKeys.AutoSubscribeEnabled]);
+					return Convert.ToBoolean(ForumSettings[ForumSettingKeys.AutoSubscribeEnabled]);
 				}
 				catch (Exception ex)
 				{
@@ -803,13 +778,14 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public string AutoSubscribeRoles
 		{
 			get
 			{
 				try
 				{
-					return Convert.ToString(_ForumSettings[ForumSettingKeys.AutoSubscribeRoles]);
+					return Convert.ToString(ForumSettings[ForumSettingKeys.AutoSubscribeRoles]);
 				}
 				catch (Exception ex)
 				{
@@ -817,13 +793,14 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
+
 		public bool AutoSubscribeNewTopicsOnly
 		{
 			get
 			{
 				try
 				{
-					return Convert.ToBoolean(_ForumSettings[ForumSettingKeys.AutoSubscribeNewTopicsOnly]);
+					return Convert.ToBoolean(ForumSettings[ForumSettingKeys.AutoSubscribeNewTopicsOnly]);
 				}
 				catch (Exception ex)
 				{
@@ -831,10 +808,6 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 		}
-
-
-
-
 
 	}
 }

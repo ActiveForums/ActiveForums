@@ -4,7 +4,7 @@
 <script type="text/javascript">
 <!--
 	var img1 = new Image();
-	img1.src = '<%=spinner%>';
+	img1.src = '<%=Spinner%>';
 var animate;
 var animatecount;
 function togglePreview(obj) {
@@ -200,10 +200,7 @@ function amaf_removeAttachId(attachid){
 
 <div id="divPreviewWindow" class="afpreview"><div class="afpreviewbar"><img src="<%=ImagePath%>/images/delete_new.gif" align="right" onclick="closePreview();" /><%=PreviewText%></div><div id="divPreviewText" class="afpreviewtext"></div></div>
 <am:callback ID="cbPreview" runat="server" OnCallbackComplete="cbPreview_render">
-	<Content>
-		<asp:HiddenField ID="hidPreviewText" runat="server" />
-
-	</Content>
+	<Content><asp:HiddenField ID="hidPreviewText" runat="server" /></Content>
 </am:callback>
 </div>
 
