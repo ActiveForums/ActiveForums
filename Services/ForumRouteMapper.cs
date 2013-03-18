@@ -6,7 +6,7 @@ namespace DotNetNuke.Modules.ActiveForums
     {
         public void RegisterRoutes(IMapRoute mapRouteManager)
         {
-            mapRouteManager.MapHttpRoute("ActiveForums", "", "{controller}/{action}", new {}, new string[] { "DotNetNuke.Modules.ActiveForums" });
+            mapRouteManager.MapHttpRoute("ActiveForums", "default", "{controller}/{action}", new {}, new[] { "DotNetNuke.Modules.ActiveForums" });
         }
     }
 }

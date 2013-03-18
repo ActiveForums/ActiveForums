@@ -212,38 +212,21 @@ namespace DotNetNuke.Modules.ActiveForums
             return text;
         }
 
-        public static bool IsTrusted(int forumTrustLevel, int userTrustLevel, bool isTrustedRole)
+        public static bool IsTrusted(int forumTrustLevel, int userTrustLevel, bool isTrustedRole, int autoTrustLevel = 0, int userPostCount = 0)
         {
-            return IsTrusted(forumTrustLevel, userTrustLevel, isTrustedRole, 0, 0);
-        }
-
-        public static bool IsTrusted(int forumTrustLevel, int userTrustLevel, bool isTrustedRole, int autoTrustLevel, int userPostCount)
-        {
-            var trustSum = (forumTrustLevel + userTrustLevel);
-            if (forumTrustLevel == 0 && autoTrustLevel == 0 && !isTrustedRole && userTrustLevel != 1)
-                return false;
-
-            if (userTrustLevel == 1)
-                return true;
-
-            if (isTrustedRole && userTrustLevel != -1)
-                return true;
-
-            if (userPostCount >= autoTrustLevel && trustSum > 0 & userTrustLevel != -1)
-                return true;
-
+            // Never trust users with trust level -1 (This overrides everything)
             if (userTrustLevel == -1)
                 return false;
-
-            if (trustSum > 0)
+            
+            // Always trust users with trust level 1 or in a trusted role or the forum trusts by default
+            if (userTrustLevel == 1 || isTrustedRole || forumTrustLevel > 0)
                 return true;
 
-            if (trustSum == 0 && userTrustLevel == 0 && isTrustedRole)
+            // Check to see if the user should be trusted based on post count settings
+            if (autoTrustLevel > 0 && userPostCount >= autoTrustLevel)
                 return true;
 
-            if (trustSum == 0 && userTrustLevel == 0 && userPostCount >= autoTrustLevel)
-                return true;
-
+            // If we get this far, the user must not be trusted.
             return false;
         }
 

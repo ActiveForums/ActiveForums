@@ -23,6 +23,25 @@ IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwn
 DROP FUNCTION {databaseOwner}[{objectQualifier}activeforums_Functions_Split]
 GO
 
+-- Update Moderation Paths
+
+UPDATE {databaseOwner}{objectQualifier}CoreMessaging_NotificationTypeActions
+SET APICall = N'DesktopModules/ActiveForums/API/ModerationService/ApprovePost'
+WHERE APICall = N'DesktopModules/ActiveForums/API/ModerationService.ashx/ApprovePost'
+
+UPDATE {databaseOwner}{objectQualifier}CoreMessaging_NotificationTypeActions
+SET APICall = N'DesktopModules/ActiveForums/API/ModerationService/RejectPost'
+WHERE APICall = N'DesktopModules/ActiveForums/API/ModerationService.ashx/RejectPost'
+
+UPDATE {databaseOwner}{objectQualifier}CoreMessaging_NotificationTypeActions
+SET APICall = N'DesktopModules/ActiveForums/API/ModerationService/DeletePost'
+WHERE APICall = N'DesktopModules/ActiveForums/API/ModerationService.ashx/DeletePost'
+
+UPDATE {databaseOwner}{objectQualifier}CoreMessaging_NotificationTypeActions
+SET APICall = N'DesktopModules/ActiveForums/API/ModerationService/IgnorePost'
+WHERE APICall = N'DesktopModules/ActiveForums/API/ModerationService.ashx/IgnorePost'
+
+
 
 
 IF  EXISTS (SELECT * FROM {databaseOwner}{objectQualifier}sysobjects WHERE id = OBJECT_ID(N'[DF__activefor__creat__7B863AD4]') AND type = 'D')
