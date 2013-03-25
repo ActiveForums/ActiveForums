@@ -7,6 +7,7 @@ using DotNetNuke.Web.Api;
 
 namespace DotNetNuke.Modules.ActiveForums
 {
+    [ValidateAntiForgeryToken]
     public class ModerationServiceController : DnnApiController
     {
         private int _tabId = -1;

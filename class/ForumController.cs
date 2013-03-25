@@ -125,15 +125,7 @@ namespace DotNetNuke.Modules.ActiveForums
 			fi.ForumGroup.PrefixURL = dr["GroupPrefixURL"].ToString();
 			fi.SocialGroupId = Convert.ToInt32(dr["SocialGroupId"].ToString());
 			fi.HasProperties = Convert.ToBoolean(dr["HasProperties"]);
-			try
-			{
-				fi.AllowRSS = Convert.ToBoolean(dr["AllowRSS"]);
-			}
-			catch (Exception ex)
-			{
-				fi.AllowRSS = false;
-			}
-
+		    fi.AllowRSS = dr.HasColumn("AllowRSS") && Convert.ToBoolean(dr["AllowRSS"]);
 			fi.Security.Announce = dr["CanAnnounce"].ToString();
 			fi.Security.Attach = dr["CanAttach"].ToString();
 			fi.Security.Create = dr["CanCreate"].ToString();
@@ -535,5 +527,7 @@ namespace DotNetNuke.Modules.ActiveForums
 
 			return forumId;
 		}
+
+
 	}
 }

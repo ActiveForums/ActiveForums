@@ -8,7 +8,7 @@ using DotNetNuke.Web.Api;
 
 namespace DotNetNuke.Modules.ActiveForums
 {
-    [ValidateAntiForgeryToken()]
+    [ValidateAntiForgeryToken]
     public class ForumServiceController : DnnApiController
     {
         [DnnAuthorize()]
