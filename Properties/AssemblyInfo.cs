@@ -1,14 +1,9 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Web.UI;
 using System.Security;
 
-[assembly: System.Security.SecurityRules(System.Security.SecurityRuleSet.Level1)]
+[assembly: SecurityRules(SecurityRuleSet.Level1)]
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -37,9 +32,9 @@ using System.Security;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("05.00.03")]
+[assembly: AssemblyVersion("05.00.04")]
 
-[assembly: AssemblyFileVersionAttribute("05.00.03")]
+[assembly: AssemblyFileVersionAttribute("05.00.04")]
 [assembly: WebResource("DotNetNuke.Modules.ActiveForums.CustomControls.Resources.cb.js", "text/javascript")]
 [assembly: WebResource("DotNetNuke.Modules.ActiveForums.scripts.afadmin.properties.js", "text/javascript")]
 

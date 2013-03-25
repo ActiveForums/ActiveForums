@@ -1294,6 +1294,119 @@ namespace DotNetNuke.Modules.ActiveForums
 
             return mods;
         }
+
+        public static bool SafeConvertBool(object value, bool defaultValue = false)
+        {
+            if (value == null)
+                return defaultValue;
+
+            if (value is bool)
+                return (bool) value;
+
+            var s = value as string;
+            if (s != null)
+            {
+                switch (s)
+                {
+                    case "0":
+                        return false;
+                    case "1":
+                        return true;
+                    default:
+                        bool parsedValue;
+                        return bool.TryParse(s, out parsedValue) ? parsedValue : defaultValue;
+                }  
+            }
+
+            try
+            {
+                return Convert.ToBoolean(value);
+            }
+            catch (Exception)
+            {
+                return defaultValue;
+            }
+        }
+
+        public static int SafeConvertInt(object value, int defaultValue = 0)
+        {
+            if (value == null)
+                return defaultValue;
+
+            if (value is int)
+                return (int)value;
+
+            var s = value as string;
+            if (s != null)
+            {
+                int parsedValue;
+                return int.TryParse(s, out parsedValue) ? parsedValue : defaultValue;  
+            }
+
+            try
+            {
+                return Convert.ToInt32(value);
+            }
+            catch (Exception)
+            {
+                return defaultValue;
+            }
+        }
+
+        public static double SafeConvertDouble(object value, double defaultValue = 0.0)
+        {
+            if (value == null)
+                return defaultValue;
+
+            if (value is int)
+                return (int)value;
+
+            var s = value as string;
+            if (s != null)
+            {
+                double parsedValue;
+                return double.TryParse(s, out parsedValue) ? parsedValue : defaultValue;
+            }
+
+            try
+            {
+                return Convert.ToDouble(value);
+            }
+            catch (Exception)
+            {
+                return defaultValue;
+            }
+        }
+
+        public static DateTime SafeConvertDateTime(object value, DateTime? defaultValue = null)
+        {
+            if (value == null)
+                return defaultValue.HasValue ? defaultValue.Value : NullDate();
+
+            if (value is DateTime)
+                return (DateTime)value;
+
+            var s = value as string;
+            if (s != null)
+            {
+                DateTime parsedValue;
+                return DateTime.TryParse(s, out parsedValue) ? parsedValue : (defaultValue.HasValue ? defaultValue.Value : NullDate());
+            }
+
+            try
+            {
+                return Convert.ToDateTime(value);
+            }
+            catch (Exception)
+            {
+                return defaultValue.HasValue ? defaultValue.Value : NullDate();
+            }
+        }
+
+        public static string SafeConvertString(object value, string defaultValue = null)
+        {
+            return value == null ? defaultValue : value.ToString();
+        }
     }
 
 }

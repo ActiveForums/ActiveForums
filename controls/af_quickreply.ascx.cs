@@ -449,7 +449,6 @@ namespace DotNetNuke.Modules.ActiveForums
             }
             else if (isApproved == false)
             {
-                Email oEmail = new Email();
                 List<Entities.Users.UserInfo> mods = Utilities.GetListOfModerators(PortalId, ForumId);
                 NotificationType notificationType = NotificationsController.Instance.GetNotificationType("AF-ForumModeration");
                 string subject = Utilities.GetSharedResource("NotificationSubjectReply");
@@ -467,11 +466,8 @@ namespace DotNetNuke.Modules.ActiveForums
                 notification.SenderUserID = UserInfo.UserID;
                 notification.Context = notificationKey;
 
-
                 NotificationsController.Instance.SendNotification(notification, PortalId, null, mods);
 
-
-                //oEmail.SendEmailToModerators(ForumInfo.ModNotifyTemplateId, PortalId, ForumId, ri.TopicId, ReplyId, ForumModuleId, TabId, String.Empty)
                 var @params = new List<string> { ParamKeys.ForumId + "=" + ForumId, ParamKeys.ViewType + "=confirmaction", "afmsg=pendingmod", ParamKeys.TopicId + "=" + TopicId };
                 if (SocialGroupId > 0)
                 {

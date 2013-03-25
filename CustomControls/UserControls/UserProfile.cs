@@ -137,7 +137,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             User up = upc.GetUser(PortalId, ModuleId, UID);
             ForumController fc = new ForumController();
             up.UserForums = fc.GetForumsForUser(up.UserRoles, PortalId, ForumModuleId, "CanRead");
-            sTemplate = TemplateUtils.ParseProfileTemplate(sTemplate, up, PortalId, ModuleId, ImagePath, CurrentUserType, ProfileMode, UserInfo.UserID, TimeZoneOffset);
+            sTemplate = TemplateUtils.ParseProfileTemplate(sTemplate, up, PortalId, ModuleId, ImagePath, CurrentUserType, UserInfo.UserID, TimeZoneOffset);
             sTemplate = RenderModals(sTemplate);
 
             sTemplate = sTemplate.Replace("[AM:CONTROLS:AdminProfileSettings]", "<asp:placeholder id=\"plhProfileAdminSettings\" runat=\"server\" />");

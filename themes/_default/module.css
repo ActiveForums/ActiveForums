@@ -297,6 +297,9 @@ li.afn-currentforum ul li.afn-subforum a:link,li.afn-currentforum ul li.afn-subf
 div.af-pager table{float:right;}
 div.af-pager table td{padding:2px;}
 
+/* jQuery UI Button fix - Added 5.0.4 */
+.activeForums span.ui-icon { display: inline-block;  }
+
 /* Search Popup - Added 5.0.4 */
 .aftb-search { position: relative; }
 .aftb-search .aftb-search-link { color: #666666;cursor: pointer; }
@@ -365,3 +368,7 @@ div.af-pager table td{padding:2px;}
 .af-search-results .af-topics .af-mini-pager a { display: inline-block;border: solid 1px #999;text-decoration: none;font-weight: normal;font-size: 0.8em;height: 16px;min-width: 12px;text-align: center;line-height: 16px;padding: 0px 2px; margin: 0px 1px;}
 .af-search-results .af-topics .af-mini-pager span { padding: 0px 2px; }
 
+/* Profile Edit - Added 5.0.4 */
+.af-button-edituser { }
+.af-button-edituser .ui-icon { vertical-align: text-top; }
+.af-button-edituser .ui-button-text { padding: 0px 5px;  }

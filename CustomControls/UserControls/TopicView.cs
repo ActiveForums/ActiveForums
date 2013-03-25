@@ -11,6 +11,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Text.RegularExpressions;
 using System.Xml;
+using DotNetNuke.Framework;
 
 namespace DotNetNuke.Modules.ActiveForums.Controls
 {
@@ -32,11 +33,11 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
         private DataTable dtAttach;
         private bool bView = false;
         private bool bRead = false;
-        private bool bCreate = false;
+        //private bool bCreate = false;
         private bool bPoll = false;
         private bool bAttach = false;
         private bool bTrust = false;
-        private bool bReply = false;
+        //private bool bReply = false;
         private bool bDelete = false;
         private bool bEdit = false;
         private bool bLock = false;
@@ -186,6 +187,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
         protected override void OnInit(EventArgs e)
 		{
 			base.OnInit(e);
+
 
             if (ForumInfo == null)
             {
@@ -443,10 +445,10 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 dtAttach = ds.Tables[3];
                 bView = Permissions.HasPerm(drSecurity["CanView"].ToString(), ForumUser.UserRoles);
                 bRead = Permissions.HasPerm(drSecurity["CanRead"].ToString(), ForumUser.UserRoles);
-                bCreate = Permissions.HasPerm(drSecurity["CanCreate"].ToString(), ForumUser.UserRoles);
+                //bCreate = Permissions.HasPerm(drSecurity["CanCreate"].ToString(), ForumUser.UserRoles);
                 bEdit = Permissions.HasPerm(drSecurity["CanEdit"].ToString(), ForumUser.UserRoles);
                 bDelete = Permissions.HasPerm(drSecurity["CanDelete"].ToString(), ForumUser.UserRoles);
-                bReply = Permissions.HasPerm(drSecurity["CanReply"].ToString(), ForumUser.UserRoles);
+                //bReply = Permissions.HasPerm(drSecurity["CanReply"].ToString(), ForumUser.UserRoles);
                 bPoll = Permissions.HasPerm(drSecurity["CanPoll"].ToString(), ForumUser.UserRoles);
                 bAttach = Permissions.HasPerm(drSecurity["CanAttach"].ToString(), ForumUser.UserRoles);
                 bSubscribe = Permissions.HasPerm(drSecurity["CanSubscribe"].ToString(), ForumUser.UserRoles);
@@ -868,7 +870,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     plh.Controls.Add(ctlPoll);
                 }
                 //Quick Reply
-                if (bReply && bLocked == false)
+                if (CanRead && bLocked == false)
                 {
                     plh = (PlaceHolder)(this.FindControl("plhQuickReply"));
                     if (plh != null)
@@ -947,6 +949,8 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 var ctlTopicScripts = (af_topicscripts)(LoadControl("~/DesktopModules/ActiveForums/controls/af_topicscripts.ascx"));
                 ctlTopicScripts.ModuleConfiguration = ModuleConfiguration;
                 Controls.Add(ctlTopicScripts);
+
+
             }
 
 
@@ -1055,7 +1059,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             else
             {
                 //TODO: Check for owner
-                if (bReply)
+                if (CanReply)
                 {
                     var @params = new List<string> { ParamKeys.ViewType + "=post", ParamKeys.TopicId + "=" + TopicId, ParamKeys.ForumId + "=" + ForumId };
                     if (SocialGroupId > 0)
@@ -1397,7 +1401,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 sOutput = sOutput.Replace("[AF:LABEL:TAGS]", tagList);
             }
             //Perform Profile Related replacements
-            sOutput = TemplateUtils.ParseProfileTemplate(sOutput, up, PortalId, ModuleId, ImagePath, CurrentUserType, true, UserPrefHideAvatars, UserPrefHideSigs, IPAddress, UserProfile.ProfileModes.View, UserId, TimeZoneOffset);
+            sOutput = TemplateUtils.ParseProfileTemplate(sOutput, up, PortalId, ModuleId, ImagePath, CurrentUserType, true, UserPrefHideAvatars, UserPrefHideSigs, IPAddress, UserId, TimeZoneOffset);
 
             if (bModDelete || ((bDelete && AuthorId == UserId && bLocked == false) & ((ReplyId == 0 && ReplyCount == 0) | ReplyId > 0)))
             {
@@ -1439,7 +1443,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             }
             if (bLocked == false)
             {
-                if (bReply || bReply && AuthorId == UserId)
+                if (CanReply)
                 {
                     string[] QuoteParams = { ParamKeys.ViewType + "=post", ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + TopicId, ParamKeys.QuoteId + "=" + PostId };
                     string[] ReplyParams = { ParamKeys.ViewType + "=post", ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + TopicId, ParamKeys.ReplyId + "=" + PostId };

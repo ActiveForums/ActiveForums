@@ -9,8 +9,11 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 		{
 			base.OnLoad(e);
 
+            ServicesFramework.Instance.RequestAjaxScriptSupport();
             ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
 
+            if (!(Page.ClientScript.IsClientScriptIncludeRegistered("AFUserEditor")))
+                Page.ClientScript.RegisterClientScriptInclude("AFUserEditor", Page.ResolveUrl("~/DesktopModules/activeforums/scripts/usereditor.js"));
         }
     }
 }

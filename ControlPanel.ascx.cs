@@ -24,6 +24,8 @@ namespace DotNetNuke.Modules.ActiveForums
 		{
 			base.OnLoad(e);
 
+            jQuery.RequestRegistration();
+            jQuery.RequestUIRegistration();
 
             IsCallBack = cbShell.IsCallback;
 
@@ -66,7 +68,9 @@ namespace DotNetNuke.Modules.ActiveForums
                     GetControl("upgrade", string.Empty, IsCallBack);
                 }
             }
+
             ClientResourceManager.RegisterStyleSheet(Page, "~/DesktopModules/ActiveForums/ControlPanel.css");
+            ClientResourceManager.RegisterStyleSheet(Page, "~/DesktopModules/ActiveForums/themes/" + MainSettings.Theme + "/jquery-ui.min.css");
 
 
             lblProd.Visible = true;

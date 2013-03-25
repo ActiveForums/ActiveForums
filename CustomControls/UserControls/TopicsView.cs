@@ -32,8 +32,8 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
         private DataTable dtSubForums;
         private bool bView = false;
         private bool bRead = false;
-        private bool bReply = false;
-        private bool bCreate = false;
+        //private bool bReply = false;
+        //private bool bCreate = false;
         private bool bPoll = false;
         private bool bDelete = false;
         private bool bEdit = false;
@@ -119,7 +119,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
         #region Controls
         protected af_quickjump ctlForumJump = new af_quickjump();
         //Protected WithEvents cbActions As New DotNetNuke.Modules.ActiveForums.Controls.Callback
-        protected Modal ctlModal = new Modal();
+        //protected Modal ctlModal = new Modal();
         protected ForumView ctlForumSubs = new ForumView();
 
         #endregion
@@ -128,7 +128,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 		{
 			base.OnInit(e);
 
-            ctlModal.Callback += ctlModal_Callback;
+            //ctlModal.Callback += ctlModal_Callback;
 
         }
 
@@ -231,10 +231,10 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 
                         bView = Permissions.HasPerm(drSecurity["CanView"].ToString(), ForumUser.UserRoles);
                         bRead = Permissions.HasPerm(drSecurity["CanRead"].ToString(), ForumUser.UserRoles);
-                        bCreate = Permissions.HasPerm(drSecurity["CanCreate"].ToString(), ForumUser.UserRoles);
+                        //bCreate = Permissions.HasPerm(drSecurity["CanCreate"].ToString(), ForumUser.UserRoles);
                         bEdit = Permissions.HasPerm(drSecurity["CanEdit"].ToString(), ForumUser.UserRoles);
                         bDelete = Permissions.HasPerm(drSecurity["CanDelete"].ToString(), ForumUser.UserRoles);
-                        bReply = Permissions.HasPerm(drSecurity["CanReply"].ToString(), ForumUser.UserRoles);
+                        //bReply = Permissions.HasPerm(drSecurity["CanReply"].ToString(), ForumUser.UserRoles);
                         bPoll = Permissions.HasPerm(drSecurity["CanPoll"].ToString(), ForumUser.UserRoles);
 
                         bSubscribe = Permissions.HasPerm(drSecurity["CanSubscribe"].ToString(), ForumUser.UserRoles);
@@ -362,7 +362,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     }
                     if (Session["modal_View"] != null)
                     {
-                        LoadModal(Session["modal_View"].ToString(), Session["modal_options"].ToString());
+                        //LoadModal(Session["modal_View"].ToString(), Session["modal_options"].ToString());
                     }
                 }
                 else
@@ -465,7 +465,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 plh.Controls.Add(ctlForumSubs);
             }
             //Me.Controls.Add(cbActions)
-            this.Controls.Add(ctlModal);
+            //this.Controls.Add(ctlModal);
             // LoadCallBackScripts()
         }
         private void LinkControls(ControlCollection ctrls)
@@ -514,7 +514,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 sOutput = sOutput.Replace("[MARKFORUMREAD]", string.Empty);
             }
 
-            if (bCreate)
+            if (CanCreate)
             {
                 string[] Params = { };
                 if (SocialGroupId <= 0)
@@ -1325,8 +1325,8 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             }
         }
 
-
-        private void ctlModal_Callback(object sender, Modules.ActiveForums.Controls.CallBackEventArgs e)
+        /*
+        private void ctlModal_Callback(object sender, CallBackEventArgs e)
         {
             switch (e.Parameters[0].ToLowerInvariant())
             {
@@ -1367,37 +1367,17 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 ctlModal.ModalContent.Controls.Add(ctl);
             }
         }
-        private string CheckControls(string template)
+         */
+        
+        private static string CheckControls(string template)
         {
-            if (string.IsNullOrEmpty(template))
-            {
+            const string tagRegistration = "<%@ Register TagPrefix=\"ac\" Namespace=\"DotNetNuke.Modules.ActiveForums.Controls\" Assembly=\"DotNetNuke.Modules.ActiveForums\" %>";
+
+            if (string.IsNullOrWhiteSpace(template))
                 return string.Empty;
-            }
-            if (!(template.Contains("<%@ Register TagPrefix=\"ac\" Namespace=\"DotNetNuke.Modules.ActiveForums.Controls\" Assembly=\"DotNetNuke.Modules.ActiveForums\" %>")))
-            {
-                template = "<%@ Register TagPrefix=\"ac\" Namespace=\"DotNetNuke.Modules.ActiveForums.Controls\" Assembly=\"DotNetNuke.Modules.ActiveForums\" %>" + template;
-            }
-            if (ForumId > 0)
-            {
-                if (ForumInfo.Security != null)
-                {
-                    if (Permissions.HasAccess(ForumInfo.Security.Create, ForumUser.UserRoles))
-                    {
-                        string[] Params = { };
-                        if (SocialGroupId > 0)
-                        {
-                            Params = new string[] { "GroupId=" + SocialGroupId, ParamKeys.ViewType + "=post", ParamKeys.ForumId + "=" + ForumId };
-                        }
-                        else
-                        {
-                            Params = new string[] { ParamKeys.ViewType + "=post", ParamKeys.ForumId + "=" + ForumId };
-                        }
 
-                        template = template.Replace("[ADDTOPIC]", "<a href=\"" + NavigateUrl(TabId, "", Params) + "\" class=\"dnnPrimaryAction\">[RESX:AddTopic]</a>");
-                    }
-                }
-            }
-
+            if (!(template.Contains(tagRegistration)))
+                template = tagRegistration + template;
 
             return template;
         }

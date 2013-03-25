@@ -783,14 +783,7 @@ namespace DotNetNuke.Modules.ActiveForums
 		{
 			get
 			{
-				try
-				{
-					return Convert.ToString(ForumSettings[ForumSettingKeys.AutoSubscribeRoles]);
-				}
-				catch (Exception ex)
-				{
-					return string.Empty;
-				}
+			    return Utilities.SafeConvertString(ForumSettings[ForumSettingKeys.AutoSubscribeRoles], string.Empty);
 			}
 		}
 
@@ -798,16 +791,25 @@ namespace DotNetNuke.Modules.ActiveForums
 		{
 			get
 			{
-				try
-				{
-					return Convert.ToBoolean(ForumSettings[ForumSettingKeys.AutoSubscribeNewTopicsOnly]);
-				}
-				catch (Exception ex)
-				{
-					return false;
-				}
+			    return Utilities.SafeConvertBool(ForumSettings[ForumSettingKeys.AutoSubscribeNewTopicsOnly]);
 			}
 		}
+
+        public int CreatePostCount // Minimum posts required to create a topic in this forum if the user is not trusted
+		{
+			get
+			{
+			    return Utilities.SafeConvertInt(ForumSettings[ForumSettingKeys.CreatePostCount]);
+			}
+		}
+
+        public int ReplyPostCount // Minimum posts required to reply to a topic in this forum if the user is not trusted
+        {
+            get
+            {
+                return Utilities.SafeConvertInt(ForumSettings[ForumSettingKeys.ReplyPostCount]);
+            }
+        }
 
 	}
 }

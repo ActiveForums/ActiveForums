@@ -160,22 +160,13 @@ namespace DotNetNuke.Modules.ActiveForums
 		public const string PrefixURLCategories = "URLCATS";
 		public const string PrefixURLOther = "URLOTHER";
 
-
-
-
-
 		public const string AdminResourceFile = "~/DesktopModules/ActiveForums/App_LocalResources/AdminResources.resx";
 		public const string SharedResourceFile = "~/DesktopModules/ActiveForums/App_LocalResources/SharedResources.resx";
 		public const string CacheDependencyFile = "~/DesktopModules/ActiveForums/cache/cachedep.resources";
 		public const string TemplatePath = "~/DesktopModules/ActiveForums/config/templates/";
 
-
-
-
-
-
-
 	}
+
 	public class ForumSettingKeys
 	{
 		public const string AllowHTML = "ALLOWHTML";
@@ -219,6 +210,8 @@ namespace DotNetNuke.Modules.ActiveForums
 		public const string AutoSubscribeRoles = "AUTOSUBSCRIBEROLES";
 		public const string AutoSubscribeNewTopicsOnly = "AUTOSUBSCRIBENEWTOPICSONLY";
 		public const string AllowTags = "ALLOWTAGS";
+	    public const string CreatePostCount = "CREATEPOSTCOUNT";
+	    public const string ReplyPostCount = "REPLYPOSTCOUNT";
 
 		public const string ActiveSocialEnabled = "AMASON";
 		public const string ActiveSocialTopicsOnly = "AMASTO";

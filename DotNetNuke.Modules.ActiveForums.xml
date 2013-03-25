@@ -4,42 +4,6 @@
         <name>DotNetNuke.Modules.ActiveForums</name>
     </assembly>
     <members>
-        <member name="F:DotNetNuke.Modules.ActiveForums.Controls.af_topicscripts.DnnJsInclude1">
-            <summary>
-            DnnJsInclude1 control.
-            </summary>
-            <remarks>
-            Auto-generated field.
-            To modify move field declaration from designer file to code-behind file.
-            </remarks>
-        </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.Controls.af_topicscripts.DnnCssInclude1">
-            <summary>
-            DnnCssInclude1 control.
-            </summary>
-            <remarks>
-            Auto-generated field.
-            To modify move field declaration from designer file to code-behind file.
-            </remarks>
-        </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.Controls.af_topicscripts.DnnJsInclude3">
-            <summary>
-            DnnJsInclude3 control.
-            </summary>
-            <remarks>
-            Auto-generated field.
-            To modify move field declaration from designer file to code-behind file.
-            </remarks>
-        </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.Controls.af_topicscripts.DnnCssInclude4">
-            <summary>
-            DnnCssInclude4 control.
-            </summary>
-            <remarks>
-            Auto-generated field.
-            To modify move field declaration from designer file to code-behind file.
-            </remarks>
-        </member>
         <member name="F:DotNetNuke.Modules.ActiveForums.af_searchadvanced.litOptions">
             <summary>
             litOptions control.
@@ -2937,6 +2901,24 @@
         <member name="F:DotNetNuke.Modules.ActiveForums.admin_manageforums_forumeditor.txtEmailAddress">
             <summary>
             txtEmailAddress control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.admin_manageforums_forumeditor.txtCreatePostCount">
+            <summary>
+            txtCreatePostCount control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.admin_manageforums_forumeditor.txtReplyPostCount">
+            <summary>
+            txtReplyPostCount control.
             </summary>
             <remarks>
             Auto-generated field.

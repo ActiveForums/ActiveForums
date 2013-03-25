@@ -27,6 +27,11 @@ namespace DotNetNuke.Modules.ActiveForums
         private Forum _foruminfo;
         private XmlDocument _forumData;
 
+        private bool? _canRead;
+        private bool? _canView;
+        private bool? _canCreate;
+        private bool? _canReply;
+
         #endregion
 
         #region Public Properties
@@ -415,7 +420,10 @@ namespace DotNetNuke.Modules.ActiveForums
         {
             get
             {
-                return SecurityCheck("read");
+                if(!_canRead.HasValue)
+                    _canRead =  SecurityCheck("read");
+
+                return _canRead.Value;
             }
         }
 
@@ -423,7 +431,10 @@ namespace DotNetNuke.Modules.ActiveForums
         {
             get
             {
-                return SecurityCheck("view");
+                if(!_canView.HasValue)
+                    _canView = SecurityCheck("view");
+
+                return _canView.Value;
             }
         }
 
@@ -431,7 +442,29 @@ namespace DotNetNuke.Modules.ActiveForums
         {
             get
             {
-                return SecurityCheck("create");
+                if(!_canCreate.HasValue)
+                {
+                    // The basic security check trumps everything.
+                    if (!SecurityCheck("create"))
+                        _canCreate = false;
+
+                    // Admins and trusted users shall pass!
+                    else if (ForumUser.IsAdmin || ForumUser.IsSuperUser || Permissions.HasPerm(ForumInfo.Security.Trust, ForumUser.UserRoles))
+                        _canCreate = true;
+
+                    // If CreatePostCount is not set, no need to go further
+                    else if (ForumInfo.CreatePostCount <= 0)
+                        _canCreate = true;
+
+                    // If we don't have a valid user, there is no way they could meed the minumum post count requirement
+                    else if (ForumUser.UserId <= 0)
+                        _canCreate = false;
+
+                    else
+                        _canCreate = ForumUser.PostCount >= ForumInfo.CreatePostCount; 
+                }
+
+                return _canCreate.Value;
             }
         }
 
@@ -439,9 +472,32 @@ namespace DotNetNuke.Modules.ActiveForums
         {
             get
             {
-                return SecurityCheck("reply");
+                if(!_canReply.HasValue)
+                {
+                    // The basic security check trumps everything.
+                    if (!SecurityCheck("reply"))
+                        _canReply = false;
+
+                    // Admins and trusted users shall pass!
+                    else if (ForumUser.IsAdmin || ForumUser.IsSuperUser || Permissions.HasPerm(ForumInfo.Security.Trust, ForumUser.UserRoles))
+                        _canReply = true;
+
+                    // If ReplyPostCount is not set, no need to go further
+                    else if (ForumInfo.ReplyPostCount <= 0)
+                        _canReply = true;
+
+                    // If we don't have a valid user, there is no way they could meed the minumum post count requirement
+                    else if (ForumUser.UserId <= 0)
+                        _canReply = false;
+
+                    else
+                        _canReply = ForumUser.PostCount >= ForumInfo.ReplyPostCount;   
+                }
+
+                return _canReply.Value;
             }
         }
+
 
         #endregion
 

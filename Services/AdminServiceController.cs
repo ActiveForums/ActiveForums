@@ -3,13 +3,15 @@ using System.Net.Http;
 using System.Text;
 using System.Web;
 using System.Web.Http;
-using DotNetNuke.Common.Utilities;
+using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 
 
 namespace DotNetNuke.Modules.ActiveForums
 {
-    [ValidateAntiForgeryToken()]
+    [ValidateAntiForgeryToken]
+    [SupportedModules("Active Forums")]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public class AdminServiceController : DnnApiController
     {
         // DTO for ToggleUrlHandler
@@ -18,24 +20,20 @@ namespace DotNetNuke.Modules.ActiveForums
             public int ModuleId { get; set; }
         }
 
-        [DnnAuthorize()]
         public HttpResponseMessage ToggleURLHandler(ToggleUrlHandlerDTO dto)
         {
-            Entities.Modules.ModuleController objModules = new Entities.Modules.ModuleController();
-            SettingsInfo objSettings = new SettingsInfo();
-            objSettings.MainSettings = objModules.GetModuleSettings(dto.ModuleId);
-            ConfigUtils cfg = new ConfigUtils();
-            bool success = false;
+            var objModules = new Entities.Modules.ModuleController();
+            var objSettings = new SettingsInfo { MainSettings = objModules.GetModuleSettings(dto.ModuleId) };
+            var cfg = new ConfigUtils();
+            bool success;
             if (Utilities.IsRewriteLoaded())
             {
-                success = cfg.DisableRewriter(HttpContext.Current.Server.MapPath("~/web.config"));
+                cfg.DisableRewriter(HttpContext.Current.Server.MapPath("~/web.config"));
                 return Request.CreateResponse(HttpStatusCode.OK, "disabled");
             }
-            else
-            {
-                success = cfg.EnableRewriter(HttpContext.Current.Server.MapPath("~/web.config"));
-                return Request.CreateResponse(HttpStatusCode.OK, "enabled");
-            }
+
+            cfg.EnableRewriter(HttpContext.Current.Server.MapPath("~/web.config"));
+            return Request.CreateResponse(HttpStatusCode.OK, "enabled");
         }
 
         //DTO for RunMaintenance
@@ -43,41 +41,83 @@ namespace DotNetNuke.Modules.ActiveForums
         {
             public int ModuleId { get; set; }
             public int ForumId { get; set; }
-            public int olderThan { get; set; }
-            public int byUserId { get; set; }
-            public int lastActive { get; set; }
-            public bool withNoReplies { get; set; }
-            public bool dryRun { get; set; }
+            public int OlderThan { get; set; }
+            public int ByUserId { get; set; }
+            public int LastActive { get; set; }
+            public bool WithNoReplies { get; set; }
+            public bool DryRun { get; set; }
         }
 
-        [DnnAuthorize()]
         public HttpResponseMessage RunMaintenance(RunMaintenanceDTO dto)
         {
-            Entities.Modules.ModuleController objModules = new Entities.Modules.ModuleController();
-            SettingsInfo objSettings = new SettingsInfo();
-            objSettings.MainSettings = objModules.GetModuleSettings(dto.ModuleId);
-            int rows = DataProvider.Instance().Forum_Maintenance(dto.ForumId, dto.olderThan, dto.lastActive, dto.byUserId, dto.withNoReplies, dto.dryRun, objSettings.DeleteBehavior);
-            if (dto.dryRun)
-            {
+            var objModules = new Entities.Modules.ModuleController();
+            var objSettings = new SettingsInfo {MainSettings = objModules.GetModuleSettings(dto.ModuleId)};
+            var rows = DataProvider.Instance().Forum_Maintenance(dto.ForumId, dto.OlderThan, dto.LastActive, dto.ByUserId, dto.WithNoReplies, dto.DryRun, objSettings.DeleteBehavior);
+            if (dto.DryRun)
                 return Request.CreateResponse(HttpStatusCode.OK, new { Result = string.Format(Utilities.GetSharedResource("[RESX:Maint:DryRunResults]", true), rows.ToString()) });
-                //return Json(new { Result = string.Format(Utilities.GetSharedResource("[RESX:Maint:DryRunResults]", true), rows.ToString()) });
-            }
-            else
-            {
-                return Request.CreateResponse(HttpStatusCode.OK, new { Result = Utilities.GetSharedResource("[RESX:ProcessComplete]", true) });
 
-                //return Json(new { Result = Utilities.GetSharedResource("[RESX:ProcessComplete]", true) });
-            }
+            return Request.CreateResponse(HttpStatusCode.OK, new { Result = Utilities.GetSharedResource("[RESX:ProcessComplete]", true) });
         }
 
-        [DnnAuthorize()]
-        public string GetSecurityGrid(int GroupId, int ForumId)  // Needs DTO
+        public string GetSecurityGrid(int groupId, int forumId)  // Needs DTO
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             return sb.ToString();
         }
 
+        public class UserProfileDTO
+        {
+            public int UserId { get; set; }
+            public int? TrustLevel { get; set; }
+            public string UserCaption { get; set; }
+            public string Signature { get; set; }
+            public int? RewardPoints { get; set; }
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetUserProfile(int userId)
+        {
+            var upc = new UserProfileController();
+            var up = upc.Profiles_Get(PortalSettings.PortalId, ActiveModule.ModuleID, userId);
+
+            if(up == null)
+                return Request.CreateResponse(HttpStatusCode.NotFound);
+
+            var result = new
+                             {
+                                 up.UserID,
+                                 up.TrustLevel,
+                                 up.UserCaption,
+                                 up.Signature,
+                                 up.RewardPoints
+                             };
+
+            return Request.CreateResponse(HttpStatusCode.OK, result);
+        }
+
+        [HttpPost]
+        public HttpResponseMessage UpdateUserProfile(UserProfileDTO dto)
+        {
+            var upc = new UserProfileController();
+            var up = upc.Profiles_Get(PortalSettings.PortalId, ActiveModule.ModuleID, dto.UserId);
+
+            if (up == null)
+                return Request.CreateResponse(HttpStatusCode.NotFound);
+
+            if (dto.TrustLevel.HasValue)
+                up.TrustLevel = dto.TrustLevel.Value;
+
+            up.UserCaption = dto.UserCaption;
+            up.Signature = dto.Signature;
+
+            if (dto.RewardPoints.HasValue)
+                up.RewardPoints = dto.RewardPoints.Value;
+
+            upc.Profiles_Save(up);
+
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
 
         //DTO for ToggleSecurity
         public class ToggleSecurityDTO
@@ -91,65 +131,50 @@ namespace DotNetNuke.Modules.ActiveForums
             public string ReturnId { get; set; }
         }
 
-        [DnnModuleAuthorize]
         [HttpPost]
         public HttpResponseMessage ToggleSecurity(ToggleSecurityDTO dto)
         {
-            Data.Common db = new Data.Common();
-            StringBuilder sb = new StringBuilder();
+            var db = new Data.Common();
+            var sb = new StringBuilder();
             switch (dto.Action)
             {
                 case "delete":
                     {
                         Permissions.RemoveObjectFromAll(dto.SecurityId, dto.SecurityType, dto.PermissionsId);
                         return Request.CreateResponse(HttpStatusCode.OK);
-                        //return string.Empty;
                     }
                 case "addobject":
                     {
                         if (dto.SecurityType == 1)
                         {
-                            UserController uc = new UserController();
-                            User ui = uc.GetUser(PortalSettings.PortalId, dto.ModuleId, dto.SecurityId);
-                            if (ui != null)
-                            {
-                                dto.SecurityId = ui.UserId.ToString();
-                            }
-                            else
-                            {
-                                dto.SecurityId = string.Empty;
-                            }
+                            var uc = new UserController();
+                            var ui = uc.GetUser(PortalSettings.PortalId, dto.ModuleId, dto.SecurityId);
+                            dto.SecurityId = ui != null ? ui.UserId.ToString() : string.Empty;
                         }
                         else
                         {
                             if (dto.SecurityId.Contains(":"))
-                            {
                                 dto.SecurityType = 2;
-                            }
                         }
                         if (!(string.IsNullOrEmpty(dto.SecurityId)))
                         {
-                            string permSet = db.GetPermSet(dto.PermissionsId, "View");
+                            var permSet = db.GetPermSet(dto.PermissionsId, "View");
                             permSet = Permissions.AddPermToSet(dto.SecurityId, dto.SecurityType, permSet);
                             db.SavePermSet(dto.PermissionsId, "View", permSet);
                         }
+
                         return Request.CreateResponse(HttpStatusCode.OK);
-                        //return string.Empty;
                     }
                 default:
                     {
-                        string permSet = db.GetPermSet(dto.PermissionsId, dto.SecurityKey);
+                        var permSet = db.GetPermSet(dto.PermissionsId, dto.SecurityKey);
                         if (dto.Action == "remove")
-                        {
                             permSet = Permissions.RemovePermFromSet(dto.SecurityId, dto.SecurityType, permSet);
-                        }
                         else
-                        {
                             permSet = Permissions.AddPermToSet(dto.SecurityId, dto.SecurityType, permSet);
-                        }
+
                         db.SavePermSet(dto.PermissionsId, dto.SecurityKey, permSet);
-                        return Request.CreateResponse(HttpStatusCode.OK, dto.Action + "|" + dto.ReturnId.ToString());
-                        //return Action + "|" + ReturnId.ToString();
+                        return Request.CreateResponse(HttpStatusCode.OK, dto.Action + "|" + dto.ReturnId);
                     }
             }
         }

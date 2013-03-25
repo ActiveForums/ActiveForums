@@ -336,6 +336,7 @@
     <None Include="sql\04.03.05.SqlDataProvider" />
     <None Include="sql\04.03.06.SqlDataProvider" />
     <None Include="sql\04.03.09.SqlDataProvider" />
+    <Content Include="scripts\usereditor.js" />
     <Content Include="sql\CoreForumsToActiveForums.sql" />
     <Content Include="themes\_default\images\add16.png" />
     <Content Include="themes\_default\images\afgrouprow.png" />

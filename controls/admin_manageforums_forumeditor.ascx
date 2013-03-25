@@ -144,6 +144,8 @@ function saveSettings(gs){
 	var tt6 = document.getElementById("<%=drpProfileDisplay.ClientID%>");
 	if (tt6.selectedIndex > 0){tt6 = tt6.options[tt6.selectedIndex].value;}else{tt6 = 0;};
 	var em = document.getElementById("<%=txtEmailAddress.ClientID%>").value;
+    var cpc = document.getElementById("<%=txtCreatePostCount.ClientID%>").value;
+    var rpc = document.getElementById("<%=txtReplyPostCount.ClientID%>").value;
 	var ef = document.getElementById("<%=rdFilterOn.ClientID%>").checked;
         var pi = document.getElementById("<%=rdPostIconOn.ClientID%>").checked;
         var ei = document.getElementById("<%=rdEmotOn.ClientID%>").checked;
@@ -203,7 +205,7 @@ function saveSettings(gs){
 
     var as2 = null;
     if (as2 != null){as2 = as2.checked;}else{as2 = false;};
-    <%=cbEditorAction.ClientID%>.Callback(settingsAction,forumid,tt1,tt2,em,ef,pi,ei,sp,ix,rs,at,at1,at2,at3,at4,at5,at6,at7,ed,ed1,ed2,ed3,ed4,ed5,ed6,tt3,tt4,tt5,tt6,md,md1,md2,md3,md4,md5,md6,md7,as,as1,tg,mc,mc1,mc2,mc3,mc4,mc5,mc6,mc7,mc8,mc9,mc10,mc11,mc12,mc13,mc14,mc15,as2,socialOn,socialTopics,socialSec);
+    <%=cbEditorAction.ClientID%>.Callback(settingsAction,forumid,tt1,tt2,em,ef,pi,ei,sp,ix,rs,at,at1,at2,at3,at4,at5,at6,at7,ed,ed1,ed2,ed3,ed4,ed5,ed6,tt3,tt4,tt5,tt6,md,md1,md2,md3,md4,md5,md6,md7,as,as1,tg,mc,mc1,mc2,mc3,mc4,mc5,mc6,mc7,mc8,mc9,mc10,mc11,mc12,mc13,mc14,mc15,as2,socialOn,socialTopics,socialSec,cpc,rpc);
 
 
 };
@@ -923,6 +925,22 @@ function afadmin_getProperties() {
                         <td class="amcpbold" style="white-space: nowrap">[RESX:EmailAddress]:</td>
                         <td width="100%">
                             <asp:TextBox ID="txtEmailAddress" runat="server" CssClass="amcptxtbx" /></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <img src="~/DesktopModules/ActiveForums/images/tooltip.png" runat="server" onmouseover="amShowTip(this, '[RESX:Tips:CreatePostCount]');" onmouseout="amHideTip(this);" /></td>
+                        <td class="amcpbold" style="white-space: nowrap">[RESX:CreatePostCount]:</td>
+                        <td width="100%">
+                            <asp:TextBox ID="txtCreatePostCount" runat="server" CssClass="amcptxtbx" /></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <img src="~/DesktopModules/ActiveForums/images/tooltip.png" runat="server" onmouseover="amShowTip(this, '[RESX:Tips:ReplyPostCount]');" onmouseout="amHideTip(this);" /></td>
+                        <td class="amcpbold" style="white-space: nowrap">[RESX:ReplyPostCount]:</td>
+                        <td width="100%">
+                            <asp:TextBox ID="txtReplyPostCount" runat="server" CssClass="amcptxtbx" /></td>
                         <td></td>
                     </tr>
 

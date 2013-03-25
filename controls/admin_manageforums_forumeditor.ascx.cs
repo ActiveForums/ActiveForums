@@ -16,6 +16,7 @@ namespace DotNetNuke.Modules.ActiveForums
         public string editorType = "G"; //"F"
         public int recordId = 0;
         protected Controls.admin_securitygrid ctlSecurityGrid = new Controls.admin_securitygrid();
+
         #region Event Handlers
 
         protected override void OnInit(EventArgs e)
@@ -438,6 +439,8 @@ namespace DotNetNuke.Modules.ActiveForums
             DotNetNuke.Modules.ActiveForums.Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ActiveSocialEnabled, Parameters[58].ToString());
             DotNetNuke.Modules.ActiveForums.Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ActiveSocialTopicsOnly, Parameters[59].ToString());
             DotNetNuke.Modules.ActiveForums.Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ActiveSocialSecurityOption, Parameters[60].ToString());
+            DotNetNuke.Modules.ActiveForums.Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.CreatePostCount, Parameters[61].ToString());
+            DotNetNuke.Modules.ActiveForums.Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ReplyPostCount, Parameters[62].ToString());
         }
         private void LoadForum(int ForumId)
         {
@@ -489,6 +492,8 @@ namespace DotNetNuke.Modules.ActiveForums
                 drpDefaultTrust.SelectedIndex = drpDefaultTrust.Items.IndexOf(drpDefaultTrust.Items.FindByValue(Convert.ToInt32(fi.DefaultTrustValue).ToString()));
                 txtAutoTrustLevel.Text = fi.AutoTrustLevel.ToString();
                 txtEmailAddress.Text = fi.EmailAddress;
+                txtCreatePostCount.Text = fi.CreatePostCount.ToString();
+                txtReplyPostCount.Text = fi.ReplyPostCount.ToString();
                 if (fi.UseFilter)
                 {
                     rdFilterOn.Checked = true;
@@ -661,6 +666,8 @@ namespace DotNetNuke.Modules.ActiveForums
                 drpDefaultTrust.SelectedIndex = drpDefaultTrust.Items.IndexOf(drpDefaultTrust.Items.FindByValue(gi.DefaultTrustValue.ToString()));
                 txtAutoTrustLevel.Text = gi.AutoTrustLevel.ToString();
                 txtEmailAddress.Text = gi.EmailAddress;
+                txtCreatePostCount.Text = gi.CreatePostCount.ToString();
+                txtReplyPostCount.Text = gi.ReplyPostCount.ToString();
                 if (gi.UseFilter)
                 {
                     rdFilterOn.Checked = true;

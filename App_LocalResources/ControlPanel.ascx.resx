@@ -1411,4 +1411,16 @@ Your removal method is currently set to {0}.  Your topics will be {1} based upon
   <data name="ControlTitle_edit.Text" xml:space="preserve">
     <value>Control Panel</value>
   </data>
+  <data name="[RESX:CreatePostCount].Text" xml:space="preserve">
+    <value>Create Post Count</value>
+  </data>
+  <data name="[RESX:ReplyPostCount].Text" xml:space="preserve">
+    <value>Reply Post Count</value>
+  </data>
+  <data name="[RESX:Tips:CreatePostCount].Text" xml:space="preserve">
+    <value>The minimum number of posts a user must have in order to create a new topic.</value>
+  </data>
+  <data name="[RESX:Tips:ReplyPostCount].Text" xml:space="preserve">
+    <value>The minumum number of posts a user must have in order to reply to a topic.</value>
+  </data>
 </root>

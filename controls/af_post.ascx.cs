@@ -1095,8 +1095,29 @@ namespace DotNetNuke.Modules.ActiveForums
                 }
                 if (ri.IsApproved == false)
                 {
-                    var oEmail = new Email();
-                    oEmail.SendEmailToModerators(ForumInfo.ModNotifyTemplateId, PortalId, ForumId, ri.TopicId, tmpReplyId, ForumModuleId, ForumTabId, string.Empty);
+                    var ti = tc.Topics_Get(PortalId, ForumModuleId, TopicId);
+
+                    var mods = Utilities.GetListOfModerators(PortalId, ForumId);
+                    var notificationType = NotificationsController.Instance.GetNotificationType("AF-ForumModeration");
+                    var notifySubject = Utilities.GetSharedResource("NotificationSubjectReply");
+                    notifySubject = notifySubject.Replace("[DisplayName]", UserInfo.DisplayName);
+                    notifySubject = notifySubject.Replace("[TopicSubject]", ti.Content.Subject);
+                    var notifyBody = Utilities.GetSharedResource("NotificationBodyReply");
+                    notifyBody = notifyBody.Replace("[Post]", ri.Content.Body);
+                    var notificationKey = string.Format("{0}:{1}:{2}:{3}:{4}", TabId, ForumModuleId, ForumId, TopicId, ri.ReplyId);
+
+                    var notification = new Notification
+                                           {
+                                               NotificationTypeID = notificationType.NotificationTypeId,
+                                               Subject = notifySubject,
+                                               Body = notifyBody,
+                                               IncludeDismissAction = false,
+                                               SenderUserID = UserInfo.UserID,
+                                               Context = notificationKey
+                                           };
+
+                    NotificationsController.Instance.SendNotification(notification, PortalId, null, mods);
+
                     string[] @params = { ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + TopicId, ParamKeys.ViewType + "=confirmaction", ParamKeys.ConfirmActionId + "=" + ConfirmActions.MessagePending };
                     Response.Redirect(Utilities.NavigateUrl(ForumTabId, "", @params), false);
                 }
