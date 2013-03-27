@@ -7,11 +7,11 @@
 <div class="License">
 	<p class="Owner">
 		<h3>About DotNetNuke Active Forums</h3>
-		<strong>Version 5.0.3</strong><br /><br />		
+		<strong>Version 5.0.4</strong><br /><br />		
 		
 	</p>
 </div>
-<h3>DotNetNuke Active Forums 05.00.03</h3>
+<h3>DotNetNuke Active Forums 05.00.04</h3>
 <p class="Contributor">
 	Will Morgenweck <br />
 	Benjiro Nelson <br />
@@ -30,6 +30,10 @@
 			<li><a href="http://activeforums.codeplex.com/workitem/1830" target="_blank">Item 1830</a> - Full-text search doesn't work as expected</li>
 			<li>Redesigned Search UI</li>
 			<li>Added JQuery UI Theme to Default Theme (.ActiveForums scope)</li>
+			<li>Added Mini User Editor to Profile Info: [AF:BUTTON:EDITUSER]</li>
+			<li>Fixed Moderation Service</li>
+			<li>Added ability to restrict the ability to create topics/replies in a forum or forum group by the number of posts a user has.
+			<li>Made the loading of forum/group setting more resiliant to old data</li>
 		</ul>
 	</p>
    <p class="Owner">
