@@ -117,15 +117,14 @@ namespace DotNetNuke.Modules.ActiveForums
 			    PermissionsId = Convert.ToInt32(dr["PermissionsId"].ToString()),
 			    ForumSettingsKey = dr["ForumSettingsKey"].ToString(),
 			    InheritSecurity = Convert.ToBoolean(dr["InheritSecurity"]),
-			    PrefixURL = dr["PrefixURL"].ToString()
+			    PrefixURL = dr["PrefixURL"].ToString(),
+                SocialGroupId = Convert.ToInt32(dr["SocialGroupId"].ToString()),
+			    HasProperties = Convert.ToBoolean(dr["HasProperties"])
 			};
 
 		    fi.ForumGroup.ForumGroupId = fi.ForumGroupId;
 			fi.ForumGroup.GroupName = fi.GroupName;
 			fi.ForumGroup.PrefixURL = dr["GroupPrefixURL"].ToString();
-			fi.SocialGroupId = Convert.ToInt32(dr["SocialGroupId"].ToString());
-			fi.HasProperties = Convert.ToBoolean(dr["HasProperties"]);
-		    fi.AllowRSS = dr.HasColumn("AllowRSS") && Convert.ToBoolean(dr["AllowRSS"]);
 			fi.Security.Announce = dr["CanAnnounce"].ToString();
 			fi.Security.Attach = dr["CanAttach"].ToString();
 			fi.Security.Create = dr["CanCreate"].ToString();
@@ -440,7 +439,6 @@ namespace DotNetNuke.Modules.ActiveForums
 			    forumId = Forums_Save(portalId, fi, true, true);
 				fi = GetForum(portalId, moduleId, forumId);
 				fi.PermissionsId = permissionsId;
-				fi.AllowRSS = true;
 				Forums_Save(portalId, fi, false, false);
 
 			    var xDoc = new XmlDocument();

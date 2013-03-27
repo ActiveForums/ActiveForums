@@ -390,7 +390,6 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 
                 fi.TopicSubject = dr["LastPostSubject"].ToString();
                 fi.TopicId = Convert.ToInt32(dr["LastTopicId"]);
-                fi.AllowRSS = !(string.IsNullOrEmpty(dr["AllowRSS"].ToString())) && Convert.ToBoolean(dr["AllowRSS"]);
 
                 fi.TotalTopics = Convert.ToInt32(dr["TotalTopics"]);
                 fi.TotalReplies = Convert.ToInt32(dr["TotalReplies"]);

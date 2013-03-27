@@ -47,115 +47,73 @@ namespace DotNetNuke.Modules.ActiveForums
 
 		public bool AllowAttach
 		{
-			get
-			{
-			    return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.AllowAttach]);
-			}
+			get { return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.AllowAttach]); }
 		}
 
 		public bool AllowEmoticons
 		{
-			get
-			{
-                return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.AllowEmoticons]);
-			}
+			get { return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.AllowEmoticons]); }
 		}
 
 		public bool AllowHTML
 		{
-			get
-			{
-                return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.AllowHTML]);
-			}
+			get { return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.AllowHTML]); }
 		}
 
 		public bool AllowPostIcon
 		{
-			get
-			{
-                return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.AllowPostIcon]);
-			}
+			get { return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.AllowPostIcon]); }
 		}
 
 		public bool AllowRSS
 		{
-			get
-			{
-                return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.AllowRSS]);
-			}
+			get { return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.AllowRSS]); }
 		}
 
+        // TODO: Eliminate this
 		public bool ActiveSocialEnabled
 		{
-			get
-			{
-                // TODO: Eliminate this
-                return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.ActiveSocialEnabled]);
-			}
+			get { return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.ActiveSocialEnabled]); }
 		}
 
 		public bool ActiveSocialTopicsOnly
 		{
-			get
-			{
-                return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.ActiveSocialTopicsOnly]);
-			}
+			get { return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.ActiveSocialTopicsOnly]); }
 		}
 
 		public int ActiveSocialSecurityOption
 		{
-			get
-			{
-                return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.ActiveSocialSecurityOption], 1);
-			}
+			get { return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.ActiveSocialSecurityOption], 1); }
 		}
 
 		public bool AllowScript
 		{
-			get
-			{
-                return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.AllowScript]);
-			}
+			get { return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.AllowScript]); }
 		}
 
 		public bool AllowSubscribe
 		{
-			get
-			{
-                return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.AllowSubscribe]);
-			}
+			get { return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.AllowSubscribe]); }
 		}
 
 		public int AttachCount
 		{
-			get
-			{
-                return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.AttachCount], 3);
-			}
+			get { return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.AttachCount], 3); }
 		}
 
 		public int AttachMaxHeight
 		{
-			get
-			{
-			    return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.AttachMaxHeight], 500);
-			}
+			get { return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.AttachMaxHeight], 500); }
 		}
 
 		public int AttachMaxSize
 		{
-			get
-			{
-                return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.AttachMaxSize], 1000);
-			}
+			get { return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.AttachMaxSize], 1000); }
 		}
 
 		public int AttachMaxWidth
 		{
-			get
-			{
-                return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.AttachMaxWidth], 500);
-			}
+			get { return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.AttachMaxWidth], 500); }
 		}
 
 		public AttachStores AttachStore
@@ -172,34 +130,22 @@ namespace DotNetNuke.Modules.ActiveForums
 
 		public string AttachTypeAllowed
 		{
-			get
-			{
-			    return Utilities.SafeConvertString(GroupSettings[ForumSettingKeys.AttachTypeAllowed], ".jpg,.gif,.png");
-			}
+			get { return Utilities.SafeConvertString(GroupSettings[ForumSettingKeys.AttachTypeAllowed], ".jpg,.gif,.png"); }
 		}
 
 		public bool AttachUniqueFileNames
 		{
-			get
-			{
-                return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.AttachUniqueFileNames]);
-			}
+			get { return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.AttachUniqueFileNames]); }
 		}
 
 		public string EditorHeight
 		{
-			get
-			{
-                return Utilities.SafeConvertString(GroupSettings[ForumSettingKeys.EditorHeight], "400");
-			}
+			get { return Utilities.SafeConvertString(GroupSettings[ForumSettingKeys.EditorHeight], "400"); }
 		}
 
 		public int EditorStyle
 		{
-			get
-			{
-			    return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.EditorStyle], 1);
-			}
+			get { return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.EditorStyle], 1); }
 		}
 
 		public HTMLPermittedUsers EditorPermittedUsers
@@ -215,10 +161,7 @@ namespace DotNetNuke.Modules.ActiveForums
 
 		public string EditorToolBar
 		{
-			get
-			{
-			    return Utilities.SafeConvertString(GroupSettings[ForumSettingKeys.EditorToolbar], "bold,italic,underline");
-			}
+			get { return Utilities.SafeConvertString(GroupSettings[ForumSettingKeys.EditorToolbar], "bold,italic,underline"); }
 		}
 
 		public EditorTypes EditorType
@@ -234,187 +177,123 @@ namespace DotNetNuke.Modules.ActiveForums
 
 		public string EditorWidth
 		{
-			get
-			{
-			    return Utilities.SafeConvertString(GroupSettings[ForumSettingKeys.EditorWidth], "100%");
-			}
+			get { return Utilities.SafeConvertString(GroupSettings[ForumSettingKeys.EditorWidth], "100%"); }
 		}
 
 		public string EmailAddress
 		{
-			get
-			{
-                return Utilities.SafeConvertString(GroupSettings[ForumSettingKeys.EmailAddress], string.Empty);
-			}
+			get { return Utilities.SafeConvertString(GroupSettings[ForumSettingKeys.EmailAddress], string.Empty); }
 		}
 
 		public bool IndexContent
 		{
-			get
-			{
-                return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.IndexContent]);
-			}
+			get { return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.IndexContent]); }
 		}
 
 		public bool AutoSubscribeEnabled
 		{
-			get
-			{
-                return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.AutoSubscribeEnabled]);
-			}
+			get { return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.AutoSubscribeEnabled]); }
 		}
 
 		public string AutoSubscribeRoles
 		{
-			get
-			{
-                return Utilities.SafeConvertString(GroupSettings[ForumSettingKeys.AutoSubscribeRoles], string.Empty);
-			}
+			get { return Utilities.SafeConvertString(GroupSettings[ForumSettingKeys.AutoSubscribeRoles], string.Empty); }
 		}
 
 		public bool AutoSubscribeNewTopicsOnly
 		{
-			get
-			{
-                return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.AutoSubscribeNewTopicsOnly]);
-			}
+			get { return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.AutoSubscribeNewTopicsOnly]); }
 		}
 
 		public bool IsModerated
 		{
-			get
-			{
-                return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.IsModerated]);
-			}
+			get { return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.IsModerated]); }
 		}
 
 		public int TopicsTemplateId
 		{
-			get
-			{
-                return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.TopicsTemplateId]);
-			}
+			get { return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.TopicsTemplateId]); }
 		}
 
 		public int TopicTemplateId
 		{
-			get
-			{
-                return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.TopicTemplateId]);
-
-			}
+			get { return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.TopicTemplateId]); }
 		}
 
 		public int TopicFormId
 		{
-			get
-			{
-                return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.TopicFormId]);
-			}
+			get { return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.TopicFormId]); }
 		}
 
 		public int ReplyFormId
 		{
-			get
-			{
-                return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.ReplyFormId]);
-			}
+			get { return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.ReplyFormId]); }
 		}
 
 		public int QuickReplyFormId
 		{
-			get
-			{
-                return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.QuickReplyFormId]);
-			}
+			get { return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.QuickReplyFormId]); }
 		}
 
 		public int ProfileTemplateId
 		{
-			get
-			{
-                return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.ProfileTemplateId]);
-			}
+			get { return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.ProfileTemplateId]); }
 		}
 
 		public bool UseFilter
 		{
-			get
-			{
-                return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.UseFilter]);
-			}
+			get { return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.UseFilter]); }
 		}
 
 		public int AutoTrustLevel
 		{
-			get
-			{
-                return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.AutoTrustLevel]);
-			}
+			get { return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.AutoTrustLevel]); }
 		}
 
-		public int DefaultTrustValue
-		{
-			get
-			{
-                return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.DefaultTrustValue]);
-			}
-		}
+        public TrustTypes DefaultTrustValue
+        {
+            get
+            {
+                TrustTypes parseValue;
+                return Enum.TryParse(Utilities.SafeConvertString(GroupSettings[ForumSettingKeys.DefaultTrustValue], "0"), true, out parseValue)
+                           ? parseValue
+                           : TrustTypes.NotTrusted;
+            }
+        }
 
 		public int ModApproveTemplateId
 		{
-			get
-			{
-                return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.ModApproveTemplateId]);
-			}
+			get { return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.ModApproveTemplateId]); }
 		}
 
 		public int ModRejectTemplateId
 		{
-			get
-			{
-                return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.ModRejectTemplateId]);
-			}
+			get { return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.ModRejectTemplateId]); }
 		}
 
 		public int ModMoveTemplateId
 		{
-			get
-			{
-                return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.ModMoveTemplateId]);
-			}
+			get { return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.ModMoveTemplateId]); }
 		}
 
 		public int ModDeleteTemplateId
 		{
-			get
-			{
-                return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.ModDeleteTemplateId]);
-			}
+			get { return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.ModDeleteTemplateId]); }
 		}
 
 		public int ModNotifyTemplateId
 		{
-			get
-			{
-                return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.ModNotifyTemplateId]);
-			}
+			get { return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.ModNotifyTemplateId]); }
 		}
 
         public int CreatePostCount // Minimum posts required to create a topic in this forum if the user is not trusted
         {
-            get
-            {
-                return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.CreatePostCount]);
-            }
+            get { return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.CreatePostCount]); }
         }
 
         public int ReplyPostCount // Minimum posts required to reply to a topic in this forum if the user is not trusted
         {
-            get
-            {
-                return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.ReplyPostCount]);
-            }
+            get { return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.ReplyPostCount]); }
         }
 
         #endregion
