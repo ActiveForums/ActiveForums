@@ -224,7 +224,7 @@ namespace DotNetNuke.Modules.ActiveForums
             get
             {
                 EditorTypes parseValue;
-                return Enum.TryParse(Utilities.SafeConvertString(ForumSettings[ForumSettingKeys.EditorPermittedUsers], "0"), true, out parseValue)
+                return Enum.TryParse(Utilities.SafeConvertString(ForumSettings[ForumSettingKeys.EditorType], "0"), true, out parseValue)
                            ? parseValue
                            : EditorTypes.TEXTBOX;
             }
