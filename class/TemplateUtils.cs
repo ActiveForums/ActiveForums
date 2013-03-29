@@ -255,9 +255,9 @@ namespace DotNetNuke.Modules.ActiveForums
 
         #region Profile
 
-        public static string GetPostInfo(int portalId, int moduleId, int userId, string username, User up, string imagePath, bool isMod, string ipAddress, bool isUserOnline, CurrentUserTypes currentUserType, bool userPrefHideAvatar, int timeZoneOffset)
+        public static string GetPostInfo(int portalId, int moduleId, int userId, string username, User up, string imagePath, bool isMod, string ipAddress, bool isUserOnline, CurrentUserTypes currentUserType, int currentUserId, bool userPrefHideAvatar, int timeZoneOffset)
         {
-            var sPostInfo = ParseProfileInfo(portalId, moduleId, userId, username, up, imagePath, isMod, ipAddress, currentUserType, userPrefHideAvatar, timeZoneOffset);
+            var sPostInfo = ParseProfileInfo(portalId, moduleId, userId, username, up, imagePath, isMod, ipAddress, currentUserType, currentUserId, userPrefHideAvatar, timeZoneOffset);
             if (sPostInfo.ToLower().Contains("<br"))
                 return sPostInfo;
 
@@ -274,7 +274,7 @@ namespace DotNetNuke.Modules.ActiveForums
             return sTrim;
         }
 
-        public static string ParseProfileInfo(int portalId, int moduleId, int userId, string username, User up, string imagePath, bool isMod, string ipAddress, CurrentUserTypes currentUserType, bool userPrefHideAvatar, int timeZoneOffset)
+        public static string ParseProfileInfo(int portalId, int moduleId, int userId, string username, User up, string imagePath, bool isMod, string ipAddress, CurrentUserTypes currentUserType, int currentUserId, bool userPrefHideAvatar, int timeZoneOffset)
 		{
 			var mainSettings = DataCache.MainSettings(moduleId);
 
@@ -288,7 +288,7 @@ namespace DotNetNuke.Modules.ActiveForums
 					DataCache.CacheStore(cacheKey, myTemplate);
 			}
 
-			myTemplate = ParseProfileTemplate(myTemplate, up, portalId, moduleId, imagePath, currentUserType, true, userPrefHideAvatar, false, ipAddress, -1, timeZoneOffset);
+			myTemplate = ParseProfileTemplate(myTemplate, up, portalId, moduleId, imagePath, currentUserType, true, userPrefHideAvatar, false, ipAddress, currentUserId, timeZoneOffset);
 			
             return myTemplate;
 		}
@@ -321,6 +321,7 @@ namespace DotNetNuke.Modules.ActiveForums
 			return ParseProfileTemplate(profileTemplate, up, portalId, moduleId, imagePath, currentUserType, legacyTemplate, userPrefHideAvatar, userPrefHideSignature, ipAddress, -1, timeZoneOffset);
 		}
 
+
 		public static string ParseProfileTemplate(string profileTemplate, User up, int portalId, int moduleId, string imagePath, CurrentUserTypes currentUserType, bool legacyTemplate, bool userPrefHideAvatar, bool userPrefHideSignature, string ipAddress, int currentUserId, int timeZoneOffset)
 		{
 			try
@@ -334,7 +335,7 @@ namespace DotNetNuke.Modules.ActiveForums
                 // TODO figure out why/if this recurion is possible.  Seems a bit scary as it could create a loop.
                 if (profileTemplate.Contains("[POSTINFO]"))
 				{
-					var sPostInfo = GetPostInfo(portalId, moduleId, up.UserId, up.UserName, up, imagePath, false, ipAddress, up.Profile.IsUserOnline, currentUserType, userPrefHideAvatar, timeZoneOffset);
+					var sPostInfo = GetPostInfo(portalId, moduleId, up.UserId, up.UserName, up, imagePath, false, ipAddress, up.Profile.IsUserOnline, currentUserType, currentUserId, userPrefHideAvatar, timeZoneOffset);
 					profileTemplate = profileTemplate.Replace("[POSTINFO]", sPostInfo);
 				}
 
@@ -358,6 +359,7 @@ namespace DotNetNuke.Modules.ActiveForums
                  // Used in a few places to determine if info should be shown or removed.
 			    var isAdmin = (currentUserType == CurrentUserTypes.Admin || currentUserType == CurrentUserTypes.SuperUser);
 
+                var isAuthethenticated = currentUserType != CurrentUserTypes.Anon;
 
                 // IP Address
                 result.Replace("[MODIPADDRESS]", isMod ? ipAddress : string.Empty);
@@ -674,6 +676,8 @@ namespace DotNetNuke.Modules.ActiveForums
 							sReplace = profprop.PropertyValue;
 						else if (profprop.Visibility == Entities.Users.UserVisibilityMode.MembersOnly && currentUserType != CurrentUserTypes.Anon)
 							sReplace = profprop.PropertyValue;
+                        else if (profprop.Visibility == Entities.Users.UserVisibilityMode.AllUsers)
+                            sReplace = profprop.PropertyValue;
 						else
 							sReplace = "[RESX:Private]";
 
@@ -693,7 +697,7 @@ namespace DotNetNuke.Modules.ActiveForums
 		    return DataCache.GetCachedTemplate(mainSettings.TemplateCache, moduleId, "TopicView", topicTemplateId);
 		}
 
-		public static string PreviewTopic(int topicTemplateID, int portalId, int moduleId, int tabId, Forum forumInfo, int userId, string body, string imagePath, User up, DateTime postDate, CurrentUserTypes currentUserType, int timeZoneOffset)
+		public static string PreviewTopic(int topicTemplateID, int portalId, int moduleId, int tabId, Forum forumInfo, int userId, string body, string imagePath, User up, DateTime postDate, CurrentUserTypes currentUserType, int currentUserId, int timeZoneOffset)
 		{
 			var sTemplate = GetTopicTemplate(topicTemplateID, moduleId);
 			try
@@ -706,7 +710,7 @@ namespace DotNetNuke.Modules.ActiveForums
 				sTopic = sTopic.Replace("[ACTIONS:QUOTE]", string.Empty);
 				sTopic = sTopic.Replace("[ACTIONS:REPLY]", string.Empty);
 				sTopic = sTopic.Replace("[POSTDATE]", Utilities.GetDate(postDate, moduleId, timeZoneOffset));
-				sTopic = sTopic.Replace("[POSTINFO]", GetPostInfo(portalId, moduleId, userId, up.UserName, up, imagePath, false, HttpContext.Current.Request.UserHostAddress, true, currentUserType, false, timeZoneOffset));
+				sTopic = sTopic.Replace("[POSTINFO]", GetPostInfo(portalId, moduleId, userId, up.UserName, up, imagePath, false, HttpContext.Current.Request.UserHostAddress, true, currentUserType, currentUserId, false, timeZoneOffset));
 				sTemplate = ParsePreview(portalId, sTopic, body, moduleId);
 				sTemplate = "<table class=\"afgrid\" width=\"100%\" cellspacing=\"0\" cellpadding=\"4\" border=\"1\">" + sTemplate;
 				sTemplate = sTemplate + "</table>";

@@ -318,7 +318,7 @@ namespace DotNetNuke.Modules.ActiveForums
                                                                                     Profile = {TopicCount = 0, ReplyCount = 0},
                                                                                     DateCreated = DateTime.Now
                                                                                 };
-                    message = TemplateUtils.PreviewTopic(topicTemplateID, PortalId, ForumModuleId, ForumTabId, ForumInfo, UserId, message, ImagePath, up, DateTime.Now, CurrentUserType, TimeZoneOffset);
+                    message = TemplateUtils.PreviewTopic(topicTemplateID, PortalId, ForumModuleId, ForumTabId, ForumInfo, UserId, message, ImagePath, up, DateTime.Now, CurrentUserType, UserId, TimeZoneOffset);
                     hidPreviewText.Value = message;
                     break;
             }
