@@ -246,7 +246,7 @@ namespace DotNetNuke.Modules.ActiveForums
 		public const string PageId = "afpg";
 		public const string PostId = "postid";
 		public const string Sort = "afs";
-		public const string PageJumpId = "afpg";
+		public const string PageJumpId = "afpgj ";
 		public const string ContentJumpId = "afc";
 		public const string ConfirmActionId = "afca";
 		public const string Tags = "aftg";
