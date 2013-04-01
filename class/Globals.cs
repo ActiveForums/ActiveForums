@@ -90,6 +90,7 @@ namespace DotNetNuke.Modules.ActiveForums
 		public const string ControlRegisterTag = "<%@ Register TagPrefix=\"am\" Namespace=\"DotNetNuke.Modules.ActiveForums.Controls\" Assembly=\"DotNetNuke.Modules.ActiveForums\" %>";
 		public const string ControlRegisterAFTag = "<%@ Register TagPrefix=\"af\" Namespace=\"DotNetNuke.Modules.ActiveForums.Controls\" Assembly=\"DotNetNuke.Modules.ActiveForums\" %>";
 		public const string SocialRegisterTag = "<%@ Register TagPrefix=\"social\" Namespace=\"Active.Modules.Social.Controls\" Assembly=\"Active.Modules.Social\" %>";
+        public const string BannerRegisterTag = "<%@ Register TagPrefix=\"dnn\" TagName=\"BANNER\" Src=\"~/Admin/Skins/Banner.ascx\" %>";
 
 		public const int GroupCount = 10000000;
 		public const int ForumCount = 10000000;
@@ -246,7 +247,7 @@ namespace DotNetNuke.Modules.ActiveForums
 		public const string PageId = "afpg";
 		public const string PostId = "postid";
 		public const string Sort = "afs";
-		public const string PageJumpId = "afpgj ";
+		public const string PageJumpId = "afpgj";
 		public const string ContentJumpId = "afc";
 		public const string ConfirmActionId = "afca";
 		public const string Tags = "aftg";

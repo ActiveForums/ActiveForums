@@ -388,6 +388,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 RenderMessage("[RESX:Error:LoadingTopics]", exc.Message, exc);
             }
         }
+
         private void BindTopics(string TopicsTemplate)
         {
             string sOutput = TopicsTemplate;

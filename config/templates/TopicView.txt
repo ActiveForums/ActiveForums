@@ -2,16 +2,16 @@
 <table class="afgrid">
 	<tr>
 		<td>
-			<div  class="afcrumb">[FORUMMAINLINK] > [FORUMGROUPLINK] > [FORUMLINK]</div>
+			[BREADCRUMB]<div class="afcrumb">[FORUMMAINLINK] > [FORUMGROUPLINK] > [FORUMLINK]</div>[/BREADCRUMB]
 			<div class="aftitlelg">[SUBJECT]</div>
 			<div class="aftopicsum">[RESX:LastPost] [AF:LABEL:LastPostDate] [RESX:BY] [AF:LABEL:LastPostAuthor]. [AF:LABEL:ReplyCount] [RESX:REPLIES].</div>
 		    <div class="afprop-list">
-<ul>
-[AF:PROPERTIES]
-<li><b>[AF:PROPERTY:LABEL]:</b> [AF:PROPERTY:VALUE]</li>
-[/AF:PROPERTIES]
-</ul>
-</div>
+				<ul>
+				[AF:PROPERTIES]
+					<li><b>[AF:PROPERTY:LABEL]:</b> [AF:PROPERTY:VALUE]</li>
+				[/AF:PROPERTIES]
+				</ul>
+			</div>
 		</td>
 		<td align="right" valign="top"><div style="padding:5px;"><span class="afactionicon">[AF:CONTROL:ADDTHIS:0]</span><span class="afactionicon">[AF:CONTROL:PRINTER]</span><span class="afactionicon">[AF:CONTROL:EMAIL]</span></div>
 [POSTRATINGBUTTON][AF:CONTROL:STATUS]<div style="padding-top:5px;">[RESX:SortPosts]:[SORTDROPDOWN]</div>
@@ -47,10 +47,7 @@
 						<table class="afgrid" cellpadding="4">
 							<tr>
 								<td class="afsubrow"><a name="[POSTID]"></a>[POSTDATE]</td>
-								<td class="afsubrow af-actions">
-								[AF:CONTROL:TOPICACTIONS]
-								
-								</td>
+								<td class="afsubrow af-actions">[AF:CONTROL:TOPICACTIONS]</td>
 							</tr>
 							<tr>
 								<td colspan="2"><div class="afpostbody">[AF:CONTROL:POLL][BODY]</div></td>
@@ -80,9 +77,7 @@
 						<table class="afgrid" cellpadding="4">
 							<tr>
 								<td class="afsubrow"><a name="[POSTID]"></a>[POSTDATE]</td>
-								<td class="afsubrow af-actions">
-									[AF:CONTROL:POSTACTIONS]
-								</td>
+								<td class="afsubrow af-actions">[AF:CONTROL:POSTACTIONS]</td>
 							</tr>
 							<tr>
 								<td colspan="2"><div class="afpostbody">[BODY]</div></td>

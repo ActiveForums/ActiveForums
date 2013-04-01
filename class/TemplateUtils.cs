@@ -528,7 +528,7 @@ namespace DotNetNuke.Modules.ActiveForums
 
         #endregion
 
-        private static string ParseRoles(string template, string userRoles)
+        public static string ParseRoles(string template, string userRoles)
 		{
             if (string.IsNullOrWhiteSpace(template))
                 return template;
@@ -622,7 +622,7 @@ namespace DotNetNuke.Modules.ActiveForums
 			return sb.ToString();
 		}
 
-		public static string GetTemplateSection(string template, string startTag, string endTag)
+		public static string GetTemplateSection(string template, string startTag, string endTag, bool returnTemplateIfTagNotFound = true)
 		{
 			var intStartTag = template.IndexOf(startTag, StringComparison.Ordinal);
 			var intEndTag = template.IndexOf(endTag, StringComparison.Ordinal);
@@ -634,7 +634,8 @@ namespace DotNetNuke.Modules.ActiveForums
 				var sSubTemp = template.Substring(intSubTempStart, intSubTempLength);
 				return sSubTemp;
 			}
-		    return template;
+
+            return returnTemplateIfTagNotFound ? template : string.Empty;
 		}
 
         public static string ReplaceSubSection(string template, string subTemplate, string startTag, string endTag)
