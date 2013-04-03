@@ -44,7 +44,7 @@ WHERE APICall = N'DesktopModules/ActiveForums/API/ModerationService.ashx/IgnoreP
 
 
 
-IF  EXISTS (SELECT * FROM {databaseOwner}sysobjects WHERE id = OBJECT_ID(N'[DF__activefor__creat__7B863AD4]') AND type = 'D')
+IF  EXISTS (SELECT * FROM sys.objects WHERE id = OBJECT_ID(N'[DF__activefor__creat__7B863AD4]') AND type = 'D')
 BEGIN
 ALTER TABLE {databaseOwner}[{objectQualifier}activeforums_SearchCache] DROP CONSTRAINT [DF__activefor__creat__7B863AD4]
 END
@@ -229,7 +229,7 @@ BEGIN
 	END
 	
 	-- Make sure the full text proc has been installed
-	IF NOT EXISTS (SELECT * FROM {databaseOwner}sysobjects where id = object_id(N'{databaseOwner}{objectQualifier}activeforums_Search_FullText') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+	IF NOT EXISTS (SELECT * FROM sys.objects where id = object_id(N'{databaseOwner}{objectQualifier}activeforums_Search_FullText') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
 	BEGIN
 		SELECT -3 as Status
 		RETURN
