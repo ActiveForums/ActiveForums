@@ -34,6 +34,10 @@
 			<li>Fixed Moderation Service</li>
 			<li>Added ability to restrict the ability to create topics/replies in a forum or forum group by the number of posts a user has.
 			<li>Made the loading of forum/group setting more resiliant to old data</li>
+			<li>Fixed duplicate afpg tag in URL
+			<li>Fixed support for the [BANNER] token in the Topic View template
+			<li>Added [REPLYSEPARATOR][/REPLYSEPARATOR] and [REPLYSEPARATOR:?][/REPLYSEPARATOR:?] tokens to the Topic View template
+			<li>Added afpostinfo, afreplyinfo and aftopicinfo classes to the [CSS????INFO] tokens in the Topic View template
 		</ul>
 	</p>
    <p class="Owner">
