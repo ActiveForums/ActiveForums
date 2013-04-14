@@ -85,12 +85,6 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 					BindForumGroups();
 					BindForumSecurity();
 
-
-					rdFullTextSearch.SelectedIndex = 1;
-					rdMailQueue.SelectedIndex = 1;
-					rdAutoLinks.SelectedIndex = 0;
-					rdPoints.SelectedIndex = 1;
-
 					txtPageSize.Value = 20;
 					txtPageSize.Text = "20";
 					txtFloodInterval.Value = 0;
@@ -98,23 +92,25 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 					txtEditInterval.Value = 0;
 					txtEditInterval.Text = "0";
 
-					drpMode.SelectedIndex = drpMode.Items.IndexOf(drpMode.Items.FindByValue(Mode));
-					drpThemes.SelectedIndex = drpThemes.Items.IndexOf(drpThemes.Items.FindByValue(Theme));
-					drpTemplates.SelectedIndex = drpTemplates.Items.IndexOf(drpTemplates.Items.FindByValue(TemplateId.ToString()));
+                    Utilities.SelectListItemByValue(drpMode, Mode);
+                    Utilities.SelectListItemByValue(drpThemes, Theme);
+                    Utilities.SelectListItemByValue(drpTemplates, TemplateId);
 					txtPageSize.Text = PageSize.ToString();
 					txtFloodInterval.Text = FloodInterval.ToString();
 					txtEditInterval.Text = EditInterval.ToString();
-					rdAutoLinks.SelectedIndex = rdAutoLinks.Items.IndexOf(rdAutoLinks.Items.FindByValue(AutoLink.ToString()));
-					drpDeleteBehavior.SelectedIndex = drpDeleteBehavior.Items.IndexOf(drpDeleteBehavior.Items.FindByValue(DeleteBehavior.ToString()));
+					Utilities.SelectListItemByValue(rdAutoLinks, AutoLink);
+                    Utilities.SelectListItemByValue(drpDeleteBehavior, DeleteBehavior);
 					txtAddThis.Text = AddThis;
-					drpProfileType.SelectedIndex = drpProfileType.Items.IndexOf(drpProfileType.Items.FindByValue(ProfileType.ToString()));
-					drpSignatures.SelectedIndex = drpSignatures.Items.IndexOf(drpSignatures.Items.FindByValue(Signatures.ToString()));
-					drpUserDisplayMode.SelectedIndex = drpUserDisplayMode.Items.IndexOf(drpUserDisplayMode.Items.FindByValue(UserNameDisplay));
-					rdEnableURLRewriter.SelectedIndex = rdEnableURLRewriter.Items.IndexOf(rdEnableURLRewriter.Items.FindByValue(FriendlyURLs.ToString()));
-					rdFullTextSearch.SelectedIndex = rdFullTextSearch.Items.IndexOf(rdFullTextSearch.Items.FindByValue(FullTextSearch.ToString()));
-					rdMailQueue.SelectedIndex = rdMailQueue.Items.IndexOf(rdMailQueue.Items.FindByValue(MailQueue.ToString()));
+                    Utilities.SelectListItemByValue(drpProfileType, ProfileType);
+                    Utilities.SelectListItemByValue(drpSignatures, Signatures);
+                    Utilities.SelectListItemByValue(drpUserDisplayMode, UserNameDisplay);
+                    Utilities.SelectListItemByValue(rdEnableURLRewriter, FriendlyURLs);
+                    Utilities.SelectListItemByValue(rdFullTextSearch, FullTextSearch);
+                    Utilities.SelectListItemByValue(rdMailQueue, MailQueue);
+                    Utilities.SelectListItemByValue(rdPoints, EnablePoints);
+                    Utilities.SelectListItemByValue(rdUsersOnline, EnableUsersOnline);
+                    Utilities.SelectListItemByValue(rdUseSkinBreadCrumb, UseSkinBreadCrumb);
 
-					rdPoints.SelectedIndex = rdPoints.Items.IndexOf(rdPoints.Items.FindByValue(EnablePoints.ToString().ToLower()));
 					txtAnswerPointValue.Text = AnswerPointValue.ToString();
 					txtTopicPointValue.Text = TopicPointValue.ToString();
 					txtReplyPointValue.Text = ReplyPointValue.ToString();
@@ -129,9 +125,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 					txtAvatarHeight.Text = AvatarHeight.ToString();
 					txtAvatarWidth.Text = AvatarWidth.ToString();
 
-					drpForumGroupTemplate.SelectedIndex = drpForumGroupTemplate.Items.IndexOf(drpForumGroupTemplate.Items.FindByValue(ForumGroupTemplate.ToString()));
-
-
+                    Utilities.SelectListItemByValue(drpForumGroupTemplate, ForumGroupTemplate);
 				}
 			}
 			catch (Exception exc) //Module failed to load
@@ -153,65 +147,65 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 		{
 			try
 			{
-				bool fullTextCurrent = FullTextSearch;
+				var fullTextCurrent = FullTextSearch;
 
-				Theme = drpThemes.SelectedItem.Value;
-				Mode = drpMode.SelectedItem.Value;
-				TemplateId = Convert.ToInt32(drpTemplates.SelectedItem.Value);
-				PageSize = Convert.ToInt32(txtPageSize.Text);
-				FloodInterval = Convert.ToInt32(txtFloodInterval.Text);
-				EditInterval = Convert.ToInt32(txtEditInterval.Text);
-				AutoLink = Convert.ToBoolean(rdAutoLinks.SelectedItem.Value);
-				DeleteBehavior = Convert.ToInt32(drpDeleteBehavior.SelectedItem.Value);
+				Theme = drpThemes.SelectedValue;
+				Mode = drpMode.SelectedValue;
+				TemplateId = Utilities.SafeConvertInt(drpTemplates.SelectedValue);
+				PageSize = Utilities.SafeConvertInt(txtPageSize.Text, 10);
+                FloodInterval = Utilities.SafeConvertInt(txtFloodInterval.Text);
+                EditInterval = Utilities.SafeConvertInt(txtEditInterval.Text);
+                AutoLink = Utilities.SafeConvertBool(rdAutoLinks.SelectedValue);
+                DeleteBehavior = Utilities.SafeConvertInt(drpDeleteBehavior.SelectedValue);
 				AddThis = txtAddThis.Text;
-				ProfileType = Convert.ToInt32(drpProfileType.SelectedItem.Value);
-				Signatures = Convert.ToInt32(drpSignatures.SelectedItem.Value);
-				UserNameDisplay = drpUserDisplayMode.SelectedItem.Value;
-				FriendlyURLs = Convert.ToBoolean(rdEnableURLRewriter.SelectedItem.Value);
-				FullTextSearch = Convert.ToBoolean(rdFullTextSearch.SelectedItem.Value);
-				MailQueue = Convert.ToBoolean(rdMailQueue.SelectedItem.Value);
+                ProfileType = Utilities.SafeConvertInt(drpProfileType.SelectedValue);
+                Signatures = Utilities.SafeConvertInt(drpSignatures.SelectedValue);
+                UserNameDisplay = drpUserDisplayMode.SelectedValue;
+                FriendlyURLs = Utilities.SafeConvertBool(rdEnableURLRewriter.SelectedValue);
+                FullTextSearch = Utilities.SafeConvertBool(rdFullTextSearch.SelectedValue);
+                MailQueue = Utilities.SafeConvertBool(rdMailQueue.SelectedValue);
 
-			    MessagingType = Convert.ToInt32(drpMessagingType.SelectedItem.Value);
+                MessagingType = Utilities.SafeConvertInt(drpMessagingType.SelectedValue);
+
+			    EnableUsersOnline = Utilities.SafeConvertBool(rdUsersOnline.SelectedValue);
+			    UseSkinBreadCrumb = Utilities.SafeConvertBool(rdUseSkinBreadCrumb.SelectedValue);
 
                 if(drpMessagingTab.SelectedItem != null)
-			        MessagingTabId = Convert.ToInt32(drpMessagingTab.SelectedItem.Value);              
+                    MessagingTabId = Utilities.SafeConvertInt(drpMessagingTab.SelectedValue);              
 
 				PrefixURLBase = txtURLPrefixBase.Text;
 				PrefixURLCategory = txtURLPrefixCategory.Text;
 				PrefixURLOther = txtURLPrefixOther.Text;
 				PrefixURLTag = txtURLPrefixTags.Text;
 
+                EnablePoints = Utilities.SafeConvertBool(rdPoints.SelectedValue);
+                AnswerPointValue = Utilities.SafeConvertInt(txtAnswerPointValue.Text, 1);
+                ReplyPointValue = Utilities.SafeConvertInt(txtReplyPointValue.Text, 1);
+                MarkAsAnswerPointValue = Utilities.SafeConvertInt(txtMarkAnswerPointValue.Text, 1);
+                TopicPointValue = Utilities.SafeConvertInt(txtTopicPointValue.Text, 1);
+                ModPointValue = Utilities.SafeConvertInt(txtModPointValue.Text, 1);
 
-				EnablePoints = Convert.ToBoolean(rdPoints.SelectedItem.Value);
-				AnswerPointValue = Convert.ToInt32(txtAnswerPointValue.Text);
-				ReplyPointValue = Convert.ToInt32(txtReplyPointValue.Text);
-				MarkAsAnswerPointValue = Convert.ToInt32(txtMarkAnswerPointValue.Text);
-				TopicPointValue = Convert.ToInt32(txtTopicPointValue.Text);
-				ModPointValue = Convert.ToInt32(txtModPointValue.Text);
-
-				AvatarHeight = Convert.ToInt32(txtAvatarHeight.Text);
-				AvatarWidth = Convert.ToInt32(txtAvatarWidth.Text);
+                AvatarHeight = Utilities.SafeConvertInt(txtAvatarHeight.Text, 48);
+                AvatarWidth = Utilities.SafeConvertInt(txtAvatarWidth.Text, 48);
 
 
-				ForumGroupTemplate = Convert.ToInt32(drpForumGroupTemplate.SelectedItem.Value);
-				string[] adminSec = txtGroupModSec.Value.Split(',');
+                ForumGroupTemplate = Utilities.SafeConvertInt(drpForumGroupTemplate.SelectedValue);
+				var adminSec = txtGroupModSec.Value.Split(',');
 				SaveForumSecurity("groupadmin", adminSec);
-				string[] memSec = txtGroupMemSec.Value.Split(',');
+				var memSec = txtGroupMemSec.Value.Split(',');
 				SaveForumSecurity("groupmember", memSec);
-				string[] regSec = txtGroupRegSec.Value.Split(',');
+				var regSec = txtGroupRegSec.Value.Split(',');
 				SaveForumSecurity("registereduser", regSec);
-				string[] anonSec = txtGroupAnonSec.Value.Split(',');
+				var anonSec = txtGroupAnonSec.Value.Split(',');
 				SaveForumSecurity("anon", anonSec);
-
 
 				try
 				{
 					if (FullTextSearch && fullTextCurrent == false)
 					{
 						DataProvider.Instance().Search_ManageFullText(FullTextSearch);
-						string err = string.Empty;
-                        string s = Utilities.GetSqlString("DotNetNuke.Modules.ActiveForums.FullText.sql");
-						err = DotNetNuke.Data.DataProvider.Instance().ExecuteScript(s);
+                        var s = Utilities.GetSqlString("DotNetNuke.Modules.ActiveForums.FullText.sql");
+						DotNetNuke.Data.DataProvider.Instance().ExecuteScript(s);
 					}
 					else if (FullTextSearch == false && fullTextCurrent)
 					{
@@ -235,7 +229,9 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 		}
 
 		#endregion
-		#region Private Methods
+		
+        #region Private Methods
+
 		private void BindTemplates()
 		{
 			var tc = new TemplateController();
@@ -246,13 +242,13 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 			drpTemplates.DataBind();
 			drpTemplates.Items.Insert(0, new ListItem(LocalizeString("Default"), "0"));
 		}
-		private void BindThemes()
+		
+        private void BindThemes()
 		{
 			var di = new System.IO.DirectoryInfo(Server.MapPath("~/DesktopModules/ActiveForums/themes"));
 			drpThemes.DataSource = di.GetDirectories();
 			drpThemes.DataBind();
 		}
-
 
         private void BindPrivateMessaging()
         {
@@ -322,7 +318,8 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 
 			}
 		}
-		private void BindForumSecurity()
+
+        private void BindForumSecurity()
 		{
 			var xDoc = new XmlDocument();
 			if (string.IsNullOrEmpty(ForumConfig))
@@ -536,7 +533,8 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 				litForumSecurity.Text = sb.ToString();
 			}
 		}
-		private void SaveForumSecurity(string sectype, string[] security)
+		
+        private void SaveForumSecurity(string sectype, string[] security)
 		{
 			var xDoc = new XmlDocument();
 			if (string.IsNullOrEmpty(ForumConfig))
@@ -561,7 +559,8 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 			ForumConfig = xDoc.OuterXml;
 
 		}
-		#endregion
+		
+        #endregion
 
 	}
 }

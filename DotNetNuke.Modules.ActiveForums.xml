@@ -1098,6 +1098,24 @@
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.Controls.ForumSettings.lblUseSkinBreadCrumb">
+            <summary>
+            lblUseSkinBreadCrumb control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.Controls.ForumSettings.rdUseSkinBreadCrumb">
+            <summary>
+            rdUseSkinBreadCrumb control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
         <member name="F:DotNetNuke.Modules.ActiveForums.Controls.ForumSettings.lblFloodInterval">
             <summary>
             lblFloodInterval control.
@@ -1299,6 +1317,24 @@
         <member name="F:DotNetNuke.Modules.ActiveForums.Controls.ForumSettings.drpUserDisplayMode">
             <summary>
             drpUserDisplayMode control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.Controls.ForumSettings.lblUsersOnline">
+            <summary>
+            lblUsersOnline control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.Controls.ForumSettings.rdUsersOnline">
+            <summary>
+            rdUsersOnline control.
             </summary>
             <remarks>
             Auto-generated field.

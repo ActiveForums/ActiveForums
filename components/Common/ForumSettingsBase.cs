@@ -9,18 +9,18 @@ namespace DotNetNuke.Modules.ActiveForums
 {
 	public class ForumSettingsBase : Entities.Modules.ModuleSettingsBase
 	{
-		private Entities.Modules.ModuleController objModules = new Entities.Modules.ModuleController();
+		private readonly Entities.Modules.ModuleController _objModules = new Entities.Modules.ModuleController();
 
 		public string Mode
 		{
 			get
 			{
-				return GetStringSetting(SettingKeys.Mode, "Standard");
+                return Settings.GetString(SettingKeys.Mode, "Standard");
 			}
 			set
 			{
 				Settings[SettingKeys.Mode] = value;
-				objModules.UpdateTabModuleSetting(TabModuleId, SettingKeys.Mode, value);
+				_objModules.UpdateTabModuleSetting(TabModuleId, SettingKeys.Mode, value);
 			}
 		}
 
@@ -28,12 +28,12 @@ namespace DotNetNuke.Modules.ActiveForums
 		{
 			get
 			{
-				return GetStringSetting(SettingKeys.Theme, "_default");
+                return Settings.GetString(SettingKeys.Theme, "_default");
 			}
 			set
 			{
 				Settings[SettingKeys.Theme] = value;
-				objModules.UpdateModuleSetting(ModuleId, SettingKeys.Theme, value);
+				_objModules.UpdateModuleSetting(ModuleId, SettingKeys.Theme, value);
 			}
 		}
 
@@ -41,12 +41,12 @@ namespace DotNetNuke.Modules.ActiveForums
 		{
 			get
 			{
-				return GetIntegerSetting(SettingKeys.ForumTemplateId, 0);
+				return Settings.GetInt(SettingKeys.ForumTemplateId);
 			}
 			set
 			{
 				Settings[SettingKeys.ForumTemplateId] = value;
-				objModules.UpdateModuleSetting(ModuleId, SettingKeys.ForumTemplateId, value.ToString());
+				_objModules.UpdateModuleSetting(ModuleId, SettingKeys.ForumTemplateId, value.ToString());
 			}
 		}
 
@@ -54,12 +54,12 @@ namespace DotNetNuke.Modules.ActiveForums
 		{
 			get
 			{
-				return GetIntegerSetting(SettingKeys.PageSize, 20);
+				return Settings.GetInt(SettingKeys.PageSize, 20);
 			}
 			set
 			{
 				Settings[SettingKeys.PageSize] = value;
-				objModules.UpdateModuleSetting(ModuleId, SettingKeys.PageSize, value.ToString());
+				_objModules.UpdateModuleSetting(ModuleId, SettingKeys.PageSize, value.ToString());
 			}
 		}
 
@@ -67,12 +67,12 @@ namespace DotNetNuke.Modules.ActiveForums
 		{
 			get
 			{
-				return GetIntegerSetting(SettingKeys.FloodInterval, 0);
+                return Settings.GetInt(SettingKeys.FloodInterval);
 			}
 			set
 			{
 				Settings[SettingKeys.FloodInterval] = value;
-				objModules.UpdateModuleSetting(ModuleId, SettingKeys.FloodInterval, value.ToString());
+				_objModules.UpdateModuleSetting(ModuleId, SettingKeys.FloodInterval, value.ToString());
 			}
 		}
 
@@ -80,12 +80,12 @@ namespace DotNetNuke.Modules.ActiveForums
 		{
 			get
 			{
-				return GetIntegerSetting(SettingKeys.EditInterval, 0);
+                return Settings.GetInt(SettingKeys.EditInterval);
 			}
 			set
 			{
 				Settings[SettingKeys.EditInterval] = value;
-				objModules.UpdateModuleSetting(ModuleId, SettingKeys.EditInterval, value.ToString());
+				_objModules.UpdateModuleSetting(ModuleId, SettingKeys.EditInterval, value.ToString());
 			}
 		}
 
@@ -93,12 +93,12 @@ namespace DotNetNuke.Modules.ActiveForums
 		{
 			get
 			{
-				return GetBooleanSetting(SettingKeys.EnableAutoLink, true);
+                return Settings.GetBoolean(SettingKeys.EnableAutoLink, true);
 			}
 			set
 			{
 				Settings[SettingKeys.EnableAutoLink] = value;
-				objModules.UpdateModuleSetting(ModuleId, SettingKeys.EnableAutoLink, value.ToString());
+				_objModules.UpdateModuleSetting(ModuleId, SettingKeys.EnableAutoLink, value.ToString());
 			}
 		}
 
@@ -106,12 +106,12 @@ namespace DotNetNuke.Modules.ActiveForums
 		{
 			get
 			{
-				return GetIntegerSetting(SettingKeys.DeleteBehavior, 0);
+                return Settings.GetInt(SettingKeys.DeleteBehavior);
 			}
 			set
 			{
 				Settings[SettingKeys.DeleteBehavior] = value;
-				objModules.UpdateModuleSetting(ModuleId, SettingKeys.DeleteBehavior, value.ToString());
+				_objModules.UpdateModuleSetting(ModuleId, SettingKeys.DeleteBehavior, value.ToString());
 			}
 		}
 
@@ -119,12 +119,12 @@ namespace DotNetNuke.Modules.ActiveForums
 		{
 			get
 			{
-				return GetStringSetting(SettingKeys.AddThisAccount, string.Empty);
+				return Settings.GetString(SettingKeys.AddThisAccount, string.Empty);
 			}
 			set
 			{
 				Settings[SettingKeys.AddThisAccount] = value;
-				objModules.UpdateModuleSetting(ModuleId, SettingKeys.AddThisAccount, value);
+				_objModules.UpdateModuleSetting(ModuleId, SettingKeys.AddThisAccount, value);
 			}
 		}
 
@@ -132,12 +132,12 @@ namespace DotNetNuke.Modules.ActiveForums
 		{
 			get
 			{
-				return GetIntegerSetting(SettingKeys.ProfileType, 1);
+				return Settings.GetInt(SettingKeys.ProfileType, 1);
 			}
 			set
 			{
 				Settings[SettingKeys.ProfileType] = value;
-				objModules.UpdateModuleSetting(ModuleId, SettingKeys.ProfileType, value.ToString());
+				_objModules.UpdateModuleSetting(ModuleId, SettingKeys.ProfileType, value.ToString());
 			}
 		}
 
@@ -145,12 +145,12 @@ namespace DotNetNuke.Modules.ActiveForums
         {
             get
             {
-                return GetIntegerSetting(SettingKeys.PMType, 0);
+                return Settings.GetInt(SettingKeys.PMType);
             }
             set
             {
                 Settings[SettingKeys.PMType] = value;
-                objModules.UpdateModuleSetting(ModuleId, SettingKeys.PMType, value.ToString());
+                _objModules.UpdateModuleSetting(ModuleId, SettingKeys.PMType, value.ToString());
             }
         }
 
@@ -158,12 +158,12 @@ namespace DotNetNuke.Modules.ActiveForums
         {
             get
             {
-                return GetIntegerSetting(SettingKeys.PMTabId, 0);
+                return Settings.GetInt(SettingKeys.PMTabId);
             }
             set
             {
                 Settings[SettingKeys.PMTabId] = value;
-                objModules.UpdateModuleSetting(ModuleId, SettingKeys.PMTabId, value.ToString());
+                _objModules.UpdateModuleSetting(ModuleId, SettingKeys.PMTabId, value.ToString());
             }
         }
 
@@ -171,12 +171,12 @@ namespace DotNetNuke.Modules.ActiveForums
 		{
 			get
 			{
-				return GetIntegerSetting(SettingKeys.AllowSignatures, 1);
+                return Settings.GetInt(SettingKeys.AllowSignatures, 1);
 			}
 			set
 			{
 				Settings[SettingKeys.AllowSignatures] = value;
-				objModules.UpdateModuleSetting(ModuleId, SettingKeys.AllowSignatures, value.ToString());
+				_objModules.UpdateModuleSetting(ModuleId, SettingKeys.AllowSignatures, value.ToString());
 			}
 		}
 
@@ -184,12 +184,12 @@ namespace DotNetNuke.Modules.ActiveForums
 		{
 			get
 			{
-				return GetStringSetting(SettingKeys.UserNameDisplay, "Username");
+				return Settings.GetString(SettingKeys.UserNameDisplay, "Username");
 			}
 			set
 			{
 				Settings[SettingKeys.UserNameDisplay] = value;
-				objModules.UpdateModuleSetting(ModuleId, SettingKeys.UserNameDisplay, value);
+				_objModules.UpdateModuleSetting(ModuleId, SettingKeys.UserNameDisplay, value);
 			}
 		}
 
@@ -197,12 +197,12 @@ namespace DotNetNuke.Modules.ActiveForums
 		{
 			get
 			{
-				return GetBooleanSetting(SettingKeys.EnableURLRewriter, false);
+				return Settings.GetBoolean(SettingKeys.EnableURLRewriter);
 			}
 			set
 			{
 				Settings[SettingKeys.EnableURLRewriter] = value;
-				objModules.UpdateModuleSetting(ModuleId, SettingKeys.EnableURLRewriter, value.ToString());
+				_objModules.UpdateModuleSetting(ModuleId, SettingKeys.EnableURLRewriter, value.ToString());
 			}
 		}
 
@@ -210,24 +210,25 @@ namespace DotNetNuke.Modules.ActiveForums
 		{
 			get
 			{
-				return GetStringSetting(SettingKeys.PrefixURLBase, "forums");
+				return Settings.GetString(SettingKeys.PrefixURLBase, "forums");
 			}
 			set
 			{
 				Settings[SettingKeys.PrefixURLBase] = value;
-				objModules.UpdateModuleSetting(ModuleId, SettingKeys.PrefixURLBase, value);
+				_objModules.UpdateModuleSetting(ModuleId, SettingKeys.PrefixURLBase, value);
 			}
 		}
+
 		public string PrefixURLTag
 		{
 			get
 			{
-				return GetStringSetting(SettingKeys.PrefixURLTags, "tag");
+				return Settings.GetString(SettingKeys.PrefixURLTags, "tag");
 			}
 			set
 			{
 				Settings[SettingKeys.PrefixURLTags] = value;
-				objModules.UpdateModuleSetting(ModuleId, SettingKeys.PrefixURLTags, value);
+				_objModules.UpdateModuleSetting(ModuleId, SettingKeys.PrefixURLTags, value);
 			}
 		}
 
@@ -235,12 +236,12 @@ namespace DotNetNuke.Modules.ActiveForums
 		{
 			get
 			{
-				return GetStringSetting(SettingKeys.PrefixURLCategories, "category");
+                return Settings.GetString(SettingKeys.PrefixURLCategories, "category");
 			}
 			set
 			{
 				Settings[SettingKeys.PrefixURLCategories] = value;
-				objModules.UpdateModuleSetting(ModuleId, SettingKeys.PrefixURLCategories, value);
+				_objModules.UpdateModuleSetting(ModuleId, SettingKeys.PrefixURLCategories, value);
 			}
 		}
 
@@ -248,12 +249,12 @@ namespace DotNetNuke.Modules.ActiveForums
 		{
 			get
 			{
-				return GetStringSetting(SettingKeys.PrefixURLOther, "views");
+                return Settings.GetString(SettingKeys.PrefixURLOther, "views");
 			}
 			set
 			{
 				Settings[SettingKeys.PrefixURLOther] = value;
-				objModules.UpdateModuleSetting(ModuleId, SettingKeys.PrefixURLOther, value);
+				_objModules.UpdateModuleSetting(ModuleId, SettingKeys.PrefixURLOther, value);
 			}
 		}
 
@@ -261,12 +262,12 @@ namespace DotNetNuke.Modules.ActiveForums
 		{
 			get
 			{
-				return GetBooleanSetting(SettingKeys.FullText, false);
+                return Settings.GetBoolean(SettingKeys.FullText);
 			}
 			set
 			{
 				Settings[SettingKeys.FullText] = value;
-				objModules.UpdateModuleSetting(ModuleId, SettingKeys.FullText, value.ToString());
+				_objModules.UpdateModuleSetting(ModuleId, SettingKeys.FullText, value.ToString());
 			}
 		}
 
@@ -274,12 +275,12 @@ namespace DotNetNuke.Modules.ActiveForums
 		{
 			get
 			{
-				return GetBooleanSetting(SettingKeys.MailQueue, false);
+				return Settings.GetBoolean(SettingKeys.MailQueue);
 			}
 			set
 			{
 				Settings[SettingKeys.MailQueue] = value;
-				objModules.UpdateModuleSetting(ModuleId, SettingKeys.MailQueue, value.ToString());
+				_objModules.UpdateModuleSetting(ModuleId, SettingKeys.MailQueue, value.ToString());
 			}
 		}
 
@@ -287,12 +288,12 @@ namespace DotNetNuke.Modules.ActiveForums
 		{
 			get
 			{
-				return GetBooleanSetting(SettingKeys.EnablePoints, false);
+				return Settings.GetBoolean(SettingKeys.EnablePoints);
 			}
 			set
 			{
 				Settings[SettingKeys.EnablePoints] = value;
-				objModules.UpdateModuleSetting(ModuleId, SettingKeys.EnablePoints, value.ToString());
+				_objModules.UpdateModuleSetting(ModuleId, SettingKeys.EnablePoints, value.ToString());
 			}
 		}
 
@@ -300,12 +301,12 @@ namespace DotNetNuke.Modules.ActiveForums
 		{
 			get
 			{
-				return GetIntegerSetting(SettingKeys.TopicPointValue, 1);
+				return Settings.GetInt(SettingKeys.TopicPointValue, 1);
 			}
 			set
 			{
 				Settings[SettingKeys.TopicPointValue] = value;
-				objModules.UpdateModuleSetting(ModuleId, SettingKeys.TopicPointValue, value.ToString());
+				_objModules.UpdateModuleSetting(ModuleId, SettingKeys.TopicPointValue, value.ToString());
 			}
 		}
 
@@ -313,12 +314,12 @@ namespace DotNetNuke.Modules.ActiveForums
 		{
 			get
 			{
-				return GetIntegerSetting(SettingKeys.ReplyPointValue, 1);
+				return Settings.GetInt(SettingKeys.ReplyPointValue, 1);
 			}
 			set
 			{
 				Settings[SettingKeys.ReplyPointValue] = value;
-				objModules.UpdateModuleSetting(ModuleId, SettingKeys.ReplyPointValue, value.ToString());
+				_objModules.UpdateModuleSetting(ModuleId, SettingKeys.ReplyPointValue, value.ToString());
 			}
 		}
 
@@ -326,12 +327,12 @@ namespace DotNetNuke.Modules.ActiveForums
 		{
 			get
 			{
-				return GetIntegerSetting(SettingKeys.AnswerPointValue, 1);
+                return Settings.GetInt(SettingKeys.AnswerPointValue, 1);
 			}
 			set
 			{
 				Settings[SettingKeys.AnswerPointValue] = value;
-				objModules.UpdateModuleSetting(ModuleId, SettingKeys.AnswerPointValue, value.ToString());
+				_objModules.UpdateModuleSetting(ModuleId, SettingKeys.AnswerPointValue, value.ToString());
 			}
 		}
 
@@ -339,12 +340,12 @@ namespace DotNetNuke.Modules.ActiveForums
 		{
 			get
 			{
-				return GetIntegerSetting(SettingKeys.MarkAnswerPointValue, 1);
+                return Settings.GetInt(SettingKeys.MarkAnswerPointValue, 1);
 			}
 			set
 			{
 				Settings[SettingKeys.MarkAnswerPointValue] = value;
-				objModules.UpdateModuleSetting(ModuleId, SettingKeys.MarkAnswerPointValue, value.ToString());
+				_objModules.UpdateModuleSetting(ModuleId, SettingKeys.MarkAnswerPointValue, value.ToString());
 			}
 		}
 
@@ -352,12 +353,12 @@ namespace DotNetNuke.Modules.ActiveForums
 		{
 			get
 			{
-				return GetIntegerSetting(SettingKeys.ModPointValue, 1);
+                return Settings.GetInt(SettingKeys.ModPointValue, 1);
 			}
 			set
 			{
 				Settings[SettingKeys.ModPointValue] = value;
-				objModules.UpdateModuleSetting(ModuleId, SettingKeys.ModPointValue, value.ToString());
+				_objModules.UpdateModuleSetting(ModuleId, SettingKeys.ModPointValue, value.ToString());
 			}
 		}
 
@@ -365,13 +366,13 @@ namespace DotNetNuke.Modules.ActiveForums
 		{
 			get
 			{
-				return GetIntegerSetting("ForumGroupTemplate", -1);
+                return Settings.GetInt("ForumGroupTemplate", -1);
 			}
 			set
 			{
 				Settings["ForumGroupTemplate"] = value;
 				//Use Tab Module Setting
-				objModules.UpdateTabModuleSetting(TabModuleId, "ForumGroupTemplate", value.ToString());
+				_objModules.UpdateTabModuleSetting(TabModuleId, "ForumGroupTemplate", value.ToString());
 			}
 		}
 
@@ -379,78 +380,66 @@ namespace DotNetNuke.Modules.ActiveForums
 		{
 			get
 			{
-				return GetStringSetting("ForumConfig", string.Empty);
+				return Settings.GetString("ForumConfig", string.Empty);
 			}
 			set
 			{
 				Settings["ForumConfig"] = value;
-				objModules.UpdateTabModuleSetting(TabModuleId, "ForumConfig", value);
+				_objModules.UpdateTabModuleSetting(TabModuleId, "ForumConfig", value);
 			}
 		}
+
 		public int AvatarHeight
 		{
 			get
 			{
-				return GetIntegerSetting(SettingKeys.AvatarHeight, 48);
+                return Settings.GetInt(SettingKeys.AvatarHeight, 48);
 			}
 			set
 			{
 				Settings[SettingKeys.AvatarHeight] = value.ToString();
-				objModules.UpdateModuleSetting(ModuleId, SettingKeys.AvatarHeight, value.ToString());
+				_objModules.UpdateModuleSetting(ModuleId, SettingKeys.AvatarHeight, value.ToString());
 			}
 		}
+
 		public int AvatarWidth
 		{
 			get
 			{
-				return GetIntegerSetting(SettingKeys.AvatarWidth, 48);
+                return Settings.GetInt(SettingKeys.AvatarWidth, 48);
 			}
 			set
 			{
 				Settings[SettingKeys.AvatarWidth] = value.ToString();
-				objModules.UpdateModuleSetting(ModuleId, SettingKeys.AvatarWidth, value.ToString());
+				_objModules.UpdateModuleSetting(ModuleId, SettingKeys.AvatarWidth, value.ToString());
 			}
 		}
-		public int GetIntegerSetting(string key, int defaultValue)
-		{
-			if (Settings.ContainsKey(key))
-			{
-				if (SimulateIsNumeric.IsNumeric(Settings[key]))
-				{
-					return Convert.ToInt32(Settings[key].ToString());
-				}
-				else
-				{
-					return defaultValue;
-				}
-			}
-			else
-			{
-				return defaultValue;
-			}
-		}
-		public bool GetBooleanSetting(string key, bool defaultValue)
-		{
-			if (Settings.ContainsKey(key))
-			{
-				return Convert.ToBoolean(Settings[key]);
-			}
-			else
-			{
-				return defaultValue;
-			}
-		}
-		public string GetStringSetting(string key, string defaultValue)
-		{
-			if (Settings.ContainsKey(key))
-			{
-				return Settings[key].ToString();
-			}
-			else
-			{
-				return defaultValue;
-			}
-		}
+
+        public bool EnableUsersOnline
+        {
+            get
+            {
+                return Settings.GetBoolean(SettingKeys.UsersOnlineEnabled);
+            }
+            set
+            {
+                Settings[SettingKeys.UsersOnlineEnabled] = value;
+                _objModules.UpdateModuleSetting(ModuleId, SettingKeys.UsersOnlineEnabled, value.ToString());
+            }
+        }
+
+        public bool UseSkinBreadCrumb
+        {
+            get
+            {
+                return Settings.GetBoolean(SettingKeys.UseSkinBreadCrumb);
+            }
+            set
+            {
+                Settings[SettingKeys.UseSkinBreadCrumb] = value;
+                _objModules.UpdateModuleSetting(ModuleId, SettingKeys.UseSkinBreadCrumb, value.ToString());
+            }
+        }
 	}
 }
 

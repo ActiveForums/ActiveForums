@@ -1,11 +1,14 @@
 namespace DotNetNuke.Modules.ActiveForums
 {
-	public enum AttachStores: int
+    #region Enumerations
+
+    public enum AttachStores
 	{
 		FILESYSTEM,
 		DATABASE
 	}
-	public enum CurrentUserTypes: int
+
+	public enum CurrentUserTypes
 	{
 		Anon,
 		Auth,
@@ -13,13 +16,15 @@ namespace DotNetNuke.Modules.ActiveForums
 		Admin,
 		SuperUser
 	}
-	public enum EditorTypes: int
+
+	public enum EditorTypes
 	{
 		TEXTBOX,
 		ACTIVEEDITOR,
 		HTMLEDITORPROVIDER
 	}
-	public enum HTMLPermittedUsers: int
+
+	public enum HTMLPermittedUsers
 	{
 		AllUsers,
 		AuthenticatedUsers,
@@ -27,55 +32,79 @@ namespace DotNetNuke.Modules.ActiveForums
 		Moderators,
 		Administrators
 	}
-	public enum AvatarTypes: int
+
+	public enum AvatarTypes
 	{
 		LocalFile,
 		ExternalLink,
 		MultipleLocalFile,
 		MultipleExternalLink
 	}
-	public enum SubscriptionTypes: int
+
+	public enum SubscriptionTypes
 	{
 		Disabled,
 		Instant,
 		DailyDigest,
 		WeeklyDigest
 	}
-	public enum TopicTypes: int
+
+	public enum TopicTypes
 	{
 		Topic,
 		Poll
 	}
-	public enum EmailFormats: int
+
+	public enum EmailFormats
 	{
 		HTML,
 		PlainText
 	}
-	public enum ProfileTypes: int
+
+	public enum ProfileTypes
 	{
 		Disabled,
 		Basic,
 		Advanced,
 		Social
 	}
-	public enum PMTypes: int
+
+	public enum PMTypes
 	{
 		Disabled = 0,
 		Core = 1,
 		Ventrian = 2
 		//Social = 3
 	}
-	public enum SpecialTokenTypes: int
+
+	public enum SpecialTokenTypes
 	{
 		AddThis //http://www.addthis.com
-
 	}
-	public enum TrustTypes: int
+
+	public enum TrustTypes
 	{
 		NotTrusted,
 		Trusted
 	}
-	public class Globals
+
+    public enum ConfirmActions
+    {
+        TopicSaved,
+        TopicDeleted,
+        ReplySaved,
+        ReplyDeleted,
+        MessagePending,
+        MessageMoved,
+        MessageDeleted,
+        SendToComplete,
+        SendToFailed,
+        AlertSent
+    }
+
+    #endregion
+
+    public class Globals
 	{
 		public static string DefaultAnonRoles
 		{
@@ -218,6 +247,7 @@ namespace DotNetNuke.Modules.ActiveForums
 		public const string ActiveSocialTopicsOnly = "AMASTO";
 		public const string ActiveSocialSecurityOption = "AMASSEC";
 
+        /*
 		public const string MCEnabled = "MCENABLED";
 		public const string MCUrl = "MCURL";
 		public const string MCAddress = "MCADDRESS";
@@ -234,8 +264,10 @@ namespace DotNetNuke.Modules.ActiveForums
 		public const string MCEOMTag = "MCEOMTAG";
 		public const string MCEOMTagRequired = "MCEOMTAGREQ";
 		public const string MCRemoveHTML = "MCSTRIPHTML";
+        */
 
 	}
+
 	public class ParamKeys
 	{
 		public const string ForumId = "aff";
@@ -253,6 +285,7 @@ namespace DotNetNuke.Modules.ActiveForums
 		public const string Tags = "aftg";
 		public const string FirstNewPost = "afnp";
 	}
+
 	public class Views
 	{
 		public const string Topics = "topicsview";
@@ -261,6 +294,7 @@ namespace DotNetNuke.Modules.ActiveForums
 		public const string TopicNew = "topicnew";
 		public const string TopicEdit = "topicedit";
 	}
+
 	public class CacheKeys
 	{
 		public const string Rewards = "afrwd{0}";
@@ -273,20 +307,9 @@ namespace DotNetNuke.Modules.ActiveForums
 		public const string ProfileTemplate = "afpit{0}";
 		public const string ForumList = "affl{0}";
 	}
-	public enum ConfirmActions: int
-	{
-		TopicSaved,
-		TopicDeleted,
-		ReplySaved,
-		ReplyDeleted,
-		MessagePending,
-		MessageMoved,
-		MessageDeleted,
-		SendToComplete,
-		SendToFailed,
-		AlertSent
 
-	}
+
+
 	public class SortColumns
 	{
 		public const string ReplyCreated = "ReplyCreated";

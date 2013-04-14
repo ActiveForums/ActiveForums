@@ -103,6 +103,24 @@ namespace DotNetNuke.Modules.ActiveForums.Controls {
         protected global::DotNetNuke.Web.UI.WebControls.DnnNumericTextBox txtPageSize;
         
         /// <summary>
+        /// lblUseSkinBreadCrumb control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UserControl lblUseSkinBreadCrumb;
+        
+        /// <summary>
+        /// rdUseSkinBreadCrumb control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButtonList rdUseSkinBreadCrumb;
+        
+        /// <summary>
         /// lblFloodInterval control.
         /// </summary>
         /// <remarks>
@@ -308,6 +326,24 @@ namespace DotNetNuke.Modules.ActiveForums.Controls {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList drpUserDisplayMode;
+        
+        /// <summary>
+        /// lblUsersOnline control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UserControl lblUsersOnline;
+        
+        /// <summary>
+        /// rdUsersOnline control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButtonList rdUsersOnline;
         
         /// <summary>
         /// lblPoints control.

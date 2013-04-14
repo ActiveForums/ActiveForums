@@ -429,4 +429,16 @@
   <data name="ControlTitle_settings.Text" xml:space="preserve">
     <value>Active Forums Settings</value>
   </data>
+  <data name="UsersOnline.Help" xml:space="preserve">
+    <value>Enable or disable the display of users currently using the forum module.</value>
+  </data>
+  <data name="UsersOnline.Text" xml:space="preserve">
+    <value>Enable Users Online Display</value>
+  </data>
+  <data name="UseSkinBreadCrumb.Help" xml:space="preserve">
+    <value>Use the skin breadcrumb for the top breadcrumb display rather than the AF breadcrumb.  Note that this setting does not affect the bottom AF breadcrumb.</value>
+  </data>
+  <data name="UseSkinBreadCrumb.Text" xml:space="preserve">
+    <value>Use Skin Breadcrumb</value>
+  </data>
 </root>

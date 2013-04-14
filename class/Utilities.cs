@@ -1407,6 +1407,32 @@ namespace DotNetNuke.Modules.ActiveForums
         {
             return value == null ? defaultValue : value.ToString();
         }
+
+        public static void SelectListItemByValue(ListControl dropDownList, object value)
+        {
+            if (dropDownList == null)
+                return;
+
+            dropDownList.ClearSelection();
+
+            var selectedItem = dropDownList.Items.FindByValue(value == null ? string.Empty : value.ToString());
+
+            if (selectedItem != null)
+                selectedItem.Selected = true;
+        }
+
+        public static void SelectListItemByValue(ListControl dropDownList, object value, object defaultValue)
+        {
+            if (dropDownList == null)
+                return;
+
+            dropDownList.ClearSelection();
+
+            var selectedItem = dropDownList.Items.FindByValue(value == null ? (defaultValue == null ? string.Empty : defaultValue.ToString()) : value.ToString());
+
+            if (selectedItem != null)
+                selectedItem.Selected = true;
+        }
     }
 
 }

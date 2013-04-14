@@ -42,6 +42,13 @@
 			<dnn:label ID="lblDefaultPageSize" runat="server" resourcekey="DefaultPageSize" Suffix=":" />
 			<dnn:DnnNumericTextBox id="txtPageSize" MinValue="5" MaxValue="200" Width="50" Type="0" ShowSpinButtons="True" runat="server" />
 		</div>
+        <div class="dnnFormItem">
+			<dnn:label ID="lblUseSkinBreadCrumb" runat="server" resourcekey="UseSkinBreadCrumb" Suffix=":" />
+			<asp:RadioButtonList ID="rdUseSkinBreadCrumb" runat="server" RepeatDirection="Horizontal">
+				<asp:ListItem Value="True" resourcekey="Yes" />
+				<asp:ListItem Value="False" resourcekey="No" />
+			</asp:RadioButtonList>
+        </div>
 	</fieldset>
 	<h2 id="H1" class="dnnFormSectionHead"><a href="" class="dnnSectionExpanded"><%=LocalizeString("ContentOptions")%></a></h2>
 	<fieldset>
@@ -117,11 +124,18 @@
 									<asp:ListItem Value="Displayname" resourcekey="DisplayName" />
 									</asp:DropDownList>
 		</div>
+        <div class="dnnFormItem">
+			<dnn:label ID="lblUsersOnline" runat="server" resourcekey="UsersOnline" Suffix=":" />
+			<asp:RadioButtonList ID="rdUsersOnline" runat="server" RepeatDirection="Horizontal">
+				<asp:ListItem Value="True" resourcekey="Yes" />
+				<asp:ListItem Value="False" resourcekey="No" />
+			</asp:RadioButtonList>
+        </div>
 		<div class="dnnFormItem">
 			<dnn:label ID="lblPoints" runat="server" resourcekey="EnablePoints" Suffix=":" />
 			<asp:RadioButtonList ID="rdPoints" runat="server" RepeatDirection="Horizontal">
-				<asp:ListItem Value="true" resourcekey="Yes" />
-				<asp:ListItem Value="false" resourcekey="No" />
+				<asp:ListItem Value="True" resourcekey="Yes" />
+				<asp:ListItem Value="False" resourcekey="No" />
 			</asp:RadioButtonList>
 			<div class="pointOptions">
 				<div class="dnnFormItem">
@@ -239,12 +253,12 @@
 		});
 
 		var pointsSelected = $("#<%=rdPoints.ClientID%> input:checked").val();
-		if (pointsSelected == 'true') {
+		if (pointsSelected == 'True') {
 			$('.pointOptions').show();
 		}
 		$('#<%=rdPoints.ClientID%> input').click(function() {
 			var selected = $("#<%=rdPoints.ClientID%> input:checked").val();
-			if (selected == 'true') {
+			if (selected == 'True') {
 				$('.pointOptions').show();
 			}else{
 				$('.pointOptions').hide();

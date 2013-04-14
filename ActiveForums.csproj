@@ -657,6 +657,7 @@
     </Content>
     <Content Include="config\templates\ForumView-4.3.txt" />
     <Content Include="viewer.aspx" />
+    <Compile Include="class\HashtableExtensions.cs" />
     <Compile Include="class\DataRowExtensions.cs" />
     <Compile Include="class\DataRecordExtensions.cs" />
     <Compile Include="class\ParamBuilder.cs" />

@@ -302,15 +302,16 @@ namespace DotNetNuke.Modules.ActiveForums
 
 	public class ForumGroupController
 	{
-		public void Group_Delete(int ModuleId, int ForumGroupId)
+		public void Group_Delete(int moduleId, int forumGroupId)
 		{
-			DataProvider.Instance().Groups_Delete(ModuleId, ForumGroupId);
+			DataProvider.Instance().Groups_Delete(moduleId, forumGroupId);
 		}
-		public ForumGroupInfo GetForumGroup(int ModuleId, int ForumGroupid)
+
+		public ForumGroupInfo GetForumGroup(int moduleId, int forumGroupId)
 		{
 			var db = new Data.Groups();
 			ForumGroupInfo gi = null;
-			using (IDataReader dr = db.Groups_Get(ModuleId, ForumGroupid))
+			using (var dr = db.Groups_Get(moduleId, forumGroupId))
 			{
 				while (dr.Read())
 				{
@@ -320,113 +321,117 @@ namespace DotNetNuke.Modules.ActiveForums
 			}
 			return gi;
 		}
-		private ForumGroupInfo FillForumGroup(IDataRecord dr)
+
+		private static ForumGroupInfo FillForumGroup(IDataRecord dr)
 		{
 			var g = new ForumGroupInfo
 			            {
-			                Active = Convert.ToBoolean(dr["Active"]),
-			                ForumGroupId = Convert.ToInt32(dr["ForumGroupId"].ToString()),
-			                Hidden = Convert.ToBoolean(dr["Hidden"]),
-			                GroupName = dr["GroupName"].ToString(),
-			                SortOrder = Convert.ToInt32(dr["SortOrder"].ToString()),
-			                GroupSettingsKey = dr["GroupSettingsKey"].ToString(),
-			                PermissionsId = Convert.ToInt32(dr["PermissionsId"].ToString()),
-			                PrefixURL = dr["PrefixURL"].ToString(),
-			                ModuleId = Convert.ToInt32(dr["ModuleId"].ToString()),
+			                Active = dr.GetBoolean("Active"),
+			                ForumGroupId = dr.GetInt("ForumGroupId"),
+			                Hidden = dr.GetBoolean("Hidden"),
+			                GroupName = dr.GetString("GroupName"),
+			                SortOrder = dr.GetInt("SortOrder"),
+			                GroupSettingsKey = dr.GetString("GroupSettingsKey"),
+			                PermissionsId = dr.GetInt("PermissionsId"),
+			                PrefixURL = dr.GetString("PrefixURL"),
+			                ModuleId = dr.GetInt("ModuleId"),
 			                Security =
 			                    {
-			                        Announce = dr["CanAnnounce"].ToString(),
-			                        Attach = dr["CanAttach"].ToString(),
-			                        Create = dr["CanCreate"].ToString(),
-			                        Delete = dr["CanDelete"].ToString(),
-			                        Edit = dr["CanEdit"].ToString(),
-			                        Lock = dr["CanLock"].ToString(),
-			                        ModApprove = dr["CanModApprove"].ToString(),
-			                        ModDelete = dr["CanModDelete"].ToString(),
-			                        ModEdit = dr["CanModEdit"].ToString(),
-			                        ModLock = dr["CanModLock"].ToString(),
-			                        ModMove = dr["CanModMove"].ToString(),
-			                        ModPin = dr["CanModPin"].ToString(),
-			                        ModSplit = dr["CanModSplit"].ToString(),
-			                        ModUser = dr["CanModUser"].ToString(),
-			                        Pin = dr["CanPin"].ToString(),
-			                        Poll = dr["CanPoll"].ToString(),
-			                        Block = dr["CanBlock"].ToString(),
-			                        Read = dr["CanRead"].ToString(),
-			                        Reply = dr["CanReply"].ToString(),
-			                        Subscribe = dr["CanSubscribe"].ToString(),
-			                        Trust = dr["CanTrust"].ToString(),
-			                        View = dr["CanView"].ToString(),
-			                        Tag = dr["CanTag"].ToString(),
-			                        Prioritize = dr["CanPrioritize"].ToString(),
-			                        Categorize = dr["CanCategorize"].ToString()
+			                        Announce =  dr.GetString("CanAnnounce"),
+			                        Attach = dr.GetString("CanAttach"),
+			                        Create = dr.GetString("CanCreate"),
+			                        Delete = dr.GetString("CanDelete"),
+			                        Edit = dr.GetString("CanEdit"),
+			                        Lock = dr.GetString("CanLock"),
+			                        ModApprove = dr.GetString("CanModApprove"),
+			                        ModDelete = dr.GetString("CanModDelete"),
+			                        ModEdit = dr.GetString("CanModEdit"),
+			                        ModLock = dr.GetString("CanModLock"),
+			                        ModMove = dr.GetString("CanModMove"),
+			                        ModPin = dr.GetString("CanModPin"),
+			                        ModSplit = dr.GetString("CanModSplit"),
+			                        ModUser = dr.GetString("CanModUser"),
+			                        Pin = dr.GetString("CanPin"),
+			                        Poll = dr.GetString("CanPoll"),
+			                        Block = dr.GetString("CanBlock"),
+			                        Read = dr.GetString("CanRead"),
+			                        Reply = dr.GetString("CanReply"),
+			                        Subscribe = dr.GetString("CanSubscribe"),
+			                        Trust = dr.GetString("CanTrust"),
+			                        View = dr.GetString("CanView"),
+			                        Tag = dr.GetString("CanTag"),
+			                        Prioritize = dr.GetString("CanPrioritize"),
+			                        Categorize = dr.GetString("CanCategorize")
 			                    }
 			            };
 
 		    return g;
 		}
-		public ForumGroupInfo Groups_Get(int ModuleID, int ForumGroupID)
+
+		public ForumGroupInfo Groups_Get(int moduleID, int forumGroupID)
 		{
-			ForumGroupInfo gi = GetForumGroup(ModuleID, ForumGroupID);
-			//gi.GroupSecurity = DataCache.GetSecurity(ModuleID, gi.ForumGroupId, SecureType.ForumGroup)
-			gi.GroupSettings = DataCache.GetSettings(ModuleID, gi.GroupSettingsKey, string.Format(CacheKeys.GroupInfo, ForumGroupID), false);
+			var gi = GetForumGroup(moduleID, forumGroupID);
+			gi.GroupSettings = DataCache.GetSettings(moduleID, gi.GroupSettingsKey, string.Format(CacheKeys.GroupInfo, forumGroupID), false);
 			return gi;
 		}
-		public ArrayList Groups_List(int ModuleId, bool FillSettings = false, bool FillSecurity = false)
+
+		public ArrayList Groups_List(int moduleId, bool fillSettings = false)
 		{
-			ArrayList groupArr = CBO.FillCollection(DataProvider.Instance().Groups_List(ModuleId), typeof(ForumGroupInfo));
-			if (FillSettings == false || FillSecurity == false)
-			{
+			var groupArr = CBO.FillCollection(DataProvider.Instance().Groups_List(moduleId), typeof(ForumGroupInfo));
+			
+            if (fillSettings == false)
 				return groupArr;
-			}
-			ForumGroupInfo gi;
-			int i;
+
+		    int i;
 			for (i = 0; i < groupArr.Count; i++)
 			{
-				gi = (ForumGroupInfo)(groupArr[i]);
-				//If FillSecurity Then
-				//    gi.GroupSecurity = DataCache.GetSecurity(ModuleId, gi.ForumGroupId, SecureType.ForumGroup)
-				//End If
-				if (FillSettings)
-				{
-					gi.GroupSettings = DataCache.GetSettings(ModuleId, gi.GroupSettingsKey, string.Format(CacheKeys.GroupInfo, gi.ForumGroupId), false);
-				}
+				var gi = groupArr[i] as ForumGroupInfo;
+                if(gi == null)
+                    continue;
+
+				gi.GroupSettings = DataCache.GetSettings(moduleId, gi.GroupSettingsKey, string.Format(CacheKeys.GroupInfo, gi.ForumGroupId), false);
+
 				groupArr[i] = gi;
 			}
 			return groupArr;
 		}
-		internal int Groups_Save(int PortalId, ForumGroupInfo fg)
+
+		internal int Groups_Save(int portalId, ForumGroupInfo fg)
 		{
-			return Groups_Save(PortalId, fg, false);
+			return Groups_Save(portalId, fg, false);
 		}
-		public int Groups_Save(int PortalId, ForumGroupInfo fg, bool IsNew)
+
+		public int Groups_Save(int portalId, ForumGroupInfo fg, bool isNew)
 		{
 			var rc = new Security.Roles.RoleController();
-			Security.Roles.RoleInfo ri;
-			var db = new Data.Common();
-			int permissionsId = -1;
+		    var db = new Data.Common();
+			
+            var permissionsId = -1;
 			if (fg.PermissionsId == -1)
 			{
-				ri = rc.GetRoleByName(PortalId, "Administrators");
-				if (ri != null)
+			    var ri = rc.GetRoleByName(portalId, "Administrators");
+			    if (ri != null)
 				{
 					fg.PermissionsId = db.CreatePermSet(ri.RoleID.ToString());
 					permissionsId = fg.PermissionsId;
 				}
 			}
-			int groupId = Convert.ToInt32(DataProvider.Instance().Groups_Save(PortalId, fg.ModuleId, fg.ForumGroupId, fg.GroupName, fg.SortOrder, fg.Active, fg.Hidden, fg.PermissionsId, fg.PrefixURL));
-			if (IsNew)
+		   
+            var groupId = DataProvider.Instance().Groups_Save(portalId, fg.ModuleId, fg.ForumGroupId, fg.GroupName, fg.SortOrder, fg.Active, fg.Hidden, fg.PermissionsId, fg.PrefixURL);
+			if (isNew)
 			{
-				Permissions.CreateDefaultSets(PortalId, permissionsId);
-				int moduleId = fg.ModuleId;
-				string sKey = "G:" + groupId.ToString();
+				Permissions.CreateDefaultSets(portalId, permissionsId);
+				var moduleId = fg.ModuleId;
+				var sKey = "G:" + groupId.ToString();
 				Settings.SaveSetting(moduleId, sKey, ForumSettingKeys.TopicsTemplateId, "0");
 				Settings.SaveSetting(moduleId, sKey, ForumSettingKeys.TopicTemplateId, "0");
 				Settings.SaveSetting(moduleId, sKey, ForumSettingKeys.TopicFormId, "0");
 				Settings.SaveSetting(moduleId, sKey, ForumSettingKeys.ReplyFormId, "0");
 				Settings.SaveSetting(moduleId, sKey, ForumSettingKeys.AllowRSS, "false");
 			}
+
 			DataCache.CacheClear(string.Format(CacheKeys.ForumList, fg.ModuleId));
+
 			return groupId;
 		}
 	}

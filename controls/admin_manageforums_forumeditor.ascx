@@ -1,6 +1,5 @@
 <%@ Control Language="C#" AutoEventWireup="false" CodeBehind="admin_manageforums_forumeditor.ascx.cs" Inherits="DotNetNuke.Modules.ActiveForums.admin_manageforums_forumeditor" %>
 <%@ Register Assembly="DotNetNuke.Modules.ActiveForums" Namespace="DotNetNuke.Modules.ActiveForums.Controls" TagPrefix="am" %>
-<%@ Register TagPrefix="dnn" TagName="Label" Src="~/controls/LabelControl.ascx" %>
 <script type="text/javascript">
     var afShell = document.getElementById('amcpcontainer');
     var imgOn = new Image();

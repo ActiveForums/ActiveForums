@@ -19,13 +19,10 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 
         public bool RequiredFieldValidator { get; set; }
 
-        public bool NumberSpinner { get; set; }
-
         #endregion
 
         public ScriptLoader()
         {
-            NumberSpinner = false;
             RequiredFieldValidator = false;
             DatePicker = false;
             Callback = false;
@@ -58,10 +55,6 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             if (RequiredFieldValidator && !(Page.ClientScript.IsClientScriptIncludeRegistered("AMValidation")))
             {
                 Page.ClientScript.RegisterClientScriptInclude("AMValidation", Page.ClientScript.GetWebResourceUrl(GetType(), "DotNetNuke.Modules.ActiveForums.CustomControls.Resources.Validation.js"));
-            }
-            if (!(Page.ClientScript.IsClientScriptIncludeRegistered("AMNumberSpinner")))
-            {
-                Page.ClientScript.RegisterClientScriptInclude("AMNumberSpinner", Page.ClientScript.GetWebResourceUrl(GetType(), "DotNetNuke.Modules.ActiveForums.CustomControls.Resources.NumberSpinner.js"));
             }
             if (!(Page.ClientScript.IsClientScriptIncludeRegistered("AMMenu")))
             {
