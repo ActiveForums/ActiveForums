@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-
-using DotNetNuke;
+﻿using DotNetNuke.Entities.Modules;
 
 namespace DotNetNuke.Modules.ActiveForums
 {
-	public class ForumSettingsBase : Entities.Modules.ModuleSettingsBase
+	public class ForumSettingsBase : ModuleSettingsBase
 	{
-		private readonly Entities.Modules.ModuleController _objModules = new Entities.Modules.ModuleController();
+		private readonly ModuleController _objModules = new ModuleController();
 
 		public string Mode
 		{
@@ -36,6 +31,32 @@ namespace DotNetNuke.Modules.ActiveForums
 				_objModules.UpdateModuleSetting(ModuleId, SettingKeys.Theme, value);
 			}
 		}
+
+        public string TimeFormatString
+        {
+            get
+            {
+                return Settings.GetString(SettingKeys.TimeFormatString, "h:mm tt");
+            }
+            set
+            {
+                Settings[SettingKeys.TimeFormatString] = value;
+                _objModules.UpdateModuleSetting(ModuleId, SettingKeys.TimeFormatString, value);
+            }
+        }
+
+        public string DateFormatString
+        {
+            get
+            {
+                return Settings.GetString(SettingKeys.DateFormatString, "MM/dd/yyyy");
+            }
+            set
+            {
+                Settings[SettingKeys.DateFormatString] = value;
+                _objModules.UpdateModuleSetting(ModuleId, SettingKeys.DateFormatString, value);
+            }
+        }
 
 		public int TemplateId
 		{

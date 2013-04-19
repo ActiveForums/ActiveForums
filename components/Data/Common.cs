@@ -1,6 +1,5 @@
 ﻿//© 2004 - 2010 ActiveModules, Inc. All Rights Reserved
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 
@@ -81,24 +80,37 @@ namespace DotNetNuke.Modules.ActiveForums.Data
 		}
 
 #endregion
-#region Views
-		public DataSet UI_ActiveView(int PortalId, int ModuleId, int UserId, int RowIndex, int MaxRows, string Sort, bool IsSuper, int TimeFrame, string ForumIds)
+
+    #region Views
+
+		public DataSet UI_ActiveView(int portalId, int moduleId, int userId, int rowIndex, int maxRows, string sort, int timeFrame, string forumIds)
 		{
-			return (DataSet)(SqlHelper.ExecuteDataset(_connectionString, dbPrefix + "UI_ActiveView", PortalId, ModuleId, UserId, RowIndex, MaxRows, Sort, IsSuper, TimeFrame, ForumIds));
+			return SqlHelper.ExecuteDataset(_connectionString, dbPrefix + "UI_ActiveView", portalId, moduleId, userId, rowIndex, maxRows, sort, timeFrame, forumIds);
 		}
-		public DataSet UI_NotReadView(int PortalId, int ModuleId, int UserId, int RowIndex, int MaxRows, string Sort, string ForumIds)
+
+		public DataSet UI_NotReadView(int portalId, int moduleId, int userId, int rowIndex, int maxRows, string sort, string forumIds)
 		{
-			return (DataSet)(SqlHelper.ExecuteDataset(_connectionString, dbPrefix + "UI_NotRead", PortalId, ModuleId, UserId, RowIndex, MaxRows, Sort, ForumIds));
+			return SqlHelper.ExecuteDataset(_connectionString, dbPrefix + "UI_NotRead", portalId, moduleId, userId, rowIndex, maxRows, sort, forumIds);
 		}
-		public DataSet UI_UnansweredView(int PortalId, int ModuleId, int UserId, int RowIndex, int MaxRows, string Sort, string ForumIds)
+
+		public DataSet UI_UnansweredView(int portalId, int moduleId, int userId, int rowIndex, int maxRows, string sort, string forumIds)
 		{
-			return (DataSet)(SqlHelper.ExecuteDataset(_connectionString, dbPrefix + "UI_UnansweredView", PortalId, ModuleId, UserId, RowIndex, MaxRows, Sort, ForumIds));
+			return SqlHelper.ExecuteDataset(_connectionString, dbPrefix + "UI_UnansweredView", portalId, moduleId, userId, rowIndex, maxRows, sort, forumIds);
 		}
-		public DataSet UI_TagsView(int PortalId, int ModuleId, int UserId, int RowIndex, int MaxRows, string Sort, string ForumIds, int TagId)
+
+		public DataSet UI_TagsView(int portalId, int moduleId, int userId, int rowIndex, int maxRows, string sort, string forumIds, int tagId)
 		{
-			return (DataSet)(SqlHelper.ExecuteDataset(_connectionString, dbPrefix + "UI_TagsView", PortalId, ModuleId, UserId, RowIndex, MaxRows, Sort, ForumIds, TagId));
+			return SqlHelper.ExecuteDataset(_connectionString, dbPrefix + "UI_TagsView", portalId, moduleId, userId, rowIndex, maxRows, sort, forumIds, tagId);
 		}
-#endregion
+
+        public DataSet UI_MyTopicsView(int portalId, int moduleId, int userId, int rowIndex, int maxRows, string sort, string forumIds)
+        {
+            return SqlHelper.ExecuteDataset(_connectionString, dbPrefix + "UI_MyTopicsView", portalId, moduleId, userId, rowIndex, maxRows, sort, forumIds);
+        }
+
+
+    #endregion
+
 #region TagCloud
 		public IDataReader TagCloud_Get(int PortalId, int ModuleId, string ForumIds, int Rows)
 		{

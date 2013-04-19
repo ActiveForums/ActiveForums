@@ -49,6 +49,14 @@
 				<asp:ListItem Value="False" resourcekey="No" />
 			</asp:RadioButtonList>
         </div>
+        <div class="dnnFormItem">
+			<dnn:Label ID="lblTimeFormat" resourcekey="TimeFormat" runat="server" Suffix=":" /> 
+			<asp:TextBox ID="txtTimeFormat" runat="server" Width="100" />
+		</div>
+        <div class="dnnFormItem">
+			<dnn:Label ID="lblDateFormat" resourcekey="DateFormat" runat="server" Suffix=":" /> 
+			<asp:TextBox ID="txtDateFormat" runat="server" Width="100" />
+		</div>
 	</fieldset>
 	<h2 id="H1" class="dnnFormSectionHead"><a href="" class="dnnSectionExpanded"><%=LocalizeString("ContentOptions")%></a></h2>
 	<fieldset>
@@ -86,6 +94,7 @@
 		<div class="dnnFormItem">
 			<dnn:label ID="lblProfileType" runat="server" resourcekey="ProfileType" Suffix=":" />
 			<asp:DropDownList ID="drpProfileType" runat="server">
+			    <asp:ListItem Value="0" resourcekey="ProfileDisabled" />
 				<asp:ListItem Value="1" resourcekey="DefaultProfile" />
 			</asp:DropDownList>
 		</div>

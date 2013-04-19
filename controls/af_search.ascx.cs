@@ -488,17 +488,14 @@ namespace DotNetNuke.Modules.ActiveForums
             var date = GetUserDate(Convert.ToDateTime(_currentRow["DateCreated"]));
             var currentDate = GetUserDate(DateTime.Now);
 
-            const string dateFormat = "M/d/yyyy"; // MainSettings.DateFormatString;
-            const string timeFormat = "h:mm tt"; // MainSettings.TimeFormatString;
-
-            var datePart = date.ToString(dateFormat);
+            var datePart = date.ToString(MainSettings.DateFormatString);
 
             if (currentDate.Date == date.Date)
                 datePart = GetSharedResource("Today");
             else if (currentDate.AddDays(-1).Date == date.Date)
                 datePart = GetSharedResource("Yesterday");
 
-            return string.Format(GetSharedResource("SearchPostTime"), datePart, date.ToString(timeFormat));
+            return string.Format(GetSharedResource("SearchPostTime"), datePart, date.ToString(MainSettings.TimeFormatString));
         }
 
         public string GetAuthorProfileUrl()
@@ -527,7 +524,7 @@ namespace DotNetNuke.Modules.ActiveForums
             return UserProfiles.GetDisplayName(ModuleId, userId, "none", userName, firstName, lastName, displayName);
         }
 
-        public string GetLastReplyAuthorName()
+        public string GetLastPostAuthorName()
         {
             if (_currentRow == null)
                 return null;
@@ -541,7 +538,7 @@ namespace DotNetNuke.Modules.ActiveForums
             return UserProfiles.GetDisplayName(ModuleId, userId, "none", userName, firstName, lastName, displayName);
         }
 
-        public string GetLastReplyAuthorProfileUrl()
+        public string GetLastPostAuthorProfileUrl()
         {
             if (_currentRow == null)
                 return null;
@@ -554,7 +551,7 @@ namespace DotNetNuke.Modules.ActiveForums
         }
 
         // Todo: Localize today and yesterday
-        public string GetLastReplyTime()
+        public string GetLastPostTime()
         {
             if (_currentRow == null)
                 return null;
@@ -562,17 +559,14 @@ namespace DotNetNuke.Modules.ActiveForums
             var date = GetUserDate(Convert.ToDateTime(_currentRow["LastReplyDate"]));
             var currentDate = GetUserDate(DateTime.Now);
 
-            const string dateFormat = "M/d/yyyy"; // MainSettings.DateFormatString;
-            const string timeFormat = "h:mm tt"; // MainSettings.TimeFormatString;
-
-            var datePart = date.ToString(dateFormat);
+            var datePart = date.ToString(MainSettings.DateFormatString);
 
             if (currentDate.Date == date.Date)
                 datePart = "Today";
             else if (currentDate.AddDays(-1).Date == date.Date)
                 datePart = "Yesterday";
 
-            return datePart + " @ " + date.ToString(timeFormat);
+            return datePart + " @ " + date.ToString(MainSettings.TimeFormatString);
         }
 
         public string GetPostSnippet()

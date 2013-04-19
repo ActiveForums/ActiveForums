@@ -70,9 +70,9 @@
                     <label><%= GetSharedResource("SearchReplies") %></label><span> <%# Eval("ReplyCount") %></span><br/>
                     <label><%= GetSharedResource("SearchViews") %></label><span> <%# Eval("ViewCount") %></span>
                 </td>
-                <td class="af-reply">
-                    <label><%= GetSharedResource("SearchLastReply") %></label> <%# GetLastReplyTime() %> <br/>
-                    <label><%= GetSharedResource("SearchBy") %></label> <a class="af-profile-link" href="<%# GetLastReplyAuthorProfileUrl() %>"><%# GetLastReplyAuthorName() %></a>
+                <td class="af-lastpost">
+                    <label><%= GetSharedResource("SearchLastPost") %></label> <%# GetLastPostTime() %> <br/>
+                    <label><%= GetSharedResource("SearchBy") %></label> <a class="af-profile-link" href="<%# GetLastPostAuthorProfileUrl() %>"><%# GetLastPostAuthorName() %></a>
                 </td>
                 <td class="af-forum">
                    <label><%= GetSharedResource("SearchForum") %></label><br/>

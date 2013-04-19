@@ -1116,6 +1116,42 @@
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.Controls.ForumSettings.lblTimeFormat">
+            <summary>
+            lblTimeFormat control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.Controls.ForumSettings.txtTimeFormat">
+            <summary>
+            txtTimeFormat control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.Controls.ForumSettings.lblDateFormat">
+            <summary>
+            lblDateFormat control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.Controls.ForumSettings.txtDateFormat">
+            <summary>
+            txtDateFormat control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
         <member name="F:DotNetNuke.Modules.ActiveForums.Controls.ForumSettings.lblFloodInterval">
             <summary>
             lblFloodInterval control.
@@ -2065,9 +2101,27 @@
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_grid.PagerTop">
+            <summary>
+            PagerTop control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
         <member name="F:DotNetNuke.Modules.ActiveForums.af_grid.lblHeader">
             <summary>
             lblHeader control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_grid.btnMarkRead">
+            <summary>
+            btnMarkRead control.
             </summary>
             <remarks>
             Auto-generated field.
@@ -2083,27 +2137,45 @@
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.af_grid.rptPosts">
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_grid.pnlMessage">
             <summary>
-            rptPosts control.
+            pnlMessage control.
             </summary>
             <remarks>
             Auto-generated field.
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.af_grid.plhMarkRead">
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_grid.litMessage">
             <summary>
-            plhMarkRead control.
+            litMessage control.
             </summary>
             <remarks>
             Auto-generated field.
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.af_grid.Pager1">
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_grid.rptTopics">
             <summary>
-            Pager1 control.
+            rptTopics control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_grid.PagerBottom">
+            <summary>
+            PagerBottom control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_grid.litRecordCount">
+            <summary>
+            litRecordCount control.
             </summary>
             <remarks>
             Auto-generated field.

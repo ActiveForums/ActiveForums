@@ -13,6 +13,15 @@ namespace DotNetNuke.Modules.ActiveForums {
     public partial class af_grid {
         
         /// <summary>
+        /// PagerTop control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::DotNetNuke.Modules.ActiveForums.Controls.PagerNav PagerTop;
+        
+        /// <summary>
         /// lblHeader control.
         /// </summary>
         /// <remarks>
@@ -20,6 +29,15 @@ namespace DotNetNuke.Modules.ActiveForums {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblHeader;
+        
+        /// <summary>
+        /// btnMarkRead control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlButton btnMarkRead;
         
         /// <summary>
         /// drpTimeFrame control.
@@ -31,30 +49,48 @@ namespace DotNetNuke.Modules.ActiveForums {
         protected global::System.Web.UI.WebControls.DropDownList drpTimeFrame;
         
         /// <summary>
-        /// rptPosts control.
+        /// pnlMessage control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptPosts;
+        protected global::System.Web.UI.WebControls.Panel pnlMessage;
         
         /// <summary>
-        /// plhMarkRead control.
+        /// litMessage control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder plhMarkRead;
+        protected global::System.Web.UI.WebControls.Literal litMessage;
         
         /// <summary>
-        /// Pager1 control.
+        /// rptTopics control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::DotNetNuke.Modules.ActiveForums.Controls.PagerNav Pager1;
+        protected global::System.Web.UI.WebControls.Repeater rptTopics;
+        
+        /// <summary>
+        /// PagerBottom control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::DotNetNuke.Modules.ActiveForums.Controls.PagerNav PagerBottom;
+        
+        /// <summary>
+        /// litRecordCount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litRecordCount;
     }
 }

@@ -441,4 +441,19 @@
   <data name="UseSkinBreadCrumb.Text" xml:space="preserve">
     <value>Use Skin Breadcrumb</value>
   </data>
+  <data name="DateFormat.Help" xml:space="preserve">
+    <value>Format string used to display date values.</value>
+  </data>
+  <data name="DateFormat.Text" xml:space="preserve">
+    <value>Date Format</value>
+  </data>
+  <data name="ProfileDisabled.Text" xml:space="preserve">
+    <value>Profile Links Disabled</value>
+  </data>
+  <data name="TimeFormat.Help" xml:space="preserve">
+    <value>Format string used to display time values.</value>
+  </data>
+  <data name="TimeFormat.Text" xml:space="preserve">
+    <value>Time Format</value>
+  </data>
 </root>

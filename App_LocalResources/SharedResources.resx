@@ -1510,8 +1510,8 @@ From,
   <data name="SearchForum.Text" xml:space="preserve">
     <value>Forum:</value>
   </data>
-  <data name="SearchLastReply.Text" xml:space="preserve">
-    <value>Last Reply:</value>
+  <data name="SearchLastPost.Text" xml:space="preserve">
+    <value>Last Post:</value>
   </data>
   <data name="SearchModify.Text" xml:space="preserve">
     <value>Modify Search</value>
@@ -1542,5 +1542,8 @@ From,
   </data>
   <data name="[RESX:SearchInputError].Text" xml:space="preserve">
     <value>Please enter a keyword, username or tag.</value>
+  </data>
+  <data name="MarkAllReadConfirm.Text" xml:space="preserve">
+    <value>Mark all items read?</value>
   </data>
 </root>

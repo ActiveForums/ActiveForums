@@ -1,46 +1,27 @@
 //© 2004 - 2005 ActiveModules, Inc. All Rights Reserved
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using DotNetNuke;
 namespace DotNetNuke.Modules.ActiveForums
 {
 
     public partial class af_markread : ForumBase
     {
-        public int MID;
-        #region Controls
-        #endregion
+        public string CSSClass { get; set; }
 
         #region Event Handlers
+        
         protected override void OnLoad(EventArgs e)
 		{
 			base.OnLoad(e);
 
-            try
-            {
-                //Dim myMainSettings As SettingsInfo = DataCache.MainSettings(MID)
-                this.ForumModuleId = MID;
+            if (btnMarkAllRead == null)
+                return;
 
-                if (this.UserId == -1)
-                {
-                    btnMarkAllRead.Visible = false;
-                }
-                else
-                {
-                    btnMarkAllRead.Visible = true;
-                }
-            }
-            catch (Exception exc)
-            {
-                DotNetNuke.Services.Exceptions.Exceptions.ProcessModuleLoadException(this, exc);
-            }
+            btnMarkAllRead.Visible = UserId != -1;
+
+            if (!string.IsNullOrWhiteSpace(CSSClass))
+                btnMarkAllRead.CssClass = CSSClass;
         }
+
         #endregion
 
         #region  Web Form Designer Generated Code
@@ -60,28 +41,22 @@ namespace DotNetNuke.Modules.ActiveForums
 
             //CODEGEN: This method call is required by the Web Form Designer
             //Do not modify it using the code editor.
-            this.LocalResourceFile = "~/DesktopModules/ActiveForums/App_LocalResources/SharedResources.resx";
+            LocalResourceFile = "~/DesktopModules/ActiveForums/App_LocalResources/SharedResources.resx";
             InitializeComponent();
 
-            btnMarkAllRead.Click += new System.EventHandler(btnMarkAllRead_Click);
+            btnMarkAllRead.Click += BtnMarkAllReadClick;
         }
 
         #endregion
 
-        private void btnMarkAllRead_Click(object sender, System.EventArgs e)
+        private void BtnMarkAllReadClick(object sender, EventArgs e)
         {
-            if (Request.IsAuthenticated)
-            {
-                if (ForumId > 0)
-                {
-                    DataProvider.Instance().Utility_MarkAllRead(ModuleId, UserId, ForumId);
-                }
-                else
-                {
-                    DataProvider.Instance().Utility_MarkAllRead(ModuleId, UserId, 0);
-                }
-                Response.Redirect(Request.RawUrl);
-            }
+            if (!Request.IsAuthenticated) 
+                return;
+
+            DataProvider.Instance().Utility_MarkAllRead(ModuleId, UserId, ForumId > 0 ? ForumId : 0);
+            
+            Response.Redirect(Request.RawUrl);
         }
     }
 

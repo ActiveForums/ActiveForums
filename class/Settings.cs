@@ -78,7 +78,7 @@ namespace DotNetNuke.Modules.ActiveForums
 
         public string DateFormatString
         {
-            get { return MainSettings.GetString(SettingKeys.DateFormatString, "MM/dd/yyyy"); }
+            get { return MainSettings.GetString(SettingKeys.DateFormatString, "M/d/yyyy"); }
         }
 
         public string TimeFormatString

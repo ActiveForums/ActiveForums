@@ -125,6 +125,9 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 					txtAvatarHeight.Text = AvatarHeight.ToString();
 					txtAvatarWidth.Text = AvatarWidth.ToString();
 
+				    txtTimeFormat.Text = TimeFormatString;
+				    txtDateFormat.Text = DateFormatString;
+
                     Utilities.SelectListItemByValue(drpForumGroupTemplate, ForumGroupTemplate);
 				}
 			}
@@ -188,6 +191,8 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 AvatarHeight = Utilities.SafeConvertInt(txtAvatarHeight.Text, 48);
                 AvatarWidth = Utilities.SafeConvertInt(txtAvatarWidth.Text, 48);
 
+			    TimeFormatString = !string.IsNullOrWhiteSpace(txtTimeFormat.Text) ? txtTimeFormat.Text : "h:mm tt";
+                DateFormatString = !string.IsNullOrWhiteSpace(txtDateFormat.Text) ? txtDateFormat.Text : "M/d/yyyy";
 
                 ForumGroupTemplate = Utilities.SafeConvertInt(drpForumGroupTemplate.SelectedValue);
 				var adminSec = txtGroupModSec.Value.Split(',');
@@ -235,7 +240,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 		private void BindTemplates()
 		{
 			var tc = new TemplateController();
-		    List<TemplateInfo> tl = tc.Template_List(PortalId, ModuleId, Templates.TemplateTypes.ForumView);
+		    var tl = tc.Template_List(PortalId, ModuleId, Templates.TemplateTypes.ForumView);
 			drpTemplates.DataTextField = "Title";
 			drpTemplates.DataValueField = "TemplateId";
 			drpTemplates.DataSource = tl;

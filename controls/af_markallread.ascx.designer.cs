@@ -7,30 +7,18 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using DotNetNuke;
-
-namespace DotNetNuke.Modules.ActiveForums
-{
-
-	public partial class af_markread
-	{
-
-		///<summary>
-		///btnMarkAllRead control.
-		///</summary>
-		///<remarks>
-		///Auto-generated field.
-		///To modify move field declaration from designer file to code-behind file.
-		///</remarks>
-		protected global::System.Web.UI.WebControls.LinkButton btnMarkAllRead;
-	}
+namespace DotNetNuke.Modules.ActiveForums {
+    
+    
+    public partial class af_markread {
+        
+        /// <summary>
+        /// btnMarkAllRead control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton btnMarkAllRead;
+    }
 }

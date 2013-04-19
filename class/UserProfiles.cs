@@ -141,7 +141,7 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 				else
 				{
-					sOutput = DisplayName;
+					sOutput = Username;
 				}
 			}
 			else

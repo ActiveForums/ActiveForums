@@ -121,6 +121,42 @@ namespace DotNetNuke.Modules.ActiveForums.Controls {
         protected global::System.Web.UI.WebControls.RadioButtonList rdUseSkinBreadCrumb;
         
         /// <summary>
+        /// lblTimeFormat control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UserControl lblTimeFormat;
+        
+        /// <summary>
+        /// txtTimeFormat control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtTimeFormat;
+        
+        /// <summary>
+        /// lblDateFormat control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UserControl lblDateFormat;
+        
+        /// <summary>
+        /// txtDateFormat control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDateFormat;
+        
+        /// <summary>
         /// lblFloodInterval control.
         /// </summary>
         /// <remarks>

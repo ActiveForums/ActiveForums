@@ -338,6 +338,7 @@ div.af-pager table td{padding:2px;}
 .af-search-header .afpager { position: absolute;bottom: 0px;right: 0px; }
 .af-search-header .ui-button { padding: 2px 5px; } 
 .af-search-header .ui-button-text { padding: 5px; }
+.af-search-header select { padding: 4px; margin: 0px;border: solid 1px #ccc; }
 .af-search-bar { padding: 0px 10px;background-color: #3D3D3D;color: #fff;font-weight: bold; height: 30px;line-height: 30px;}
 .af-search-duration { float: right; }
 .af-search-footer { position: relative; margin: 10px 0px; }
@@ -359,11 +360,12 @@ div.af-pager table td{padding:2px;}
 .af-search-results .af-topics { width: 100%; border-collapse: collapse;margin: 0px;padding: 0px; background-color: #f0f0f0; }
 .af-search-results .af-topics tr { border: solid 1px #999;border-top: none; }
 .af-search-results .af-topics td { padding: 10px;vertical-align: top;text-align: left; }
-.af-search-results .af-topics .af-icon { vertical-align: middle;background-color: #ddd; }
+.af-search-results .af-topics .af-icon { vertical-align: middle;background-color: #ddd;text-align: center;width: 32px; }
 .af-search-results .af-topics .af-icon img { border: none; }
 .af-search-results .af-topics .af-thread {  }
-.af-search-results .af-topics .af-stats { text-align: right;background-color: #ddd;white-space: nowrap; }
-.af-search-results .af-topics .af-forum { background-color: #ddd;max-width: 150px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;  }
+.af-search-results .af-topics .af-stats { text-align: right;background-color: #ddd;white-space: nowrap;width: 70px; }
+.af-search-results .af-topics .af-lastpost { width: 200px; }
+.af-search-results .af-topics .af-forum { background-color: #ddd;width: 150px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;  }
 .af-search-results .af-topics .af-mini-pager { display: inline-block;margin-left: 10px;white-space: nowrap;}
 .af-search-results .af-topics .af-mini-pager a { display: inline-block;border: solid 1px #999;text-decoration: none;font-weight: normal;font-size: 0.8em;height: 16px;min-width: 12px;text-align: center;line-height: 16px;padding: 0px 2px; margin: 0px 1px;}
 .af-search-results .af-topics .af-mini-pager span { padding: 0px 2px; }
