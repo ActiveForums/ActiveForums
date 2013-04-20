@@ -32,12 +32,21 @@
 			<li>Added JQuery UI Theme to Default Theme (.ActiveForums scope)</li>
 			<li>Added Mini User Editor to Profile Info: [AF:BUTTON:EDITUSER]</li>
 			<li>Fixed Moderation Service</li>
-			<li>Added ability to restrict the ability to create topics/replies in a forum or forum group by the number of posts a user has.
+			<li>Added ability to restrict the ability to create topics/replies in a forum or forum group by the number of posts a user has.</li>
 			<li>Made the loading of forum/group setting more resiliant to old data</li>
-			<li>Fixed duplicate afpg tag in URL
-			<li>Fixed support for the [BANNER] token in the Topic View template
-			<li>Added [REPLYSEPARATOR][/REPLYSEPARATOR] and [REPLYSEPARATOR:?][/REPLYSEPARATOR:?] tokens to the Topic View template
-			<li>Added afpostinfo, afreplyinfo and aftopicinfo classes to the [CSS????INFO] tokens in the Topic View template
+			<li>Fixed duplicate afpg tag in URL</li>
+			<li>Fixed support for the [BANNER] token in the Topic View template</li>
+			<li>Added [REPLYSEPARATOR][/REPLYSEPARATOR] and [REPLYSEPARATOR:?][/REPLYSEPARATOR:?] tokens to the Topic View template</li>
+			<li>Added afpostinfo, afreplyinfo and aftopicinfo classes to the [CSS????INFO] tokens in the Topic View template</li>
+			<li>Reworked Unanswered/Not Read/My Topics/Active Topics to match new Search UI.<li>
+			<li>Reworked stored procedures related to Unanswered/Not Read/My Topics/Active Topics to provide more information and be more performant</li>
+			<li>Active Topics now defaults to "last day" rather than the timestamp of the last visit.</li>
+			<li>Date and Time display formats are now configurable in settings.</li>
+			<li>Users Online functionality can now be enabled/disabled in settings.</li>
+			<li>Site BreadCrumb usage can now be enabled/disabled in settings.</li>
+			<li>Profile links can now be disabled in settings.</li>
+			<li>Made loading of forum settings more resiliant to old data.</li>
+			<li>Fixed bug that may have prevented to control panel from loading in some circumstances.</li>
 		</ul>
 	</p>
    <p class="Owner">

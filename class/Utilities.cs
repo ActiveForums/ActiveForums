@@ -16,13 +16,9 @@ namespace DotNetNuke.Modules.ActiveForums
 {
     public abstract partial class Utilities
     {
-        internal static string AppPath
-        {
-            get
-            {
-                return "~/DesktopModules/ActiveForums/";
-            }
-        }
+        internal const string AppPath = "~/DesktopModules/ActiveForums/";
+        internal static CultureInfo DateTimeStringCultureInfo = new CultureInfo("en-US", true);
+
 
         /// <summary>
         /// Calculates a friendly display string based on an input timespan
@@ -1390,7 +1386,9 @@ namespace DotNetNuke.Modules.ActiveForums
             if (s != null)
             {
                 DateTime parsedValue;
-                return DateTime.TryParse(s, out parsedValue) ? parsedValue : (defaultValue.HasValue ? defaultValue.Value : NullDate());
+
+                if (DateTime.TryParse(s, DateTimeStringCultureInfo, DateTimeStyles.AssumeLocal, out parsedValue))
+                    return parsedValue;
             }
 
             try

@@ -99,8 +99,8 @@
             e.preventDefault();
             e.stopPropagation();
 
-            userId = $(e.target).attr('data-id');
-            userName = $(e.target).attr('data-name');
+            userId = $(e.currentTarget).attr('data-id');
+            userName = $(e.currentTarget).attr('data-name');
 
             $.ajax(
             {
