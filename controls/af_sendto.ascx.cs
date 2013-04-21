@@ -46,7 +46,7 @@ namespace DotNetNuke.Modules.ActiveForums
                                 sURL = NavigateUrl(TabId, "", new string[] { ParamKeys.TopicId + "=" + TopicId });
                             }
                             MessageDefault = MessageDefault.Replace("[TOPICLINK]", sURL);
-                            MessageDefault = MessageDefault.Replace("[DISPLAYNAME]", UserProfiles.GetDisplayName(ModuleId, UserId, MainSettings.UserNameDisplay, UserInfo.Username, UserInfo.FirstName, UserInfo.LastName, UserInfo.DisplayName));
+                            MessageDefault = MessageDefault.Replace("[DISPLAYNAME]", UserProfiles.GetDisplayName(ModuleId, UserId, UserInfo.Username, UserInfo.FirstName, UserInfo.LastName, UserInfo.DisplayName));
                             txtMessage.Text = MessageDefault;
                         }
 

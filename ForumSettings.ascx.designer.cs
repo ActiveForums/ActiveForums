@@ -247,22 +247,22 @@ namespace DotNetNuke.Modules.ActiveForums.Controls {
         protected global::System.Web.UI.WebControls.TextBox txtAddThis;
         
         /// <summary>
-        /// lblProfileType control.
+        /// lblProfileVisibility control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl lblProfileType;
+        protected global::System.Web.UI.UserControl lblProfileVisibility;
         
         /// <summary>
-        /// drpProfileType control.
+        /// drpProfileVisibility control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList drpProfileType;
+        protected global::System.Web.UI.WebControls.DropDownList drpProfileVisibility;
         
         /// <summary>
         /// lblMessagingType control.

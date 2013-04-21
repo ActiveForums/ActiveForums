@@ -1,37 +1,26 @@
 ﻿using System;
-using System.Data;
+using System.Text;
 
 namespace DotNetNuke.Modules.ActiveForums
 {
 	public class UsersOnline
 	{
-		public string GetUsersOnline(int PortalId, int ModuleId, int UserId)
+		public string GetUsersOnline(int portalId, int moduleId, User user)
 		{
-
-			var sb = new System.Text.StringBuilder();
-			IDataReader dr = DataProvider.Instance().Profiles_GetUsersOnline(PortalId, ModuleId, 2);
+			var sb = new StringBuilder();
+			var dr = DataProvider.Instance().Profiles_GetUsersOnline(portalId, moduleId, 2);
 			try
 			{
-				SettingsInfo MainSettings = DataCache.MainSettings(ModuleId);
-				while (dr.Read())
+				var mainSettings = DataCache.MainSettings(moduleId);
+				
+                while (dr.Read())
 				{
-					var ai = new Author
-					             {
-					                 AuthorId = Convert.ToInt32(dr["UserId"]),
-					                 DisplayName = dr["DisplayName"].ToString(),
-					                 Email = dr["Email"].ToString(),
-					                 FirstName = dr["FirstName"].ToString(),
-					                 LastName = dr["LastName"].ToString(),
-					                 Username = dr["Username"].ToString()
-					             };
-				    sb.Append(UserProfiles.GetDisplayName(ModuleId, MainSettings.MemberListMode, false, ai.AuthorId, MainSettings.UserNameDisplay, ai));
-					sb.Append(", ");
+                    if(sb.Length > 0)
+                        sb.Append(", ");
 
+				    sb.Append(UserProfiles.GetDisplayName(moduleId, true, false, user.IsAdmin || user.IsSuperUser, dr.GetInt("UserId"), dr.GetString("Username"), dr.GetString("FirstName"), dr.GetString("LastName"), dr.GetString("DisplayName")));
 				}
-				if (sb.Length > 3)
-				{
-					sb.Remove(sb.Length - 2, 2);
-				}
+
 				dr.Close();
 				return sb.ToString();
 			}

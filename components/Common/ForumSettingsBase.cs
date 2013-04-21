@@ -149,16 +149,16 @@ namespace DotNetNuke.Modules.ActiveForums
 			}
 		}
 
-		public int ProfileType
+		public int ProfileVisibility
 		{
 			get
 			{
-				return Settings.GetInt(SettingKeys.ProfileType, 1);
+				return Settings.GetInt(SettingKeys.ProfileVisibility, (int)ProfileVisibilities.Everyone);
 			}
 			set
 			{
-				Settings[SettingKeys.ProfileType] = value;
-				_objModules.UpdateModuleSetting(ModuleId, SettingKeys.ProfileType, value.ToString());
+				Settings[SettingKeys.ProfileVisibility] = value;
+				_objModules.UpdateModuleSetting(ModuleId, SettingKeys.ProfileVisibility, value.ToString());
 			}
 		}
 

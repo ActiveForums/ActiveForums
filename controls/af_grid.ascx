@@ -36,7 +36,7 @@
                 </td>
                 <td class="af-thread">
                     <a class="af-thread-link" href="<%# GetThreadUrl() %>"><%# Eval("Subject") %></a><br/>
-                    <%= GetSharedResource("Started") %> <%# GetPostTime() %> <%= GetSharedResource("By") %> <a class="af-profile-link" href="<%# GetAuthorProfileUrl() %>"><%# GetAuthorName() %></a>
+                    <%= GetSharedResource("Started") %> <%# GetPostTime() %> <%= GetSharedResource("By") %> <%# GetAuthor() %>
                     <span class="af-mini-pager"><%# GetMiniPager() %></span> 
                 </td>
                 <td class="af-stats">
@@ -45,7 +45,7 @@
                 </td>
                 <td class="af-lastpost">
                     <label><%= GetSharedResource("SearchLastPost") %></label> <%# GetLastPostTime() %> <br/>
-                    <label><%= GetSharedResource("SearchBy") %></label> <a class="af-profile-link" href="<%# GetLastPostAuthorProfileUrl() %>"><%# GetLastPostAuthorName() %></a>
+                    <label><%= GetSharedResource("SearchBy") %></label> <%# GetLastPostAuthor() %>
                 </td>
                 <td class="af-forum">
                    <label><%= GetSharedResource("SearchForum") %></label><br/>

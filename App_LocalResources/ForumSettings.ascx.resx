@@ -456,4 +456,25 @@
   <data name="TimeFormat.Text" xml:space="preserve">
     <value>Time Format</value>
   </data>
+  <data name="Admins.Text" xml:space="preserve">
+    <value>Admins</value>
+  </data>
+  <data name="AuthenticatedUsers.Text" xml:space="preserve">
+    <value>Authenticated Users</value>
+  </data>
+  <data name="Disabled.Text" xml:space="preserve">
+    <value>Disabled</value>
+  </data>
+  <data name="Everyone.Text" xml:space="preserve">
+    <value>Everyone</value>
+  </data>
+  <data name="Moderators.Text" xml:space="preserve">
+    <value>Moderators</value>
+  </data>
+  <data name="ProfileVisibility.Help" xml:space="preserve">
+    <value>Determines which users can click to see a users profile.</value>
+  </data>
+  <data name="ProfileVisibility.Text" xml:space="preserve">
+    <value>Profile Visibility</value>
+  </data>
 </root>

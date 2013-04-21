@@ -208,8 +208,7 @@ namespace DotNetNuke.Modules.ActiveForums
 
 		    var result = new StringBuilder(sOut);
 
-
-            result.Replace("[DISPLAYNAME]", UserProfiles.GetDisplayName(moduleID, "DISABLED", false, userId, ms.UserNameDisplay, authorName, sFirstName, sLastName, sDisplayName));
+            result.Replace("[DISPLAYNAME]", UserProfiles.GetDisplayName(moduleID, userId, authorName, sFirstName, sLastName, sDisplayName));
             result.Replace("[USERNAME]", sUsername);
             result.Replace("[USERID]", userId.ToString());
             result.Replace("[FORUMNAME]", fi.ForumName);
@@ -366,7 +365,7 @@ namespace DotNetNuke.Modules.ActiveForums
 
 
                 // User Edit
-			    result.Replace("[AF:BUTTON:EDITUSER]", isAdmin ? string.Format("<button class='af-button af-button-edituser' data-id='{0}' data-name='{1}'>[RESX:Edit]</button>", up.UserId, Utilities.JSON.EscapeJsonString(up.DisplayName)) : string.Empty);
+			    result.Replace("[AF:BUTTON:EDITUSER]", isAdmin && up.UserId > 0 ? string.Format("<button class='af-button af-button-edituser' data-id='{0}' data-name='{1}'>[RESX:Edit]</button>", up.UserId, Utilities.JSON.EscapeJsonString(up.DisplayName)) : string.Empty);
 
                 // Points
 				var totalPoints = up.PostCount;
@@ -445,12 +444,12 @@ namespace DotNetNuke.Modules.ActiveForums
                 // Avatar
 				var sAvatar = string.Empty;
 				if (! userPrefHideAvatar && !up.Profile.AvatarDisabled)
-                    sAvatar = UserProfiles.GetAvatar(up.UserId, portalId, imagePath, mainSettings.Theme, up.Profile.Avatar, (int)up.Profile.AvatarType, mainSettings.AvatarWidth, mainSettings.ProfileType, true);
+                    sAvatar = UserProfiles.GetAvatar(up.UserId, mainSettings.AvatarWidth, mainSettings.AvatarHeight);
                 
                 result.Replace("[AF:PROFILE:AVATAR]", sAvatar);
 
                 // Display Name
-			    result.Replace("[AF:PROFILE:DISPLAYNAME]", UserProfiles.GetDisplayName(moduleId, mainSettings.ProfileVisibility, isMod, up.UserId, mainSettings.UserNameDisplay, up.UserName, up.FirstName, up.LastName, up.DisplayName));
+			    result.Replace("[AF:PROFILE:DISPLAYNAME]", UserProfiles.GetDisplayName(moduleId, true, isMod, isAdmin, up.UserId, up.UserName, up.FirstName, up.LastName, up.DisplayName));
 				
 
                 // These fields are no longer used
@@ -656,7 +655,7 @@ namespace DotNetNuke.Modules.ActiveForums
 		{
 			var objuser = Entities.Users.UserController.GetUser(portalId, userId, true);
 
-			var s = template == null ? string.Empty : template.Replace("[DNN:PROFILE:Email]", objuser.Email);
+	        var s = template ?? string.Empty;
 
 			const string pattern = "(\\[DNN:PROFILE:(.+?)\\])";
 

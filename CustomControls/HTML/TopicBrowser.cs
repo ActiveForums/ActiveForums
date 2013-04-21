@@ -406,7 +406,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 				{
 					try
 					{
-						tmp = tmp.Replace("[LASTAUTHOR]", UserProfiles.GetDisplayName(ModuleId, _mainSettings.ProfileVisibility, ForumUser.Profile.IsMod, -1, _mainSettings.UserNameDisplay, auth));
+						tmp = tmp.Replace("[LASTAUTHOR]", UserProfiles.GetDisplayName(ModuleId, true, ForumUser.Profile.IsMod, ForumUser.IsAdmin || ForumUser.IsSuperUser, -1, auth.Username, auth.FirstName, auth.LastName, auth.DisplayName));
 					}
 					catch (Exception ex)
 					{
@@ -416,7 +416,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 				}
 				else
 				{
-					tmp = tmp.Replace("[LASTAUTHOR]", UserProfiles.GetDisplayName(ModuleId, _mainSettings.ProfileVisibility, ForumUser.Profile.IsMod, int.Parse(row["LastAuthorId"].ToString()), _mainSettings.UserNameDisplay, auth));
+                    tmp = tmp.Replace("[LASTAUTHOR]", UserProfiles.GetDisplayName(ModuleId, true, ForumUser.Profile.IsMod, ForumUser.IsAdmin || ForumUser.IsSuperUser, int.Parse(row["LastAuthorId"].ToString()), auth.Username, auth.FirstName, auth.LastName, auth.DisplayName));
 				}
 
 				if (_canEdit)
@@ -430,16 +430,8 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 				//
 
 				tmp = tmp.Replace("[TOPICSTATE]", cUtils.TopicState(row));
-				string sAvatar = string.Empty;
-				if (_mainSettings.ProfileType == ProfileTypes.Social)
-				{
-					sAvatar = "<span style=\"background-image:url('/desktopmodules/activesocial/profilepic.ashx?PortalId=" + PortalId.ToString() + "&uid=" + row["LastAuthorId"].ToString() + "&h=26&w=26');\"></span>";
-					//"<social:ProfilePicture ProfileUserId='" & up.UserId & "' PicSizes='sm' imagealt='" & UserProfiles.GetDisplayName(ModuleId, up.UserId, MainSettings.UserNameDisplay, True, up.UserName, up.FirstName, up.LastName, up.DisplayName).Replace("'", String.Empty).Replace("""", String.Empty) & "'  runat='server'/>"
-				}
-				else
-				{
-					sAvatar = UserProfiles.GetAvatar(auth.AuthorId, PortalId, ImagePath, _mainSettings.Theme, row["Avatar"].ToString(), int.Parse(row["AvatarType"].ToString()), _mainSettings.AvatarWidth, _mainSettings.ProfileType, true);
-				}
+				var sAvatar = UserProfiles.GetAvatar(auth.AuthorId, _mainSettings.AvatarWidth, _mainSettings.AvatarHeight);
+
 				tmp = tmp.Replace("[AF:AVATAR]", sAvatar);
 				return tmp;
 			}

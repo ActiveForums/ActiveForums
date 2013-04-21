@@ -119,15 +119,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             }
             sTemplate = Utilities.ParseSpacer(sTemplate);
 
-#if !SKU_LITE
-            if (MainSettings.ProfileType == ProfileTypes.Social)
-            {
-                if (!(sTemplate.Contains(Globals.SocialRegisterTag)))
-                {
-                    sTemplate = Globals.SocialRegisterTag + sTemplate;
-                }
-            }
-#endif
+
             if (ProfileMode == ProfileModes.Edit)
             {
                 sTemplate = "<%@ Register TagPrefix=\"dnn\" Assembly=\"DotNetNuke\" Namespace=\"DotNetNuke.UI.WebControls\"%>" + sTemplate;

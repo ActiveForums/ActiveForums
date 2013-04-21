@@ -92,10 +92,13 @@
 	<fieldset>
 
 		<div class="dnnFormItem">
-			<dnn:label ID="lblProfileType" runat="server" resourcekey="ProfileType" Suffix=":" />
-			<asp:DropDownList ID="drpProfileType" runat="server">
-			    <asp:ListItem Value="0" resourcekey="ProfileDisabled" />
-				<asp:ListItem Value="1" resourcekey="DefaultProfile" />
+			<dnn:label ID="lblProfileVisibility" runat="server" resourcekey="ProfileVisibility" Suffix=":" />
+			<asp:DropDownList ID="drpProfileVisibility" runat="server">
+			    <asp:ListItem Value="0" resourcekey="Disabled" />
+				<asp:ListItem Value="1" resourcekey="Everyone" />
+                <asp:ListItem Value="2" resourcekey="AuthenticatedUsers" />
+                <asp:ListItem Value="3" resourcekey="Moderators" />
+                <asp:ListItem Value="4" resourcekey="Admins" />
 			</asp:DropDownList>
 		</div>
         <div class="dnnFormItem">

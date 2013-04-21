@@ -43,7 +43,7 @@
                     </div>
                     <div class="af-forum"><label><%= GetSharedResource("SearchForum") %></label> <a class="af-forum-url" href="<%# GetForumUrl() %>"><%# Eval("ForumName") %></a></div>
                     <div class="af-thread"><label><%= GetSharedResource("SearchTopic") %></label> <a class="af-thread-url" href="<%# GetThreadUrl() %>"><%# Eval("Subject") %></a></div>
-                    <div class="af-postinfo"><label><%= GetSharedResource("SearchPosted") %></label><%# GetPostTime() %> <%= GetSharedResource("By") %> <a class="af-profile-url" href="<%# GetAuthorProfileUrl() %>"><%# GetAuthorName() %></a></div>   
+                    <div class="af-postinfo"><label><%= GetSharedResource("SearchPosted") %></label><%# GetPostTime() %> <%= GetSharedResource("By") %> <%# GetAuthor() %></div>   
                 </div>
                 <div class="af-post-content">
                     <a class="af-post-url" href="<%# GetPostUrl() %>"><%# Eval("PostSubject") %></a>
@@ -63,7 +63,7 @@
                 </td>
                 <td class="af-thread">
                     <a class="af-thread-link" href="<%# GetThreadUrl() %>"><%# Eval("Subject") %></a><br/>
-                    <%= GetSharedResource("Started") %> <%# GetPostTime() %> <%= GetSharedResource("By") %> <a class="af-profile-link" href="<%# GetAuthorProfileUrl() %>"><%# GetAuthorName() %></a>
+                    <%= GetSharedResource("Started") %> <%# GetPostTime() %> <%= GetSharedResource("By") %> <%# GetAuthor() %>
                     <span class="af-mini-pager"><%# GetMiniPager() %></span> 
                 </td>
                 <td class="af-stats">
@@ -72,7 +72,7 @@
                 </td>
                 <td class="af-lastpost">
                     <label><%= GetSharedResource("SearchLastPost") %></label> <%# GetLastPostTime() %> <br/>
-                    <label><%= GetSharedResource("SearchBy") %></label> <a class="af-profile-link" href="<%# GetLastPostAuthorProfileUrl() %>"><%# GetLastPostAuthorName() %></a>
+                    <label><%= GetSharedResource("SearchBy") %></label> <%# GetLastPostAuthor() %>
                 </td>
                 <td class="af-forum">
                    <label><%= GetSharedResource("SearchForum") %></label><br/>

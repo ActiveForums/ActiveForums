@@ -265,7 +265,7 @@ namespace DotNetNuke.Modules.ActiveForums
             sb.Append(WriteElement("title", dr["Subject"].ToString(), Indent + 1));
             sb.Append(WriteElement("description", body, Indent + 1));
             sb.Append(WriteElement("link", URL, Indent + 1));
-            sb.Append(WriteElement("dc:creator", UserProfiles.GetDisplayName(ModuleID, -1, MainSettings.UserNameDisplay, dr["AuthorUserName"].ToString(), dr["AuthorFirstName"].ToString(), dr["AuthorLastName"].ToString(), dr["AuthorDisplayName"].ToString()), Indent + 1));
+            sb.Append(WriteElement("dc:creator", UserProfiles.GetDisplayName(ModuleID, -1, dr["AuthorUserName"].ToString(), dr["AuthorFirstName"].ToString(), dr["AuthorLastName"].ToString(), dr["AuthorDisplayName"].ToString()), Indent + 1));
             sb.Append(WriteElement("pubDate", Convert.ToDateTime(dr["DateCreated"]).AddMinutes(offSet).ToString("r"), Indent + 1));
             sb.Append(WriteElement("guid", URL, Indent + 1));
             sb.Append(WriteElement("slash:comments", dr["ReplyCount"].ToString(), Indent + 1));

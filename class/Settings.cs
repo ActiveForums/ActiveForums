@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using DotNetNuke.Entities.Profile;
 
 namespace DotNetNuke.Modules.ActiveForums
 {
@@ -17,18 +18,6 @@ namespace DotNetNuke.Modules.ActiveForums
         public string UserNameDisplay
         {
             get { return MainSettings.GetString(SettingKeys.UserNameDisplay, "USERNAME"); }
-        }
-
-        public ProfileTypes ProfileType
-        {
-            get
-            {
-                ProfileTypes parsedValue;
-                return Enum.TryParse(MainSettings.GetString(SettingKeys.ProfileType), true,
-                                     out parsedValue)
-                           ? parsedValue
-                           : ProfileTypes.Disabled;
-            }
         }
 
         public bool EnablePoints
@@ -189,9 +178,17 @@ namespace DotNetNuke.Modules.ActiveForums
             get { return MainSettings.GetInt(SettingKeys.DeleteBehavior); }
         }
 
-        public string ProfileVisibility
+        public ProfileVisibilities ProfileVisibility
         {
-            get { return MainSettings.GetString(SettingKeys.AllowSubTypes, "ENABLEDREG"); }
+            get
+            {
+                ProfileVisibilities parsedValue;
+
+                return Enum.TryParse(MainSettings.GetString(SettingKeys.ProfileVisibility), true,
+                                     out parsedValue)
+                           ? parsedValue
+                           : ProfileVisibilities.Disabled;
+            }
         }
 
         public string AddThisAccount

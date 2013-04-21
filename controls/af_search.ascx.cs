@@ -498,19 +498,7 @@ namespace DotNetNuke.Modules.ActiveForums
             return string.Format(GetSharedResource("SearchPostTime"), datePart, date.ToString(MainSettings.TimeFormatString));
         }
 
-        public string GetAuthorProfileUrl()
-        {
-            if (_currentRow == null)
-                return null;
-
-            var portalSettings = (PortalSettings) HttpContext.Current.Items["PortalSettings"];
-
-            var @params = new [] { "userid=" + _currentRow["AuthorID"] };
-
-            return Common.Globals.NavigateURL(portalSettings.UserTabId, string.Empty, Params);
-        }
-
-        public string GetAuthorName()
+        public string GetAuthor()
         {
             if (_currentRow == null)
                 return null;
@@ -521,10 +509,10 @@ namespace DotNetNuke.Modules.ActiveForums
             var lastName = _currentRow["AuthorLastName"].ToString();
             var displayName = _currentRow["AuthorDisplayName"].ToString();
 
-            return UserProfiles.GetDisplayName(ModuleId, userId, "none", userName, firstName, lastName, displayName);
+            return UserProfiles.GetDisplayName(ModuleId, true, false, ForumUser.IsAdmin, userId, userName, firstName, lastName, displayName);
         }
 
-        public string GetLastPostAuthorName()
+        public string GetLastPostAuthor()
         {
             if (_currentRow == null)
                 return null;
@@ -535,19 +523,7 @@ namespace DotNetNuke.Modules.ActiveForums
             var lastName = _currentRow["LastReplyLastName"].ToString();
             var displayName = _currentRow["LastReplyDisplayName"].ToString();
 
-            return UserProfiles.GetDisplayName(ModuleId, userId, "none", userName, firstName, lastName, displayName);
-        }
-
-        public string GetLastPostAuthorProfileUrl()
-        {
-            if (_currentRow == null)
-                return null;
-
-            var portalSettings = (PortalSettings)HttpContext.Current.Items["PortalSettings"];
-
-            var @params = new[] { "userid=" + _currentRow["LastReplyAuthorID"] };
-
-            return Common.Globals.NavigateURL(portalSettings.UserTabId, string.Empty, Params);
+            return UserProfiles.GetDisplayName(ModuleId, true, false, ForumUser.IsAdmin, userId, userName, firstName, lastName, displayName);
         }
 
         // Todo: Localize today and yesterday

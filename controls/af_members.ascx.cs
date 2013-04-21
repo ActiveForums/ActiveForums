@@ -14,7 +14,7 @@ namespace DotNetNuke.Modules.ActiveForums
 		{
 			base.OnLoad(e);
 
-
+/*
 #if !SKU_LITE
             try
             {
@@ -34,6 +34,7 @@ namespace DotNetNuke.Modules.ActiveForums
             }
 
 #endif
+*/
 
 
             lblHeader.Text = Utilities.GetSharedResource("[RESX:MemberDirectory]");

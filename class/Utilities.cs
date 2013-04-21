@@ -1406,6 +1406,11 @@ namespace DotNetNuke.Modules.ActiveForums
             return value == null ? defaultValue : value.ToString();
         }
 
+        public static string SafeTrim(string input)
+        {
+            return input == null ? null : input.Trim();
+        }
+
         public static void SelectListItemByValue(ListControl dropDownList, object value)
         {
             if (dropDownList == null)

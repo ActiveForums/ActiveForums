@@ -101,7 +101,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 					Utilities.SelectListItemByValue(rdAutoLinks, AutoLink);
                     Utilities.SelectListItemByValue(drpDeleteBehavior, DeleteBehavior);
 					txtAddThis.Text = AddThis;
-                    Utilities.SelectListItemByValue(drpProfileType, ProfileType);
+                    Utilities.SelectListItemByValue(drpProfileVisibility, ProfileVisibility);
                     Utilities.SelectListItemByValue(drpSignatures, Signatures);
                     Utilities.SelectListItemByValue(drpUserDisplayMode, UserNameDisplay);
                     Utilities.SelectListItemByValue(rdEnableURLRewriter, FriendlyURLs);
@@ -161,7 +161,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 AutoLink = Utilities.SafeConvertBool(rdAutoLinks.SelectedValue);
                 DeleteBehavior = Utilities.SafeConvertInt(drpDeleteBehavior.SelectedValue);
 				AddThis = txtAddThis.Text;
-                ProfileType = Utilities.SafeConvertInt(drpProfileType.SelectedValue);
+                ProfileVisibility = Utilities.SafeConvertInt(drpProfileVisibility.SelectedValue);
                 Signatures = Utilities.SafeConvertInt(drpSignatures.SelectedValue);
                 UserNameDisplay = drpUserDisplayMode.SelectedValue;
                 FriendlyURLs = Utilities.SafeConvertBool(rdEnableURLRewriter.SelectedValue);

@@ -648,7 +648,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             sOutput = TemplateUtils.GetTemplateSection(Template, "[" + Section + "]", "[/" + Section + "]");
             string sTopics = string.Empty;
             string MemberListMode = MainSettings.MemberListMode;
-            string ProfileVisibility = MainSettings.ProfileVisibility;
+            var ProfileVisibility = MainSettings.ProfileVisibility;
             string UserNameDisplay = MainSettings.UserNameDisplay;
             bool DisableUserProfiles = false;
             string sLastReply = TemplateUtils.GetTemplateSection(sOutput, "[LASTPOST]", "[/LASTPOST]");
@@ -908,7 +908,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     sTopicsTemplate = sTopicsTemplate.Replace("[SUBJECTLINK]", sPollImage + GetTopic(ModuleId, TabId, ForumId, TopicId, Subject, sBodyTitle, UserId, AuthorId, ReplyCount, -1, sTopicURL));
 
 
-                    sTopicsTemplate = sTopicsTemplate.Replace("[STARTEDBY]", UserProfiles.GetDisplayName(ModuleId, ProfileVisibility, bModApprove, AuthorId, UserNameDisplay, AuthorUserName, AuthorFirstName, AuthorLastName, AuthorDisplayName).ToString().Replace("&amp;#", "&#"));
+                    sTopicsTemplate = sTopicsTemplate.Replace("[STARTEDBY]", UserProfiles.GetDisplayName(ModuleId, true, bModApprove, ForumUser.IsAdmin || ForumUser.IsSuperUser, AuthorId, AuthorUserName, AuthorFirstName, AuthorLastName, AuthorDisplayName).ToString().Replace("&amp;#", "&#"));
                     sTopicsTemplate = sTopicsTemplate.Replace("[DATECREATED]", GetDate(DateCreated));
                     sTopicsTemplate = sTopicsTemplate.Replace("[REPLIES]", ReplyCount.ToString());
                     sTopicsTemplate = sTopicsTemplate.Replace("[VIEWS]", ViewCount.ToString());
@@ -964,7 +964,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                             //sLastReplyTemp = sLastReplyTemp.Replace("[RESX:BY]", Utilities.GetSharedResource("By.Text"))
                             if (LastReplyAuthorId > 0)
                             {
-                                sLastReplyTemp = sLastReplyTemp.Replace("[LASTPOSTDISPLAYNAME]", UserProfiles.GetDisplayName(ModuleId, ProfileVisibility, bModApprove, LastReplyAuthorId, UserNameDisplay, LastReplyUserName, LastReplyFirstName, LastReplyLastName, LastReplyDisplayName).ToString().Replace("&amp;#", "&#"));
+                                sLastReplyTemp = sLastReplyTemp.Replace("[LASTPOSTDISPLAYNAME]", UserProfiles.GetDisplayName(ModuleId, true, bModApprove, ForumUser.IsAdmin || ForumUser.IsSuperUser, LastReplyAuthorId, LastReplyUserName, LastReplyFirstName, LastReplyLastName, LastReplyDisplayName).ToString().Replace("&amp;#", "&#"));
                             }
                             else
                             {

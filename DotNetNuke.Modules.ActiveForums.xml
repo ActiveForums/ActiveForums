@@ -1242,18 +1242,18 @@
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.Controls.ForumSettings.lblProfileType">
+        <member name="F:DotNetNuke.Modules.ActiveForums.Controls.ForumSettings.lblProfileVisibility">
             <summary>
-            lblProfileType control.
+            lblProfileVisibility control.
             </summary>
             <remarks>
             Auto-generated field.
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.Controls.ForumSettings.drpProfileType">
+        <member name="F:DotNetNuke.Modules.ActiveForums.Controls.ForumSettings.drpProfileVisibility">
             <summary>
-            drpProfileType control.
+            drpProfileVisibility control.
             </summary>
             <remarks>
             Auto-generated field.

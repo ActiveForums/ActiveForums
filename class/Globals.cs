@@ -61,12 +61,13 @@ namespace DotNetNuke.Modules.ActiveForums
 		PlainText
 	}
 
-	public enum ProfileTypes
+	public enum ProfileVisibilities
 	{
-		Disabled,
-		Basic,
-		Advanced,
-		Social
+		Disabled = 0,
+		Everyone = 1,
+		RegisteredUsers = 2,
+		Moderators = 3,
+        Admins = 4
 	}
 
 	public enum PMTypes
@@ -137,7 +138,6 @@ namespace DotNetNuke.Modules.ActiveForums
 		public const string AllowSubscribe = "ALLOWSUBSCRIBE";
 		public const string UserNameDisplay = "USERNAMEDISPLAY";
 		public const string DisableUserProfiles = "DISABLEUSERPROFILES";
-		public const string ProfileType = "PROFILETYPE";
 		public const string ProfileTabId = "PROFILETABID";
 		public const string AllowAvatars = "ALLOWAVATARS";
 		public const string AllowAvatarLinks = "ALLOWAVATARLINKS";
