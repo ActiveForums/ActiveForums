@@ -1,3 +1,23 @@
+//
+// Active Forums - http://www.dnnsoftware.com
+// Copyright (c) 2013
+// by DNN Corp.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and 
+// to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.
+//
+
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Web.UI;
@@ -13,9 +33,9 @@ using System.Security;
 [assembly: AllowPartiallyTrustedCallers()]
 [assembly: AssemblyTitle("Active Forums")]
 [assembly: AssemblyDescription("Discussion Forum Module for DotNetNuke")]
-[assembly: AssemblyCompany("DotNetNuke Corporation")]
+[assembly: AssemblyCompany("DNN Corp")]
 [assembly: AssemblyProduct("Active Forums")]
-[assembly: AssemblyCopyright("Copyright © 2004-2013 DotNetNuke Corporation.")]
+[assembly: AssemblyCopyright("Copyright © 2004-2013 DNN Corporation.")]
 [assembly: AssemblyTrademark("")]
 
 
@@ -32,9 +52,9 @@ using System.Security;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("05.00.04")]
+[assembly: AssemblyVersion("05.00.05")]
 
-[assembly: AssemblyFileVersionAttribute("05.00.04")]
+[assembly: AssemblyFileVersionAttribute("05.00.05")]
 [assembly: WebResource("DotNetNuke.Modules.ActiveForums.CustomControls.Resources.cb.js", "text/javascript")]
 [assembly: WebResource("DotNetNuke.Modules.ActiveForums.scripts.afadmin.properties.js", "text/javascript")]
 

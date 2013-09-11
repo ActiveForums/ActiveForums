@@ -1,14 +1,14 @@
-/****************************************************/
-/*                                                  */
-/*     V1.5 - 9-30-2012                             */
-/*     Enhancements by Chris Hammond                */
-/*     DotNetNuke Corporation                       */
-/*     Additional Enhancements by                   */
-/*     Matthias Schloman - Aarsys.de                */
-/*     (c) 2012 DotNetNuke Corporation              */
-/*     http://activeforums.codeplex.com/workitem/1583 */
-/*                                                  */
-/****************************************************/
+/*********************************************************/
+/*													     */
+/*     V1.5 - 9-30-2012								     */
+/*     Enhancements by Chris Hammond				     */
+/*     DotNetNuke Corporation						     */
+/*     Additional Enhancements by					     */
+/*     Matthias Schloman - Aarsys.de				     */
+/*     (c) 2013 DNN Corporation							 */
+/*     http://activeforums.codeplex.com/workitem/1583	 */
+/*														 */
+/*********************************************************/
 
 /*******************************************************************/
 /*

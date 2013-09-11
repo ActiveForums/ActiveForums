@@ -548,7 +548,9 @@
       <SubType>ASPXCodeBehind</SubType>
     </Content>
     <Content Include="controls\uploader.aspx" />
-    <Content Include="controls\_default.ascx" />
+    <Content Include="controls\_default.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <Content Include="images\AF_logo.gif" />
     <Content Include="images\ambuttonback.gif" />
     <Content Include="images\attach.gif" />
@@ -1281,6 +1283,7 @@
     <None Include="config\templates\BlogsView.txt" />
     <None Include="sql\05.00.01.SqlDataProvider" />
     <None Include="sql\05.00.04.SqlDataProvider" />
+    <None Include="sql\05.00.05.SqlDataProvider" />
     <None Include="WhatsNewResources.zip" />
   </ItemGroup>
   <ItemGroup>

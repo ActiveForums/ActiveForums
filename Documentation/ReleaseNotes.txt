@@ -11,7 +11,7 @@
 		
 	</p>
 </div>
-<h3>DotNetNuke Active Forums 05.00.04</h3>
+<h3>DotNetNuke Active Forums 05.00.05</h3>
 <p class="Contributor">
 	Will Morgenweck <br />
 	Benjiro Nelson <br />
@@ -22,6 +22,15 @@
 <hr/>
 <div class="License">
    <h3>Release Notes</h3>
+   <p class="Owner">
+	<b>Version 05.00.05</b><br /><br />
+	</p>
+	<p>
+		<ul>
+			<li>Updated performance for the FullText search on sites with large amounts of topics/replies.</li>
+			<li>Added/updated copyright statements in all C# code files.</li>
+		</ul>
+	</p>
    <p class="Owner">
 	<b>Version 05.00.04</b><br /><br />
 	</p>
