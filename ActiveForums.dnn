@@ -1,6 +1,6 @@
 ﻿<dotnetnuke type="Package" version="5.0">
     <packages>
-        <package name="Active Forums" type="Module" version="05.00.04">
+        <package name="Active Forums" type="Module" version="05.00.05">
             <friendlyname>Active Forums</friendlyname>
             <description>Active Forums - Forum module for DotNetNuke</description>
             <iconFile></iconFile>
@@ -13,7 +13,7 @@
             <license src="License.txt"></license>
             <releaseNotes src="ReleaseNotes.txt"></releaseNotes>
             <dependencies>
-                <dependency type="CoreVersion">07.00.00</dependency>
+                <dependency type="CoreVersion">07.01.00</dependency>
             </dependencies>
             <components>
                 <component type="Module">
@@ -72,7 +72,7 @@
                         <assembly>
                             <name>DotNetNuke.Modules.ActiveForums.dll</name>
                             <sourceFileName>DotNetNuke.Modules.ActiveForums.dll</sourceFileName>
-                            <version>05.00.04</version>
+                            <version>05.00.05</version>
                         </assembly>
                     </assemblies>
                 </component>
@@ -261,6 +261,10 @@
                       <script type="Install">
                         <name>05.00.04.SqlDataProvider</name>
                         <version>05.00.04</version>
+                      </script>
+                      <script type="Install">
+                        <name>05.00.05.SqlDataProvider</name>
+                        <version>05.00.05</version>
                       </script>
                         <script type="UnInstall">                            
                             <name>Uninstall.SqlDataProvider</name>

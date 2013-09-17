@@ -7,7 +7,7 @@
 <div class="License">
 	<p class="Owner">
 		<h3>About DotNetNuke Active Forums</h3>
-		<strong>Version 5.0.4</strong><br /><br />		
+		<strong>Version 5.0.5</strong><br /><br />		
 		
 	</p>
 </div>
@@ -29,6 +29,7 @@
 		<ul>
 			<li>Updated performance for the FullText search on sites with large amounts of topics/replies.</li>
 			<li>Added/updated copyright statements in all C# code files.</li>
+			<li>Fixed Moderation trust AJAX issue when trying to edit a user's profile to apply trust.</li>
 		</ul>
 	</p>
    <p class="Owner">
