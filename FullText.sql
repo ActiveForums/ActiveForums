@@ -62,17 +62,7 @@ GO
 
 
 
-
-
-USE [DNN7]
-GO
-
-/****** Object:  StoredProcedure {databaseOwner}[{objectQualifier}activeforums_Search_FullText]    Script Date: 03/14/2013 22:52:33 ******/
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
+/****** Object:  StoredProcedure {databaseOwner}[{objectQualifier}activeforums_Search_FullText]    Script Date: 09/09/2013 18:50:31 ******/
 
 CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Search_FullText]
 
@@ -166,63 +156,60 @@ FROM {databaseOwner}{objectQualifier}activeforums_Functions_Split(@Forums,':')
 
 -- Grab our full text results
 
-DECLARE @tmpResults TABLE (tid int, cid int, mcpt decimal(15,4))	
+CREATE TABLE #tmpResults (cid INT not null, tid INT not null, mcpt DECIMAL)
 
 IF @SearchField = 0
 BEGIN
-		INSERT INTO @tmpResults
-		SELECT c.topicid as tid ,c.contentid as cid, b.[RANK] as mcpt
-		FROM {databaseOwner}{objectQualifier}vw_activeforums_TopicView C INNER JOIN
-			#forums as f on C.ForumId = f.id INNER JOIN
-			CONTAINSTABLE({databaseOwner}{objectQualifier}activeforums_Content, (Body,[Subject]), @Contains, 1000) as B ON C.ContentId = B.[KEY]
-		WHERE c.ModuleId = @ModuleId			
+	INSERT INTO #tmpResults (cid, tid, mcpt)
+	SELECT tmp.[KEY] as cid, tv.TopicId as tid, tmp.[RANK] as mcpt
+	FROM CONTAINSTABLE({databaseOwner}{objectQualifier}activeforums_Content, (Body,[Subject]), @Contains) as tmp INNER JOIN
+		{databaseOwner}vw_{objectQualifier}activeforums_TopicViewForSearch as tv on tmp.[KEY] = tv.ContentId INNER JOIN
+		#forums as f on f.id = TV.ForumId
+		WHERE tv.ModuleId > 0 AND tv.PortalId = 0	
 END
 IF @SearchField = 1
 BEGIN
-		INSERT INTO @tmpResults
-		SELECT c.topicid as tid ,c.contentid as cid, b.[RANK] as mcpt
-		FROM {databaseOwner}{objectQualifier}vw_activeforums_TopicView C INNER JOIN
-			#forums as f on C.ForumId = f.id INNER JOIN
-			CONTAINSTABLE({databaseOwner}{objectQualifier}activeforums_Content, ([Subject]), @Contains, 1000) as B ON C.ContentId = B.[KEY]
-		WHERE c.ModuleId = @ModuleId	
+	INSERT INTO #tmpResults (cid, tid, mcpt)
+	SELECT tmp.[KEY] as cid, tv.TopicId as tid, tmp.[RANK] as mcpt
+	FROM CONTAINSTABLE({databaseOwner}{objectQualifier}activeforums_Content, ([Subject]), @Contains) as tmp INNER JOIN
+		{databaseOwner}vw_{objectQualifier}activeforums_TopicViewForSearch as tv on tmp.[KEY] = tv.ContentId INNER JOIN
+		#forums as f on f.id = TV.ForumId
+	WHERE tv.ModuleId > 0 AND tv.PortalId = 0
 END
 IF @SearchField = 2
+BEGIN
+	INSERT INTO #tmpResults (cid, tid, mcpt)
+	SELECT tmp.[KEY] as cid, tv.TopicId as tid, tmp.[RANK] as mcpt
+	FROM CONTAINSTABLE({databaseOwner}{objectQualifier}activeforums_Content, (Body), @Contains) as tmp INNER JOIN
+		{databaseOwner}vw_{objectQualifier}activeforums_TopicViewForSearch as tv on tmp.[KEY] = tv.ContentId INNER JOIN
+		#forums as f on f.id = TV.ForumId
+	WHERE tv.ModuleId > 0 AND tv.PortalId = 0
+END
 
-		INSERT INTO @tmpResults
-		SELECT c.topicid as tid ,c.contentid as cid, b.[RANK] as mcpt
-		FROM {databaseOwner}{objectQualifier}vw_activeforums_TopicView C INNER JOIN
-			#forums as f on C.ForumId = f.id INNER JOIN
-			CONTAINSTABLE({databaseOwner}{objectQualifier}activeforums_Content, (Body), @Contains, 1000) as B ON C.ContentId = B.[KEY]
-		WHERE c.ModuleId = @ModuleId
-
-SELECT *
-INTO #tmpResults
-FROM @tmpResults
 
 IF @ResultType = 1
 BEGIN
 
 	-- Get our main result set
 	SELECT TOP 1000 
-		ROW_NUMBER() OVER (ORDER BY CASE @Sort WHEN 1 THEN DateCreated ELSE hits.mcpt END DESC, DateCreated DESC) as rn, 
-		TopicId as tid, 
-		ContentId as cid, 
-		hits.mcpt as mcpt
+		ROW_NUMBER() OVER (ORDER BY CASE @Sort WHEN 1 THEN DateCreated ELSE mcpt END DESC, DateCreated DESC) as rn, 
+		tid, 
+		cid, 
+		mcpt
 	FROM (
-			SELECT  t.topicid,
-				 t.contentid, 
-				 c.DateCreated	
-			FROM {databaseOwner}{objectQualifier}vw_activeforums_TopicView AS T INNER JOIN 
-				{databaseOwner}{objectQualifier}activeforums_Content AS C ON T.ContentId = C.ContentId
-			WHERE T.PortalId = @PortalId AND T.ModuleId = @ModuleId AND 
-				(@TimeSpan = 0 OR DATEDIFF(hh,c.DateCreated,GetDate()) <= @TimeSpan) AND
-				(@AuthorId = 0 OR T.AuthorId = @AuthorId) AND
-				(@TagCount = 0 OR  T.TopicId IN (
+			SELECT  t.tid,
+				 t.cid, 
+				 c.DateCreated,
+				 t.mcpt	
+			FROM #tmpResults AS T INNER JOIN 
+				{databaseOwner}{objectQualifier}activeforums_Content AS C ON T.cid = C.ContentId
+			WHERE (@TimeSpan = 0 OR DATEDIFF(hh,c.DateCreated,GetDate()) <= @TimeSpan) AND
+				(@AuthorId = 0 OR C.AuthorId = @AuthorId) AND
+				(@TagCount = 0 OR  T.tid IN (
 					SELECT TopicId FROM {databaseOwner}{objectQualifier}activeforums_Tags INNER JOIN
 						{databaseOwner}{objectQualifier}activeforums_Topics_Tags ON {databaseOwner}{objectQualifier}activeforums_Tags.TagId = {databaseOwner}{objectQualifier}activeforums_Topics_Tags.TagId INNER JOIN
 						@TagTable TT ON TT.Tag = {databaseOwner}{objectQualifier}activeforums_Tags.TagName)) 
-		) AS results INNER JOIN
-			#tmpResults as hits ON results.contentid = hits.cid
+		) AS results
 
 	RETURN	
 END
@@ -232,33 +219,32 @@ BEGIN
 
 	-- Get our main result set
 	SELECT TOP 1000 
-		ROW_NUMBER() OVER (ORDER BY CASE @Sort WHEN 1 THEN MAX(LastReplyDate) ELSE SUM(hits.mcpt) END DESC, MAX(LastReplyDate) DESC) as rn, 
-		TopicId as tid, 
-		MAX(ContentId) as cid, 
-		SUM(hits.mcpt) as mcpt
+		ROW_NUMBER() OVER (ORDER BY CASE @Sort WHEN 1 THEN MAX(LastReplyDate) ELSE SUM(mcpt) END DESC, MAX(LastReplyDate) DESC) as rn, 
+		tid, 
+		MAX(cid) as cid, 
+		SUM(mcpt) as mcpt
 	FROM (
-			SELECT  t.topicid, 
-				t.contentid, 
+			SELECT  t.tid, 
+				t.cid,
+				t.mcpt, 
 				CASE WHEN rc.DateCreated IS NULL THEN c.DateCreated ELSE rc.DateCreated END  as LastReplyDate		
-			FROM {databaseOwner}{objectQualifier}vw_activeforums_TopicView AS T INNER JOIN 
-				{databaseOwner}{objectQualifier}activeforums_ForumTopics FT on T.TopicId = FT.TopicId INNER JOIN
-				{databaseOwner}{objectQualifier}activeforums_Content AS C ON T.ContentId = C.ContentId  LEFT OUTER JOIN -- Left outer joins to get last reply date
+			FROM #tmpResults AS T INNER JOIN 
+				{databaseOwner}{objectQualifier}activeforums_ForumTopics FT on T.tid = FT.TopicId INNER JOIN
+				{databaseOwner}{objectQualifier}activeforums_Content AS C ON T.cid = C.ContentId  LEFT OUTER JOIN -- Left outer joins to get last reply date
 				{databaseOwner}{objectQualifier}activeforums_Replies as R on FT.LastReplyId = r.ReplyId LEFT OUTER JOIN
 				{databaseOwner}{objectQualifier}activeforums_Content as RC on R.ContentId = rc.ContentId 
-			WHERE T.PortalId = @PortalId AND T.ModuleId = @ModuleId AND 
-			(@TimeSpan = 0 OR DATEDIFF(hh,CASE WHEN rc.DateCreated IS NULL THEN c.DateCreated ELSE rc.DateCreated END,GetDate()) <= @TimeSpan) AND
-			(@AuthorId = 0 OR T.AuthorId = @AuthorId) AND
-			(@TagCount = 0 OR  T.TopicId IN (
+			WHERE (@TimeSpan = 0 OR DATEDIFF(hh,CASE WHEN rc.DateCreated IS NULL THEN c.DateCreated ELSE rc.DateCreated END,GetDate()) <= @TimeSpan) AND
+			(@AuthorId = 0 OR c.AuthorId = @AuthorId) AND
+			(@TagCount = 0 OR  T.tid IN (
 				SELECT TopicId FROM {databaseOwner}{objectQualifier}activeforums_Tags INNER JOIN
 					{databaseOwner}{objectQualifier}activeforums_Topics_Tags ON {databaseOwner}{objectQualifier}activeforums_Tags.TagId = {databaseOwner}{objectQualifier}activeforums_Topics_Tags.TagId INNER JOIN
 					@TagTable TT ON TT.Tag = {databaseOwner}{objectQualifier}activeforums_Tags.TagName))
-		) AS results INNER JOIN
-			#tmpResults as hits ON results.contentid = hits.cid
-	GROUP BY TopicID
+		) AS results
+	GROUP BY tid
 
 	RETURN	
 END
 
 
-GO
 
+GO

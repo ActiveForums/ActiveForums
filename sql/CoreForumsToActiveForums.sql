@@ -44,14 +44,14 @@ CREATE TABLE {databaseOwner}[{objectQualifier}dnntoaf_groups]
 	(
 	oldgroupid int NOT NULL,
 	newgroupid int NOT NULL
-	)  ON [PRIMARY]
+	)  
 GO
 
 ALTER TABLE {databaseOwner}[{objectQualifier}dnntoaf_groups] ADD CONSTRAINT
 	PK_{objectQualifier}dnntoaf_groups PRIMARY KEY CLUSTERED 
 	(
 	newgroupid
-	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) 
 
 GO
 
@@ -61,7 +61,7 @@ CREATE TABLE {databaseOwner}{objectQualifier}dnntoaf_forums
 	(
 	oldforumid int NOT NULL,
 	newforumid int NOT NULL
-	)  ON [PRIMARY]
+	)  
 GO
 
 
@@ -69,7 +69,7 @@ ALTER TABLE {databaseOwner}{objectQualifier}dnntoaf_forums ADD CONSTRAINT
 	PK_{objectQualifier}conversion_dnntoaf_forums PRIMARY KEY CLUSTERED 
 	(
 	newforumid
-	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
 
 GO
 
@@ -77,7 +77,7 @@ CREATE TABLE {databaseOwner}{objectQualifier}dnntoaf_topics
 	(
 	oldpostid int NOT NULL,
 	newtopicid int NOT NULL
-	)  ON [PRIMARY]
+	)  
 GO
 
 ALTER TABLE {databaseOwner}{objectQualifier}dnntoaf_topics ADD CONSTRAINT
@@ -85,7 +85,7 @@ ALTER TABLE {databaseOwner}{objectQualifier}dnntoaf_topics ADD CONSTRAINT
 	(
 	oldpostid,
 	newtopicid
-	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
 
 GO
 
@@ -93,7 +93,7 @@ CREATE TABLE {databaseOwner}{objectQualifier}dnntoaf_replies
 	(
 	oldpostid int NOT NULL,
 	newreplyid int NOT NULL
-	)  ON [PRIMARY]
+	)  
 GO
 
 ALTER TABLE {databaseOwner}{objectQualifier}dnntoaf_replies ADD CONSTRAINT
@@ -101,7 +101,7 @@ ALTER TABLE {databaseOwner}{objectQualifier}dnntoaf_replies ADD CONSTRAINT
 	(
 	oldpostid,
 	newreplyid
-	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
 
 GO
 

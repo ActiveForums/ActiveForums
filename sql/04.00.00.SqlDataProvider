@@ -15,8 +15,8 @@ CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Attachments](
  CONSTRAINT [PK_{objectQualifier}activeforums_Attachments] PRIMARY KEY CLUSTERED 
 (
 	[AttachID] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) 
+) 
 GO
 CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_AuditLog](
 	[AuditId] [int] IDENTITY(1,1) NOT NULL,
@@ -30,8 +30,8 @@ CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_AuditLog](
  CONSTRAINT [PK_{objectQualifier}activeforums_AuditLog] PRIMARY KEY CLUSTERED 
 (
 	[AuditId] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-) ON [PRIMARY]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) 
+) 
 GO
 CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Content](
 	[ContentId] [int] IDENTITY(1,1) NOT NULL,
@@ -47,8 +47,8 @@ CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Content](
  CONSTRAINT [PK_{objectQualifier}activeforums_Content] PRIMARY KEY CLUSTERED 
 (
 	[ContentId] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON)
+) 
 GO
 CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Filters](
 	[FilterId] [int] IDENTITY(1,1) NOT NULL,
@@ -60,8 +60,8 @@ CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Filters](
  CONSTRAINT [PK_{objectQualifier}activeforums_Filters] PRIMARY KEY CLUSTERED 
 (
 	[FilterId] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-) ON [PRIMARY]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON)
+) 
 GO
 CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Forums](
 	[ForumId] [int] IDENTITY(1,1) NOT NULL,
@@ -84,8 +84,8 @@ CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Forums](
  CONSTRAINT [PK_{objectQualifier}activeforums_Forums] PRIMARY KEY CLUSTERED 
 (
 	[ForumId] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-) ON [PRIMARY]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON)
+) 
 GO
 CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Forums_Tracking](
 	[TrackingId] [int] IDENTITY(1,1) NOT NULL,
@@ -98,14 +98,14 @@ CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Forums_Tracking](
  CONSTRAINT [PK_{objectQualifier}activeforums_Forums_Tracking] PRIMARY KEY CLUSTERED 
 (
 	[TrackingId] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-) ON [PRIMARY]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) 
+) 
 GO
 CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_ForumTopics](
 	[ForumId] [int] NOT NULL,
 	[TopicId] [int] NOT NULL,
 	[LastReplyId] [int] NULL
-) ON [PRIMARY]
+) 
 GO
 CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Groups](
 	[ForumGroupId] [int] IDENTITY(1,1) NOT NULL,
@@ -119,8 +119,8 @@ CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Groups](
  CONSTRAINT [PK_{objectQualifier}activeforums_Groups] PRIMARY KEY CLUSTERED 
 (
 	[ForumGroupId] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-) ON [PRIMARY]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) 
+) 
 GO
 CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Poll](
 	[PollID] [int] IDENTITY(1,1) NOT NULL,
@@ -133,8 +133,8 @@ CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Poll](
  CONSTRAINT [PK_{objectQualifier}activeforums_Poll] PRIMARY KEY CLUSTERED 
 (
 	[PollID] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-) ON [PRIMARY]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) 
+) 
 GO
 CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Poll_Options](
 	[PollOptionsID] [int] IDENTITY(1,1) NOT NULL,
@@ -145,8 +145,8 @@ CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Poll_Options](
  CONSTRAINT [PK_{objectQualifier}activeforums_Poll_Options] PRIMARY KEY CLUSTERED 
 (
 	[PollOptionsID] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-) ON [PRIMARY]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) 
+) 
 GO
 CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Poll_Results](
 	[PollResultsID] [int] IDENTITY(1,1) NOT NULL,
@@ -160,8 +160,8 @@ CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Poll_Results](
  CONSTRAINT [PK_{objectQualifier}activeforums_Poll_Results] PRIMARY KEY CLUSTERED 
 (
 	[PollResultsID] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-) ON [PRIMARY]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) 
+) 
 GO
 CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Ranks](
 	[RankId] [int] IDENTITY(1,1) NOT NULL,
@@ -174,8 +174,8 @@ CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Ranks](
  CONSTRAINT [PK_{objectQualifier}activeforums_Ranks] PRIMARY KEY CLUSTERED 
 (
 	[RankId] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-) ON [PRIMARY]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) 
+) 
 GO
 CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Replies](
 	[ReplyId] [int] IDENTITY(1,1) NOT NULL,
@@ -189,8 +189,8 @@ CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Replies](
  CONSTRAINT [PK_{objectQualifier}activeforums_Replies] PRIMARY KEY CLUSTERED 
 (
 	[ReplyId] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-) ON [PRIMARY]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) 
+) 
 GO
 CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Security](
 	[SecuredId] [int] NOT NULL,
@@ -222,14 +222,14 @@ CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Security](
 	[ModLock] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Security_ModLock]  DEFAULT ((0)),
 	[ModPin] [bit] NOT NULL CONSTRAINT [DF_{objectQualifier}activeforums_Security_ModPin]  DEFAULT ((0)),
 	[SecurityKey] [nvarchar](25)
-) ON [PRIMARY]
+) 
 GO
 CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Settings](
 	[ModuleId] [int] NOT NULL,
 	[GroupKey] [nvarchar](25) NULL,
 	[SettingName] [nvarchar](50) NOT NULL,
 	[SettingValue] [nvarchar](2000) NOT NULL
-) ON [PRIMARY]
+) 
 GO
 CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Subscriptions](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
@@ -242,8 +242,8 @@ CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Subscriptions](
  CONSTRAINT [PK_{objectQualifier}activeforums_Subscriptions] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-) ON [PRIMARY]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) 
+) 
 GO
 CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Tags](
 	[TagId] [int] IDENTITY(1,1) NOT NULL,
@@ -256,8 +256,8 @@ CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Tags](
  CONSTRAINT [PK_{objectQualifier}activeforums_Tags] PRIMARY KEY CLUSTERED 
 (
 	[TagId] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-) ON [PRIMARY]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) 
+) 
 GO
 CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Templates](
 	[TemplateId] [int] IDENTITY(1,1) NOT NULL,
@@ -273,8 +273,8 @@ CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Templates](
  CONSTRAINT [PK_{objectQualifier}activeforums_Templates] PRIMARY KEY CLUSTERED 
 (
 	[TemplateId] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) 
+)
 GO
 CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Topics](
 	[TopicId] [int] IDENTITY(1,1) NOT NULL,
@@ -296,8 +296,8 @@ CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Topics](
  CONSTRAINT [PK_{objectQualifier}activeforums_Topics] PRIMARY KEY CLUSTERED 
 (
 	[TopicId] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-) ON [PRIMARY]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) 
+) 
 GO
 CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Topics_Ratings](
 	[RatingID] [int] IDENTITY(1,1) NOT NULL,
@@ -312,13 +312,13 @@ CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Topics_Ratings](
  CONSTRAINT [PK_{objectQualifier}activeforums_Topics_Ratings] PRIMARY KEY CLUSTERED 
 (
 	[RatingID] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-) ON [PRIMARY]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) 
+) 
 GO
 CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Topics_Tags](
 	[TopicId] [int] NOT NULL,
 	[TagId] [int] NOT NULL
-) ON [PRIMARY]
+) 
 GO
 CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Topics_Tracking](
 	[TrackingId] [int] IDENTITY(1,1) NOT NULL,
@@ -330,8 +330,8 @@ CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Topics_Tracking](
  CONSTRAINT [PK_{objectQualifier}activeforums_Topics_Tracking] PRIMARY KEY CLUSTERED 
 (
 	[TrackingId] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-) ON [PRIMARY]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) 
+) 
 GO
 CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_UserProfiles](
 	[ProfileId] [int] IDENTITY(1,1) NOT NULL,
@@ -378,8 +378,8 @@ CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_UserProfiles](
  CONSTRAINT [PK_{objectQualifier}activeforums_UserProfiles] PRIMARY KEY CLUSTERED 
 (
 	[ProfileId] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-) ON [PRIMARY]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) 
+) 
 GO
 SET ANSI_PADDING OFF
 GO
@@ -1875,50 +1875,7 @@ AS
 DELETE FROM {databaseOwner}{objectQualifier}activeforums_ForumTopics WHERE ForumId = @ForumId
 DELETE FROM {databaseOwner}{objectQualifier}activeforums_Forums WHERE ForumId = @ForumId
 GO
-CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Search_ManageFullText]
-@Enable bit
-AS
-DECLARE @FullTextEnabled bit
-If @Enable = 1
-	BEGIN
-	
-	SET @FullTextEnabled = 0
-	
-	DECLARE @dbName nvarchar(1000)
-	SET @dbName = DB_NAME()
-	SET @FullTextEnabled = (SELECT DATABASEPROPERTY(@dbName, 'IsFulltextEnabled'))
-	If @FullTextEnabled = 0
-		BEGIN
-			exec sp_fulltext_database 'enable'
-			SET @FullTextEnabled = (SELECT DATABASEPROPERTY(@dbName, 'IsFulltextEnabled'))
-		END
-	IF @FullTextEnabled > 0
-		BEGIN
-			IF OBJECTPROPERTY(object_id('{databaseOwner}{objectQualifier}activeforums_Content'),'TableHasActiveFulltextIndex') = 0
-				BEGIN
-					
-					IF  NOT EXISTS (SELECT * FROM sysfulltextcatalogs ftc WHERE ftc.name = N'{objectQualifier}activeforums_Catalog')
-						BEGIN
-							exec sp_fulltext_catalog '{objectQualifier}activeforums_Catalog', 'create'
-						END					
-					exec sp_fulltext_table N'{databaseOwner}{objectQualifier}activeforums_Content', N'create', N'{objectQualifier}activeforums_Catalog', N'PK_{objectQualifier}activeforums_Content'
-					exec sp_fulltext_column N'{databaseOwner}{objectQualifier}activeforums_Content', N'Subject', N'add', 1033  
-					exec sp_fulltext_column N'{databaseOwner}{objectQualifier}activeforums_Content', N'Body', N'add', 1033  
-					exec sp_fulltext_table N'{databaseOwner}{objectQualifier}activeforums_Content', N'activate'
-					exec sp_fulltext_catalog '{objectQualifier}activeforums_Catalog', 'start_full'
-				END
-		END
-	SELECT @FullTextEnabled
-	END
-ELSE
-	BEGIN
-			IF OBJECTPROPERTY(object_id('{databaseOwner}{objectQualifier}activeforums_Content'),'TableHasActiveFulltextIndex') = 1
-				BEGIN
-					exec sp_fulltext_table N'{databaseOwner}{objectQualifier}activeforums_Content', N'drop'					
-				END
-		SELECT @Enable
-	END
-GO
+
 
 CREATE PROCEDURE {databaseOwner}{objectQualifier}activeforums_TP_PortalForums
 @PortalId int

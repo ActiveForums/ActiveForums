@@ -101,11 +101,11 @@ CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_SearchCache](
 	[duration] [int] NOT NULL,
 	[userId] [int] NOT NULL,
 	[context] [nvarchar](max) NULL,
- CONSTRAINT [PK_activeforums_SearchCache] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_{objectQualifier}activeforums_SearchCache] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-) ON [PRIMARY]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) 
+) 
 
 GO
 
@@ -234,18 +234,44 @@ AS
 
 BEGIN
     
-    -- Test if it's installed on the server  
-    IF FullTextServiceProperty('IsFullTextInstalled') < 1
+	-- We should never get past this point if the sql server is running on azure
+	-- as it does not support full text search
+	DECLARE @EngineEdition int
+	SELECT @EngineEdition = CONVERT(int, SERVERPROPERTY('EngineEdition'))
+	IF @EngineEdition = 5
+	BEGIN
+		SELECT -4 as Status
+		RETURN
+	END
+
+	DECLARE @sqlCommand nvarchar(max)
+
+	-- Test if full text is installed on the server
+	-- Jump through a few hoops here with dynamic SQL to allow this proc to be 
+	-- Created on Azure though it will never execute this code
+	DECLARE @IsFullTextInstalled bit
+	SET @IsFullTextInstalled = 0
+	SET @sqlCommand = 'SELECT @fti = FullText' + 'ServiceProperty(''IsFullTextInstalled'')'
+	EXECUTE sp_executesql @sqlCommand, N'@fti bit out', @IsFullTextInstalled out
+     
+    IF @IsFullTextInstalled < 1
 	BEGIN
 		SELECT 0 as Status
 		RETURN
 	END
 	
 	-- Test if it's enabled in the database
-	DECLARE @dbName nvarchar(1000)
-	SET @dbName = DB_NAME()
+	-- Jump through a few hoops here with dynamic SQL to allow this proc to be 
+	-- Created on Azure though it will never execute this code
+	DECLARE @IsFullTextEnabled bit;
+	SET @IsFullTextEnabled = 0
+	SET @sqlCommand = 'DECLARE @dbName nvarchar(1000) 
+						SET @dbName = DB_' + 'NAME()
+						SELECT @fte = DATABASE' + 'PROPERTY(@dbName, ''IsFulltextEnabled'')'
 
-	IF DATABASEPROPERTY(@dbName, 'IsFulltextEnabled') = 0
+	EXECUTE sp_executesql @sqlCommand, N'@fte bit out', @IsFullTextEnabled out
+
+	IF @IsFullTextEnabled = 0
 	BEGIN
 		SELECT -1 as Status
 		RETURN
@@ -368,16 +394,19 @@ END
 
 -- Performance Enhancement
 
-SELECT *
-INTO #forums
+CREATE TABLE #forums(id int NOT NULL) 
+INSERT INTO #forums(id)
+SELECT id
 FROM {databaseOwner}{objectQualifier}activeforums_Functions_Split(@Forums,':')
 
-SELECT *
-INTO #tags
+CREATE TABLE #tags(Tag nvarchar(400) NOT NULL)
+INSERT INTO #tags(tag)
+SELECT tag
 FROM @TagTable
 
-SELECT *
-INTO #words
+CREATE TABLE #words(Word nvarchar(200) not null)
+INSERT INTO #words(word)
+SELECT word
 FROM @Words
 
 
@@ -421,6 +450,10 @@ BEGIN
 						GROUP BY ContentId) as hits
 						WHERE MatchPct = 1 or @MatchType <> 1 
 		) AS hits ON results.ContentId = hits.cid
+
+	DROP TABLE #forums
+	DROP TABLE #tags
+	DROP TABLE #words
 
 	RETURN	
 END
@@ -466,6 +499,10 @@ BEGIN
 		) AS hits ON results.ContentId = hits.cid
 	GROUP BY TopicID
 
+	DROP TABLE #forums
+	DROP TABLE #tags
+	DROP TABLE #words
+
 	RETURN	
 END
 
@@ -495,6 +532,10 @@ BEGIN
 						#tags TT ON TT.Tag = {databaseOwner}{objectQualifier}activeforums_Tags.TagName))
 		) as Results
 			
+	DROP TABLE #forums
+	DROP TABLE #tags
+	DROP TABLE #words
+
 	RETURN
 END
 
@@ -527,6 +568,10 @@ BEGIN
 		) as Results
 	GROUP BY TopicId	
 			
+	DROP TABLE #forums
+	DROP TABLE #tags
+	DROP TABLE #words
+
 	RETURN
 END
 
@@ -655,8 +700,10 @@ BEGIN
 	SET @SearchId = SCOPE_IDENTITY();
 END
 
-SELECT *
-INTO #tmpResults
+CREATE TABLE #tmpResults(rn int, tid int, cid int, mpct decimal(15,4))
+
+INSERT INTO #tmpResults(rn, tid, cid, mpct)
+SELECT rn, tid, cid, mpct
 FROM @tmpResults
 
 -- Select out total row count and search id
@@ -768,6 +815,8 @@ IF @ResultType = 0
 			{databaseOwner}{objectQualifier}activeforums_Subscriptions AS S ON S.ForumId = FT.ForumId AND S.TopicId = T.TopicId and S.UserId = @UserId
 	WHERE rn > @RowIndex AND rn <= (@RowIndex + @MaxRows)
 	ORDER BY rn
+
+	DROP TABLE #tmpResults
 GO
 
 
@@ -800,6 +849,9 @@ AS
 
 	-- Populate our active topics table
 	
+	CREATE TABLE #ActiveTopics(RowRank int NOT NULL, TopicId int NOT NULL)
+	
+	INSERT INTO #ActiveTopics(RowRank, TopicId)
 	SELECT ROW_NUMBER() OVER (
 			ORDER BY 
 				CASE 
@@ -807,7 +859,6 @@ AS
 				CASE  
 					WHEN @Sort = 'ASC' THEN T.LastReplyDate END ASC) as RowRank, 
 		T.TopicId
-	INTO #ActiveTopics
 	FROM {databaseOwner}{objectQualifier}vw_activeforums_TopicsView T INNER JOIN
 		{databaseOwner}{objectQualifier}activeforums_Functions_Split(@ForumIds,';') as ft ON ft.id = T.ForumId
 	WHERE T.PortalId = @PortalId AND T.ModuleId = @ModuleId AND DATEDIFF(mi,t.LastReplyDate,GetDate())<= @TimeFrame
@@ -883,6 +934,8 @@ AS
 				
 	WHERE RowRank > @RowIndex AND RowRank <= (@RowIndex + @MaxRows)
 	ORDER BY RowRank
+
+	DROP TABLE #ActiveTopics
 GO
 
 
@@ -920,11 +973,16 @@ AS
 		{databaseOwner}{objectQualifier}activeforums_Functions_Split(@ForumIds,';') as FL ON FL.id = F.ForumId
 
 	-- Dedupe the topics list
+	CREATE TABLE #ParticipatedTopicIds(TopicId int NOT NULL)
+	
+	INSERT INTO #ParticipatedTopicIds(TopicId)
 	SELECT DISTINCT TopicId 
-	INTO #ParticipatedTopicIds
 	FROM @TopicIds
 
 	-- Populate our participated topics table
+	CREATE TABLE #ParticipatedTopics(RowRank int NOT NULL, TopicId int NOT NULL)
+
+	INSERT INTO #ParticipatedTopics(RowRank, TopicId)
 	SELECT ROW_NUMBER() OVER (
 			ORDER BY 
 				CASE 
@@ -932,7 +990,6 @@ AS
 				CASE  
 					WHEN @Sort = 'ASC' THEN F.LastReplyDate END ASC) as RowRank, 
 		T.TopicId
-	INTO #ParticipatedTopics
 	FROM {databaseOwner}{objectQualifier}activeforums_Topics T INNER JOIN
 		#ParticipatedTopicIds PT ON T.TopicId = PT.TopicId INNER JOIN
 		{databaseOwner}{objectQualifier}activeforums_ForumTopics F on F.TopicId = T.TopicId
@@ -1004,6 +1061,9 @@ AS
 				
 	WHERE RowRank > @RowIndex AND RowRank <= (@RowIndex + @MaxRows)
 	ORDER BY RowRank
+
+	DROP TABLE #ParticipatedTopicIds
+	DROP TABLE #ParticipatedTopics
 GO
 
 
@@ -1026,6 +1086,9 @@ AS
 
 	-- Populate our unread topics table
 	
+	CREATE TABLE #NotReadTopics(RowRank int NOT NULL, TopicId int NOT NULL)
+
+	INSERT INTO #NotReadTopics(RowRank, TopicId)
 	SELECT ROW_NUMBER() OVER (
 			ORDER BY 
 				CASE 
@@ -1033,7 +1096,6 @@ AS
 				CASE  
 					WHEN @Sort = 'ASC' THEN T.LastReplyDate END ASC) as RowRank, 
 		T.TopicId
-	INTO #NotReadTopics
 	FROM {databaseOwner}{objectQualifier}vw_activeforums_TopicsView T INNER JOIN
 		{databaseOwner}{objectQualifier}activeforums_Functions_Split(@ForumIds,';') as fids ON fids.id = T.ForumId LEFT OUTER JOIN 
 		{databaseOwner}{objectQualifier}activeforums_Forums_Tracking as FT on ft.forumid = t.Forumid AND ft.UserId = @UserId 
@@ -1121,6 +1183,8 @@ AS
 				
 	WHERE RowRank > @RowIndex AND RowRank <= (@RowIndex + @MaxRows)
 	ORDER BY RowRank
+
+	DROP TABLE #NotReadTopics
 GO
 
 
@@ -1142,6 +1206,9 @@ AS
 
 	-- Populate our taged topics table
 	
+	CREATE TABLE #TagTopics(RowRank int NOT NULL, TopicId int NOT NULL)
+
+	INSERT INTO #TagTopics(RowRank, TopicId)
 	SELECT ROW_NUMBER() OVER (
 			ORDER BY 
 				CASE 
@@ -1149,7 +1216,6 @@ AS
 				CASE  
 					WHEN @Sort = 'ASC' THEN T.LastReplyDate END ASC) as RowRank, 
 		T.TopicId
-	INTO #TagTopics
 	FROM {databaseOwner}{objectQualifier}vw_activeforums_TopicsView T INNER JOIN
 		{databaseOwner}{objectQualifier}activeforums_Functions_Split(@ForumIds,';') as fids ON fids.id = T.ForumId INNER JOIN 
 		{databaseOwner}{objectQualifier}activeforums_Topics_Tags as tt ON tt.TopicId = t.TopicId
@@ -1227,6 +1293,8 @@ AS
 				
 	WHERE RowRank > @RowIndex AND RowRank <= (@RowIndex + @MaxRows)
 	ORDER BY RowRank
+
+	DROP TABLE #TagTopics
 GO
 
 
@@ -1247,6 +1315,9 @@ AS
 
 	-- Populate our unanswered topics table
 	
+	CREATE TABLE #UnansweredTopics(RowRank int NOT NULL, TopicId int NOT NULL)
+
+	INSERT INTO #UnansweredTopics(RowRank, TopicId)
 	SELECT ROW_NUMBER() OVER (
 			ORDER BY 
 				CASE 
@@ -1254,7 +1325,6 @@ AS
 				CASE  
 					WHEN @Sort = 'ASC' THEN T.LastReplyDate END ASC) as RowRank, 
 		T.TopicId
-	INTO #UnansweredTopics
 	FROM {databaseOwner}{objectQualifier}vw_activeforums_TopicsView T INNER JOIN
 		{databaseOwner}{objectQualifier}activeforums_Functions_Split(@ForumIds,';') as fids ON fids.id = T.ForumId		
 	WHERE T.LastReplyId = 0 AND T.PortalId = @PortalId AND T.ModuleId = @ModuleId
@@ -1330,5 +1400,7 @@ AS
 				
 	WHERE RowRank > @RowIndex AND RowRank <= (@RowIndex + @MaxRows)
 	ORDER BY RowRank
+
+	DROP TABLE #UnansweredTopics
 GO
 

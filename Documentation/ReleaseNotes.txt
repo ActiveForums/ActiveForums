@@ -30,6 +30,7 @@
 			<li>Updated performance for the FullText search on sites with large amounts of topics/replies.</li>
 			<li>Added/updated copyright statements in all C# code files.</li>
 			<li>Fixed Moderation trust AJAX issue when trying to edit a user's profile to apply trust.</li>
+			<li>Should now be compatible with Azure.</li>
 		</ul>
 	</p>
    <p class="Owner">

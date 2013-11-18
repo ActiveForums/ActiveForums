@@ -522,11 +522,11 @@ AS
 SELECT
 	a.AttachID,
 	UserID,
-	[Filename],
+	a.[Filename],
 	DateAdded,
 	DateUpdated,
 	FileData,
-	ContentType,
+	a.ContentType,
 	FileSize,
 	AllowDownload,
 	DisplayInline,

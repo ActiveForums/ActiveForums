@@ -198,48 +198,48 @@ INCLUDE ( [View],
 [ModUser],
 [ModEdit],
 [ModLock],
-[ModPin]) WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) ON [PRIMARY]
+[ModPin]) WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) 
 GO
 CREATE NONCLUSTERED INDEX [idx_{objectQualifier}activeforums_Settings_Opt1] ON {databaseOwner}{objectQualifier}activeforums_Settings
 (
 	[GroupKey] ASC,
 	[SettingName] ASC
 )
-INCLUDE ( [SettingValue]) WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) ON [PRIMARY]
+INCLUDE ( [SettingValue]) WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) 
 GO
 CREATE CLUSTERED INDEX [idx_{objectQualifier}activeforums_Settings_Opt2] ON {databaseOwner}{objectQualifier}activeforums_Settings
 (
 	[GroupKey] ASC,
 	[SettingName] ASC,
 	[ModuleId] ASC
-)WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) ON [PRIMARY]
+)WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) 
 GO
 CREATE NONCLUSTERED INDEX [idx_{objectQualifier}activeforums_Topics_Opt1] ON {databaseOwner}{objectQualifier}activeforums_Topics 
 (
 	[TopicId] ASC,
 	[IsDeleted] ASC,
 	[IsApproved] ASC
-)WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) ON [PRIMARY]
+)WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) 
 GO
 CREATE NONCLUSTERED INDEX [idx_{objectQualifier}activeforums_Topics_Opt2] ON {databaseOwner}{objectQualifier}activeforums_Topics 
 (
 	[IsApproved] ASC,
 	[IsDeleted] ASC,
 	[TopicId] ASC
-)WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) ON [PRIMARY]
+)WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) 
 GO
 CREATE NONCLUSTERED INDEX [idx_{objectQualifier}activeforums_Topics_Tracking_Opt1] ON {databaseOwner}{objectQualifier}activeforums_Topics_Tracking
 (
 	[UserId] ASC,
 	[TopicId] ASC
 )
-INCLUDE ( [LastReplyId]) WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) ON [PRIMARY]
+INCLUDE ( [LastReplyId]) WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) 
 GO
 CREATE NONCLUSTERED INDEX [idx_{objectQualifier}activeforums_Replies_Opt1] ON {databaseOwner}{objectQualifier}activeforums_Replies
 (
 	[ReplyId] ASC,
 	[ContentId] ASC
-)WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) ON [PRIMARY]
+)WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) 
 GO
 CREATE NONCLUSTERED INDEX [idx_{objectQualifier}activeforums_Replies_Opt2] ON {databaseOwner}{objectQualifier}activeforums_Replies
 (
@@ -249,46 +249,46 @@ CREATE NONCLUSTERED INDEX [idx_{objectQualifier}activeforums_Replies_Opt2] ON {d
 	[ContentId] ASC,
 	[StatusId] ASC
 )
-INCLUDE ( [ReplyId]) WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) ON [PRIMARY]
+INCLUDE ( [ReplyId]) WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) 
 GO
 CREATE NONCLUSTERED INDEX [idx_{objectQualifier}activeforums_Content_Opt1] ON {databaseOwner}{objectQualifier}activeforums_Content
 (
 	[ContentId] ASC,
 	[AuthorId] ASC
 )
-INCLUDE ( [IPAddress]) WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) ON [PRIMARY]
+INCLUDE ( [IPAddress]) WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) 
 GO
 CREATE NONCLUSTERED INDEX [idx_{objectQualifier}activeforums_Content_Opt2] ON {databaseOwner}{objectQualifier}activeforums_Content
 (
 	[ContentId] ASC,
 	[IsDeleted] ASC
-)WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) ON [PRIMARY]
+)WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) 
 GO
 CREATE NONCLUSTERED INDEX [idx_{objectQualifier}activeforums_ForumTopics_Opt1] ON {databaseOwner}{objectQualifier}activeforums_ForumTopics
 (
 	[ForumId] ASC,
 	[TopicId] ASC
-)WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) ON [PRIMARY]
+)WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) 
 GO
 CREATE NONCLUSTERED INDEX [idx_{objectQualifier}activeforums_ForumTopics_Opt2] ON {databaseOwner}{objectQualifier}activeforums_ForumTopics
 (
 	[ForumId] ASC,
 	[TopicId] ASC,
 	[LastReplyId] ASC
-)WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) ON [PRIMARY]
+)WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) 
 GO
 CREATE NONCLUSTERED INDEX [idx_{objectQualifier}activeforums_ForumTopics_Opt3] ON {databaseOwner}{objectQualifier}activeforums_ForumTopics
 (
 	[TopicId] ASC,
 	[ForumId] ASC
-)WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) ON [PRIMARY]
+)WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) 
 GO
 CREATE NONCLUSTERED INDEX [idx_{objectQualifier}activeforums_ForumTopics_Opt4] ON {databaseOwner}{objectQualifier}activeforums_ForumTopics
 (
 	[TopicId] ASC,
 	[ForumId] ASC,
 	[LastReplyId] ASC
-)WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) ON [PRIMARY]
+)WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) 
 GO
 CREATE NONCLUSTERED INDEX [idx_{objectQualifier}activeforums_Forums_Tracking_Opt1] ON {databaseOwner}{objectQualifier}activeforums_Forums_Tracking
 (
@@ -296,14 +296,14 @@ CREATE NONCLUSTERED INDEX [idx_{objectQualifier}activeforums_Forums_Tracking_Opt
 	[ForumId] ASC
 )
 INCLUDE ( [MaxTopicRead],
-[MaxReplyRead]) WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) ON [PRIMARY]
+[MaxReplyRead]) WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) 
 GO
 CREATE NONCLUSTERED INDEX [idx_{objectQualifier}activeforums_UserProfiles_Opt1] ON {databaseOwner}{objectQualifier}activeforums_UserProfiles
 (
 	[UserId] ASC
 )
 INCLUDE ( [PortalId],
-[DateLastActivity]) WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) ON [PRIMARY]
+[DateLastActivity]) WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) 
 GO
 CREATE NONCLUSTERED INDEX [idx_{objectQualifier}activeforums_UserProfiles_Opt2] ON {databaseOwner}{objectQualifier}activeforums_UserProfiles
 (
@@ -329,7 +329,7 @@ INCLUDE ( [TopicCount],
 [Occupation],
 [Location],
 [Interests],
-[WebSite]) WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) ON [PRIMARY]
+[WebSite]) WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) 
 GO
 CREATE NONCLUSTERED INDEX [idx_{objectQualifier}activeforums_UserProfiles_Opt3] ON {databaseOwner}{objectQualifier}activeforums_UserProfiles 
 (
@@ -374,5 +374,5 @@ INCLUDE ( [ProfileId],
 [Interests],
 [WebSite],
 [Badges],
-[DateLastPost]) WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) ON [PRIMARY]
+[DateLastPost]) WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF) 
 GO

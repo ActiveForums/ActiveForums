@@ -1,19 +1,20 @@
 ﻿<dotnetnuke type="Package" version="5.0">
     <packages>
         <package name="Active Forums" type="Module" version="05.00.05">
-            <friendlyname>Active Forums</friendlyname>
+            <friendlyName>Active Forums</friendlyName>
             <description>Active Forums - Forum module for DotNetNuke</description>
             <iconFile></iconFile>
             <owner>
                 <name>DotNetNuke Active Forums Module</name>
                 <organization>DotNetNuke Corporation</organization>
                 <url>activeforums.codeplex.com</url>
-                <email />
+                <email>support@dnnsoftware.com</email>
             </owner>
             <license src="License.txt"></license>
             <releaseNotes src="ReleaseNotes.txt"></releaseNotes>
+            <azureCompatible>true</azureCompatible>
             <dependencies>
-                <dependency type="CoreVersion">07.01.00</dependency>
+                <dependency type="CoreVersion">07.00.00</dependency>
             </dependencies>
             <components>
                 <component type="Module">
@@ -310,10 +311,11 @@
           <name>DotNetNuke Active Forums Module</name>
           <organization>DotNetNuke Corporation</organization>
           <url>activeforums.codeplex.com</url>
-          <email />
+          <email>support@dnnsoftware.com</email>
         </owner>
         <license src="License.txt"></license>
         <releaseNotes src="ReleaseNotes.txt"></releaseNotes>
+        <azureCompatible>true</azureCompatible>
         <dependencies>
           <dependency type="CoreVersion">07.00.00</dependency>
         </dependencies>
