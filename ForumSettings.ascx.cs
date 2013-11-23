@@ -31,13 +31,21 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 	public partial class ForumSettings : ForumSettingsBase
 	{
 
+	    private int? _fullTextStatus;
+        
+	    private bool IsFullTextAvailable
+	    {
+	        get
+	        {
+	            return _fullTextStatus.HasValue && _fullTextStatus != -4 && _fullTextStatus != 0;
+	        }
+	    }
+
 		protected override void OnLoad(EventArgs e)
 		{
 			base.OnLoad(e);
 
             ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
-
-			ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
 
 			txtPageSize.Style.Add("float", "none");
 			txtPageSize.EmptyMessageStyle.CssClass += "dnnformHint";
@@ -78,6 +86,22 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 
 			}
 
+            // Full Text
+		    rdFullTextSearch.Enabled = IsFullTextAvailable;
+            switch (_fullTextStatus)
+            {
+                case -4:
+                    ltrFullTextMessage.Text = LocalizeString("FullTextAzure");
+                    ltrFullTextMessage.Visible = true;
+                    break;
+                case 0:
+                    ltrFullTextMessage.Text = LocalizeString("FullTextNotInstalled");
+                    ltrFullTextMessage.Visible = true;
+                    break;
+                default:
+                    ltrFullTextMessage.Visible = false;
+                    break;
+            }
 
 		}
 
@@ -94,8 +118,13 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 		/// -----------------------------------------------------------------------------
 		public override void LoadSettings()
 		{
+            // Note, this is called before OnLoad
+
 			try
 			{
+			    _fullTextStatus = DataProvider.Instance().Search_GetFullTextStatus();
+
+
 				if (Page.IsPostBack == false)
 				{
 					BindThemes();
@@ -124,7 +153,9 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     Utilities.SelectListItemByValue(drpSignatures, Signatures);
                     Utilities.SelectListItemByValue(drpUserDisplayMode, UserNameDisplay);
                     Utilities.SelectListItemByValue(rdEnableURLRewriter, FriendlyURLs);
-                    Utilities.SelectListItemByValue(rdFullTextSearch, FullTextSearch);
+
+                    Utilities.SelectListItemByValue(rdFullTextSearch, FullTextSearch && _fullTextStatus == 1); // 1 = Enabled Status
+
                     Utilities.SelectListItemByValue(rdMailQueue, MailQueue);
                     Utilities.SelectListItemByValue(rdPoints, EnablePoints);
                     Utilities.SelectListItemByValue(rdUsersOnline, EnableUsersOnline);
@@ -169,8 +200,6 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 		{
 			try
 			{
-				var fullTextCurrent = FullTextSearch;
-
 				Theme = drpThemes.SelectedValue;
 				Mode = drpMode.SelectedValue;
 				TemplateId = Utilities.SafeConvertInt(drpTemplates.SelectedValue);
@@ -225,15 +254,25 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 
 				try
 				{
-					if (FullTextSearch && fullTextCurrent == false)
+					if (IsFullTextAvailable && FullTextSearch && _fullTextStatus != 1) // Available, selected and not currently installed
 					{
-						DataProvider.Instance().Search_ManageFullText(FullTextSearch);
-                        var s = Utilities.GetSqlString("DotNetNuke.Modules.ActiveForums.FullText.sql");
-						DotNetNuke.Data.DataProvider.Instance().ExecuteScript(s);
+                        // Note: We have to jump through some hoops here to maintain Azure compatibility and prevent a race condition in the procs.
+
+                        // Create the full text manager proc
+					    var fullTextInstallScript = Utilities.GetSqlString("DotNetNuke.Modules.ActiveForums.sql.FullTextInstallPart1.sql");
+                        var result = DotNetNuke.Data.DataProvider.Instance().ExecuteScript(fullTextInstallScript);
+
+                        // Exectute the full text manager proc to setup the search indexes
+                        DataProvider.Instance().Search_ManageFullText(true);
+
+                        // Create the full text search proc (can't be reliably created until the indexes are in place)
+                        fullTextInstallScript = Utilities.GetSqlString("DotNetNuke.Modules.ActiveForums.sql.FullTextInstallPart2.sql");
+                        DotNetNuke.Data.DataProvider.Instance().ExecuteScript(fullTextInstallScript);
 					}
-					else if (FullTextSearch == false && fullTextCurrent)
+					else if (IsFullTextAvailable && !FullTextSearch) // Available, but not selected
 					{
-						DataProvider.Instance().Search_ManageFullText(FullTextSearch);
+                        // Remove the search indexes if they exist
+						DataProvider.Instance().Search_ManageFullText(false);
 					}
 				}
 				catch (Exception ex)
@@ -583,7 +622,8 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 			ForumConfig = xDoc.OuterXml;
 
 		}
-		
+	
+
         #endregion
 
 	}

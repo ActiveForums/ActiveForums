@@ -535,6 +535,15 @@ namespace DotNetNuke.Modules.ActiveForums.Controls {
         protected global::System.Web.UI.WebControls.RadioButtonList rdFullTextSearch;
         
         /// <summary>
+        /// ltrFullTextMessage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal ltrFullTextMessage;
+        
+        /// <summary>
         /// lblMailQueue control.
         /// </summary>
         /// <remarks>

@@ -1,9 +1,6 @@
 ﻿
-if exists (select * from {databaseOwner}{objectQualifier}sysobjects where id = object_id(N'{databaseOwner}{objectQualifier}activeforums_Search_ManageFullText') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
-drop procedure {databaseOwner}{objectQualifier}activeforums_Search_ManageFullText
-GO
-if exists (select * from {databaseOwner}{objectQualifier}sysobjects where id = object_id(N'{databaseOwner}{objectQualifier}activeforums_Search_FullText') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
-drop procedure {databaseOwner}{objectQualifier}activeforums_Search_FullText
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_Search_FullText]') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Search_FullText]
 GO
 
 SET ANSI_NULLS ON
@@ -11,56 +8,6 @@ GO
 
 SET QUOTED_IDENTIFIER ON
 GO
-
-CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Search_ManageFullText]
-@Enable bit
-AS
-DECLARE @FullTextEnabled bit
-If @Enable = 1
-	BEGIN
-	
-	SET @FullTextEnabled = 0
-	
-	DECLARE @dbName nvarchar(1000)
-	SET @dbName = DB_NAME()
-	SET @FullTextEnabled = (SELECT DATABASEPROPERTY(@dbName, 'IsFulltextEnabled'))
-	If @FullTextEnabled = 0
-		BEGIN
-			exec sp_fulltext_database 'enable'
-			SET @FullTextEnabled = (SELECT DATABASEPROPERTY(@dbName, 'IsFulltextEnabled'))
-		END
-	IF @FullTextEnabled > 0
-		BEGIN
-			IF OBJECTPROPERTY(object_id('{databaseOwner}{objectQualifier}activeforums_Content'),'TableHasActiveFulltextIndex') = 0
-				BEGIN
-					
-					IF  NOT EXISTS (SELECT * FROM sysfulltextcatalogs ftc WHERE ftc.name = N'activeforums_Catalog')
-						BEGIN
-							exec sp_fulltext_catalog 'activeforums_Catalog', 'create'
-						END					
-					exec sp_fulltext_table N'{databaseOwner}{objectQualifier}activeforums_Content', N'create', N'activeforums_Catalog', N'PK_activeforums_Content'
-					exec sp_fulltext_column N'{databaseOwner}{objectQualifier}activeforums_Content', N'Subject', N'add', 1033  
-					exec sp_fulltext_column N'{databaseOwner}{objectQualifier}activeforums_Content', N'Body', N'add', 1033  
-					exec sp_fulltext_table N'{databaseOwner}{objectQualifier}activeforums_Content', N'activate'
-					exec sp_fulltext_table '{databaseOwner}{objectQualifier}activeforums_Content', 'start_change_tracking'
-					exec sp_fulltext_table '{databaseOwner}{objectQualifier}activeforums_Content', 'start_background_updateindex'
-					--exec sp_fulltext_catalog 'activeforums_Catalog', 'start_full'
-					
-				END
-		END
-	SELECT @FullTextEnabled
-	END
-ELSE
-	BEGIN
-			IF OBJECTPROPERTY(object_id('{databaseOwner}{objectQualifier}activeforums_Content'),'TableHasActiveFulltextIndex') = 1
-				BEGIN
-					exec sp_fulltext_table N'{databaseOwner}{objectQualifier}activeforums_Content', N'drop'					
-				END
-		SELECT @Enable
-	END
-GO
-
-
 
 /****** Object:  StoredProcedure {databaseOwner}[{objectQualifier}activeforums_Search_FullText]    Script Date: 09/09/2013 18:50:31 ******/
 
@@ -81,10 +28,14 @@ CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Search_FullText]
 
 AS
 
+
+
 -- Temp table to store our full text search results
 
 
 -- Parse out the Words
+
+
 
 DECLARE @Word nvarchar(200)
 DECLARE @WordTable table (Word nvarchar(200) NOT NULL)
@@ -154,36 +105,40 @@ SELECT *
 INTO #forums
 FROM {databaseOwner}{objectQualifier}activeforums_Functions_Split(@Forums,':')
 
+
+
 -- Grab our full text results
 
 CREATE TABLE #tmpResults (cid INT not null, tid INT not null, mcpt DECIMAL)
 
+SET NOCOUNT ON;
+
 IF @SearchField = 0
 BEGIN
 	INSERT INTO #tmpResults (cid, tid, mcpt)
-	SELECT tmp.[KEY] as cid, tv.TopicId as tid, tmp.[RANK] as mcpt
+	SELECT tmp.[KEY], tv.TopicId, tmp.[RANK]
 	FROM CONTAINSTABLE({databaseOwner}{objectQualifier}activeforums_Content, (Body,[Subject]), @Contains) as tmp INNER JOIN
 		{databaseOwner}vw_{objectQualifier}activeforums_TopicViewForSearch as tv on tmp.[KEY] = tv.ContentId INNER JOIN
 		#forums as f on f.id = TV.ForumId
-		WHERE tv.ModuleId > 0 AND tv.PortalId = 0	
+	WHERE tv.ModuleId = @ModuleId AND tv.PortalId = @PortalId	
 END
 IF @SearchField = 1
 BEGIN
 	INSERT INTO #tmpResults (cid, tid, mcpt)
-	SELECT tmp.[KEY] as cid, tv.TopicId as tid, tmp.[RANK] as mcpt
+	SELECT tmp.[KEY], tv.TopicId, tmp.[RANK]
 	FROM CONTAINSTABLE({databaseOwner}{objectQualifier}activeforums_Content, ([Subject]), @Contains) as tmp INNER JOIN
 		{databaseOwner}vw_{objectQualifier}activeforums_TopicViewForSearch as tv on tmp.[KEY] = tv.ContentId INNER JOIN
 		#forums as f on f.id = TV.ForumId
-	WHERE tv.ModuleId > 0 AND tv.PortalId = 0
+	WHERE tv.ModuleId = @ModuleId AND tv.PortalId = @PortalId
 END
 IF @SearchField = 2
 BEGIN
 	INSERT INTO #tmpResults (cid, tid, mcpt)
-	SELECT tmp.[KEY] as cid, tv.TopicId as tid, tmp.[RANK] as mcpt
+	SELECT tmp.[KEY], tv.TopicId, tmp.[RANK]
 	FROM CONTAINSTABLE({databaseOwner}{objectQualifier}activeforums_Content, (Body), @Contains) as tmp INNER JOIN
 		{databaseOwner}vw_{objectQualifier}activeforums_TopicViewForSearch as tv on tmp.[KEY] = tv.ContentId INNER JOIN
 		#forums as f on f.id = TV.ForumId
-	WHERE tv.ModuleId > 0 AND tv.PortalId = 0
+	WHERE tv.ModuleId = @ModuleId AND tv.PortalId = @PortalId
 END
 
 
@@ -244,7 +199,5 @@ BEGIN
 
 	RETURN	
 END
-
-
 
 GO

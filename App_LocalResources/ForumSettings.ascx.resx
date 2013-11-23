@@ -477,4 +477,10 @@
   <data name="ProfileVisibility.Text" xml:space="preserve">
     <value>Profile Visibility</value>
   </data>
+  <data name="FullTextAzure.Text" xml:space="preserve">
+    <value>Full text searching is not supported on SQL Azure.</value>
+  </data>
+  <data name="FullTextNotInstalled.Text" xml:space="preserve">
+    <value>Full text search is not installed on the SQL Server.</value>
+  </data>
 </root>

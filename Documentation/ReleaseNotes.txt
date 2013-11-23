@@ -7,11 +7,10 @@
 <div class="License">
 	<p class="Owner">
 		<h3>About DotNetNuke Active Forums</h3>
-		<strong>Version 5.0.5</strong><br /><br />		
-		
+		<strong>Version 5.1.0</strong><br /><br />		
 	</p>
 </div>
-<h3>DotNetNuke Active Forums 05.00.05</h3>
+<h3>DotNetNuke Active Forums 05.01.00</h3>
 <p class="Contributor">
 	Will Morgenweck <br />
 	Benjiro Nelson <br />
@@ -22,6 +21,17 @@
 <hr/>
 <div class="License">
    <h3>Release Notes</h3>
+    <p class="Owner">
+	<b>Version 05.01.00</b><br /><br />
+	</p>
+	<p>
+		<ul>
+			<li>Revamped full text installation process so that it gives better feedback as to whether or not full text search is/can be enabled.</li>
+			<li>Consolidates SQL Updates from 5.0.4 and 5.0.5 (resolves issues for 5.0.4 beta users).</li>
+			<li>Removed debug code that was preventing full text from working on some systems.</li>
+			<li><a href="http://activeforums.codeplex.com/workitem/2047" target="_blank">Item 2047</a>Fixed issue where user was logged out of the site when replying to a post on a child portal. Thanks Ben!<li>
+		</ul>
+	</p>
    <p class="Owner">
 	<b>Version 05.00.05</b><br /><br />
 	</p>

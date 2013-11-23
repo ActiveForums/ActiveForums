@@ -53,6 +53,14 @@ IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'{databaseOwner
 DROP VIEW {databaseOwner}[{objectQualifier}vw_activeforums_TopicRatings]
 GO
 
+IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'{databaseOwner}[vw_{objectQualifier}activeforums_TopicViewForSearch]'))
+DROP VIEW {databaseOwner}[vw_{objectQualifier}activeforums_TopicViewForSearch]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}activeforums_Attachments_ListForPost') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}{objectQualifier}activeforums_Attachments_ListForPost
+GO
+
 -- Update Moderation Paths
 
 UPDATE {databaseOwner}{objectQualifier}CoreMessaging_NotificationTypeActions
@@ -1403,4 +1411,103 @@ AS
 
 	DROP TABLE #UnansweredTopics
 GO
+
+
+/****** Object:  View {databaseOwner}[vw_{objectQualifier}activeforums_TopicViewForSearch]  ******/
+
+CREATE VIEW {databaseOwner}[vw_{objectQualifier}activeforums_TopicViewForSearch]
+AS
+SELECT     r.TopicId, r.ContentId, f.ForumId, f.ModuleId, f.PortalId
+FROM         
+	{databaseOwner}{objectQualifier}activeforums_Replies r
+	join {databaseOwner}{objectQualifier}activeforums_ForumTopics ft on (r.TopicId = ft.TopicId)
+	join {databaseOwner}{objectQualifier}activeforums_Forums f on (ft.ForumId = f.forumid)
+ 
+WHERE     (r.IsApproved = 1) and (r.IsDeleted=0) and (f.Active = 1)
+
+UNION
+
+SELECT     t.TopicId, t.ContentId, f.ForumId, f.ModuleId, f.PortalId
+FROM         {databaseOwner}{objectQualifier}activeforums_Topics t
+	join {databaseOwner}{objectQualifier}activeforums_ForumTopics ft on (t.TopicId = ft.TopicId)
+	join {databaseOwner}{objectQualifier}activeforums_Forums f on (ft.ForumId = f.forumid)
+ 
+WHERE     (t.IsApproved = 1) and (t.IsDeleted=0) and (f.Active = 1)
+GO
+
+/****** Object:  StoredProcedure {databaseOwner}[{objectQualifier}activeforums_Attachments_ListForPost]     ******/
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}activeforums_Attachments_ListForPost
+@UserId int,
+@ContentId int
+AS
+SELECT
+	a.AttachID,
+	UserID,
+	a.[Filename],
+	DateAdded,
+	DateUpdated,
+	FileData,
+	a.ContentType,
+	FileSize,
+	AllowDownload,
+	DisplayInline,
+	DownloadCount
+	FROM {databaseOwner}{objectQualifier}activeforums_Attachments as a INNER JOIN
+	{databaseOwner}{objectQualifier}activeforums_Content_Attachments as c on a.attachid = c.attachid
+	WHERE c.ContentId = @ContentId
+GO
+
+-- Add Clustered Indexes for Azure Compatibility
+
+--- activeforums_Security
+
+IF NOT EXISTS(SELECT * FROM SYS.COLUMNS WHERE Name = N'id' and Object_ID = Object_ID(N'{databaseOwner}[{objectQualifier}activeforums_Security]'))    
+BEGIN
+	ALTER TABLE {databaseOwner}[{objectQualifier}activeforums_Security] 
+		ADD ID INT IDENTITY(1,1)
+END
+GO
+
+IF (OBJECT_ID(N'{databaseOwner}[PK_{objectQualifier}activeforums_Security]', 'PK') IS NOT NULL)
+BEGIN
+    ALTER TABLE {databaseOwner}[{objectQualifier}activeforums_Security] DROP CONSTRAINT [PK_{objectQualifier}activeforums_Security]
+END
+GO
+
+ALTER TABLE {databaseOwner}[{objectQualifier}activeforums_Security] 
+	ADD CONSTRAINT [PK_{objectQualifier}activeforums_Security] PRIMARY KEY CLUSTERED ( [Id] ASC  ) 
+		WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) 
+
+GO
+
+--- activeforums_Queue
+
+IF (OBJECT_ID(N'{databaseOwner}[PK_{objectQualifier}activeforums_Queue]', 'PK') IS NOT NULL)
+BEGIN
+    ALTER TABLE {databaseOwner}[{objectQualifier}activeforums_Queue] DROP CONSTRAINT [PK_{objectQualifier}activeforums_Queue]
+END
+GO
+
+ALTER TABLE {databaseOwner}[{objectQualifier}activeforums_Queue] 
+	ADD CONSTRAINT [PK_{objectQualifier}activeforums_Queue] PRIMARY KEY CLUSTERED ( [Id] ASC  ) 
+		WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) 
+GO
+
+--- activeforums_Queue
+
+IF (OBJECT_ID(N'{databaseOwner}[PK_{objectQualifier}activeforums_Topics_Tags]', 'PK') IS NOT NULL)
+BEGIN
+    ALTER TABLE {databaseOwner}[{objectQualifier}activeforums_Topics_Tags] DROP CONSTRAINT [PK_{objectQualifier}activeforums_Topics_Tags]
+END
+GO
+
+ALTER TABLE {databaseOwner}[{objectQualifier}activeforums_Topics_Tags] 
+	ADD CONSTRAINT [PK_{objectQualifier}activeforums_Topics_Tags] PRIMARY KEY CLUSTERED ( TopicId, TagId ) 
+		WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) 
+GO
+
+
+
+
 
