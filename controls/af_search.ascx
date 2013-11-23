@@ -41,12 +41,12 @@
                         <label><%= GetSharedResource("SearchReplies") %></label><span><%# Eval("ReplyCount") %></span><br/>
                         <label><%= GetSharedResource("SearchViews") %></label><span><%# Eval("ViewCount") %></span>
                     </div>
-                    <div class="af-forum"><label><%= GetSharedResource("SearchForum") %></label> <a class="af-forum-url" href="<%# GetForumUrl() %>"><%# Eval("ForumName") %></a></div>
-                    <div class="af-thread"><label><%= GetSharedResource("SearchTopic") %></label> <a class="af-thread-url" href="<%# GetThreadUrl() %>"><%# Eval("Subject") %></a></div>
+                    <div class="af-forum"><label><%= GetSharedResource("SearchForum") %></label> <a class="af-forum-url" href='<%# GetForumUrl() %>'><%# Eval("ForumName") %></a></div>
+                    <div class="af-thread"><label><%= GetSharedResource("SearchTopic") %></label> <a class="af-thread-url" href='<%# GetThreadUrl() %>'><%# Eval("Subject") %></a></div>
                     <div class="af-postinfo"><label><%= GetSharedResource("SearchPosted") %></label><%# GetPostTime() %> <%= GetSharedResource("By") %> <%# GetAuthor() %></div>   
                 </div>
                 <div class="af-post-content">
-                    <a class="af-post-url" href="<%# GetPostUrl() %>"><%# Eval("PostSubject") %></a>
+                    <a class="af-post-url" href='<%# GetPostUrl() %>'><%# Eval("PostSubject") %></a>
                     <div><%# GetPostSnippet() %></div>
                 </div>
             </div>
@@ -59,10 +59,10 @@
         <ItemTemplate>
             <tr>
                 <td class="af-icon">
-                    <a href="<%# GetThreadUrl() %>"><asp:Image runat="server" ImageUrl='<%#GetIcon()%>' /></a>
+                    <a href='<%# GetThreadUrl() %>'><asp:Image runat="server" ImageUrl='<%#GetIcon()%>' /></a>
                 </td>
                 <td class="af-thread">
-                    <a class="af-thread-link" href="<%# GetThreadUrl() %>"><%# Eval("Subject") %></a><br/>
+                    <a class="af-thread-link" href='<%# GetThreadUrl() %>'><%# Eval("Subject") %></a><br/>
                     <%= GetSharedResource("Started") %> <%# GetPostTime() %> <%= GetSharedResource("By") %> <%# GetAuthor() %>
                     <span class="af-mini-pager"><%# GetMiniPager() %></span> 
                 </td>
@@ -76,7 +76,7 @@
                 </td>
                 <td class="af-forum">
                    <label><%= GetSharedResource("SearchForum") %></label><br/>
-                   <a class="af-forum-url" href="<%# GetForumUrl() %>"><%# Eval("ForumName") %></a> 
+                   <a class="af-forum-url" href='<%# GetForumUrl() %>'><%# Eval("ForumName") %></a> 
                 </td>
             </tr>
         </ItemTemplate>
