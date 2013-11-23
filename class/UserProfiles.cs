@@ -31,8 +31,7 @@ namespace DotNetNuke.Modules.ActiveForums
 	{
 		public static string GetAvatar(int userID, int avatarWidth, int avatarHeight)
 		{
-			var strHost = Common.Globals.AddHTTP(Common.Globals.GetDomainName(HttpContext.Current.Request)) + "/";
-			return "<img class='af-avatar' src='" + strHost + "profilepic.ashx?userid=" + userID + "&w=" + avatarWidth + "&h=" + avatarHeight + "' />";
+            return "<img class='af-avatar' src='" + string.Format(Common.Globals.UserProfilePicFormattedUrl(), userID, avatarWidth, avatarHeight) + "' />";
 		}
 
 	    public static string GetDisplayName(int moduleId, int userID, string username, string firstName = "", string lastName = "", string displayName = "")
