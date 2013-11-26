@@ -101,43 +101,44 @@ OPEN WordCursor
 CLOSE WordCursor
 DEALLOCATE WordCursor
 
-SELECT *
-INTO #forums
+DECLARE @ForumsTable table (Id INT not null)
+
+insert INTO @ForumsTable SELECT id 
 FROM {databaseOwner}{objectQualifier}activeforums_Functions_Split(@Forums,':')
 
 
 
 -- Grab our full text results
 
-CREATE TABLE #tmpResults (cid INT not null, tid INT not null, mcpt DECIMAL)
+declare @tmpResults TABLE  (cid INT not null, tid INT not null, mcpt DECIMAL)
 
 SET NOCOUNT ON;
 
 IF @SearchField = 0
 BEGIN
-	INSERT INTO #tmpResults (cid, tid, mcpt)
+	INSERT INTO @tmpResults (cid, tid, mcpt)
 	SELECT tmp.[KEY], tv.TopicId, tmp.[RANK]
 	FROM CONTAINSTABLE({databaseOwner}{objectQualifier}activeforums_Content, (Body,[Subject]), @Contains) as tmp INNER JOIN
 		{databaseOwner}vw_{objectQualifier}activeforums_TopicViewForSearch as tv on tmp.[KEY] = tv.ContentId INNER JOIN
-		#forums as f on f.id = TV.ForumId
+		@ForumsTable as f on f.id = TV.ForumId
 	WHERE tv.ModuleId = @ModuleId AND tv.PortalId = @PortalId	
 END
 IF @SearchField = 1
 BEGIN
-	INSERT INTO #tmpResults (cid, tid, mcpt)
+	INSERT INTO @tmpResults (cid, tid, mcpt)
 	SELECT tmp.[KEY], tv.TopicId, tmp.[RANK]
 	FROM CONTAINSTABLE({databaseOwner}{objectQualifier}activeforums_Content, ([Subject]), @Contains) as tmp INNER JOIN
 		{databaseOwner}vw_{objectQualifier}activeforums_TopicViewForSearch as tv on tmp.[KEY] = tv.ContentId INNER JOIN
-		#forums as f on f.id = TV.ForumId
+		@ForumsTable as f on f.id = TV.ForumId
 	WHERE tv.ModuleId = @ModuleId AND tv.PortalId = @PortalId
 END
 IF @SearchField = 2
 BEGIN
-	INSERT INTO #tmpResults (cid, tid, mcpt)
+	INSERT INTO @tmpResults (cid, tid, mcpt)
 	SELECT tmp.[KEY], tv.TopicId, tmp.[RANK]
 	FROM CONTAINSTABLE({databaseOwner}{objectQualifier}activeforums_Content, (Body), @Contains) as tmp INNER JOIN
 		{databaseOwner}vw_{objectQualifier}activeforums_TopicViewForSearch as tv on tmp.[KEY] = tv.ContentId INNER JOIN
-		#forums as f on f.id = TV.ForumId
+		@ForumsTable as f on f.id = TV.ForumId
 	WHERE tv.ModuleId = @ModuleId AND tv.PortalId = @PortalId
 END
 
@@ -156,7 +157,7 @@ BEGIN
 				 t.cid, 
 				 c.DateCreated,
 				 t.mcpt	
-			FROM #tmpResults AS T INNER JOIN 
+			FROM @tmpResults AS T INNER JOIN 
 				{databaseOwner}{objectQualifier}activeforums_Content AS C ON T.cid = C.ContentId
 			WHERE (@TimeSpan = 0 OR DATEDIFF(hh,c.DateCreated,GetDate()) <= @TimeSpan) AND
 				(@AuthorId = 0 OR C.AuthorId = @AuthorId) AND
@@ -183,7 +184,7 @@ BEGIN
 				t.cid,
 				t.mcpt, 
 				CASE WHEN rc.DateCreated IS NULL THEN c.DateCreated ELSE rc.DateCreated END  as LastReplyDate		
-			FROM #tmpResults AS T INNER JOIN 
+			FROM @tmpResults AS T INNER JOIN 
 				{databaseOwner}{objectQualifier}activeforums_ForumTopics FT on T.tid = FT.TopicId INNER JOIN
 				{databaseOwner}{objectQualifier}activeforums_Content AS C ON T.cid = C.ContentId  LEFT OUTER JOIN -- Left outer joins to get last reply date
 				{databaseOwner}{objectQualifier}activeforums_Replies as R on FT.LastReplyId = r.ReplyId LEFT OUTER JOIN
