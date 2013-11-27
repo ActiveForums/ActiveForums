@@ -33,11 +33,24 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 
 	    private int? _fullTextStatus;
         
+	    private int FullTextStatus
+	    {
+	        get
+	        {
+	            if(!_fullTextStatus.HasValue)
+	            {
+                    _fullTextStatus = DataProvider.Instance().Search_GetFullTextStatus();
+	            }
+
+	            return _fullTextStatus.HasValue ? _fullTextStatus.Value : -5;
+	        }
+	    }
+
 	    private bool IsFullTextAvailable
 	    {
 	        get
 	        {
-	            return _fullTextStatus.HasValue && _fullTextStatus != -4 && _fullTextStatus != 0;
+	            return FullTextStatus != -5 && FullTextStatus != -4 && FullTextStatus != 0;
 	        }
 	    }
 
@@ -88,7 +101,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 
             // Full Text
 		    rdFullTextSearch.Enabled = IsFullTextAvailable;
-            switch (_fullTextStatus)
+            switch (FullTextStatus)
             {
                 case -4:
                     ltrFullTextMessage.Text = LocalizeString("FullTextAzure");
@@ -122,11 +135,8 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 
 			try
 			{
-			    _fullTextStatus = DataProvider.Instance().Search_GetFullTextStatus();
-
-
-				if (Page.IsPostBack == false)
-				{
+				//if (Page.IsPostBack == false)
+				//{
 					BindThemes();
 					BindTemplates();
 					BindPrivateMessaging();
@@ -154,7 +164,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     Utilities.SelectListItemByValue(drpUserDisplayMode, UserNameDisplay);
                     Utilities.SelectListItemByValue(rdEnableURLRewriter, FriendlyURLs);
 
-                    Utilities.SelectListItemByValue(rdFullTextSearch, FullTextSearch && _fullTextStatus == 1); // 1 = Enabled Status
+                    Utilities.SelectListItemByValue(rdFullTextSearch, FullTextSearch && FullTextStatus == 1); // 1 = Enabled Status
 
                     Utilities.SelectListItemByValue(rdMailQueue, MailQueue);
                     Utilities.SelectListItemByValue(rdPoints, EnablePoints);
@@ -179,7 +189,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 				    txtDateFormat.Text = DateFormatString;
 
                     Utilities.SelectListItemByValue(drpForumGroupTemplate, ForumGroupTemplate);
-				}
+				//}
 			}
 			catch (Exception exc) //Module failed to load
 			{
@@ -254,7 +264,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 
 				try
 				{
-					if (IsFullTextAvailable && FullTextSearch && _fullTextStatus != 1) // Available, selected and not currently installed
+					if (IsFullTextAvailable && FullTextSearch && FullTextStatus != 1) // Available, selected and not currently installed
 					{
                         // Note: We have to jump through some hoops here to maintain Azure compatibility and prevent a race condition in the procs.
 
