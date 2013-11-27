@@ -1,6 +1,6 @@
 ﻿<dotnetnuke type="Package" version="5.0">
     <packages>
-        <package name="Active Forums" type="Module" version="05.01.01">
+        <package name="Active Forums" type="Module" version="05.01.02">
             <friendlyName>Active Forums</friendlyName>
             <description>Active Forums - Forum module for DotNetNuke</description>
             <iconFile></iconFile>
@@ -73,7 +73,7 @@
                         <assembly>
                             <name>DotNetNuke.Modules.ActiveForums.dll</name>
                             <sourceFileName>DotNetNuke.Modules.ActiveForums.dll</sourceFileName>
-                            <version>05.01.01</version>
+                            <version>05.01.02</version>
                         </assembly>
                     </assemblies>
                 </component>
@@ -298,7 +298,7 @@
                 </component>
             </components>
         </package>
-      <package name="Active Forums What's New" type="Module" version="05.01.01">
+      <package name="Active Forums What's New" type="Module" version="05.01.02">
         <friendlyName>Active Forums What's New</friendlyName>
         <foldername>ActiveForumsWhatsNew</foldername>
         <description>Display the most recent topics or replies from selected forums on any page within your site.</description>

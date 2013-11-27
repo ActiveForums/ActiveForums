@@ -7,10 +7,10 @@
 <div class="License">
 	<p class="Owner">
 		<h3>About DotNetNuke Active Forums</h3>
-		<strong>Version 5.1.1</strong><br /><br />		
+		<strong>Version 5.1.2</strong><br /><br />		
 	</p>
 </div>
-<h3>DotNetNuke Active Forums 05.01.01</h3>
+<h3>DotNetNuke Active Forums 05.01.02</h3>
 <p class="Contributor">
 	Will Morgenweck <br />
 	Benjiro Nelson <br />
@@ -21,6 +21,17 @@
 <hr/>
 <div class="License">
    <h3>Release Notes</h3>
+    <p class="Owner">
+	<b>Version 05.01.02</b><br /><br />
+	</p>
+	<p>
+		<ul>
+			<li>Fixed blocking in full text search proc that was causing timeouts when searching large forums.</li>
+			<li>Fixed missing localization on search results page.</li>
+			<li>Fixed missing images when viewing topics lists.</li>
+			<li>Removed old/orphan images from emoticons directory.</li>
+		</ul>
+	</p>
     <p class="Owner">
 	<b>Version 05.01.01</b><br /><br />
 	</p>

@@ -52,9 +52,9 @@ using System.Security;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("05.01.01")]
+[assembly: AssemblyVersion("05.01.02")]
 
-[assembly: AssemblyFileVersionAttribute("05.01.01")]
+[assembly: AssemblyFileVersionAttribute("05.01.02")]
 [assembly: WebResource("DotNetNuke.Modules.ActiveForums.CustomControls.Resources.cb.js", "text/javascript")]
 [assembly: WebResource("DotNetNuke.Modules.ActiveForums.scripts.afadmin.properties.js", "text/javascript")]
 
@@ -68,7 +68,8 @@ using System.Security;
 [assembly: WebResource("DotNetNuke.Modules.ActiveForums.CustomControls.Resources.asc.gif", "image/gif")]
 [assembly: WebResource("DotNetNuke.Modules.ActiveForums.CustomControls.Resources.desc.gif", "image/gif")]
 [assembly: WebResource("DotNetNuke.Modules.ActiveForums.CustomControls.Resources.spacer.gif", "image/gif")]
-[assembly: WebResource("DotNetNuke.Modules.ActiveForums.FullText.sql", "text/plain")]
+[assembly: WebResource("DotNetNuke.Modules.ActiveForums.sql.FullTextInstallPart1.sql", "text/plain")]
+[assembly: WebResource("DotNetNuke.Modules.ActiveForums.sql.FullTextInstallPart2.sql", "text/plain")]
 
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyDelaySign(false)]
