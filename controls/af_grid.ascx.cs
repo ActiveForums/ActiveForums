@@ -382,12 +382,17 @@ namespace DotNetNuke.Modules.ActiveForums
             // Otherwise, chose the icons based on the post stats
 
             var pinned = Convert.ToBoolean(_currentRow["IsPinned"]);
-            if (pinned)
-                return "~/DesktopModules/ActiveForums/themes/" + theme + "/topic_pin.png";
-
             var locked = Convert.ToBoolean(_currentRow["IsLocked"]);
+
+            if(pinned && locked)
+                return "~/DesktopModules/ActiveForums/themes/" + theme + "/images/topic_pinlocked.png";
+
+            if (pinned)
+                return "~/DesktopModules/ActiveForums/themes/" + theme + "/images/topic_pin.png";
+
+            
             if (locked)
-                return "~/DesktopModules/ActiveForums/themes/" + theme + "/emoticons/lock.gif";
+                return "~/DesktopModules/ActiveForums/themes/" + theme + "/images/topic_lock.png";
 
             // Unread has to be calculated based on a few fields
             //var topicId = Convert.ToInt32(_currentRow["TopicId"]);
@@ -400,9 +405,9 @@ namespace DotNetNuke.Modules.ActiveForums
             var isRead = _currentRow.GetBoolean("IsRead");
 
             if (isRead)
-                return "~/DesktopModules/ActiveForums/themes/" + theme + "/emoticons/document.gif";
+                return "~/DesktopModules/ActiveForums/themes/" + theme + "/images/topic.png";
 
-            return "~/DesktopModules/ActiveForums/themes/" + theme + "/emoticons/document_new.gif";
+            return "~/DesktopModules/ActiveForums/themes/" + theme + "/images/topic_new.png";
         }
 
         public string GetMiniPager()

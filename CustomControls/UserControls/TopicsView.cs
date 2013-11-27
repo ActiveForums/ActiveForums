@@ -1083,49 +1083,38 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
         }
         private string GetIcon(int LastTopicRead, int LastReplyRead, int TopicId, int ReplyId, string Icon, bool Pinned = false, bool Locked = false)
         {
-            if (Icon == string.Empty)
-            {
-                if (Pinned && Locked)
-                {
-                    return "<img src=\"" + MyThemePath + "/images/topic_pinlocked.png\" alt=\"[RESX:PinnedLocked]\" />";
-                }
-                else if (Pinned)
-                {
-                    return "<img src=\"" + MyThemePath + "/images/topic_pin.png\" alt=\"[RESX:Pinned]\" />";
-                }
-                else if (Locked)
-                {
-                    return "<img src=\"" + MyThemePath + "/emoticons/lock.gif\" alt=\"[RESX:Locked]\" />";
-                }
-                else
-                {
-                    if (!Request.IsAuthenticated)
-                    {
-                        return "<img src=\"" + MyThemePath + "/emoticons/document.gif\" alt=\"[RESX:TopicRead]\" />";
-                    }
-                    else
-                    {
-                        if (LastTopicRead == 0)
-                        {
-                            return "<img src=\"" + MyThemePath + "/emoticons/document_new.gif\" alt=\"[RESX:TopicNew]\" />";
-                        }
-                        else if (LastTopicRead > 0 & LastReplyRead < ReplyId)
-                        {
-                            return "<img src=\"" + MyThemePath + "/emoticons/document_new.gif\" alt=\"[RESX:TopicNew]\" />";
-                        }
-                        else
-                        {
-                            return "<img src=\"" + MyThemePath + "/emoticons/document.gif\" alt=\"[RESX:TopicRead]\" />";
-                        }
-                    }
-
-                }
-            }
-            else
+            if (Icon != string.Empty)
             {
                 return "<img src=\"" + MyThemePath + "/emoticons/" + Icon + "\" alt=\"" + Icon + "\" />";
             }
+            
+            if (Pinned && Locked)
+            {
+                return "<img src=\"" + MyThemePath + "/images/topic_pinlocked.png\" alt=\"[RESX:PinnedLocked]\" />";
+            }
+            if (Pinned)
+            {
+                return "<img src=\"" + MyThemePath + "/images/topic_pin.png\" alt=\"[RESX:Pinned]\" />";
+            }
+            if (Locked)
+            {
+                return "<img src=\"" + MyThemePath + "/images/topic_lock.png\" alt=\"[RESX:Locked]\" />";
+            }
+            if (!Request.IsAuthenticated)
+            {
+                return "<img src=\"" + MyThemePath + "/images/topic.png\" alt=\"[RESX:TopicRead]\" />";
+            }
+            if (LastTopicRead == 0)
+            {
+                return "<img src=\"" + MyThemePath + "/images/topic_new.png\" alt=\"[RESX:TopicNew]\" />";
+            }
+            if (LastTopicRead > 0 & LastReplyRead < ReplyId)
+            {
+                return "<img src=\"" + MyThemePath + "/images/topic_new.png\" alt=\"[RESX:TopicNew]\" />";
+            }
+            return "<img src=\"" + MyThemePath + "/images/topic.png\" alt=\"[RESX:TopicRead]\" />";
         }
+
         private string GetTitle(string Body, int AuthorId)
         {
             if (bRead || AuthorId == this.UserId)
