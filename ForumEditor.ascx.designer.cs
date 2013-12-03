@@ -7,52 +7,45 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-
-namespace DotNetNuke.Modules.ActiveForums.Controls
-{
-
-	public partial class ForumEditor
-	{
-
-		///<summary>
-		///ctlForums control.
-		///</summary>
-		///<remarks>
-		///Auto-generated field.
-		///To modify move field declaration from designer file to code-behind file.
-		///</remarks>
-		protected global::DotNetNuke.Web.UI.WebControls.DnnTreeView ctlForums;
-
-		///<summary>
-		///ctlContext control.
-		///</summary>
-		///<remarks>
-		///Auto-generated field.
-		///To modify move field declaration from designer file to code-behind file.
-		///</remarks>
-		protected global::DotNetNuke.Web.UI.WebControls.DnnTreeViewContextMenu ctlContext;
-
-		///<summary>
-		///txtForumName control.
-		///</summary>
-		///<remarks>
-		///Auto-generated field.
-		///To modify move field declaration from designer file to code-behind file.
-		///</remarks>
-		protected global::System.Web.UI.WebControls.TextBox txtForumName;
-
-		///<summary>
-		///drpForums control.
-		///</summary>
-		///<remarks>
-		///Auto-generated field.
-		///To modify move field declaration from designer file to code-behind file.
-		///</remarks>
-		protected global::System.Web.UI.WebControls.DropDownList drpForums;
-	}
+namespace DotNetNuke.Modules.ActiveForums.Controls {
+    
+    
+    public partial class ForumEditor {
+        
+        /// <summary>
+        /// ctlForums control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::DotNetNuke.Web.UI.WebControls.DnnTreeView ctlForums;
+        
+        /// <summary>
+        /// ctlContext control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::DotNetNuke.Web.UI.WebControls.DnnTreeViewContextMenu ctlContext;
+        
+        /// <summary>
+        /// txtForumName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtForumName;
+        
+        /// <summary>
+        /// drpForums control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList drpForums;
+    }
 }
