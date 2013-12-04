@@ -1,0 +1,289 @@
+﻿/****** Object:  StoredProcedure {databaseOwner}[{objectQualifier}activeforums_Search_Standard]    Script Date: 03/12/2013 23:04:43 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_Search_Standard]') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Search_Standard]
+GO
+
+
+/****** Object:  StoredProcedure {databaseOwner}[{objectQualifier}activeforums_Search_Standard]    Script Date: 03/14/2013 22:45:21 ******/
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Search_Standard]
+
+@PortalId int,
+    @ModuleId int,
+    @UserId int,
+    @SearchString nvarchar(200), -- String of 1 or more search terms, all separated by spaces
+@MatchType int = 0, -- 0 = match any, 1 = match all, 2 = exact match of entire expression only
+@SearchField int = 0, -- 0 = Subject & Body, 1 = Subject, 2 =Body
+@Timespan int = 0,
+    @AuthorId int = 0,
+    @Forums nvarchar(max), -- Intersection of forums allowed and forums requested
+@Tags nvarchar(400), -- Comma delmited tags
+@ResultType int = 0, -- 0 = topics, 1 = posts
+@Sort int = 0 -- 0 = relevance then post date (last), 1 = post date (last)
+
+AS
+
+-- Shared Variables
+DECLARE @i1 int
+DECLARE @i2 int
+
+DECLARE @Word nvarchar(200)
+DECLARE @Words table (Word nvarchar(200) COLLATE database_default not null)
+DECLARE @WordCount int = 0
+
+DECLARE @Tag nvarchar(400)
+DECLARE @TagTable table (Tag nvarchar(400) COLLATE database_default not null)
+DECLARE @TagCount int = 0
+
+SET NOCOUNT ON
+
+-- Parse the SearchString into words:
+
+
+    IF @SearchString IS NOT NULL AND LEN(@SearchString) > 2
+BEGIN
+IF @MatchType = 2
+INSERT INTO @Words SELECT LTRIM(RTRIM(@SearchString))
+ELSE
+BEGIN
+SET @SearchString = ' ' + @SearchString  + ' '
+SET @i1 = 1
+WHILE @i1 != 0
+BEGIN
+SET @i2 = CHARINDEX(' ', @SearchString, @i1+1)
+IF @i2 != 0
+BEGIN
+SET @Word = RTRIM(LTRIM(SUBSTRING(@SearchString, @i1+1, @i2-@i1)))
+IF LEN(@Word) > 2
+BEGIN
+IF NOT EXISTS (SELECT * FROM @Words WHERE Word = @Word)
+INSERT INTO @Words SELECT @Word
+
+IF @MatchType != 1
+BEGIN -- inserts the plural or nonplural version as needed
+IF UPPER(RIGHT(@Word,1)) = 'S'
+SET @Word = LEFT(@Word,LEN(@Word)-1)
+ELSE
+SET @Word = @Word + 's'
+
+IF NOT EXISTS (SELECT * FROM @Words WHERE Word = @Word)
+INSERT INTO @Words SELECT @Word
+END
+END
+
+END
+SET @i1 = @i2
+END
+END
+
+SET @WordCount = (SELECT COUNT(*) FROM @Words)
+END
+
+-- Parse out the Tags
+
+
+
+IF @Tags IS NOT NULL AND @Tags <> ''
+BEGIN
+INSERT INTO @TagTable
+SELECT string
+FROM {databaseOwner}{objectQualifier}activeforums_Functions_SplitText(@Tags, ',')
+
+SET @TagCount = (SELECT COUNT(*) from @TagTable)
+END
+
+
+-- If we don't have anything to search for, there's no point in trying
+IF @WordCount = 0 AND @TagCount = 0 AND @AuthorId <= 0
+BEGIN
+DECLARE @tmpResults TABLE (rn int, tid int, cid int, mpct decimal(15,4))
+SELECT * FROM @tmpResults
+RETURN
+END
+
+-- Performance Enhancement
+
+CREATE TABLE #forums(id int NOT NULL)
+INSERT INTO #forums(id)
+SELECT id
+FROM {databaseOwner}{objectQualifier}activeforums_Functions_Split(@Forums,':')
+
+CREATE TABLE #tags(Tag nvarchar(400) COLLATE database_default NOT NULL)
+INSERT INTO #tags(tag)
+SELECT tag
+FROM @TagTable
+
+CREATE TABLE #words(Word nvarchar(200) COLLATE database_default not null)
+INSERT INTO #words(word)
+SELECT word
+FROM @Words
+
+
+-- We have 4 distict paths we can go down to determin the result set depending on whether or not
+-- we have search terms and the result type
+
+
+IF @WordCount > 0 AND @ResultType = 1
+BEGIN
+
+-- Get our main result set
+SELECT TOP 1000
+ROW_NUMBER() OVER (ORDER BY CASE @Sort WHEN 1 THEN DateCreated ELSE hits.MatchPct END DESC, DateCreated DESC) as rn,
+    TopicId as tid,
+    ContentId as cid,
+    hits.MatchPct as mcpt
+FROM (
+    SELECT  t.topicid,
+    t.contentid,
+    c.DateCreated
+FROM {databaseOwner}{objectQualifier}vw_activeforums_TopicView AS T INNER JOIN
+#forums as fs ON fs.id = t.ForumId INNER JOIN
+{databaseOwner}{objectQualifier}activeforums_Content AS C ON T.ContentId = C.ContentId
+WHERE T.PortalId = @PortalId AND T.ModuleId = @ModuleId AND
+(@TimeSpan = 0 OR DATEDIFF(hh,c.DateCreated,GetDate()) <= @TimeSpan) AND
+(@AuthorId = 0 OR T.AuthorId = @AuthorId) AND
+(@TagCount = 0 OR  T.TopicId IN (
+    SELECT TopicId FROM {databaseOwner}{objectQualifier}activeforums_Tags INNER JOIN
+{databaseOwner}{objectQualifier}activeforums_Topics_Tags ON {databaseOwner}{objectQualifier}activeforums_Tags.TagId = {databaseOwner}{objectQualifier}activeforums_Topics_Tags.TagId INNER JOIN
+#tags TT ON TT.Tag = {databaseOwner}{objectQualifier}activeforums_Tags.TagName))
+) AS results INNER JOIN
+(
+    SELECT ContentId as cid, MatchPct FROM (SELECT C.ContentId, Count(*)  * 1.0 / @WordCount as MatchPct
+FROM {databaseOwner}{objectQualifier}activeforums_Content C INNER JOIN
+#words W on
+CASE @SearchField
+WHEN 0 THEN ' ' + Convert(nvarchar(max),c.Body) + ' ' + c.Subject + ' '
+WHEN 1 THEN ' ' + c.Subject + ' '
+WHEN 2 THEN ' ' + Convert(nvarchar(max),c.Body) + ' '
+END like '%[^a-z]' + Word + '[^a-z]%'
+GROUP BY ContentId) as hits
+WHERE MatchPct = 1 or @MatchType <> 1
+) AS hits ON results.ContentId = hits.cid
+
+DROP TABLE #forums
+DROP TABLE #tags
+DROP TABLE #words
+
+RETURN
+END
+
+IF @WordCount > 0 AND @ResultType = 0
+BEGIN
+
+-- Get our main result set
+SELECT TOP 1000
+ROW_NUMBER() OVER (ORDER BY CASE @Sort WHEN 1 THEN MAX(LastReplyDate) ELSE MAX(hits.MatchPct) END DESC, MAX(LastReplyDate) DESC) as rn,
+    TopicId as tid,
+    MAX(ContentId) as cid,
+    MAX(hits.MatchPct) as mcpt
+FROM (
+    SELECT  t.topicid,
+    t.contentid,
+    CASE WHEN rc.DateCreated IS NULL THEN c.DateCreated ELSE rc.DateCreated END  as LastReplyDate
+FROM         {databaseOwner}{objectQualifier}vw_activeforums_TopicView AS T INNER JOIN
+{databaseOwner}{objectQualifier}activeforums_ForumTopics FT on T.TopicId = FT.TopicId INNER JOIN
+#forums as fs ON fs.id = t.ForumId INNER JOIN
+{databaseOwner}{objectQualifier}activeforums_Content AS C ON T.ContentId = C.ContentId  LEFT OUTER JOIN -- Left outer joins to get last reply date
+{databaseOwner}{objectQualifier}activeforums_Replies as R on FT.LastReplyId = r.ReplyId LEFT OUTER JOIN
+{databaseOwner}{objectQualifier}activeforums_Content as RC on R.ContentId = rc.ContentId
+WHERE T.PortalId = @PortalId AND T.ModuleId = @ModuleId AND
+(@TimeSpan = 0 OR DATEDIFF(hh,CASE WHEN rc.DateCreated IS NULL THEN c.DateCreated ELSE rc.DateCreated END,GetDate()) <= @TimeSpan) AND
+(@AuthorId = 0 OR T.AuthorId = @AuthorId) AND
+(@TagCount = 0 OR  T.TopicId IN (
+    SELECT TopicId FROM {databaseOwner}{objectQualifier}activeforums_Tags INNER JOIN
+{databaseOwner}{objectQualifier}activeforums_Topics_Tags ON {databaseOwner}{objectQualifier}activeforums_Tags.TagId = {databaseOwner}{objectQualifier}activeforums_Topics_Tags.TagId INNER JOIN
+#tags TT ON TT.Tag = {databaseOwner}{objectQualifier}activeforums_Tags.TagName))
+) AS results INNER JOIN
+(
+    SELECT ContentId as cid, MatchPct FROM (SELECT C.ContentId, Count(*)  * 1.0 / @WordCount as MatchPct
+FROM {databaseOwner}{objectQualifier}activeforums_Content C INNER JOIN
+#words W on
+CASE @SearchField
+WHEN 0 THEN ' ' + Convert(nvarchar(max),c.Body) + ' ' + c.Subject + ' '
+WHEN 1 THEN ' ' + c.Subject + ' '
+WHEN 2 THEN ' ' + Convert(nvarchar(max),c.Body) + ' '
+END like '%[^a-z]' + Word + '[^a-z]%'
+GROUP BY ContentId) as hits
+WHERE MatchPct = 1 or @MatchType <> 1
+) AS hits ON results.ContentId = hits.cid
+GROUP BY TopicID
+
+DROP TABLE #forums
+DROP TABLE #tags
+DROP TABLE #words
+
+RETURN
+END
+
+
+IF @WordCount = 0 AND @ResultType = 1
+BEGIN
+
+-- Get our main result set
+SELECT TOP 1000
+ROW_NUMBER() OVER (ORDER BY DateCreated DESC) as rn,
+    TopicId as tid,
+    ContentId as cid,
+    1 as mcpt
+FROM (
+    SELECT  t.topicid,
+    t.contentid,
+    c.DateCreated
+FROM {databaseOwner}{objectQualifier}vw_activeforums_TopicView AS T INNER JOIN
+#forums as fs ON fs.id = t.ForumId INNER JOIN
+{databaseOwner}{objectQualifier}activeforums_Content AS C ON T.ContentId = C.ContentId
+WHERE T.PortalId = @PortalId AND T.ModuleId = @ModuleId AND
+(@TimeSpan = 0 OR DATEDIFF(hh,c.DateCreated,GetDate()) <= @TimeSpan) AND
+(@AuthorId = 0 OR T.AuthorId = @AuthorId) AND
+(@TagCount = 0 OR  T.TopicId IN (
+    SELECT TopicId FROM {databaseOwner}{objectQualifier}activeforums_Tags INNER JOIN
+{databaseOwner}{objectQualifier}activeforums_Topics_Tags ON {databaseOwner}{objectQualifier}activeforums_Tags.TagId = {databaseOwner}{objectQualifier}activeforums_Topics_Tags.TagId INNER JOIN
+#tags TT ON TT.Tag = {databaseOwner}{objectQualifier}activeforums_Tags.TagName))
+) as Results
+
+DROP TABLE #forums
+DROP TABLE #tags
+DROP TABLE #words
+
+RETURN
+END
+
+IF @WordCount = 0 AND @ResultType = 0
+BEGIN
+-- Get our main result set
+SELECT TOP 1000
+ROW_NUMBER() OVER (ORDER BY MAX(LastReplyDate) DESC) as rn,
+    TopicId as tid,
+    MAX(ContentId) as cid,
+    1 as mcpt
+FROM (
+    SELECT
+t.topicid,
+    t.contentid,
+    CASE WHEN rc.DateCreated IS NULL THEN c.DateCreated ELSE rc.DateCreated END  as LastReplyDate
+FROM {databaseOwner}{objectQualifier}vw_activeforums_TopicView AS T INNER JOIN
+{databaseOwner}{objectQualifier}activeforums_ForumTopics FT on T.TopicId = FT.TopicId INNER JOIN
+#forums as fs ON fs.id = t.ForumId INNER JOIN
+{databaseOwner}{objectQualifier}activeforums_Content AS C ON T.ContentId = C.ContentId  LEFT OUTER JOIN -- Left outer joins to get last reply date
+{databaseOwner}{objectQualifier}activeforums_Replies as R on FT.LastReplyId = r.ReplyId LEFT OUTER JOIN
+{databaseOwner}{objectQualifier}activeforums_Content as RC on R.ContentId = rc.ContentId
+WHERE T.PortalId = @PortalId AND T.ModuleId = @ModuleId AND
+(@TimeSpan = 0 OR DATEDIFF(hh,CASE WHEN rc.DateCreated IS NULL THEN c.DateCreated ELSE rc.DateCreated END,GetDate()) <= @TimeSpan) AND
+(@AuthorId = 0 OR T.AuthorId = @AuthorId) AND
+(@TagCount = 0 OR  T.TopicId IN (
+    SELECT TopicId FROM {databaseOwner}{objectQualifier}activeforums_Tags INNER JOIN
+{databaseOwner}{objectQualifier}activeforums_Topics_Tags ON {databaseOwner}{objectQualifier}activeforums_Tags.TagId = {databaseOwner}{objectQualifier}activeforums_Topics_Tags.TagId INNER JOIN
+#tags TT ON TT.Tag = {databaseOwner}{objectQualifier}activeforums_Tags.TagName))
+) as Results
+GROUP BY TopicId
+
+DROP TABLE #forums
+DROP TABLE #tags
+DROP TABLE #words
+
+RETURN
+END
+
+GO
+
+
+
