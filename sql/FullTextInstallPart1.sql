@@ -37,18 +37,18 @@ If @Enable = 1
 			IF OBJECTPROPERTY(object_id('{databaseOwner}{objectQualifier}activeforums_Content'),'TableHasActiveFulltextIndex') = 0
 				BEGIN
 					
-					IF  NOT EXISTS (SELECT * FROM sysfulltextcatalogs ftc WHERE ftc.name = N'activeforums_Catalog')
+					IF  NOT EXISTS (SELECT * FROM sysfulltextcatalogs ftc WHERE ftc.name = N'{objectQualifier}activeforums_Catalog')
 						BEGIN
-							exec sp_fulltext_catalog 'activeforums_Catalog', 'create'
+							exec sp_fulltext_catalog '{objectQualifier}activeforums_Catalog', 'create'
 						END					
-					exec sp_fulltext_table N'{databaseOwner}{objectQualifier}activeforums_Content', N'create', N'activeforums_Catalog', N'PK_activeforums_Content'
+					exec sp_fulltext_table N'{databaseOwner}{objectQualifier}activeforums_Content', N'create', N'{objectQualifier}activeforums_Catalog', N'PK_{objectQualifier}activeforums_Content'
 					exec sp_fulltext_column N'{databaseOwner}{objectQualifier}activeforums_Content', N'Subject', N'add', 1033
 					exec sp_fulltext_column N'{databaseOwner}{objectQualifier}activeforums_Content', N'Summary', N'add', 1033  
 					exec sp_fulltext_column N'{databaseOwner}{objectQualifier}activeforums_Content', N'Body', N'add', 1033  
 					exec sp_fulltext_table N'{databaseOwner}{objectQualifier}activeforums_Content', N'activate'
 					exec sp_fulltext_table '{databaseOwner}{objectQualifier}activeforums_Content', 'start_change_tracking'
 					exec sp_fulltext_table '{databaseOwner}{objectQualifier}activeforums_Content', 'start_background_updateindex'
-					--exec sp_fulltext_catalog 'activeforums_Catalog', 'start_full'
+					--exec sp_fulltext_catalog '{objectQualifier}activeforums_Catalog', 'start_full'
 					
 				END
 		END
