@@ -86,14 +86,12 @@ function amaf_topicSubscribe(fid, tid){
 };
 function amaf_topicSubscribeComplete(result) {
     var r = result[0].result;
-    var chk = document.getElementById('amaf-chk-subs');
-    chk.checked = r.subscribed;
-    var lbl = chk.nextSibling;
-    if (typeof (lbl) != 'undefined') {
-        lbl.innerHTML = r.text;
-    };
+    if (!r) return;
+    $('input[type=checkbox]#amaf-chk-subs')
+        .prop('checked', r.subscribed)
+        .siblings('label[for=amaf-chk-subs]').html(r.text);
 };
-function amaf_forumSubscribe(fid,uid) {
+function amaf_forumSubscribe(fid, uid) {
     var d = {};
     d.action = 4;
     d.forumid = fid;
@@ -104,27 +102,20 @@ function amaf_forumSubscribe(fid,uid) {
 };
 function amaf_forumSubscribeComplete(result) {
     var r = result[0].result;
-    var chk = document.getElementById('amaf-chk-subs');
-    if (chk !== null) {
-        chk.checked = r.subscribed;
-        var lbl = chk.nextSibling;
-        if (typeof (lbl) != 'undefined') {
-            lbl.innerHTML = r.text;
-        };
-    } else {
-        var img = document.getElementById('amaf-sub-' + r.forumid);
-        if (img !== null) {
-            var imgsrc = img.src;
-            if (r.subscribed == true) {
-                imgsrc = imgsrc.replace(/email_unchecked/, 'email_checked');
-            } else {
-                imgsrc = imgsrc.replace(/email_checked/, 'email_unchecked');
-            };
-            img.src = imgsrc;
-        };
-        
-    };
+    if (!r) return;
     
+    // Checkbox
+    $('input[type=checkbox]#amaf-chk-subs')
+        .prop('checked', r.subscribed)
+        .siblings('label[for=amaf-chk-subs]').html(r.text);
+
+    $('img#amaf-sub-' + r.forumid).each(function() {
+        var imgSrc = $(this).attr('src');
+        if (r.subscribed)
+            $(this).attr('src', imgSrc.replace(/email_unchecked/, 'email_checked'));
+        else
+            $(this).attr('src', imgSrc.replace(/email_checked/, 'email_unchecked'));
+    }); 
 };
 function amaf_changeRate(r, t) {
     var d = {};
