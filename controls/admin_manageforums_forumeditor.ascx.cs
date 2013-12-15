@@ -394,7 +394,10 @@ namespace DotNetNuke.Modules.ActiveForums
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachMaxWidth, parameters[17]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachUniqueFileNames, parameters[18]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AllowHTML, parameters[19]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorType, !Utilities.SafeConvertBool(parameters[19]) ? "0" : parameters[20]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorType, parameters[20]);
+
+            var test = parameters[20];
+
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorHeight, parameters[21]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorWidth, parameters[22]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorToolbar, parameters[23]);
@@ -527,7 +530,7 @@ namespace DotNetNuke.Modules.ActiveForums
 
             chkTopicsOnly.Checked = fi.AutoSubscribeNewTopicsOnly;
 
-            Utilities.SelectListItemByValue(drpEditorTypes, fi.EditorType);
+            Utilities.SelectListItemByValue(drpEditorTypes, (int)fi.EditorType);
             if (Convert.ToInt32(fi.EditorType).ToString() != "1") // Active Editor should not be used anymore
             {
                 txtEditorToolBar.Enabled = false;
@@ -636,8 +639,10 @@ namespace DotNetNuke.Modules.ActiveForums
                 cfgAutoSub.Attributes.Remove("style");
             else
                 cfgAutoSub.Attributes.Add("style", "display:none;");
-            
-            Utilities.SelectListItemByValue(drpEditorTypes, gi.EditorType);
+
+            var x = gi.EditorType;
+
+            Utilities.SelectListItemByValue(drpEditorTypes, (int)gi.EditorType);
             Utilities.SelectListItemByValue(drpEditorStyle, gi.EditorStyle);
             Utilities.SelectListItemByValue(drpPermittedRoles, gi.EditorPermittedUsers);
 
