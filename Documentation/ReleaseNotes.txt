@@ -7,7 +7,7 @@
 <div class="License">
 	<p class="Owner">
 		<h3>About DotNetNuke Active Forums</h3>
-		<strong>Version 5.1.3</strong><br /><br />		
+		<strong>Version 5.1.4</strong><br /><br />		
 	</p>
 </div>
 <h3>DotNetNuke Active Forums 05.01.03</h3>
@@ -21,6 +21,14 @@
 <hr/>
 <div class="License">
    <h3>Release Notes</h3>
+    <p class="Owner">
+	<b>Version 05.01.04
+	<p>
+		<ul>
+			<li>Fixed Issue #27 - Subscribe Link Label Text</li>
+			<li>Fixed Issue #28 - Editor Selection Does Not Work
+		</ul>
+	</p>
     <p class="Owner">
 	<b>Version 05.01.03</b><br /><br />
 	</p>
