@@ -24,17 +24,28 @@ using System.Data;
 
 using DotNetNuke.Services.Localization;
 using DotNetNuke.Framework;
+using DotNetNuke.Framework;
+using DotNetNuke.Framework.JavaScriptLibraries;
 
 namespace DotNetNuke.Modules.ActiveForums.Controls
 {
     public partial class af_attach : ForumBase
     {
         public EditorTypes EditorType { get; set; }
+
+        protected override void OnInit(EventArgs e)
+        {
+
+            JavaScript.RequestRegistration(CommonJs.DnnPlugins);
+            JavaScript.RequestRegistration(CommonJs.jQueryFileUpload);
+            ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
+
+            base.OnInit(e);
+
+        }
         protected override void OnLoad(EventArgs e)
 		{
 			base.OnLoad(e);
-
-            ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
 
         }
     }
