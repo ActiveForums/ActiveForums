@@ -29,6 +29,7 @@ using System.Web.UI.WebControls;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using System.Text;
 using DotNetNuke.Security.Roles;
+using DotNetNuke.Framework.JavaScriptLibraries;
 
 namespace DotNetNuke.Modules.ActiveForums
 {
@@ -46,9 +47,8 @@ namespace DotNetNuke.Modules.ActiveForums
 
         protected override void OnInit(EventArgs e)
 		{
-			base.OnInit(e);
-
-
+            JavaScript.RequestRegistration(CommonJs.DnnPlugins);
+            base.OnInit(e);
         }
         protected override void OnLoad(EventArgs e)
 		{
