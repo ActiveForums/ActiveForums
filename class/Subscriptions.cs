@@ -26,6 +26,7 @@ using System.Data;
 //ORIGINAL LINE: Imports System.Web.HttpContext
 
 using System.Web;
+using DotNetNuke.Entities.Host;
 
 namespace DotNetNuke.Modules.ActiveForums
 {
@@ -161,11 +162,11 @@ namespace DotNetNuke.Modules.ActiveForums
 			                     From = sFrom,
 			                     BodyText = BodyText,
 			                     BodyHTML = BodyHTML,
-			                     SmtpServer = Convert.ToString(_portalSettings.HostSettings["SMTPServer"]),
-			                     SmtpUserName = Convert.ToString(_portalSettings.HostSettings["SMTPUsername"]),
-			                     SmtpPassword = Convert.ToString(_portalSettings.HostSettings["SMTPPassword"]),
-			                     SmtpAuthentication = Convert.ToString(_portalSettings.HostSettings["SMTPAuthentication"]),
-			                     SmtpSSL = Convert.ToString(_portalSettings.HostSettings["SMTPEnableSSL"]),
+			                     SmtpServer = Host.SMTPServer,// Convert.ToString(_portalSettings.HostSettings["SMTPServer"]),
+			                     SmtpUserName = Host.SMTPUsername, // Convert.ToString(_portalSettings.HostSettings["SMTPUsername"]),
+			                     SmtpPassword = Host.SMTPPassword, // Convert.ToString(_portalSettings.HostSettings["SMTPPassword"]),
+			                     SmtpAuthentication = Host.SMTPAuthentication, // Convert.ToString(_portalSettings.HostSettings["SMTPAuthentication"]),
+			                     SmtpSSL = Host.EnableSMTPSSL.ToString(), // Convert.ToString(_portalSettings.HostSettings["SMTPEnableSSL"]),
 			                     UseQueue = MainSettings.MailQueue
 			                 };
 

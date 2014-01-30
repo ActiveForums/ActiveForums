@@ -21,6 +21,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using DotNetNuke.Entities.Host;
 
 namespace DotNetNuke.Modules.ActiveForums.Queue
 {
@@ -88,11 +89,11 @@ namespace DotNetNuke.Modules.ActiveForums.Queue
 					                       SendTo = dr["EmailTo"].ToString(),
 					                       Body = dr["EmailBody"].ToString(),
 					                       BodyText = dr["EmailBodyPlainText"].ToString(),
-					                       SmtpServer = objHost["SMTPServer"].ToString(),
-					                       SmtpUserName = objHost["SMTPUsername"].ToString(),
-					                       SmtpPassword = objHost["SMTPPassword"].ToString(),
-					                       SmtpAuthentication = objHost["SMTPAuthentication"].ToString(),
-					                       SmtpSSL = objHost["SMTPEnableSSL"].ToString()
+					                       SmtpServer = Host.SMTPServer, // objHost["SMTPServer"].ToString(),
+					                       SmtpUserName = Host.SMTPUsername, // objHost["SMTPUsername"].ToString(),
+					                       SmtpPassword = Host.SMTPPassword, // objHost["SMTPPassword"].ToString(),
+					                       SmtpAuthentication = Host.SMTPAuthentication, // objHost["SMTPAuthentication"].ToString(),
+					                       SmtpSSL = Host.EnableSMTPSSL.ToString() // objHost["SMTPEnableSSL"].ToString()
 					                   };
 
 				    bool canDelete = objEmail.SendMail();
@@ -150,11 +151,11 @@ namespace DotNetNuke.Modules.ActiveForums.Queue
 				if (SmtpServer == "")
 				{
 					objHost = Entities.Portals.PortalSettings.GetHostSettings();
-					SmtpServer = Convert.ToString(objHost["SMTPServer"]);
-					SmtpUserName = Convert.ToString(objHost["SMTPUsername"]);
-					SmtpPassword = Convert.ToString(objHost["SMTPPassword"]);
-					SmtpAuthentication = Convert.ToString(objHost["SMTPAuthentication"]);
-					SmtpSSL = Convert.ToString(objHost["SMTPEnableSSL"]);
+					SmtpServer = Host.SMTPServer; // Convert.ToString(objHost["SMTPServer"]);
+					SmtpUserName = Host.SMTPUsername; // Convert.ToString(objHost["SMTPUsername"]);
+					SmtpPassword = Host.SMTPPassword;// Convert.ToString(objHost["SMTPPassword"]);
+					SmtpAuthentication = Host.SMTPAuthentication;// Convert.ToString(objHost["SMTPAuthentication"]);
+					SmtpSSL = Host.EnableSMTPSSL.ToString();// Convert.ToString(objHost["SMTPEnableSSL"]);
 				}
 				//Dim Email As New System.Net.Mail.MailMessage
 

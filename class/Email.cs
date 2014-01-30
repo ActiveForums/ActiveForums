@@ -26,6 +26,7 @@ using System.Data;
 //ORIGINAL LINE: Imports System.Web.HttpContext
 
 using System.Web;
+using DotNetNuke.Entities.Host;
 namespace DotNetNuke.Modules.ActiveForums
 {
 	public class Email
@@ -137,10 +138,10 @@ namespace DotNetNuke.Modules.ActiveForums
 			oEmail.From = sFrom;
 			oEmail.BodyText = BodyText;
 			oEmail.BodyHTML = BodyHTML;
-			oEmail.SmtpServer = Convert.ToString(_portalSettings.HostSettings["SMTPServer"]);
-			oEmail.SmtpUserName = Convert.ToString(_portalSettings.HostSettings["SMTPUsername"]);
-			oEmail.SmtpPassword = Convert.ToString(_portalSettings.HostSettings["SMTPPassword"]);
-			oEmail.SmtpAuthentication = Convert.ToString(_portalSettings.HostSettings["SMTPAuthentication"]);
+			oEmail.SmtpServer = Host.SMTPServer;// Convert.ToString(_portalSettings.HostSettings["SMTPServer"]);
+			oEmail.SmtpUserName = Host.SMTPUsername;// Convert.ToString(_portalSettings.HostSettings["SMTPUsername"]);
+			oEmail.SmtpPassword = Host.SMTPPassword;// Convert.ToString(_portalSettings.HostSettings["SMTPPassword"]);
+			oEmail.SmtpAuthentication = Host.SMTPAuthentication;//  Convert.ToString(_portalSettings.HostSettings["SMTPAuthentication"]);
 			var objThread = new System.Threading.Thread(oEmail.Send);
 			objThread.Start();
 
@@ -218,10 +219,10 @@ namespace DotNetNuke.Modules.ActiveForums
 			                     From = sFrom,
 			                     BodyText = BodyText,
 			                     BodyHTML = BodyHTML,
-			                     SmtpServer = Convert.ToString(_portalSettings.HostSettings["SMTPServer"]),
-			                     SmtpUserName = Convert.ToString(_portalSettings.HostSettings["SMTPUsername"]),
-			                     SmtpPassword = Convert.ToString(_portalSettings.HostSettings["SMTPPassword"]),
-			                     SmtpAuthentication = Convert.ToString(_portalSettings.HostSettings["SMTPAuthentication"])
+			                     SmtpServer = Host.SMTPServer,// Convert.ToString(_portalSettings.HostSettings["SMTPServer"]),
+			                     SmtpUserName = Host.SMTPUsername,// Convert.ToString(_portalSettings.HostSettings["SMTPUsername"]),
+			                     SmtpPassword = Host.SMTPPassword,// Convert.ToString(_portalSettings.HostSettings["SMTPPassword"]),
+			                     SmtpAuthentication = Host.SMTPAuthentication// Convert.ToString(_portalSettings.HostSettings["SMTPAuthentication"])
 			                 };
 
 //#if SKU_ENTERPRISE
