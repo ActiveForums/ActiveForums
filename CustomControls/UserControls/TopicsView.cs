@@ -29,6 +29,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Text.RegularExpressions;
 using System.Xml;
+using DotNetNuke.Modules.ActiveForums.Constants;
 
 namespace DotNetNuke.Modules.ActiveForums.Controls
 {
@@ -355,7 +356,9 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                                 MetaTemplate = MetaTemplate.Replace("[BODY]", Utilities.StripHTMLTag(ForumInfo.ForumDesc));
 
                                 MetaTitle = TemplateUtils.GetTemplateSection(MetaTemplate, "[TITLE]", "[/TITLE]").Replace("[TITLE]", string.Empty).Replace("[/TITLE]", string.Empty);
+                                MetaTitle = MetaTitle.TruncateAtWord(SEOConstants.MaxMetaTitleLength);
                                 MetaDescription = TemplateUtils.GetTemplateSection(MetaTemplate, "[DESCRIPTION]", "[/DESCRIPTION]").Replace("[DESCRIPTION]", string.Empty).Replace("[/DESCRIPTION]", string.Empty);
+                                MetaDescription = MetaDescription.TruncateAtWord(SEOConstants.MaxMetaDescriptionLength);
                                 MetaKeywords = TemplateUtils.GetTemplateSection(MetaTemplate, "[KEYWORDS]", "[/KEYWORDS]").Replace("[KEYWORDS]", string.Empty).Replace("[/KEYWORDS]", string.Empty);
                             }
                             BindTopics(TopicsTemplate);
