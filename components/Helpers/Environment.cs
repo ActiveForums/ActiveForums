@@ -65,7 +65,7 @@ namespace DotNetNuke.Modules.ActiveForums
 							{
 								if (! (string.IsNullOrEmpty(s)))
 								{
-									var newValue = s.Replace("<a ", "<a class=\"" + css + "\"");
+									var newValue = s.Replace("<a ", "<a class=\"" + css + "\" ");
                                     sBread += sText + newValue;
 								}
 							}
