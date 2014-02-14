@@ -26,7 +26,7 @@
 	<p>
 		<ul>
 			<li>Fixed Issue #27 - Subscribe Link Label Text</li>
-			<li>Fixed Issue #28 - Editor Selection Does Not Work
+			<li>Fixed Issue #28 - Editor Selection Does Not Work<li>
 		</ul>
 	</p>
     <p class="Owner">
