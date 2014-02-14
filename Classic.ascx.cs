@@ -29,7 +29,9 @@ using System.Web.UI.WebControls;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using System.Text;
 using DotNetNuke.Security.Roles;
-using DotNetNuke.Framework.JavaScriptLibraries;
+
+//using DotNetNuke.Framework.JavaScriptLibraries;
+
 
 namespace DotNetNuke.Modules.ActiveForums
 {
@@ -47,7 +49,7 @@ namespace DotNetNuke.Modules.ActiveForums
 
         protected override void OnInit(EventArgs e)
 		{
-            JavaScript.RequestRegistration(CommonJs.DnnPlugins);
+            //JavaScript.RequestRegistration(CommonJs.DnnPlugins);
             base.OnInit(e);
         }
         protected override void OnLoad(EventArgs e)
@@ -334,8 +336,9 @@ namespace DotNetNuke.Modules.ActiveForums
                 lang = "en-US";
             }
 
-            Framework.jQuery.RequestRegistration();
-            Framework.jQuery.RequestUIRegistration();
+            //Framework.jQuery.RequestRegistration();
+            //Framework.jQuery.RequestUIRegistration();
+            Framework.jQuery.RequestDnnPluginsRegistration();
 
             ClientResourceManager.RegisterScript(this.Page, "~/desktopmodules/activeforums/scripts/jquery-searchPopup.js");
 
