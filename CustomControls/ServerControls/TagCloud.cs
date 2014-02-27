@@ -172,7 +172,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 }
                 writer.Write("<span class=\"" + css + "\">");
                 writer.Write("<a href=\"");
-                sURL = ctlUtils.BuildUrl(TabId, ModuleId, string.Empty, string.Empty, -1, -1, int.Parse(dr["TagID"].ToString()), -1, Utilities.CleanName(tagName), 1, -1);
+                sURL = ctlUtils.BuildUrl(TabId, ModuleId, string.Empty, string.Empty, -1, -1, int.Parse(dr["TagID"].ToString()), -1, Utilities.CleanName(tagName), 1, -1, -1);
                 writer.Write(sURL);
                 writer.Write("\" title=\"" + HttpUtility.HtmlAttributeEncode(tagName) + "\">" + tagName + "</a></span> ");
             }

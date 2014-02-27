@@ -221,7 +221,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 				//ParentForum Section
 				while (dr.Read())
 				{
-					string sURL = ctlUtils.BuildUrl(TabId, ModuleId, dr["GroupPrefixURL"].ToString(), dr["PrefixURL"].ToString(), int.Parse(dr["ForumGroupId"].ToString()), int.Parse(dr["ForumId"].ToString()), -1, -1, string.Empty, 1, -1);
+					string sURL = ctlUtils.BuildUrl(TabId, ModuleId, dr["GroupPrefixURL"].ToString(), dr["PrefixURL"].ToString(), int.Parse(dr["ForumGroupId"].ToString()), int.Parse(dr["ForumId"].ToString()), -1, -1, string.Empty, 1, -1, -1);
 					if (IncludeClasses)
 					{
 						sb.Append("<div class=\"fcv-header\"><a href=\"" + sURL + "\"><span>" + dr["ForumName"].ToString() + "</span></a></div>");
@@ -243,7 +243,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 				{
 					if (Permissions.HasPerm(dr["CanRead"].ToString(), ForumUser.UserRoles))
 					{
-						string sURL = ctlUtils.BuildUrl(TabId, ModuleId, dr["GroupPrefixURL"].ToString(), dr["PrefixURL"].ToString(), int.Parse(dr["ForumGroupId"].ToString()), int.Parse(dr["ForumId"].ToString()), -1, -1, string.Empty, 1, -1);
+						string sURL = ctlUtils.BuildUrl(TabId, ModuleId, dr["GroupPrefixURL"].ToString(), dr["PrefixURL"].ToString(), int.Parse(dr["ForumGroupId"].ToString()), int.Parse(dr["ForumId"].ToString()), -1, -1, string.Empty, 1, -1, -1);
 						if (ForumId == int.Parse(dr["ForumId"].ToString()))
 						{
 							sSubforums += "<li class=\"fcv-selected\">";
@@ -321,7 +321,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 					catCount += 1;
 					//Dim Params As String() = {ParamKeys.ForumId & "=" & ForumId, ParamKeys.TopicId & "=" & TopicId, ParamKeys.ViewType & "=topic"}
 					string[] Params = {ParamKeys.TopicId + "=" + dr["TopicId"].ToString()};
-					string sTopicURL = ctlUtils.BuildUrl(TabId, ModuleId, groupPrefix, forumPrefix, ForumGroupId, ForumId, int.Parse(dr["TopicId"].ToString()), dr["URL"].ToString(), -1, -1, string.Empty, 1, -1);
+					string sTopicURL = ctlUtils.BuildUrl(TabId, ModuleId, groupPrefix, forumPrefix, ForumGroupId, ForumId, int.Parse(dr["TopicId"].ToString()), dr["URL"].ToString(), -1, -1, string.Empty, 1, -1, -1);
 					sb.Append("<a href=\"" + sTopicURL + "\"><span>" + dr["Subject"].ToString() + "</span></a></li>");
 					if (TopicId > 0)
 					{

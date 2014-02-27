@@ -36,7 +36,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
     public class TopicView : ForumBase
     {
         #region Private Members
-        
+
         private string _metaTemplate = "[META][TITLE][TOPICSUBJECT] - [PORTALNAME] - [PAGENAME] - [GROUPNAME] - [FORUMNAME][/TITLE][DESCRIPTION][BODY:255][/DESCRIPTION][KEYWORDS][TAGS][VALUE][/KEYWORDS][/META]";
         private string _metaTitle = string.Empty;
         private string _metaDescription = string.Empty;
@@ -165,16 +165,16 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
         #region Event Handlers
 
         protected override void OnInit(EventArgs e)
-		{
-			base.OnInit(e);
+        {
+            base.OnInit(e);
 
             if (ForumInfo == null)
                 ForumInfo = new ForumController().Forums_Get(PortalId, ForumModuleId, ForumId, UserId, true, false, TopicId);
         }
 
         protected override void OnLoad(EventArgs e)
-		{
-			base.OnLoad(e);
+        {
+            base.OnLoad(e);
 
             try
             {
@@ -201,7 +201,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 // Redirect to the first new post if the first new post param is found in the url
                 // Note that this should probably be the default behavior unless a page is specified.
                 var lastPostRead = Utilities.SafeConvertInt(Request.Params[ParamKeys.FirstNewPost]);
-                if(lastPostRead > 0)
+                if (lastPostRead > 0)
                 {
                     var firstUnreadPost = DataProvider.Instance().Utility_GetFirstUnRead(TopicId, Convert.ToInt32(Request.Params[ParamKeys.FirstNewPost]));
                     if (firstUnreadPost > lastPostRead)
@@ -211,7 +211,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                             tURL = Utilities.NavigateUrl(TabId, "", new[] { ParamKeys.TopicId + "=" + TopicId, ParamKeys.ContentJumpId + "=" + firstUnreadPost });
 
                         Response.Redirect(tURL);
-                    } 
+                    }
                 }
 
 
@@ -226,15 +226,15 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 // Get our default sort
                 // Try the OptDefaultSort Value First
                 _defaultSort = OptDefaultSort;
-                if(string.IsNullOrWhiteSpace(_defaultSort))
+                if (string.IsNullOrWhiteSpace(_defaultSort))
                 {
                     // Next, try getting the sort from the query string
                     _defaultSort = (Request.Params[ParamKeys.Sort] + string.Empty).Trim().ToUpperInvariant();
-                    if(string.IsNullOrWhiteSpace(_defaultSort) || (_defaultSort != "ASC" && _defaultSort != "DESC"))
+                    if (string.IsNullOrWhiteSpace(_defaultSort) || (_defaultSort != "ASC" && _defaultSort != "DESC"))
                     {
                         // If we still don't have a valid sort, try and use the value from the users profile
                         _defaultSort = (ForumUser.Profile.PrefDefaultSort + string.Empty).Trim().ToUpper();
-                        if(string.IsNullOrWhiteSpace(_defaultSort) || (_defaultSort != "ASC" && _defaultSort != "DESC"))
+                        if (string.IsNullOrWhiteSpace(_defaultSort) || (_defaultSort != "ASC" && _defaultSort != "DESC"))
                         {
                             // No other option than to just use ASC
                             _defaultSort = "ASC";
@@ -265,7 +265,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
         {
             // Get our page size
             _pageSize = OptPageSize;
-            if(_pageSize <= 0)
+            if (_pageSize <= 0)
             {
                 _pageSize = UserId > 0 ? UserDefaultPageSize : MainSettings.PageSize;
                 if (_pageSize < 5)
@@ -284,7 +284,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             _rowIndex = (pageId - 1) * _pageSize;
 
             var ds = DataProvider.Instance().UI_TopicView(PortalId, ModuleId, ForumId, TopicId, UserId, _rowIndex, _pageSize, UserInfo.IsSuperUser, _defaultSort);
-            
+
             // Test for a proper dataset
             if (ds.Tables.Count < 4 || ds.Tables[0].Rows.Count == 0 || ds.Tables[1].Rows.Count == 0)
                 Response.Redirect(Utilities.NavigateUrl(TabId));
@@ -298,7 +298,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             // If we don't have any rows to display, redirect
             if (_dtTopic.Rows.Count == 0)
             {
-                if(pageId > 1)
+                if (pageId > 1)
                 {
                     if (MainSettings.UseShortUrls)
                         Response.Redirect(Utilities.NavigateUrl(TabId, string.Empty, new[] { ParamKeys.TopicId + "=" + TopicId }), true);
@@ -317,7 +317,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             // first make sure we have read permissions, otherwise we need to redirect
             _bRead = Permissions.HasPerm(_drSecurity["CanRead"].ToString(), ForumUser.UserRoles);
 
-            if(!_bRead)
+            if (!_bRead)
             {
                 var settings = Entities.Portals.PortalController.GetCurrentPortalSettings();
                 if (settings.LoginTabId > 0)
@@ -326,7 +326,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     Response.Redirect(Utilities.NavigateUrl(TabId, "", "ctl=login&returnUrl=" + Request.RawUrl), true);
             }
 
-            
+
             //bCreate = Permissions.HasPerm(drSecurity["CanCreate"].ToString(), ForumUser.UserRoles);
             _bEdit = Permissions.HasPerm(_drSecurity["CanEdit"].ToString(), ForumUser.UserRoles);
             _bDelete = Permissions.HasPerm(_drSecurity["CanDelete"].ToString(), ForumUser.UserRoles);
@@ -340,7 +340,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             _bModApprove = Permissions.HasPerm(_drSecurity["CanModApprove"].ToString(), ForumUser.UserRoles);
             _bTrust = Permissions.HasPerm(_drSecurity["CanTrust"].ToString(), ForumUser.UserRoles);
             _bModEdit = Permissions.HasPerm(_drSecurity["CanModEdit"].ToString(), ForumUser.UserRoles);
-            
+
             _isTrusted = Utilities.IsTrusted((int)ForumInfo.DefaultTrustValue, ForumUser.TrustLevel, Permissions.HasPerm(ForumInfo.Security.Trust, ForumUser.UserRoles));
 
             _forumName = _drForum["ForumName"].ToString();
@@ -374,8 +374,8 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             _topicDateCreated = Utilities.GetDate(Utilities.SafeConvertDateTime(_drForum["DateCreated"]), ForumModuleId, TimeZoneOffset);
             _topicData = _drForum["TopicData"].ToString();
             _isSubscribedTopic = UserId > 0 && Utilities.SafeConvertInt(_drForum["IsSubscribedTopic"]) > 0;
-  
-            if (Page.IsPostBack) 
+
+            if (Page.IsPostBack)
                 return;
 
             // If a content jump id was passed it, we need to calulate a page and then jump to it with an ancor
@@ -384,7 +384,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             var contentJumpId = Utilities.SafeConvertInt(Request.Params[ParamKeys.ContentJumpId], -1);
             if (contentJumpId < 0)
                 return;
-                      
+
             var sTarget = "#" + contentJumpId;
 
             var sURL = string.Empty;
@@ -393,7 +393,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             {
                 var db = new Data.Common();
                 sURL = db.GetUrl(ModuleId, ForumGroupId, ForumId, TopicId, UserId, contentJumpId);
-                    
+
                 if (!(sURL.StartsWith("/")))
                     sURL = "/" + sURL;
 
@@ -415,7 +415,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 
                 sURL = Utilities.NavigateUrl(TabId, "", @params.ToArray()) + sTarget;
             }
-           
+
             if (Request.IsAuthenticated)
                 Response.Redirect(sURL, true);
 
@@ -436,7 +436,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 // Note:  The template may be set in the topic review section of the Post form.
                 bFullTopic = false;
                 sOutput = TopicTemplate;
-                sOutput = Utilities.ParseSpacer(sOutput); 
+                sOutput = Utilities.ParseSpacer(sOutput);
             }
             else if (UseTemplatePath && TemplatePath != string.Empty)
             {
@@ -487,10 +487,10 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             {
                 var sProps = string.Empty;
 
-                if(!string.IsNullOrWhiteSpace(_topicData))
+                if (!string.IsNullOrWhiteSpace(_topicData))
                 {
                     var sPropTemplate = TemplateUtils.GetTemplateSection(sOutput, "[AF:PROPERTIES]", "[/AF:PROPERTIES]");
-                    
+
                     try
                     {
                         var xDoc = new XmlDocument();
@@ -508,12 +508,12 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                                 var tmp = sPropTemplate.Replace("[AF:PROPERTY:LABEL]", "[RESX:" + pName + "]");
                                 tmp = tmp.Replace("[AF:PROPERTY:VALUE]", pValue);
                                 sProps += tmp;
-                                
+
                                 // This deals with any specific property tokens that may be present outside of the normal properties template
                                 sOutput = sOutput.Replace("[AF:PROPERTY:" + pName + ":LABEL]", Utilities.GetSharedResource("[RESX:" + pName + "]"));
                                 sOutput = sOutput.Replace("[AF:PROPERTY:" + pName + ":VALUE]", pValue);
                                 var pValueKey = string.IsNullOrWhiteSpace(pValue) ? string.Empty : Utilities.CleanName(pValue).ToLowerInvariant();
-                                sOutput = sOutput.Replace("[AF:PROPERTY:" + pName + ":VALUEKEY]", pValueKey);  
+                                sOutput = sOutput.Replace("[AF:PROPERTY:" + pName + ":VALUEKEY]", pValueKey);
                             }
                         }
                     }
@@ -521,7 +521,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     {
                         // Property XML is invalid
                         // Nothing to do in this case but ignore the issue.
-                    }      
+                    }
                 }
 
                 sOutput = TemplateUtils.ReplaceSubSection(sOutput, sProps, "[AF:PROPERTIES]", "[/AF:PROPERTIES]");
@@ -543,8 +543,8 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             {
                 MetaTemplate = MetaTemplate.Replace("[FORUMNAME]", _forumName);
                 MetaTemplate = MetaTemplate.Replace("[GROUPNAME]", _groupName);
-                
-                var  settings = Entities.Portals.PortalController.GetCurrentPortalSettings();
+
+                var settings = Entities.Portals.PortalController.GetCurrentPortalSettings();
                 var pageName = (settings.ActiveTab.Title.Length == 0)
                                    ? Server.HtmlEncode(settings.ActiveTab.TabName)
                                    : Server.HtmlEncode(settings.ActiveTab.Title);
@@ -596,14 +596,14 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             #region Setup Breadcrumbs
 
             var breadCrumb = TemplateUtils.GetTemplateSection(sOutput, "[BREADCRUMB]", "[/BREADCRUMB]").Replace("[BREADCRUMB]", string.Empty).Replace("[/BREADCRUMB]", string.Empty);
-            
+
             if (MainSettings.UseSkinBreadCrumb)
             {
                 var ctlUtils = new ControlUtils();
 
-                var groupUrl = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, string.Empty, ForumInfo.ForumGroupId, -1, -1, -1, string.Empty, 1, SocialGroupId);
-                var forumUrl = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, ForumInfo.PrefixURL, ForumInfo.ForumGroupId, ForumInfo.ForumID, -1, -1, string.Empty, 1, SocialGroupId);
-                var topicUrl = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, ForumInfo.PrefixURL, ForumInfo.ForumGroupId, ForumInfo.ForumID, TopicId, _topicURL, -1, -1, string.Empty, 1, SocialGroupId);
+                var groupUrl = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, string.Empty, ForumInfo.ForumGroupId, -1, -1, -1, string.Empty, 1, -1, SocialGroupId);
+                var forumUrl = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, ForumInfo.PrefixURL, ForumInfo.ForumGroupId, ForumInfo.ForumID, -1, -1, string.Empty, 1, -1, SocialGroupId);
+                var topicUrl = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, ForumInfo.PrefixURL, ForumInfo.ForumGroupId, ForumInfo.ForumID, TopicId, _topicURL, -1, -1, string.Empty, 1, -1, SocialGroupId);
 
                 var sCrumb = "<a href=\"" + groupUrl + "\">" + _groupName + "</a>|";
                 sCrumb += "<a href=\"" + forumUrl + "\">" + _forumName + "</a>";
@@ -622,8 +622,8 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 
             // Note: If the containing element is not found, GetTemplateSection returns the entire template
             // This is desired behavior in this case as it's possible that the entire template is our topics container.
-            var topic = TemplateUtils.GetTemplateSection(sOutput, "[AF:CONTROL:CALLBACK]", "[/AF:CONTROL:CALLBACK]"); 
-                    
+            var topic = TemplateUtils.GetTemplateSection(sOutput, "[AF:CONTROL:CALLBACK]", "[/AF:CONTROL:CALLBACK]");
+
             topic = ParseTopic(topic);
 
             if (!topic.Contains(Globals.ControlRegisterTag))
@@ -635,7 +635,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             if (bFullTopic)
             {
                 sOutput = TemplateUtils.ReplaceSubSection(sOutput, "<asp:placeholder id=\"plhTopic\" runat=\"server\" />", "[AF:CONTROL:CALLBACK]", "[/AF:CONTROL:CALLBACK]");
-     
+
                 sOutput = Utilities.LocalizeControl(sOutput);
                 sOutput = Utilities.StripTokens(sOutput);
 
@@ -644,7 +644,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     sOutput = Globals.BannerRegisterTag + sOutput;
 
                 var ctl = ParseControl(sOutput);
-                if(ctl != null)
+                if (ctl != null)
                     Controls.Add(ctl);
             }
 
@@ -664,7 +664,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 topic = Globals.BannerRegisterTag + topic;
 
             var ctlTopic = ParseControl(topic);
-            if(ctlTopic != null)
+            if (ctlTopic != null)
                 plhTopic.Controls.Add(ctlTopic);
 
             //Add helper controls
@@ -723,7 +723,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     ctlQuickReply.SocialGroupId = SocialGroupId;
                     ctlQuickReply.ForumModuleId = ForumModuleId;
                     ctlQuickReply.ForumTabId = TabId;
-                    
+
                     if (ForumId > 0)
                         ctlQuickReply.ForumInfo = ForumInfo;
 
@@ -784,7 +784,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
         private string ParseControls(string sOutput)
         {
             // Do a few things before we switch to a string builder
-           
+
             // Add This
             if (sOutput.Contains("[AF:CONTROL:ADDTHIS"))
             {
@@ -796,7 +796,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             if (sOutput.Contains("[BANNER"))
             {
                 sOutput = sOutput.Replace("[BANNER]", "<dnn:BANNER runat=\"server\" GroupName=\"FORUMS\" BannerCount=\"1\" EnableViewState=\"False\" />");
-                
+
                 const string pattern = @"(\[BANNER:(.+?)\])";
                 const string sBanner = "<dnn:BANNER runat=\"server\" BannerCount=\"1\" GroupName=\"$1\" EnableViewState=\"False\" />";
 
@@ -898,7 +898,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 else if (ForumInfo.ForumGroupId > 0)
                     sbOutput.Replace("[PARENTFORUMLINK]", "<a href=\"" + Utilities.NavigateUrl(TabId) + "\">" + ForumInfo.GroupName + "</a>");
             }
-            
+
             // Parent Forum Name
             if (string.IsNullOrEmpty(ForumInfo.ParentForumName))
                 sbOutput.Replace("[PARENTFORUMNAME]", ForumInfo.ParentForumName);
@@ -920,11 +920,11 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             var sURL = "<a rel=\"nofollow\" href=\"" + Utilities.NavigateUrl(TabId, "", ParamKeys.ForumId + "=" + ForumId, ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.TopicId + "=" + TopicId, "mid=" + ModuleId, "dnnprintmode=true") + "?skinsrc=" + HttpUtility.UrlEncode("[G]" + UI.Skins.SkinInfo.RootSkin + "/" + Common.Globals.glbHostSkinFolder + "/" + "No Skin") + "&amp;containersrc=" + HttpUtility.UrlEncode("[G]" + UI.Skins.SkinInfo.RootContainer + "/" + Common.Globals.glbHostSkinFolder + "/" + "No Container") + "\" target=\"_blank\">";
             sURL += "<img src=\"" + _myThemePath + "/images/print16.png\" border=\"0\" alt=\"[RESX:PrinterFriendly]\" /></a>";
             sbOutput.Replace("[AF:CONTROL:PRINTER]", sURL);
-            
+
             // Email Link
             if (Request.IsAuthenticated)
             {
-                sURL = Utilities.NavigateUrl(TabId, "", new [] { ParamKeys.ViewType + "=sendto", ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + TopicId });
+                sURL = Utilities.NavigateUrl(TabId, "", new[] { ParamKeys.ViewType + "=sendto", ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + TopicId });
                 sbOutput.Replace("[AF:CONTROL:EMAIL]", "<a href=\"" + sURL + "\" rel=\"nofollow\"><img src=\"" + _myThemePath + "/images/email16.png\" border=\"0\" alt=\"[RESX:EmailThis]\" /></a>");
             }
             else
@@ -958,7 +958,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             // Topic Info
             sbOutput.Replace("[AF:LABEL:TopicAuthor]", UserProfiles.GetDisplayName(ModuleId, _topicAuthorId, _topicAuthorDisplayName, string.Empty, string.Empty, _topicAuthorDisplayName));
             sbOutput.Replace("[AF:LABEL:TopicDateCreated]", _topicDateCreated);
-            
+
             // Pagers
             if (_pageSize == int.MaxValue)
             {
@@ -1037,20 +1037,20 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             if (sOutput.Contains("[REPLYSEPARATOR"))
             {
                 var defaultSeparator = TemplateUtils.GetTemplateSection(sOutput, "[REPLYSEPARATOR]", "[/REPLYSEPARATOR]", false);
-                if(!string.IsNullOrWhiteSpace(defaultSeparator))
+                if (!string.IsNullOrWhiteSpace(defaultSeparator))
                 {
                     separators.Add(0, defaultSeparator.Replace("[REPLYSEPARATOR]", string.Empty).Replace("[/REPLYSEPARATOR]", string.Empty));
                     sOutput = TemplateUtils.ReplaceSubSection(sOutput, string.Empty, "[REPLYSEPARATOR]", "[/REPLYSEPARATOR]");
                 }
 
-                foreach(Match match in Regex.Matches(sOutput, pattern))
+                foreach (Match match in Regex.Matches(sOutput, pattern))
                 {
                     var rowIndex = int.Parse(match.Groups[1].Value);
                     var startTag = string.Format("[REPLYSEPARATOR:{0}]", rowIndex);
                     var endTag = string.Format("[/REPLYSEPARATOR:{0}]", rowIndex);
 
                     var separator = TemplateUtils.GetTemplateSection(sOutput, startTag, endTag, false);
-                    if (string.IsNullOrWhiteSpace(separator)) 
+                    if (string.IsNullOrWhiteSpace(separator))
                         continue;
 
                     separators[rowIndex] = separator.Replace(startTag, string.Empty).Replace(endTag, string.Empty);
@@ -1065,13 +1065,13 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             var sReplyTemplate = TemplateUtils.GetTemplateSection(sOutput, "[REPLIES]", "[/REPLIES]");
             var sTemp = string.Empty;
             var i = 0;
-            
+
             if (_dtTopic.Rows.Count > 0)
             {
                 foreach (DataRow dr in _dtTopic.Rows)
                 {
                     // deal with our separator first
-                    if(i > 0 && separators.Count > 0) // No separator before the first row
+                    if (i > 0 && separators.Count > 0) // No separator before the first row
                     {
                         if (separators.ContainsKey(i)) // Specific row
                             sTemp += separators[i];
@@ -1113,7 +1113,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
         {
             var sOutput = tempate;
 
-            var replyId = dr.GetInt("ReplyId"); 
+            var replyId = dr.GetInt("ReplyId");
             var topicId = dr.GetInt("TopicId");
             var postId = replyId == 0 ? topicId : replyId;
             var contentId = dr.GetInt("ContentId");
@@ -1143,7 +1143,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             var rewardPoints = dr.GetInt("RewardPoints");
             var dateLastActivity = dr.GetDateTime("DateLastActivity");
             var signatureDisabled = dr.GetBoolean("SignatureDisabled");
-            
+
             // Populate the user object with the post author info.  
             var up = new User
             {
@@ -1229,7 +1229,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             sbOutput.Replace("[TOPICID]", topicId.ToString());
             sbOutput.Replace("[POSTDATE]", GetDate(dateCreated));
             sbOutput.Replace("[DATECREATED]", GetDate(dateCreated));
-            
+
 
 
 
@@ -1345,7 +1345,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             }
 
             // Poll Results
-            if (sOutput.Contains("[POLLRESULTS]") )
+            if (sOutput.Contains("[POLLRESULTS]"))
             {
                 if (_topicType == 1)
                 {
@@ -1375,7 +1375,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             // Process Body
             if (string.IsNullOrEmpty(body))
                 body = " <br />";
-            
+
             var sBody = Utilities.ManageImagePath(body);
 
             sBody = sBody.Replace("[", "&#91;");
@@ -1406,9 +1406,9 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 
             // Subject
             sbOutput.Replace("[SUBJECT]", subject);
-            
+
             // Attachments
-            var sAttach =  (_dtAttach.Rows.Count > 0) ? GetAttachments(contentId, _bAttach, PortalId, ModuleId) : string.Empty;
+            var sAttach = (_dtAttach.Rows.Count > 0) ? GetAttachments(contentId, _bAttach, PortalId, ModuleId) : string.Empty;
             sbOutput.Replace("[ATTACHMENTS]", sAttach);
 
             // Switch back from the string builder to a normal string before we perform the image/thumbnail replacements.
@@ -1431,16 +1431,16 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 sOutput = Regex.Replace(sOutput, pattern, match =>
                 {
                     var thumbId = match.Groups[2].Value.Split(':')[0];
-                    var parentId = match.Groups[2].Value.Split(':')[1]; 
+                    var parentId = match.Groups[2].Value.Split(':')[1];
                     return "<a href=\"" + strHost + "DesktopModules/ActiveForums/viewer.aspx?portalid=" + PortalId + "&moduleid=" + ModuleId + "&attachid=" + parentId + "\" target=\"_blank\"><img src=\"" + strHost + "DesktopModules/ActiveForums/viewer.aspx?portalid=" + PortalId + "&moduleid=" + ModuleId + "&attachid=" + thumbId + "\" border=\"0\" class=\"afimg\" /></a>";
                 });
             }
 
             return sOutput;
         }
-        
+
         private string GetAttachments(int contentId, bool allowAttach, int portalId, int moduleId)
-        {            
+        {
             var strHost = Common.Globals.AddHTTP(Common.Globals.GetDomainName(Request)) + "/";
             if (Request.IsSecureConnection)
                 strHost = strHost.Replace("http://", "https://");
@@ -1454,16 +1454,16 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 
             var vpath = PortalSettings.HomeDirectory + "activeforums_Attach/";
             var fpath = Server.MapPath(PortalSettings.HomeDirectory + "activeforums_Attach/");
-            
+
             _dtAttach.DefaultView.RowFilter = "ContentId = " + contentId;
-              
+
             foreach (DataRow dr in _dtAttach.DefaultView.ToTable().Rows)
             {
                 var attachId = dr.GetInt("AttachId");
                 var filename = dr.GetString("Filename");
                 var contentType = dr.GetString("ContentType");
                 var fileUrl = dr.GetString("FileURL", string.Empty);
-                
+
                 if (!(string.IsNullOrEmpty(fileUrl)))
                     fileUrl = Page.ResolveUrl(fileUrl);
 
@@ -1515,7 +1515,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             if (!string.IsNullOrWhiteSpace(Request.Params[ParamKeys.Sort]))
                 @params.Add(ParamKeys.Sort + "=" + Request.Params[ParamKeys.Sort]);
 
-            if(pager1 != null)
+            if (pager1 != null)
             {
                 pager1.PageCount = intPages;
                 pager1.CurrentPage = PageId;
