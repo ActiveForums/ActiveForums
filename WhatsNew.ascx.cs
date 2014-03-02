@@ -161,8 +161,8 @@ namespace DotNetNuke.Modules.ActiveForums
                     {
                         var ctlUtils = new ControlUtils();
 
-                        sTopicUrl = ctlUtils.BuildUrl(topicTabId, topicModuleId, sGroupPrefixUrl, sForumUrl, groupId, forumId, topicId, sTopicUrl, -1, -1, string.Empty, 1, -1);
-                        sForumUrl = ctlUtils.BuildUrl(topicTabId, topicModuleId, sGroupPrefixUrl, sForumUrl, groupId, forumId, -1, string.Empty, -1, -1, string.Empty, 1, -1);
+                        sTopicUrl = ctlUtils.BuildUrl(topicTabId, topicModuleId, sGroupPrefixUrl, sForumUrl, groupId, forumId, topicId, sTopicUrl, -1, -1, string.Empty, 1, replyId, -1);
+                        sForumUrl = ctlUtils.BuildUrl(topicTabId, topicModuleId, sGroupPrefixUrl, sForumUrl, groupId, forumId, -1, string.Empty, -1, -1, string.Empty, 1, replyId, -1);
 
                         if (sHost.EndsWith("/") && sForumUrl.StartsWith("/"))
                         {

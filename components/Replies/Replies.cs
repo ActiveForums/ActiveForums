@@ -270,7 +270,7 @@ namespace DotNetNuke.Modules.ActiveForums
 			try
 			{
 				ControlUtils ctlUtils = new ControlUtils();
-				string fullURL = ctlUtils.BuildUrl(TabId, ModuleId, fi.ForumGroup.PrefixURL, fi.PrefixURL, fi.ForumGroupId, ForumId, TopicId, topic.TopicUrl, -1, -1, string.Empty, 1, fi.SocialGroupId);
+                string fullURL = ctlUtils.BuildUrl(TabId, ModuleId, fi.ForumGroup.PrefixURL, fi.PrefixURL, fi.ForumGroupId, ForumId, TopicId, topic.TopicUrl, -1, -1, string.Empty, 1, ReplyId, fi.SocialGroupId);
 
 				if (fullURL.Contains("~/"))
 				{
