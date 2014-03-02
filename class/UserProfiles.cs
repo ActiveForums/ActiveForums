@@ -34,12 +34,12 @@ namespace DotNetNuke.Modules.ActiveForums
             return "<img class='af-avatar' src='" + string.Format(Common.Globals.UserProfilePicFormattedUrl(), userID, avatarWidth, avatarHeight) + "' />";
 		}
 
-	    public static string GetDisplayName(int moduleId, int userID, string username, string firstName = "", string lastName = "", string displayName = "")
+	    public static string GetDisplayName(int moduleId, int userID, string username, string firstName = "", string lastName = "", string displayName = "", string profileNameClass = "af-profile-name")
 		{
-			return GetDisplayName(moduleId, false, false, false, userID, username, firstName, lastName, displayName, null);
+			return GetDisplayName(moduleId, false, false, false, userID, username, firstName, lastName, displayName, null, profileNameClass);
 		}
 
-	    public static string GetDisplayName(int moduleId, bool linkProfile, bool isMod, bool isAdmin, int userId, string username, string firstName = "", string lastName = "", string displayName = "", string profileLinkClass = "af-profile-link")
+	    public static string GetDisplayName(int moduleId, bool linkProfile, bool isMod, bool isAdmin, int userId, string username, string firstName = "", string lastName = "", string displayName = "", string profileLinkClass = "af-profile-link", string profileNameClass = "af-profile-name")
 		{
             var portalSettings = HttpContext.Current.Items["PortalSettings"] as PortalSettings;
             if (portalSettings == null)
@@ -47,7 +47,7 @@ namespace DotNetNuke.Modules.ActiveForums
 
 			var mainSettings = DataCache.MainSettings(moduleId);
 
-		    var outputTemplate = "<span class='af-profile-name'>{0}</span>";
+		    var outputTemplate = string.IsNullOrWhiteSpace(profileLinkClass) ? "{0}" : "<span class='" + profileNameClass + "'>{0}</span>";
 
             if(linkProfile && userId > 0)
             {
