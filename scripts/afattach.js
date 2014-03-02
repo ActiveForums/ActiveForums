@@ -17,16 +17,32 @@ function AFAttachmentManager($, ko, options) {
 
             this.attachments.subscribe(function(changes) {
                 $attachments.val(JSON.stringify(self.attachments()));
+
+                self.setAttachButtonVisibility();
             });
 
             this.hasAttachments = ko.computed(function () { return self.attachments().length ? true : false; });
 
             this.addAttachment = function(attachment) {
 
-                if (!attachment)
+                if (!attachment || (options.maxAttachmentCount > 0 && self.attachments().length >= options.maxAttachmentCount))
                     return;
 
                 self.attachments.push(attachment);
+            };
+
+            this.setAttachButtonVisibility = function () {
+
+                console.log(self.attachments().length);
+                console.log(options.maxAttachmentCount);
+
+                if (options.maxAttachmentCount > 0 && self.attachments().length >= options.maxAttachmentCount) {
+                    $element.find(".af-attach-upload").hide();
+                    console.log('hide');
+                }
+                else {
+                    $element.find(".af-attach-upload").show();
+                }
             };
 
             this.addUserFileAttachment = function(file) {
@@ -68,8 +84,7 @@ function AFAttachmentManager($, ko, options) {
                 var ext = fileName.substr((~-fileName.lastIndexOf(".") >>> 0) + 2);
 
                 return "af-fileicon af-fileicon-" + ext;
-            };
-    
+            }; 
         }
 
         this.initialize = function() {
@@ -120,7 +135,8 @@ function AFAttachmentManager($, ko, options) {
                 });
             }
 
-
+            // Have to call this after initializing the upload controls
+            attachmentsViewModel.setAttachButtonVisibility();
 
         };
     };

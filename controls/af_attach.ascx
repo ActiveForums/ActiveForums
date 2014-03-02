@@ -75,7 +75,8 @@
             fileTypeNotAllowedMsg: "<%=DotNetNuke.UI.Utilities.ClientAPI.GetSafeJSString(LocalizeString("[RESX:Error:BlockedFile]"))%>",      
             allowedFileTypes: "<%= ForumInfo.AttachTypeAllowed %>",
             allowBrowseSite: <%= ForumInfo.AttachAllowBrowseSite ? 1 : 0 %>,
-            maxFileSizeExceededMsg: "<%=DotNetNuke.UI.Utilities.ClientAPI.GetSafeJSString(string.Format(LocalizeString("[RESX:Error:FileTooLarge]").TextOrEmpty(), ForumInfo.AttachMaxSize))%>"     
+            maxFileSizeExceededMsg: "<%=DotNetNuke.UI.Utilities.ClientAPI.GetSafeJSString(string.Format(LocalizeString("[RESX:Error:FileTooLarge]").TextOrEmpty(), ForumInfo.AttachMaxSize))%>",
+            maxAttachmentCount: <%= ForumInfo.AttachCount %>
         };
 
         var attachmentMgr = new AFAttachmentManager(jQuery, ko, options);
