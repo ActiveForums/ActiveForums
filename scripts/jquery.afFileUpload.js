@@ -19,7 +19,7 @@
             buttonText = $fileUploadWrapperSelector.find(".dnnInputFileWrapper span").text();
 
         function resetButtonText() {
-            $fileUploadWrapperSelector.find(".dnnInputFileWrapper span").text(buttonText);
+            $fileUploadWrapperSelector.find(".dnnInputFileWrapper span").text(options.uploadButtonText);
         }
 
         // error response 
@@ -119,6 +119,8 @@
         }
 
         $wrap.show();
+
+        resetButtonText();
 
     };
 

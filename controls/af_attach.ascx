@@ -14,14 +14,14 @@
 	    <div class="fileupload-picker">
             <span>
                 <input type="file" name="files[]" />
-                <a href="#" id="photoFromSite" class="dnnSecondaryAction">Browse From Site</a>
+                <a href="#" id="photoFromSite" class="dnnSecondaryAction"><%=GetSharedResource("[RESX:BrowseFromSite]")%></a>
             </span>	
 	    </div>
 	    <div class="fileupload-status">
 		    <div class="fileupload-error dnnFormMessage dnnFormValidationSummary" style="display: none;"></div>
             <div class="fileupload-progress" style="display:none;">
 		        <span class="fileupload-progress-percent">0%</span>
-                <span>Uploading </span><span class="fileupload-filename"></span>
+                <span><%=GetSharedResource("[RESX:Uploading]")%> </span><span class="fileupload-filename"></span>
                 <div class="fileupload-progress-bar"></div>
             </div>
 	    </div>
@@ -76,7 +76,8 @@
             allowedFileTypes: "<%= ForumInfo.AttachTypeAllowed %>",
             allowBrowseSite: <%= ForumInfo.AttachAllowBrowseSite ? 1 : 0 %>,
             maxFileSizeExceededMsg: "<%=DotNetNuke.UI.Utilities.ClientAPI.GetSafeJSString(string.Format(LocalizeString("[RESX:Error:FileTooLarge]").TextOrEmpty(), ForumInfo.AttachMaxSize))%>",
-            maxAttachmentCount: <%= ForumInfo.AttachCount %>
+            maxAttachmentCount: <%= ForumInfo.AttachCount %>,
+            uploadButtonText: "<%=DotNetNuke.UI.Utilities.ClientAPI.GetSafeJSString(LocalizeString("[RESX:UploadButton]"))%>"
         };
 
         var attachmentMgr = new AFAttachmentManager(jQuery, ko, options);

@@ -42,6 +42,8 @@ function AFAttachmentManager($, ko, options) {
                 }
                 else {
                     $element.find(".af-attach-upload").show();
+                    $element.find(".fileupload-error").hide();
+                    $element.find(".fileupload-progress").hide();
                 }
             };
 
@@ -92,6 +94,16 @@ function AFAttachmentManager($, ko, options) {
             $element = $('#' + options.elementId);
             $attachments = $('#' + options.attachmentsClientId);
 
+
+            //Make DNN 7.2 consistent with 7.0
+            var $fileInput = $element.find("input[type=file]");
+            if(!$fileInput.parent().hasClass('dnnInputFileWrapper')) {
+                var wrapper = $("<span class='dnnInputFileWrapper'></span>");
+                $fileInput.wrap(wrapper);
+                var btn = $("<span class='dnnSecondaryAction'>Choose File</span>");
+                btn.insertBefore($fileInput);
+            }
+
             // bind view model
 
             attachmentsViewModel = new AttachmentsViewModel();
@@ -108,6 +120,7 @@ function AFAttachmentManager($, ko, options) {
                 fileTypeNotAllowedMsg: options.fileTypeNotAllowedMsg,      
                 allowedFileTypes: options.allowedFileTypes,
                 maxFileSizeExceededMsg: options.maxFileSizeExceededMsg,
+                uploadButtonText: options.uploadButtonText,
                 beforeSend: sf.setModuleHeaders,
                 callback: attachmentsViewModel.addAttachment,
                 formData: { "forumId" : options.forumId }
@@ -134,9 +147,15 @@ function AFAttachmentManager($, ko, options) {
                     attachCallback: attachmentsViewModel.addUserFileAttachment
                 });
             }
+            
 
             // Have to call this after initializing the upload controls
             attachmentsViewModel.setAttachButtonVisibility();
+
+
+
+
+
 
         };
     };

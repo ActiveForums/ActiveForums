@@ -1564,4 +1564,13 @@ From,
   <data name="MarkAllReadConfirm.Text" xml:space="preserve">
     <value>Mark all items read?</value>
   </data>
+  <data name="[RESX:BrowseFromSite].Text" xml:space="preserve">
+    <value>Browse From Site</value>
+  </data>
+  <data name="[RESX:UploadButton].Text" xml:space="preserve">
+    <value>Choose File</value>
+  </data>
+  <data name="[RESX:Uploading].Text" xml:space="preserve">
+    <value>Uploading</value>
+  </data>
 </root>
