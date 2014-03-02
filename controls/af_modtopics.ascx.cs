@@ -45,8 +45,8 @@ namespace DotNetNuke.Modules.ActiveForums
         }
 
         protected override void OnLoad(EventArgs e)
-		{
-			base.OnLoad(e);
+        {
+            base.OnLoad(e);
 
             if (Request.IsAuthenticated && ForumUser.Profile.IsMod)
             {
@@ -202,7 +202,7 @@ namespace DotNetNuke.Modules.ActiveForums
                                     try
                                     {
                                         ControlUtils ctlUtils = new ControlUtils();
-                                        string sUrl = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, fi.ForumGroup.PrefixURL, fi.PrefixURL, fi.ForumGroupId, fi.ForumID, TopicId, ti.TopicUrl, -1, -1, string.Empty, 1, fi.SocialGroupId); // Utilities.NavigateUrl(ForumTabId, "", ParamKeys.ViewType & "=" & Views.Topic & "&" & ParamKeys.ForumId & "=" & ForumId, ParamKeys.TopicId & "=" & TopicId)
+                                        string sUrl = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, fi.ForumGroup.PrefixURL, fi.PrefixURL, fi.ForumGroupId, fi.ForumID, TopicId, ti.TopicUrl, -1, -1, string.Empty, 1, -1, fi.SocialGroupId); // Utilities.NavigateUrl(ForumTabId, "", ParamKeys.ViewType & "=" & Views.Topic & "&" & ParamKeys.ForumId & "=" & ForumId, ParamKeys.TopicId & "=" & TopicId)
                                         if (sUrl.Contains("~/") || Request.QueryString["asg"] != null)
                                         {
                                             sUrl = Utilities.NavigateUrl(ForumTabId, "", ParamKeys.TopicId + "=" + TopicId);
@@ -249,7 +249,7 @@ namespace DotNetNuke.Modules.ActiveForums
                                     try
                                     {
                                         ControlUtils ctlUtils = new ControlUtils();
-                                        string fullURL = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, fi.ForumGroup.PrefixURL, fi.PrefixURL, fi.ForumGroupId, fi.ForumID, TopicId, ti.TopicUrl, -1, -1, string.Empty, 1, fi.SocialGroupId);
+                                        string fullURL = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, fi.ForumGroup.PrefixURL, fi.PrefixURL, fi.ForumGroupId, fi.ForumID, TopicId, ti.TopicUrl, -1, -1, string.Empty, 1, -1, fi.SocialGroupId);
                                         if (fullURL.Contains("~/") || Request.QueryString["asg"] != null)
                                         {
                                             fullURL = Utilities.NavigateUrl(ForumTabId, "", new string[] { ParamKeys.TopicId + "=" + TopicId, ParamKeys.ContentJumpId + "=" + tmpReplyId });

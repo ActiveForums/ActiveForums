@@ -197,7 +197,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 				{
 					string tmp = Template;
 					string categoryName = dr["TagName"].ToString();
-					tmp = tmp.Replace("[CATEGORYURL]", cUtils.BuildUrl(TabId, ModuleId, groupPrefix, forumPrefix, ForumGroupId, ForumId, -1, int.Parse(dr["TagId"].ToString()), Utilities.CleanName(categoryName), 1, -1));
+					tmp = tmp.Replace("[CATEGORYURL]", cUtils.BuildUrl(TabId, ModuleId, groupPrefix, forumPrefix, ForumGroupId, ForumId, -1, int.Parse(dr["TagId"].ToString()), Utilities.CleanName(categoryName), 1, -1, -1));
 					tmp = tmp.Replace("[CATEGORYNAME]", categoryName);
 					if (int.Parse(dr["TagId"].ToString()) == SelectedCategory)
 					{

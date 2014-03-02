@@ -707,7 +707,7 @@ namespace DotNetNuke.Modules.ActiveForums
 			try
 			{
 				ControlUtils ctlUtils = new ControlUtils();
-				string sUrl = ctlUtils.BuildUrl(TabId, ModuleId, fi.ForumGroup.PrefixURL, fi.PrefixURL, fi.ForumGroupId, fi.ForumID, TopicId, topic.TopicUrl, -1, -1, string.Empty, 1, fi.SocialGroupId);
+				string sUrl = ctlUtils.BuildUrl(TabId, ModuleId, fi.ForumGroup.PrefixURL, fi.PrefixURL, fi.ForumGroupId, fi.ForumID, TopicId, topic.TopicUrl, -1, -1, string.Empty, 1, -1, fi.SocialGroupId);
 				Social amas = new Social();
 				amas.AddTopicToJournal(PortalId, ModuleId, ForumId, TopicId, topic.Author.AuthorId, sUrl, topic.Content.Subject, string.Empty, topic.Content.Body, fi.ActiveSocialSecurityOption, fi.Security.Read, fi.SocialGroupId);
 			}

@@ -964,7 +964,7 @@ namespace DotNetNuke.Modules.ActiveForums
 
                     var ctlUtils = new ControlUtils();
 
-                    var sUrl = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, ForumInfo.PrefixURL, ForumInfo.ForumGroupId, ForumInfo.ForumID, TopicId, ti.TopicUrl, -1, -1, string.Empty, 1, SocialGroupId);
+                    var sUrl = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, ForumInfo.PrefixURL, ForumInfo.ForumGroupId, ForumInfo.ForumID, TopicId, ti.TopicUrl, -1, -1, string.Empty, 1, -1, SocialGroupId);
                     
                     if (sUrl.Contains("~/") || Request.QueryString["asg"] != null)
                         sUrl = Utilities.NavigateUrl(ForumTabId, "", ParamKeys.TopicId + "=" + TopicId);
@@ -1144,7 +1144,7 @@ namespace DotNetNuke.Modules.ActiveForums
                 {
                     var ctlUtils = new ControlUtils();
                     var ti = tc.Topics_Get(PortalId, ForumModuleId, TopicId, ForumId, -1, false);
-                    var fullURL = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, ForumInfo.PrefixURL, ForumInfo.ForumGroupId, ForumInfo.ForumID, TopicId, ti.TopicUrl, -1, -1, string.Empty, 1, SocialGroupId);
+                    var fullURL = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, ForumInfo.PrefixURL, ForumInfo.ForumGroupId, ForumInfo.ForumID, TopicId, ti.TopicUrl, -1, -1, string.Empty, 1, tmpReplyId, SocialGroupId);
                     
                     if (fullURL.Contains("~/") || Request.QueryString["asg"] != null)
                         fullURL = Utilities.NavigateUrl(ForumTabId, "", new[] { ParamKeys.TopicId + "=" + TopicId, ParamKeys.ContentJumpId + "=" + tmpReplyId });

@@ -29,6 +29,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Text.RegularExpressions;
 using System.Xml;
+using DotNetNuke.Modules.ActiveForums.Constants;
 
 namespace DotNetNuke.Modules.ActiveForums.Controls
 {
@@ -267,8 +268,8 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                         bModApprove = Permissions.HasPerm(drSecurity["CanModApprove"].ToString(), ForumUser.UserRoles);
 
                         ControlUtils ctlUtils = new ControlUtils();
-                        sGroupURL = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, string.Empty, ForumInfo.ForumGroupId, -1, -1, -1, string.Empty, 1, SocialGroupId);
-                        sForumURL = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, ForumInfo.PrefixURL, ForumInfo.ForumGroupId, ForumInfo.ForumID, -1, -1, string.Empty, 1, SocialGroupId);
+                        sGroupURL = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, string.Empty, ForumInfo.ForumGroupId, -1, -1, -1, string.Empty, 1, -1, SocialGroupId);
+                        sForumURL = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, ForumInfo.PrefixURL, ForumInfo.ForumGroupId, ForumInfo.ForumID, -1, -1, string.Empty, 1, -1, SocialGroupId);
                         if (bView)
                         {
                             ForumName = drForum["ForumName"].ToString();
@@ -355,7 +356,9 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                                 MetaTemplate = MetaTemplate.Replace("[BODY]", Utilities.StripHTMLTag(ForumInfo.ForumDesc));
 
                                 MetaTitle = TemplateUtils.GetTemplateSection(MetaTemplate, "[TITLE]", "[/TITLE]").Replace("[TITLE]", string.Empty).Replace("[/TITLE]", string.Empty);
+                                MetaTitle = MetaTitle.TruncateAtWord(SEOConstants.MaxMetaTitleLength);
                                 MetaDescription = TemplateUtils.GetTemplateSection(MetaTemplate, "[DESCRIPTION]", "[/DESCRIPTION]").Replace("[DESCRIPTION]", string.Empty).Replace("[/DESCRIPTION]", string.Empty);
+                                MetaDescription = MetaDescription.TruncateAtWord(SEOConstants.MaxMetaDescriptionLength);
                                 MetaKeywords = TemplateUtils.GetTemplateSection(MetaTemplate, "[KEYWORDS]", "[/KEYWORDS]").Replace("[KEYWORDS]", string.Empty).Replace("[/KEYWORDS]", string.Empty);
                             }
                             BindTopics(TopicsTemplate);
@@ -856,7 +859,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     }
                     string sTopicURL = string.Empty;
                     ControlUtils ctlUtils = new ControlUtils();
-                    sTopicURL = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, ForumInfo.PrefixURL, ForumGroupId, ForumId, TopicId, TopicURL, -1, -1, string.Empty, 1, SocialGroupId);
+                    sTopicURL = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, ForumInfo.PrefixURL, ForumGroupId, ForumId, TopicId, TopicURL, -1, -1, string.Empty, 1, -1, SocialGroupId);
 
                     string sLastReplyURL = NavigateUrl(TabId, "", new string[] { ParamKeys.TopicId + "=" + TopicId, ParamKeys.ContentJumpId + "=" + LastReplyId });
                     if (!(string.IsNullOrEmpty(sTopicURL)))
