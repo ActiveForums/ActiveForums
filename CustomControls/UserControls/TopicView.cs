@@ -29,6 +29,7 @@ using System.Web.UI.WebControls;
 using System.Text.RegularExpressions;
 using System.Xml;
 using DotNetNuke.Modules.ActiveForums.Constants;
+using DotNetNuke.Modules.ActiveForums.Extensions;
 
 namespace DotNetNuke.Modules.ActiveForums.Controls
 {
@@ -1408,8 +1409,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             sbOutput.Replace("[SUBJECT]", subject);
             
             // Attachments
-            var sAttach =  (_dtAttach.Rows.Count > 0) ? GetAttachments(contentId, _bAttach, PortalId, ModuleId) : string.Empty;
-            sbOutput.Replace("[ATTACHMENTS]", sAttach);
+            sbOutput.Replace("[ATTACHMENTS]", GetAttachments(contentId, true, PortalId, ModuleId));
 
             // Switch back from the string builder to a normal string before we perform the image/thumbnail replacements.
 
@@ -1439,61 +1439,42 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             return sOutput;
         }
         
+        // Renders the [ATTACHMENTS] block
         private string GetAttachments(int contentId, bool allowAttach, int portalId, int moduleId)
         {            
-            var strHost = Common.Globals.AddHTTP(Common.Globals.GetDomainName(Request)) + "/";
-            if (Request.IsSecureConnection)
-                strHost = strHost.Replace("http://", "https://");
-
-            if (!allowAttach)
+            if (!allowAttach || _dtAttach.Rows.Count == 0)
                 return string.Empty;
 
-            //TODO: Add option for folder storage
-            var sb = new StringBuilder(1024);
-            sb.Append("<br />");
+            const string itemTemplate = "<li><a href='/DesktopModules/ActiveForums/viewer.aspx?portalid={0}&moduleid={1}&attachid={2}' target='_blank'><i class='af-fileicon af-fileicon-{3}'></i><span>{4}</span></a></li>";
 
-            var vpath = PortalSettings.HomeDirectory + "activeforums_Attach/";
-            var fpath = Server.MapPath(PortalSettings.HomeDirectory + "activeforums_Attach/");
-            
             _dtAttach.DefaultView.RowFilter = "ContentId = " + contentId;
-              
+
+            var attachmentRows = _dtAttach.DefaultView.ToTable().Rows;
+
+            if (attachmentRows.Count == 0)
+                return string.Empty;
+
+            var sb = new StringBuilder(1024);
+
+            sb.Append("<div class='af-attach-post-list'><span>");
+            sb.Append(Utilities.GetSharedResource("[RESX:Attachments]"));
+            sb.Append("</span><ul>");
+                     
             foreach (DataRow dr in _dtAttach.DefaultView.ToTable().Rows)
             {
+                //AttachId, ContentId, UserID, FileName, ContentType, FileSize, FileID
+
                 var attachId = dr.GetInt("AttachId");
-                var filename = dr.GetString("Filename");
-                var contentType = dr.GetString("ContentType");
-                var fileUrl = dr.GetString("FileURL", string.Empty);
-                
-                if (!(string.IsNullOrEmpty(fileUrl)))
-                    fileUrl = Page.ResolveUrl(fileUrl);
+                var filename = dr.GetString("Filename").TextOrEmpty();
+            
+                var fileExtension = System.IO.Path.GetExtension(filename).TextOrEmpty().Replace(".",string.Empty);
 
-                if (dr.IsNull("FileData") && string.IsNullOrEmpty(fileUrl))
-                {
-                    var tmpPath = fpath + dr.GetString("Filename");
-                    if (!(System.IO.File.Exists(tmpPath)))
-                        tmpPath = tmpPath.Replace("activeforums_Attach", "ntforums_attach");
+                filename = HttpUtility.HtmlEncode(Regex.Replace(filename, @"^__\d+__\d+__", string.Empty));
 
-                    var strExt = System.IO.Path.GetExtension(tmpPath);
-                    var sPath = strHost + "DesktopModules/ActiveForums/viewer.aspx?portalid=" + portalId + "&moduleid=" + moduleId + "&attachid=" + attachId;
-
-                    sb.Append("<a href=\"" + sPath + "\" target=\"_blank\">");
-                    sb.Append("<img src=\"" + strHost + "DesktopModules/ActiveForums/images/attach.gif\" border=\"0\" align=\"absmiddle\" />" + filename + "</a><br />");
-                }
-                else if (!(string.IsNullOrEmpty(fileUrl)))
-                {
-                    sb.Append("<a href=\"" + fileUrl + "\" target=\"_blank\">" + filename + "</a><br />");
-                }
-                else
-                {
-                    var strExt = System.IO.Path.GetExtension(filename);
-                    sb.Append("<span class=\"afattachlink\"><a href=\"" + strHost + "DesktopModules/ActiveForums/viewer.aspx?portalid=" + portalId + "&moduleid=" +
-                                moduleId + "&attachid=" + attachId + "\" target=\"_blank\"><img src=\"" + strHost +
-                                "DesktopModules/ActiveForums/images/attach.gif\" border=\"0\" align=\"absmiddle\" /><span>" +
-                                filename + "</span></a></span><br />");
-                }
+                sb.AppendFormat(itemTemplate, portalId, moduleId, attachId, fileExtension, filename);
             }
 
-            sb.Append("<br />");
+            sb.Append("</ul></div>");
 
             return sb.ToString();
         }

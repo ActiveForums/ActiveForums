@@ -10,17 +10,16 @@
 		<strong>Version 5.1.4</strong><br /><br />		
 	</p>
 </div>
-<h3>DotNetNuke Active Forums 05.01.03</h3>
-<p class="Contributor">
-	Will Morgenweck <br />
-	Benjiro Nelson <br />
-   Chris Hammond <br />
-   Jay Mathis <br />
-   Jason Brunken <br />
-</p>
+<h3>DotNetNuke Active Forums 05.02.00</h3>
 <hr/>
 <div class="License">
    <h3>Release Notes</h3>
+    <p class="Owner">
+	<b>Version 05.02.00
+	<p>
+		<ul>
+		</ul>
+	</p>
     <p class="Owner">
 	<b>Version 05.01.04
 	<p>

@@ -152,23 +152,25 @@ function saveSettings(gs){
         var ix = document.getElementById("<%=rdIndexOn.ClientID%>").checked;
         var rs = document.getElementById("<%=rdRSSOn.ClientID%>").checked;
         var at = document.getElementById("<%=rdAttachOn.ClientID%>").checked;
-        var at1 = 3;
-        var at2 = 1000;
-        var at3 = 'jpg,'; 
-        var at4 = 0;
-        var at5 = 400;
+        
+        var at1 = document.getElementById("<%=txtMaxAttach.ClientID%>").value;
+        var at2 = document.getElementById("<%=txtMaxAttachSize.ClientID%>").value;
+        var at3 = document.getElementById("<%=txtAllowedTypes.ClientID%>").value; 
+        var at4 = 0; // Not USed
+        var at5 = 400; // Not USed
         var at6 = 400;
-        var at7 = true;
+        var at7 = document.getElementById("<%=ckAllowBrowseSite.ClientID%>").checked;
+        
         var ed = document.getElementById("<%=rdHTMLOn.ClientID%>").checked;
 	    var ed1 = document.getElementById("<%=drpEditorTypes.ClientID%>");
         if (ed1.selectedIndex >= 0){ed1 = ed1.options[ed1.selectedIndex].value;}else{ed1 = 0;};
         var ed2 = document.getElementById("<%=txtEditorHeight.ClientID%>").value;
 	    var ed3 = document.getElementById("<%=txtEditorWidth.ClientID%>").value;
-        var ed4 = document.getElementById("<%=txtEditorToolBar.ClientID%>").value;
-        var ed5 = document.getElementById("<%=drpEditorStyle.ClientID%>");
-        if (ed5.selectedIndex >= 0){ed5 = ed5.options[ed5.selectedIndex].value;}else{ed5 = 0;};
+        var ed4 = ''; // old toolbar
+        var ed5 = 0; // old editor style
         var ed6 = document.getElementById("<%=drpPermittedRoles.ClientID%>");
 	    if (ed6.selectedIndex >= 0){ed6 = ed6.options[ed6.selectedIndex].value;}else{ed6 = 0;};
+	    
 	    var md = document.getElementById("<%=rdModOn.ClientID%>").checked;
 	var md1 = document.getElementById("<%=drpDefaultTrust.ClientID%>");
         if (md1.selectedIndex > 0){md1 = md1.options[md1.selectedIndex].value;}else{md1 = 0;};
@@ -183,6 +185,7 @@ function saveSettings(gs){
 	if (md6.selectedIndex > 0){md6 = md6.options[md6.selectedIndex].value;}else{md6 = 0;};
 	var md7 = document.getElementById("<%=drpModNotifyTemplateId.ClientID%>");
 	if (md7.selectedIndex > 0){md7 = md7.options[md7.selectedIndex].value;}else{md7 = 0;};
+	
 	var as = document.getElementById("<%=rdAutoSubOn.ClientID%>");
 	var as1 = document.getElementById('<%=hidRoles.ClientID%>');
         if (as != null){
@@ -227,14 +230,6 @@ function toggleEditor(obj){
 function toggleEditorFields(){
     var ed1 = document.getElementById("<%=drpEditorTypes.ClientID%>");
     if (ed1.selectedIndex >= 0){ed1 = ed1.options[ed1.selectedIndex].value;}else{ed1 = 0;};
-    if (ed1 == '1'){
-        document.getElementById('<%=txtEditorToolBar.ClientID%>').disabled = false;
-        document.getElementById("<%=drpEditorStyle.ClientID%>").disabled = false;
-    }else{
-        document.getElementById('<%=txtEditorToolBar.ClientID%>').disabled = true;
-        document.getElementById("<%=drpEditorStyle.ClientID%>").disabled = true;
-    };
-
 };
 function toggleMod(obj){
     closeAllProp();
@@ -248,7 +243,22 @@ function toggleMod(obj){
     };
 };
 
-function showProp(obj,win){
+function toggleAttach(obj){
+        closeAllProp();
+        var attach = document.getElementById("<%=cfgAttach.ClientID%>");
+    if (obj.value == '1'){
+        attach.style.display = '';
+    }else{
+        attach.style.display = 'none';
+        var winDiv = document.getElementById('attachProp');
+        attach.style.display = 'none';
+    };
+};
+
+
+    function showProp(obj,win){
+
+
     var popShell = document.getElementById("amProp");
     var fid = document.getElementById("<%=hidForumId.ClientID%>").value;
     var winDiv = document.getElementById(win);
@@ -282,26 +292,29 @@ function showProp(obj,win){
     };
 
 
+        var $tmpShell = $(tmpShell);
 
-    if (tmpShell.style.display == 'block' || tmpShell.style.display == ''){
+        if (tmpShell.style.display == 'block' || tmpShell.style.display == ''){
         displaySelectBoxes();
         closeAllProp();
         tmpShell.style.display = 'none';
     }else{
         closeAllProp();
-        hideSelectBoxes()
+        hideSelectBoxes();
         var elem = $(obj);
-        position = elem.position();
+        var position = elem.position();
 
-        var winDivHeight = parseFloat(tmpShell.style.height);
-        tmpShell.style.left= position.left + 'px';
-        tmpShell.style.top= (position.top - winDivHeight) + 'px';
+        position.left += 15;
+        position.top = (position.top - ($tmpShell.height() / 2));
+        position.width = $tmpShell.innerWidth() + 20;
+        position.height = $tmpShell.innerHeight();
+
+        $tmpShell.css(position);
         tmpShell.style.display = '';
-
+        }
 
     };
 
-};
 
 function addRole(){
     var drp = document.getElementById('<%=drpRoles.ClientID%>');
@@ -1049,7 +1062,7 @@ function afadmin_getProperties() {
                             <asp:RadioButton ID="rdAttachOn" GroupName="Attach" runat="server" /></td>
                         <td align="center">
                             <asp:RadioButton ID="rdAttachOff" GroupName="Attach" runat="server" Checked="true" /></td>
-                        <td width="100%"></td>
+                        <td width="100%"><div id="cfgAttach" runat="server" class="amcfgbtn" style="display: none;"></div></td>
                     </tr>
                     <tr>
                         <td>
@@ -1189,12 +1202,12 @@ function afadmin_getProperties() {
         </div>
     </div>
 </div>
+
 <am:callback id="cbEditorAction" runat="server" oncallbackcomplete="cbEditorAction_complete">
-	<Content>
-		<asp:HiddenField ID="hidEditorResult" runat="server" />
-	</Content>
+	<Content><asp:HiddenField ID="hidEditorResult" runat="server" /></Content>
 </am:callback>
-<div class="ammodalpop" style="display: none; position: absolute; height: 150px; margin: 0px; width: 255px;" id="edProp">
+
+<div class="ammodalpop" style="display: none; position: absolute;" id="edProp">
     <div style="margin: 0px; padding: 10px;">
         <table cellpadding="0" cellspacing="2" border="0" style="margin: 0px; padding: 0px;">
             <tr>
@@ -1235,35 +1248,17 @@ function afadmin_getProperties() {
                     <asp:TextBox ID="txtEditorWidth" runat="server" CssClass="amcptxtbx" Text="99%" /></td>
                 <td></td>
             </tr>
-            <tr>
-                <td></td>
-                <td class="amcpbold">[RESX:EditorToolBar]:</td>
-                <td width="100%">
-                    <asp:TextBox ID="txtEditorToolBar" runat="server" CssClass="amcptxtbx" Text="bold,italic,underline" /></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td class="amcpbold">[RESX:EditorStyle]:</td>
-                <td width="100%">
-                    <asp:DropDownList ID="drpEditorStyle" runat="server" CssClass="amcptxtbx">
-                        <asp:ListItem Value="2" Selected="True">Office2000</asp:ListItem>
-                        <asp:ListItem Value="1">OfficeXP</asp:ListItem>
-                    </asp:DropDownList>
-                </td>
-                <td></td>
-            </tr>
         </table>
     </div>
 </div>
-<div class="ammodalpop" style="display: none; position: absolute; height: 190px; width: 225px;" id="modProp">
+<div class="ammodalpop" style="display: none; position: absolute;" id="modProp">
     <div style="margin: 0px; padding: 10px;">
 
-        <table cellpadding="0" cellspacing="2" border="0" style="margin: 0px; padding: 0px;">
+        <table cellpadding="0" cellspacing="2" border="0" style="margin: 0px; padding: 0px; vertical-align: middle;">
             <tr>
                 <td></td>
                 <td class="amcpbold" style="white-space: nowrap">[RESX:DefaultTrust]:</td>
-                <td width="100%">
+                <td>
                     <asp:DropDownList ID="drpDefaultTrust" runat="server">
                         <asp:ListItem Value="0" Text="[RESX:NotTrusted]" />
                         <asp:ListItem Value="1" Text="[RESX:Trusted]" />
@@ -1273,83 +1268,100 @@ function afadmin_getProperties() {
             <tr>
                 <td></td>
                 <td class="amcpbold" style="white-space: nowrap">[RESX:AutoTrustLevel]:</td>
-                <td width="100%">
-                    <asp:TextBox ID="txtAutoTrustLevel" runat="server" Width="50px" CssClass="amcptxtbx" Text="0" /></td>
+                <td><asp:TextBox ID="txtAutoTrustLevel" runat="server" Width="50px" CssClass="amcptxtbx" Text="0" /></td>
                 <td></td>
             </tr>
         </table>
-        <table cellpadding="0" cellspacing="2" border="0" style="margin: 0px; padding: 0px;">
+        <table cellpadding="0" cellspacing="2" border="0" style="margin: 0px; padding: 0px; vertical-align: middle">
             <tr>
                 <td colspan="4" class="amcpbold">[RESX:EmailTemplates]</td>
             </tr>
             <tr>
                 <td></td>
                 <td class="amcpbold">[RESX:Notify]:</td>
-                <td width="100%">
-                    <asp:DropDownList ID="drpModNotifyTemplateId" runat="server" CssClass="amcptxtbx" /></td>
+                <td><asp:DropDownList ID="drpModNotifyTemplateId" runat="server" CssClass="amcptxtbx" /></td>
                 <td></td>
             </tr>
             <tr>
                 <td></td>
                 <td class="amcpbold">[RESX:Approved]:</td>
-                <td width="100%">
-                    <asp:DropDownList ID="drpModApprovedTemplateId" runat="server" CssClass="amcptxtbx" /></td>
+                <td><asp:DropDownList ID="drpModApprovedTemplateId" runat="server" CssClass="amcptxtbx" /></td>
                 <td></td>
             </tr>
             <tr>
                 <td></td>
                 <td class="amcpbold">[RESX:Rejected]:</td>
-                <td width="100%">
-                    <asp:DropDownList ID="drpModRejectTemplateId" runat="server" CssClass="amcptxtbx" /></td>
+                <td><asp:DropDownList ID="drpModRejectTemplateId" runat="server" CssClass="amcptxtbx" /></td>
                 <td></td>
             </tr>
             <tr>
                 <td></td>
                 <td class="amcpbold">[RESX:Moved]:</td>
-                <td width="100%">
-                    <asp:DropDownList ID="drpModMoveTemplateId" runat="server" CssClass="amcptxtbx" /></td>
+                <td><asp:DropDownList ID="drpModMoveTemplateId" runat="server" CssClass="amcptxtbx" /></td>
                 <td></td>
             </tr>
             <tr>
                 <td></td>
                 <td class="amcpbold">[RESX:Deleted]:</td>
-                <td width="100%">
-                    <asp:DropDownList ID="drpModDeleteTemplateId" runat="server" CssClass="amcptxtbx" /></td>
+                <td><asp:DropDownList ID="drpModDeleteTemplateId" runat="server" CssClass="amcptxtbx" /></td>
                 <td></td>
             </tr>
 
         </table>
     </div>
 </div>
-
-<div class="ammodalpop" style="display: none; position: absolute; height: 135px; width: 240px; margin: 0px;" id="subProp">
+<div class="ammodalpop" style="display: none; position: absolute;" id="attachProp">
+    <div style="margin: 0px; padding: 10px;">
+        <table cellpadding="0" cellspacing="2" border="0" style="margin: 0px; padding: 0px; vertical-align: middle">
+            <tr>
+                <td></td>
+                <td class="amcpbold">[RESX:MaxAttach]:</td>
+                <td><asp:TextBox ID="txtMaxAttach" runat="server" CssClass="amcptxtbx" Text="0" /></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class="amcpbold">[RESX:MaxFileSize]:</td>
+                <td><asp:TextBox ID="txtMaxAttachSize" runat="server" CssClass="amcptxtbx" Text="0" /></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class="amcpbold">[RESX:AllowedTypes]:</td>
+                <td><asp:TextBox ID="txtAllowedTypes" runat="server" CssClass="amcptxtbx" Text="" /></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class="amcpbold">[RESX:AllowBrowseSite]:</td>
+                <td><asp:CheckBox runat="server" ID="ckAllowBrowseSite" Checked="True" /></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="ammodalpop" style="display: none; position: absolute;" id="subProp">
     <div style="margin: 0px; padding: 10px;">
         <table cellpadding="0" cellspacing="2" border="0" style="margin: 0px; padding: 0px;">
             <tr>
                 <td></td>
-                <td class="amcpbold" style="white-space: nowrap" colspan="3">[RESX:NewTopicsOnly]:<asp:CheckBox ID="chkTopicsOnly" runat="server" /></td>
+                <td class="amcpbold" style="white-space: nowrap" colspan="3">[RESX:NewTopicsOnly]:</td>
+                <td colspan="2"><asp:CheckBox ID="chkTopicsOnly" runat="server" /></td>
             </tr>
             <tr>
                 <td></td>
                 <td class="amcpbold" style="white-space: nowrap">[RESX:SelectRoles]:</td>
-                <td width="100%">
-                    <asp:DropDownList ID="drpRoles" runat="server" CssClass="amcptxtbx" /></td>
-                <td>
-                    <div onclick="addRole();">
-                        <img id="Img40" src="~/desktopmodules/activeforums/images/add.png" runat="server" border="0" align="absmiddle" alt="[RESX:ClickToAdd]" />
-                    </div>
-                </td>
+                <td><asp:DropDownList ID="drpRoles" runat="server" CssClass="amcptxtbx" /></td>
+                <td><div onclick="addRole();"><img id="Img40" src="~/desktopmodules/activeforums/images/add.png" runat="server" border="0" align="absmiddle" alt="[RESX:ClickToAdd]" /></div></td>
             </tr>
             <tr>
-                <td colspan="3" class="amcpnormal">
-                    <asp:Literal ID="tbRoles" runat="server" />
-                </td>
+                <td colspan="4" class="amcpnormal"><asp:Literal ID="tbRoles" runat="server" /></td>
             </tr>
         </table>
         <asp:HiddenField ID="hidRoles" runat="server" />
     </div>
 </div>
-<div class="ammodalpop" style="display: none; position: absolute; height: 135px; width: 240px; margin: 0px;" id="socialProp">
+<div class="ammodalpop" style="display: none; position: absolute;" id="socialProp">
     <div style="margin: 0px; padding: 10px;">
         <table cellpadding="0" cellspacing="2" border="0" style="margin: 0px; padding: 0px;">
             <tr>
@@ -1470,4 +1482,5 @@ function afadmin_getProperties() {
 
     </div>
 </div>
+
 <asp:Literal ID="litPropLoad" runat="server" />

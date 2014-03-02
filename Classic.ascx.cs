@@ -189,6 +189,7 @@ namespace DotNetNuke.Modules.ActiveForums
                 }
                 else
                 {
+                    // this is where af_post.ascx is used
                     string ctlPath = string.Empty;
                     ctlPath = "~/DesktopModules/ActiveForums/controls/af_" + view + ".ascx";
                     if (!(System.IO.File.Exists(Server.MapPath(ctlPath))))

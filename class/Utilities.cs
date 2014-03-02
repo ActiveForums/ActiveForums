@@ -1369,6 +1369,31 @@ namespace DotNetNuke.Modules.ActiveForums
             }
         }
 
+        public static long SafeConvertLong(object value, long defaultValue = 0)
+        {
+            if (value == null)
+                return defaultValue;
+
+            if (value is long)
+                return (long)value;
+
+            var s = value as string;
+            if (s != null)
+            {
+                long parsedValue;
+                return long.TryParse(s, out parsedValue) ? parsedValue : defaultValue;
+            }
+
+            try
+            {
+                return Convert.ToInt64(value);
+            }
+            catch (Exception)
+            {
+                return defaultValue;
+            }
+        }
+
         public static double SafeConvertDouble(object value, double defaultValue = 0.0)
         {
             if (value == null)

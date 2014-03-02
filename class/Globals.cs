@@ -233,10 +233,11 @@ namespace DotNetNuke.Modules.ActiveForums
 		public const string AttachCount = "ATTACHCOUNT";
 		public const string AttachMaxSize = "ATTACHMAXSIZE";
 		public const string AttachTypeAllowed = "ATTACHTYPEALLOWED";
-		public const string AttachStore = "ATTACHSTORE";
+        public const string AttachAllowBrowseSite = "ATTACHALLOWBROWSESITE";
+		//public const string AttachStore = "ATTACHSTORE";
 		public const string AttachMaxHeight = "ATTACHMAXHEIGHT";
 		public const string AttachMaxWidth = "ATTACHMAXWIDTH";
-		public const string AttachUniqueFileNames = "ATTACHUNIQUEFILENAMES";
+		//public const string AttachUniqueFileNames = "ATTACHUNIQUEFILENAMES";  
 		public const string IndexContent = "INDEXCONTENT";
 		public const string AllowRSS = "ALLOWRSS";
 		public const string TopicsTemplateId = "TOPICSTEMPLATEID";

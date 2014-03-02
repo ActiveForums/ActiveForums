@@ -21,12 +21,15 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
+using System.Runtime.Serialization.Json;
 using System.Web.UI.WebControls;
 using System.Text.RegularExpressions;
 using System.Text;
 using System.Xml;
 using DotNetNuke.Framework.Providers;
 using DotNetNuke.Modules.ActiveForums.Controls;
+using DotNetNuke.Modules.ActiveForums.Extensions;
 using DotNetNuke.Services.Social.Notifications;
 using DotNetNuke.Framework;
 using DotNetNuke.Services.FileSystem;
@@ -121,17 +124,16 @@ namespace DotNetNuke.Modules.ActiveForums
             ctlForm.PostButton.ImageLocation = "TOP";
             ctlForm.PostButton.Height = Unit.Pixel(50);
             ctlForm.PostButton.Width = Unit.Pixel(50);
-            if (_canAttach && _fi.AllowAttach)
-            {
-                ctlForm.PostButton.ClientSideScript = "af_checkupload();";
-                ctlForm.PostButton.PostBack = false;
-            }
-            else
-            {
-                ctlForm.PostButton.ClientSideScript = "af_checkupload();";
-                //ctlForm.PostButton.ClientSideScript = Page.ClientScript.GetPostBackEventReference(Me, String.Empty)
-                ctlForm.PostButton.PostBack = false;
-            }
+
+            ctlForm.PostButton.ClientSideScript = "amPostback();";
+            ctlForm.PostButton.PostBack = false;
+
+            ctlForm.AttachmentsClientId = hidAttachments.ClientID;
+
+
+            // TODO: Make sure this check happens on submit
+            //if (_canAttach && _fi.AllowAttach) {}
+
             ctlForm.CancelButton.ImageUrl = _themePath + "/images/cancel32.png";
             ctlForm.CancelButton.ImageLocation = "TOP";
             ctlForm.CancelButton.PostBack = false;
@@ -250,6 +252,9 @@ namespace DotNetNuke.Modules.ActiveForums
             {
                 Response.Redirect(NavigateUrl(ForumTabId));
             }
+
+            PrepareAttachments(_contentId);
+
             ctlForm.ContentId = _contentId;
             ctlForm.AuthorId = _authorId;
             plhContent.Controls.Add(ctlForm);
@@ -480,6 +485,8 @@ namespace DotNetNuke.Modules.ActiveForums
                 _contentId = ri.ContentId;
                 _authorId = ri.Author.AuthorId;
 
+               
+
                 if (ri.Author.AuthorId > 0)
                     ctlForm.Subscribe = Subscriptions.IsSubscribed(PortalId, ForumModuleId, ForumId, TopicId, SubscriptionTypes.Instant, ri.Author.AuthorId);
 
@@ -563,6 +570,10 @@ namespace DotNetNuke.Modules.ActiveForums
             {
                 var tc = new TopicsController();
                 var ti = tc.Topics_Get(PortalId, ForumModuleId, TopicId, ForumId, UserId, true);
+
+                if(ti == null)
+                    Response.Redirect(NavigateUrl(ForumTabId));
+
                 ctlForm.Subject = Utilities.GetSharedResource("[RESX:SubjectPrefix]") + " " + ti.Content.Subject;
                 ctlForm.TopicSubject = ti.Content.Subject;
                 var body = string.Empty;
@@ -835,7 +846,7 @@ namespace DotNetNuke.Modules.ActiveForums
             if (ti != null)
             {
                 tc.Topics_SaveToForum(ForumId, TopicId, PortalId, ModuleId);
-                SaveAttach(ti.ContentId);
+                SaveAttachments(ti.ContentId);
                 if (ti.IsApproved && ti.Author.AuthorId > 0)
                 {
                     var uc = new Data.Profiles();
@@ -1085,7 +1096,7 @@ namespace DotNetNuke.Modules.ActiveForums
             ri.TopicId = TopicId;
             var tmpReplyId = rc.Reply_Save(PortalId, ri);
             ri = rc.Reply_Get(PortalId, ForumModuleId, TopicId, tmpReplyId);
-            SaveAttach(ri.ContentId);
+            SaveAttachments(ri.ContentId);
             //tc.ForumTopicSave(ForumID, TopicId, ReplyId)
             var cachekey = string.Format("AF-FV-{0}-{1}", PortalId, ModuleId);
             DataCache.CacheClearPrefix(cachekey);
@@ -1181,33 +1192,129 @@ namespace DotNetNuke.Modules.ActiveForums
             }
         }
 
-        private void SaveAttach(int contentId)
+        // Note attachments are currently saved into the authors file directory
+
+        private void SaveAttachments(int contentId)
         {
-            var attachIds = hidAttachIds.Value;
             var fileManager = FileManager.Instance;
+            var folderManager = FolderManager.Instance;
+            var adb = new Data.AttachController();
 
-            if (attachIds == string.Empty) 
-                return;
+            var userFolder = folderManager.GetUserFolder(UserInfo);
 
-            foreach (var attachid in attachIds.Split(';'))
+            const string uploadFolderName = "activeforums_Upload";
+            const string attachmentFolderName = "activeforums_Attach";
+            const string fileNameTemplate = "__{0}__{1}__{2}";
+
+            var attachmentFolder = folderManager.GetFolder(PortalId, attachmentFolderName) ?? folderManager.AddFolder(PortalId, attachmentFolderName);
+
+            // Read the attachment list sent in the hidden field as json
+            var attachmentsJson = hidAttachments.Value;
+            var serializer = new DataContractJsonSerializer(typeof (List<ClientAttachment>));
+            var ms = new MemoryStream(Encoding.UTF8.GetBytes(attachmentsJson));
+            var attachmentsNew = (List<ClientAttachment>)serializer.ReadObject(ms);
+            ms.Close();
+
+            // Read the list of existing attachments for the content.  Must do this before saving any of the new attachments!
+            // Ignore any legacy inline attachments
+            var attachmentsOld = adb.ListForContent(contentId).Where(o => !o.AllowDownload.HasValue || o.AllowDownload.Value);
+
+            // Save all of the new attachments
+            foreach(var attachment in attachmentsNew)
             {
-                if (attachid.Trim() == string.Empty) 
+                // Don't need to do anything with existing attachments
+                if(attachment.AttachmentId.HasValue && attachment.AttachmentId.Value > 0)
                     continue;
-                    
-                var tmpAttachId = Convert.ToInt32(attachid);
-                var file = fileManager.GetFile(tmpAttachId);
-                var adb = new Data.AttachController();
 
-                if (file == null)
-                    adb.SaveToContent(contentId, tmpAttachId, null, null, false, null);
-                else
+                IFileInfo file = null;
+                
+                var fileId = attachment.FileId.GetValueOrDefault();
+                if(fileId > 0 && userFolder != null)
                 {
-                    var fileUrl = "~/LinkClick.aspx?fileticket={0}";
-                    var url = Page.ResolveUrl("~/LinkClick.aspx?fileid=" + file.FileId);
-                    fileUrl = string.Format(fileUrl, UrlUtils.EncryptParameter(UrlUtils.GetParameterValue(url)));
-                    adb.SaveToContent(contentId, tmpAttachId, fileUrl, file.FileName, true, file.ContentType);
+                    // Make sure that the file exists and it actually belongs to the user who is trying to attach it
+                    file = fileManager.GetFile(fileId);
+                    if(file == null || file.FolderId != userFolder.FolderID) continue;
                 }
+                else if(!string.IsNullOrWhiteSpace(attachment.UploadId) && !string.IsNullOrWhiteSpace(attachment.FileName))
+                {
+                    if (!Regex.IsMatch(attachment.UploadId, @"^[\w\-. ]+$")) // Check for shenanigans.
+                        continue;
+
+                    var uploadFilePath = PathUtils.Instance.GetPhysicalPath(PortalId, uploadFolderName + "/" + attachment.UploadId);
+
+                    if (!File.Exists(uploadFilePath))
+                        continue;
+
+                    // Store the files with a filename format that prevents overwrites.
+                    var index = 0;
+                    var fileName = string.Format(fileNameTemplate, contentId, index, Regex.Replace(attachment.FileName, @"[^\w\-. ]+", string.Empty));
+                    while(fileManager.FileExists(attachmentFolder, fileName))
+                    {
+                        index++;
+                        fileName = string.Format(fileNameTemplate, contentId, index, Regex.Replace(attachment.FileName, @"[^\w\-. ]+", string.Empty));
+                    }
+
+                    // Copy the file into the attachment folder with the correct name.
+                    using (var fileStream = new FileStream(uploadFilePath, FileMode.Open, FileAccess.Read))
+                    {
+                        file = fileManager.AddFile(attachmentFolder, fileName, fileStream);
+                    }
+                    
+                    File.Delete(uploadFilePath);
+                }
+                
+                if(file == null)
+                    continue;
+
+                adb.Save(contentId, UserId, file.FileName, file.ContentType, file.Size, file.FileId);
             }
+
+            // Remove any attachments that are no longer in the list of attachments
+            var attachmentsToRemove = attachmentsOld.Where(a1 => attachmentsNew.All(a2 => a2.AttachmentId != a1.AttachmentId));
+            foreach(var attachment in attachmentsToRemove)
+            {
+                adb.Delete(attachment.AttachmentId);
+
+                var file = attachment.FileId.HasValue ? fileManager.GetFile(attachment.FileId.Value) : fileManager.GetFile(attachmentFolder, attachment.FileName);
+
+                // Only delete the file if it exists in the attachment folder
+                if(file != null && file.FolderId == attachmentFolder.FolderID)
+                    fileManager.DeleteFile(file);
+            }
+        }
+
+        private void PrepareAttachments(int? contentId = null)
+        {
+            // Handle the case where we don't yet have a topic id (new posts)
+            if(!contentId.HasValue || contentId.Value == 0)
+            {
+                hidAttachments.Value = "[]"; // JSON for an empty array
+                return;
+            }
+
+            var adb = new Data.AttachController();
+            var attachments = adb.ListForContent(contentId.Value);
+
+            var clientAttachments = attachments.Select(attachment => new ClientAttachment
+            {
+                AttachmentId = attachment.AttachmentId, 
+                ContentType = attachment.ContentType, 
+                FileId = attachment.FileId, 
+                FileName = Regex.Replace(attachment.FileName.TextOrEmpty(), @"^__\d+__\d+__", string.Empty), // Remove our unique file prefix before sending to the client.
+                FileSize = attachment.FileSize
+            }).ToList();
+
+            var serializer = new DataContractJsonSerializer(typeof(List<ClientAttachment>)); 
+            
+            using(var ms = new MemoryStream())
+            {
+                serializer.WriteObject(ms, clientAttachments);
+                ms.Seek(0, 0);
+                using(var sr = new StreamReader(ms, Encoding.UTF8))
+                {
+                    hidAttachments.Value = sr.ReadToEnd();
+                }
+            } 
         }
 
         #endregion

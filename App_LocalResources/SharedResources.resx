@@ -690,11 +690,23 @@
   <data name="[RESX:Announce].Text" xml:space="preserve">
     <value>Announcement</value>
   </data>
+  <data name="[RESX:Attach].Text" xml:space="preserve">
+    <value>Attach</value>
+  </data>
   <data name="[RESX:Attachments].Text" xml:space="preserve">
     <value>Attachments</value>
   </data>
   <data name="[RESX:Attacments:Note].Text" xml:space="preserve">
     <value>Explanation for attachments</value>
+  </data>
+  <data name="[RESX:Attachments:Confirm:Remove].Text" xml:space="preserve">
+    <value>Are you sure you want to remove this attachment?</value>
+  </data>
+  <data name="[RESX:Attachments:BrowseSite:Title].Text" xml:space="preserve">
+    <value>Select a File to Attach</value>
+  </data>
+  <data name="[RESX:Attachments:Error].Text" xml:space="preserve">
+    <value>A server error has occured.</value>
   </data>
   <data name="[RESX:Confirm:Delete].Text" xml:space="preserve">
     <value>Are you sure you wish to delete this item?</value>
@@ -1251,6 +1263,12 @@ From,
   </data>
   <data name="[RESX:FileSize].Text" xml:space="preserve">
     <value>File Size</value>
+  </data>
+  <data name="[RESX:LastModified].Text" xml:space="preserve">
+    <value>Last Modified</value>
+  </data>
+  <data name="[RESX:FileType].Text" xml:space="preserve">
+    <value>File Type</value>
   </data>
   <data name="[RESX:InsertImage].Text" xml:space="preserve">
     <value>Insert Image</value>

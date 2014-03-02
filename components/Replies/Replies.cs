@@ -21,7 +21,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-
+using System.IO;
+using DotNetNuke.Common.Utilities;
+using DotNetNuke.Entities.Content;
+using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Services.Journal;
 
 namespace DotNetNuke.Modules.ActiveForums
@@ -154,9 +157,29 @@ namespace DotNetNuke.Modules.ActiveForums
 #region Public Methods
 		public void Reply_Delete(int PortalId, int ForumId, int TopicId, int ReplyId, int DelBehavior)
 		{
-			DataProvider.Instance().Reply_Delete(ForumId, TopicId, ReplyId, DelBehavior);
-			string objectKey = string.Format("{0}:{1}:{2}", ForumId.ToString(), TopicId.ToString(), ReplyId.ToString());
+            DataProvider.Instance().Reply_Delete(ForumId, TopicId, ReplyId, DelBehavior);
+			var objectKey = string.Format("{0}:{1}:{2}", ForumId, TopicId, ReplyId);
 			JournalController.Instance.DeleteJournalItemByKey(PortalId, objectKey);
+
+		    if (DelBehavior != 0) 
+                return;
+
+            // If it's a hard delete, delete associated attachments
+		    var attachmentController = new Data.AttachController();
+		    var fileManager = FileManager.Instance;
+            var folderManager = FolderManager.Instance;
+		    var attachmentFolder = folderManager.GetFolder(PortalId, "activeforums_Attach");
+
+		    foreach(var attachment in attachmentController.ListForPost(TopicId, ReplyId))
+		    {
+                attachmentController.Delete(attachment.AttachmentId);
+
+                var file = attachment.FileId.HasValue ? fileManager.GetFile(attachment.FileId.Value) : fileManager.GetFile(attachmentFolder, attachment.FileName);
+
+                // Only delete the file if it exists in the attachment folder
+                if (file != null && file.FolderId == attachmentFolder.FolderID)
+                    fileManager.DeleteFile(file); 
+		    }
 		}
 		public int Reply_QuickCreate(int PortalId, int ModuleId, int ForumId, int TopicId, int ReplyToId, string Subject, string Body, int UserId, string DisplayName, bool IsApproved, string IPAddress)
 		{

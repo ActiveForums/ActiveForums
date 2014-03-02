@@ -143,21 +143,122 @@ a.dnnTertiaryAction, a.dnnTertiaryAction:link, a.dnnTertiaryAction:visited {
     padding: 0 1.2em;
 }
         
-.progress_bar_wrapper{ width: 500px;overflow: hidden;}
-.progress-bar div{ background-image: url('Images/progress.gif');position:relative;padding:0 !important;}
-/*
-.ui-dialog.ui-widget{border:5px #ccc solid;background:#fff;-webkit-box-shadow: 0px 0px 20px 5px #999;-moz-box-shadow: 0px 0px 20px 5px #999;box-shadow: 0px 0px 20px 5px #999;-webkit-border-radius: 8px;-moz-border-radius: 8px;border-radius: 8px;}
-.ui-dialog-titlebar{padding:1.1em 1.2em;position:relative;background:#4E4E4E;background:-moz-linear-gradient(top, #4E4E4E 0%, #282828 100%);overflow:hidden;
-				background:-webkit-gradient(linear, left top, left bottom, color-stop(0%,#4E4E4E), color-stop(100%,#282828));filter:progid:DXImageTransform.Microsoft.gradient( startColorstr='#4E4E4E', endColorstr='#282828',GradientType=0);
-				color:#fff;font-weight:bold;text-shadow:0px 1px 1px #000;cursor:move;-webkit-border-top-left-radius: 4px;-webkit-border-top-right-radius: 4px;-webkit-border-bottom-right-radius: 0px;
-				-webkit-border-bottom-left-radius: 0px;-moz-border-radius-topleft: 4px;-moz-border-radius-topright: 4px;-moz-border-radius-bottomright: 0px;-moz-border-radius-bottomleft: 0px;border-top-left-radius: 4px;
-				border-top-right-radius: 4px;border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;font-size:14px;}
-	a.ui-dialog-titlebar-close.ui-corner-all{text-indent: -9999em;display: block;position: absolute;right: 10px;top: 10px;background: url(../../images/close-icn.png) no-repeat;height: 24px;width: 24px;}
-    */
-#attachments table{padding:0;margin:0; border-collapse:collapse;width:95%;}	
-#attachments table thead tr{background-color:#333; color:#fff;}
-#attachments table tr td{text-align:center;padding-left:4px; padding-right:4px;font-size:11px;}
-#attachments table tr td img{cursor:pointer;}
+
+
+/* Attachments */
+
+/* Editor */
+.af-attach-upload .progress_bar_wrapper{ overflow: hidden;}
+.af-attach-upload .progress-bar div{ background-image: url('Images/progress.gif');position:relative;padding:0 !important;}
+.af-attach-upload .fileupload-picker > span {position:relative; display:inline-block;}
+.af-attach-upload .fileupload-progress { padding:10px; margin-bottom:10px; }
+.af-attach-upload .fileupload-progress-percent { float:right; }
+.af-attach-upload .fileupload-progress-bar {height:20px !important;}
+
+.af-attach-editor-list table {padding:0;margin:0; border-collapse:collapse;width:100%;}	
+.af-attach-editor-list table thead tr { background-color:#333; color:#fff;}
+.af-attach-editor-list table tbody tr td { background-color: #fff; border-bottom: solid 1px #ddd; vertical-align: middle;  }
+.af-attach-editor-list table tr td:nth-child(1) { text-align: left;  }
+.af-attach-editor-list table tr td:nth-child(2) { width: 100px;text-align: right; }
+.af-attach-editor-list table tr td:nth-child(3) { width: 75px; }
+.af-attach-editor-list table tr td { text-align: center;padding: 4px; margin: 0px; }
+
+/* Post List */
+.af-attach-post-list {  }
+.af-attach-post-list > span { font-size: .9em;opacity: 0.4; }
+.af-attach-post-list ul { padding: 0px;margin: 0px; }
+.af-attach-post-list ul li { list-style-type: none ;margin: 5px 10px 5px 0px; padding: 0px;display: inline-block;}
+.af-attach-post-list ul li a {  padding: 5px 10px 5px 0px; display: inline-block; border: solid 1px #ddd; background-color: #eee;border-radius: 4px;-moz-border-radius: 4px; text-decoration: none !important }
+
+/* File Icons - Also used in attachments*/
+.af-fileicon { display:inline-block; width: 16px; height:16px; background: url(images/af-fileicon.png) no-repeat top left; background-position: -800px 0;vertical-align: text-bottom;margin: 0px 10px;}
+.af-fileicon-7z{ background-position: 0 0;  }
+.af-fileicon-ai{ background-position: -32px 0;  }
+.af-fileicon-aiff{ background-position: -64px 0;  }
+.af-fileicon-asc{ background-position: -96px 0;  }
+.af-fileicon-audio{ background-position: -128px 0;  }
+.af-fileicon-bin{ background-position: -160px 0;  }
+.af-fileicon-bmp, .af-fileicon-image, .af-fileicon-tif, .af-fileicon-tiff{ background-position: -192px 0;  }
+.af-fileicon-bz2{ background-position: -224px 0;  }
+.af-fileicon-c{ background-position: -256px 0;  }
+.af-fileicon-cfc{ background-position: -288px 0;  }
+.af-fileicon-cfm{ background-position: -320px 0;  }
+.af-fileicon-chm{ background-position: -352px 0;  }
+.af-fileicon-class{ background-position: -384px 0;  }
+.af-fileicon-conf{ background-position: -416px 0;  }
+.af-fileicon-cpp{ background-position: -448px 0;  }
+.af-fileicon-cs{ background-position: -480px 0;  }
+.af-fileicon-css{ background-position: -512px 0;  }
+.af-fileicon-csv{ background-position: -544px 0;  }
+.af-fileicon-deb{ background-position: -576px 0;  }
+.af-fileicon-divx{ background-position: -608px 0;  }
+.af-fileicon-doc, .af-fileicon-docm, .af-fileicon-docx{ background-position: -640px 0;  }
+.af-fileicon-dot{ background-position: -672px 0;  }
+.af-fileicon-eml{ background-position: -704px 0;  }
+.af-fileicon-enc{ background-position: -736px 0;  }
+.af-fileicon-exe{ background-position: -768px 0;  }
+.af-fileicon-file{ background-position: -800px 0;  }
+.af-fileicon-gif{ background-position: -832px 0;  }
+.af-fileicon-gz{ background-position: -864px 0;  }
+.af-fileicon-hlp{ background-position: -896px 0;  }
+.af-fileicon-htm{ background-position: -928px 0;  }
+.af-fileicon-html{ background-position: -960px 0;  }
+.af-fileicon-iso{ background-position: -992px 0;  }
+.af-fileicon-jar{ background-position: -1024px 0;  }
+.af-fileicon-java{ background-position: -1056px 0;  }
+.af-fileicon-jpeg{ background-position: -1088px 0;  }
+.af-fileicon-jpg{ background-position: -1120px 0;  }
+.af-fileicon-js{ background-position: -1152px 0;  }
+.af-fileicon-lua{ background-position: -1184px 0;  }
+.af-fileicon-m{ background-position: -1216px 0;  }
+.af-fileicon-mm{ background-position: -1248px 0;  }
+.af-fileicon-mov{ background-position: -1280px 0;  }
+.af-fileicon-mp3{ background-position: -1312px 0;  }
+.af-fileicon-mp4, .af-fileicon-mpeg, .af-fileicon-mpg{ background-position: -1344px 0;  }
+.af-fileicon-odc{ background-position: -1376px 0;  }
+.af-fileicon-odf{ background-position: -1408px 0;  }
+.af-fileicon-odg{ background-position: -1440px 0;  }
+.af-fileicon-odi{ background-position: -1472px 0;  }
+.af-fileicon-odp{ background-position: -1504px 0;  }
+.af-fileicon-ods{ background-position: -1536px 0;  }
+.af-fileicon-odt{ background-position: -1568px 0;  }
+.af-fileicon-ogg{ background-position: -1600px 0;  }
+.af-fileicon-pdf{ background-position: -1632px 0;  }
+.af-fileicon-pgp{ background-position: -1664px 0;  }
+.af-fileicon-php{ background-position: -1696px 0;  }
+.af-fileicon-pl{ background-position: -1728px 0;  }
+.af-fileicon-png{ background-position: -1760px 0;  }
+.af-fileicon-ppt, .af-fileicon-pptm, .af-fileicon-pptx{ background-position: -1792px 0;  }
+.af-fileicon-ps{ background-position: -1824px 0;  }
+.af-fileicon-py{ background-position: -1856px 0;  }
+.af-fileicon-ram{ background-position: -1888px 0;  }
+.af-fileicon-rar{ background-position: -1920px 0;  }
+.af-fileicon-rb{ background-position: -1952px 0;  }
+.af-fileicon-rm{ background-position: 0 -32px;  }
+.af-fileicon-rpm{ background-position: -32px -32px;  }
+.af-fileicon-rtf{ background-position: -64px -32px;  }
+.af-fileicon-sig{ background-position: -96px -32px;  }
+.af-fileicon-sql{ background-position: -128px -32px;  }
+.af-fileicon-swf{ background-position: -160px -32px;  }
+.af-fileicon-sxc{ background-position: -192px -32px;  }
+.af-fileicon-sxd{ background-position: -224px -32px;  }
+.af-fileicon-sxi{ background-position: -256px -32px;  }
+.af-fileicon-sxw{ background-position: -288px -32px;  }
+.af-fileicon-tar{ background-position: -320px -32px;  }
+.af-fileicon-tex{ background-position: -352px -32px;  }
+.af-fileicon-tgz{ background-position: -384px -32px;  }
+.af-fileicon-txt{ background-position: -416px -32px;  }
+.af-fileicon-vcf{ background-position: -448px -32px;  }
+.af-fileicon-video{ background-position: -480px -32px;  }
+.af-fileicon-vsd{ background-position: -512px -32px;  }
+.af-fileicon-wav{ background-position: -544px -32px;  }
+.af-fileicon-wma{ background-position: -576px -32px;  }
+.af-fileicon-wmv{ background-position: -608px -32px;  }
+.af-fileicon-xls, .af-fileicon-xlsm, .af-fileicon-xlsx{ background-position: -640px -32px;  }
+.af-fileicon-xml{ background-position: -672px -32px;  }
+.af-fileicon-xpi{ background-position: -704px -32px;  }
+.af-fileicon-xvid{ background-position: -736px -32px;  }
+.af-fileicon-zip{ background-position: -768px -32px;  }
 
 
 

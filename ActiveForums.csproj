@@ -167,6 +167,7 @@
       <HintPath>..\..\..\References\DNN 7.0.0\System.Net.Http.Formatting.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web">
       <Name>System.Web</Name>
     </Reference>
@@ -290,6 +291,7 @@
     <Content Include="ForumEditor.ascx" />
     <Content Include="handlers\adminhelper.ashx" />
     <Content Include="images\add-circle.png" />
+    <Content Include="images\af-fileicon.png" />
     <Content Include="images\arrow_down.png" />
     <Content Include="images\arrow_up.png" />
     <Content Include="images\check32.png" />
@@ -311,6 +313,7 @@
     <Content Include="images\save16.png" />
     <Content Include="module.css" />
     <EmbeddedResource Include="scripts\afadmin.properties.js" />
+    <Content Include="scripts\afattach.js" />
     <Content Include="scripts\afcommon.js" />
     <Content Include="scripts\afdebug.js" />
     <Content Include="scripts\afmod.js" />
@@ -322,6 +325,7 @@
     <Content Include="scripts\fck_editor.js" />
     <Content Include="scripts\jquery-searchPopup.js" />
     <Content Include="scripts\jquery.disable.text.select.pack.js" />
+    <Content Include="scripts\jquery.afFileUpload.js" />
     <Content Include="scripts\jquery.history.js" />
     <Content Include="scripts\jquery.listreorder.js" />
     <Content Include="scripts\jquery.tokeninput.js" />
@@ -569,18 +573,14 @@
       <SubType>ASPXCodeBehind</SubType>
     </Content>
     <Content Include="controls\af_usersonline.ascx" />
-    <Content Include="controls\af_post.ascx">
-      <SubType>ASPXCodeBehind</SubType>
-    </Content>
+    <Content Include="controls\af_post.ascx" />
     <Content Include="ControlPanel.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
     <Content Include="controls\admin_manageforums.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
-    <Content Include="controls\admin_manageforums_forumeditor.ascx">
-      <SubType>ASPXCodeBehind</SubType>
-    </Content>
+    <Content Include="controls\admin_manageforums_forumeditor.ascx" />
     <Content Include="controls\af_confirmaction.ascx">
       <SubType>Form</SubType>
     </Content>
@@ -592,7 +592,6 @@
     </Content>
     <Content Include="controls\af_subscribe.ascx" />
     <Content Include="controls\af_topicrating.ascx" />
-    <Content Include="controls\af_uploader.ascx" />
     <Content Include="controls\af_markallread.ascx">
       <SubType>Form</SubType>
     </Content>
@@ -602,7 +601,6 @@
     <Content Include="controls\af_quickreply.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
-    <Content Include="controls\uploader.aspx" />
     <Content Include="controls\_default.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
@@ -639,6 +637,7 @@
       <SubType>Designer</SubType>
     </Content>
     <None Include="sql\05.01.03.SqlDataProvider" />
+    <None Include="sql\05.02.00.SqlDataProvider" />
     <None Include="sql\Enterprise.sql" />
     <Content Include="config\templates\ModAlert_text.txt" />
     <Content Include="config\templates\ModEmail_text.txt" />
@@ -714,7 +713,10 @@
       <SubType>ASPXCodeBehind</SubType>
     </Content>
     <Content Include="config\templates\ForumView-4.3.txt" />
-    <Content Include="viewer.aspx" />
+    <Content Include="viewer.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
+    <Compile Include="class\Attachment.cs" />
     <Compile Include="class\HashtableExtensions.cs" />
     <Compile Include="class\DataRowExtensions.cs" />
     <Compile Include="class\DataRecordExtensions.cs" />
@@ -736,6 +738,7 @@
     <Compile Include="controls\af_searchadvanced.ascx.designer.cs">
       <DependentUpon>af_searchadvanced.ascx</DependentUpon>
     </Compile>
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="SimulateDateDiff.cs" />
     <Compile Include="SimulateIsNumeric.cs" />
     <Compile Include="ActiveForums.ascx.designer.cs">
@@ -767,7 +770,6 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="class\API.cs" />
-    <Compile Include="class\Attachments\AttachInfo.cs" />
     <Compile Include="components\Common\Exceptions.cs" />
     <Compile Include="components\Common\ForumSettingsBase.cs">
       <SubType>ASPXCodeBehind</SubType>
@@ -1209,13 +1211,6 @@
       <DependentUpon>af_topicrating.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="controls\af_uploader.ascx.designer.cs">
-      <DependentUpon>af_uploader.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="controls\af_uploader.ascx.cs">
-      <DependentUpon>af_uploader.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -1280,13 +1275,6 @@
       <DependentUpon>af_quickreply.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="controls\uploader.aspx.designer.cs">
-      <DependentUpon>uploader.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="controls\uploader.aspx.cs">
-      <DependentUpon>uploader.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="controls\_default.ascx.designer.cs">
       <DependentUpon>_default.ascx</DependentUpon>
     </Compile>
@@ -1349,6 +1337,7 @@
   <ItemGroup>
     <Folder Include="class\API\" />
     <Folder Include="components\Security\" />
+    <Folder Include="Legacy\" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

@@ -344,6 +344,8 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             }
         }
 
+        public string AttachmentsClientId { get; set; }
+
         public EditorModes EditorMode { get; set; }
 
         public string Tags { get; set; }
@@ -482,7 +484,6 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
         protected Label reqCustomBody = new Label();
         protected DatePicker calStartDate = new DatePicker();
         protected DatePicker calEndDate = new DatePicker();
-        protected af_uploader ctlUpload = new af_uploader();
         protected af_attach ctlAttach = new af_attach();
 
         protected PlaceHolder plhUpload;
@@ -983,6 +984,8 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 plhTopicReview.Controls.Add(ctlTopicView);
             }
 
+            
+
         }
         public void btnPost_Click(object sender, EventArgs e)
         {
@@ -1142,10 +1145,6 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             afpolledit.ModuleConfiguration = ModuleConfiguration;
             afpolledit.ForumInfo = ForumInfo;
 
-            ctlUpload.ForumInfo = ForumInfo;
-            ctlUpload.ModuleConfiguration = ModuleConfiguration;
-            ctlUpload.ForumId = ForumInfo.ForumID;
-
             reqSubject.ErrorMessage = string.Format("<img src=\"{0}/images/warning.png\" align=\"absmiddle\" />", MyThemePath);
             reqSubject.EnableClientScript = false;
             reqUsername.ErrorMessage = string.Format("<img src=\"{0}/images/warning.png\" align=\"absmiddle\" />", MyThemePath);
@@ -1190,6 +1189,9 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 
             btnPost.Click += btnPost_Click;
             btnSubmit.Click += btnSubmit_Click;
+
+            // This field is used to communicate attachment data between af_attach and af_post, etc.
+            ctlAttach.AttachmentsClientId = AttachmentsClientId;
         }
         private void LinkControls(ControlCollection ctrls)
         {
@@ -1270,15 +1272,11 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     case "afpolledit":
                         afpolledit = (DotNetNuke.Modules.ActiveForums.af_polledit)ctrl;
                         break;
-                    case "ctlUpload":
-                        ctlUpload = (DotNetNuke.Modules.ActiveForums.af_uploader)ctrl;
-                        break;
                     case "ctlAttach":
                         ctlAttach = (DotNetNuke.Modules.ActiveForums.Controls.af_attach)ctrl;
                         ctlAttach.ModuleConfiguration = this.ModuleConfiguration;
                         ctlAttach.ModuleId = ModuleId;
-                        ctlAttach.EditorType = ForumInfo.EditorType;
-
+                        ctlAttach.ForumInfo = ForumInfo;
                         break;
                     case "ctlCaptcha":
                         ctlCaptcha = (DotNetNuke.UI.WebControls.CaptchaControl)ctrl;

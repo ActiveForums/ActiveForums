@@ -34,6 +34,9 @@ GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}activeforums_Attachments_ListForPost') AND type in (N'P', N'PC'))
 DROP PROCEDURE {databaseOwner}{objectQualifier}activeforums_Attachments_ListForPost
 GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}activeforums_Attachments_ListForContent') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}{objectQualifier}activeforums_Attachments_ListForContent
+GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}activeforums_Attachments_SaveToContent') AND type in (N'P', N'PC'))
 DROP PROCEDURE {databaseOwner}{objectQualifier}activeforums_Attachments_SaveToContent
 GO
@@ -480,6 +483,9 @@ DROP VIEW {databaseOwner}[{objectQualifier}vw_activeforums_Replies]
 GO
 IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}vw_activeforums_Topics]'))
 DROP VIEW {databaseOwner}[{objectQualifier}vw_activeforums_Topics]
+GO
+IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}vw_activeforums_TopicRatings]'))
+DROP VIEW {databaseOwner}[{objectQualifier}vw_activeforums_TopicRatings]
 GO
 IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}activeforums_Security') AND name = N'idx_{objectQualifier}activeforums_Security_Opt1')
 DROP INDEX [idx_{objectQualifier}activeforums_Security_Opt1] ON {databaseOwner}{objectQualifier}activeforums_Security 
