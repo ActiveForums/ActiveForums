@@ -28,7 +28,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using DotNetNuke;
 using System.Text.RegularExpressions;
-using DotNetNuke.Services.ClientCapability;
+//using DotNetNuke.Services.ClientCapability;
 using DotNetNuke.Services.Social.Notifications;
 using DotNetNuke.Services.Localization;
 
@@ -55,7 +55,7 @@ namespace DotNetNuke.Modules.ActiveForums
         #endregion
         #region Public Members
         public string SubscribedChecked = string.Empty;
-        public IClientCapability device = ClientCapabilityProvider.CurrentClientCapability;
+        //public IClientCapability device = ClientCapabilityProvider.CurrentClientCapability;
         #endregion
         #region Public Properties
         public bool UseFilter

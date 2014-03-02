@@ -95,23 +95,9 @@ function afQuickSubmit() {
 				<tr>
 					<td align="center" colspan="3">
 					<div class="amtbwrapper" style="text-align:center;">
-								<div style="margin:0px auto;min-width:50px;max-width:60px;">
-								<%
-								if (device.IsMobile)
-								{
-								%>
-									<input type="submit" text="[RESX:Submit]" id="btnSubmit" name="btnSubmit" runat="server"  />
-								 <%
-								 }
-								 else
-								 {
-								 %>
-									<asp:linkbutton ID="btnSubmitLink" runat="server" CssClass="dnnPrimaryAction">[RESX:Submit]</asp:linkbutton>
-
-								<%
-								}
-								%>
-								</div>   
+						<div style="margin:0px auto;min-width:50px;max-width:60px;">
+							<asp:linkbutton ID="btnSubmitLink" runat="server" CssClass="dnnPrimaryAction">[RESX:Submit]</asp:linkbutton>
+						</div>   
 					</div>
 
 					</td>
