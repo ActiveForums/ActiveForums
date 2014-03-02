@@ -51,22 +51,22 @@ IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwn
 BEGIN
 
 	-- Moves all AF attachment info t
-	UPDATE activeforums_Attachments
+	UPDATE {databaseOwner}[{objectQualifier}activeforums_Attachments]
 	SET ContentId = ca.ContentId
-	FROM {databaseOwner}{objectQualifier}activeforums_Content_Attachments as ca
+	FROM {databaseOwner}[{objectQualifier}activeforums_Content_Attachments] as ca
 	WHERE
-	   {databaseOwner}{objectQualifier}activeforums_Attachments.AttachID = ca.AttachId
+	   {databaseOwner}[{objectQualifier}activeforums_Attachments].AttachID = ca.AttachId
 	   and ca.FileURL IS NULL
 	   and ca.[FileName] IS NULL
 	   and ca.ContentType IS NULL
 	 
-	 INSERT INTO {databaseOwner}{objectQualifier}activeforums_Attachments (ContentId, [Filename], ContentType, FileID, AllowDownload, DisplayInline)
+	 INSERT INTO {databaseOwner}[{objectQualifier}activeforums_Attachments] (ContentId, [Filename], ContentType, FileID, AllowDownload, DisplayInline)
 	 SELECT ContentId, [FileName], ContentType, AttachId, 1, 0
-	 FROM activeforums_Content_Attachments as ca
+	 FROM {databaseOwner}[{objectQualifier}activeforums_Content_Attachments] as ca
 	 WHERE ca.FileName IS NOT NULL
 		AND ca.FileURL IS NOT NULL
 		AND ca.DisplayLink = 1
-		AND NOT EXISTS(SELECT * FROM {databaseOwner}{objectQualifier}activeforums_Attachments WHERE ContentId = ca.ContentId And FileId = ca.AttachId)
+		AND NOT EXISTS(SELECT * FROM {databaseOwner}[{objectQualifier}activeforums_Attachments] WHERE ContentId = ca.ContentId And FileId = ca.AttachId)
 	   
 	DROP TABLE {databaseOwner}[{objectQualifier}activeforums_Content_Attachments]
 	
