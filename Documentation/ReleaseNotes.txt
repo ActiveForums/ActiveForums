@@ -17,15 +17,27 @@
     <p class="Owner">
 	<b>Version 05.02.00
 	<p>
+		Many thanks to the various GitHub users who contributed to this release!
 		<ul>
+			<li>Issue #67 - HTML appearing in RSS data</li>
+			<li>Issue #66 - SQL proc not removed during uninstall</li>
+			<li>Issue #64 - Added contentid to BuildURL method</li>
+			<li>Issue #61 - Refactored the attachment functionality to be more robust and less confusing.</li>
+			<li>Issue #50, #52 - DNN 7.2 email issues</li>
+			<li>Issue #49 - Quickedit control error</li>
+			<li>Issue #48 - SEO Metadata issues</li>
+			<li>Issue #47 - Quickreply control error</li>
+			<li>Issue #38 - Editor selection not sticking</li>
+			<li>Issue #36 - Attachment options missing from control panel</li>
+			<li>Issue #5, #19, #45, #46 - Attachment/Upload Issues</li> 
 		</ul>
 	</p>
     <p class="Owner">
 	<b>Version 05.01.04
 	<p>
 		<ul>
-			<li>Fixed Issue #27 - Subscribe Link Label Text</li>
-			<li>Fixed Issue #28 - Editor Selection Does Not Work<li>
+			<li>Issue #27 - Subscribe Link Label Text</li>
+			<li>Issue #28 - Editor Selection Does Not Work<li>
 		</ul>
 	</p>
     <p class="Owner">
