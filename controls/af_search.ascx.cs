@@ -85,6 +85,11 @@ namespace DotNetNuke.Modules.ActiveForums
                 if (_tags == null)
                 {
                     _tags = Request.Params["tg"] + string.Empty;
+
+                    // The tag links are generated with "aftg"
+                    if (_tags == string.Empty)
+                        _tags = Request.Params["aftg"] + string.Empty;
+
                     _tags = Utilities.XSSFilter(_tags);
                     _tags = Utilities.StripHTMLTag(_tags);
                     _tags = Utilities.CheckSqlString(_tags);

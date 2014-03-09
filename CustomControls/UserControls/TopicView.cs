@@ -1415,6 +1415,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 
             sOutput = sbOutput.ToString();
 
+            // Legacy attachment functionality, uses "attachid"
             // &#91;IMAGE:38&#93;
             if (sOutput.Contains("&#91;IMAGE:"))
             {
@@ -1423,6 +1424,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 sOutput = Regex.Replace(sOutput, pattern, match => "<img src=\"" + strHost + "DesktopModules/ActiveForums/viewer.aspx?portalid=" + PortalId + "&moduleid=" + ModuleId + "&attachid=" + match.Groups[2].Value + "\" border=\"0\" class=\"afimg\" />");
             }
 
+            // Legacy attachment functionality, uses "attachid"
             // &#91;THUMBNAIL:38&#93;
             if (sOutput.Contains("&#91;THUMBNAIL:"))
             {
@@ -1446,7 +1448,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             if (!allowAttach || _dtAttach.Rows.Count == 0)
                 return string.Empty;
 
-            const string itemTemplate = "<li><a href='/DesktopModules/ActiveForums/viewer.aspx?portalid={0}&moduleid={1}&attachid={2}' target='_blank'><i class='af-fileicon af-fileicon-{3}'></i><span>{4}</span></a></li>";
+            const string itemTemplate = "<li><a href='/DesktopModules/ActiveForums/viewer.aspx?portalid={0}&moduleid={1}&attachmentid={2}' target='_blank'><i class='af-fileicon af-fileicon-{3}'></i><span>{4}</span></a></li>";
 
             _dtAttach.DefaultView.RowFilter = "ContentId = " + contentId;
 

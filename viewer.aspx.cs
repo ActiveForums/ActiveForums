@@ -58,11 +58,12 @@ namespace DotNetNuke.Modules.ActiveForums
         {
             base.OnLoad(e);
 
-            var attachId = Utilities.SafeConvertInt(Request.Params["AttachID"], -1);
+            var attachmentId = Utilities.SafeConvertInt(Request.Params["AttachmentID"], -1);// Used for new attachments where the attachment is the actual file link (shouldn't appear in posts)
+            var attachFileId = Utilities.SafeConvertInt(Request.Params["AttachID"], -1); // Used for legacy attachments where the attachid was actually the file id. (appears in posts)
             var portalId = Utilities.SafeConvertInt(Request.Params["PortalID"], -1);
             var moduleId = Utilities.SafeConvertInt(Request.Params["ModuleID"], -1);
 
-            if (Page.IsPostBack || attachId < 0 || portalId < 0 || moduleId < 0)
+            if (Page.IsPostBack || (attachmentId < 0 && attachFileId < 0) || portalId < 0 || moduleId < 0)
             {
                 Response.StatusCode = 400;
                 Response.Write("Invalid Request");
@@ -71,7 +72,7 @@ namespace DotNetNuke.Modules.ActiveForums
             }
 
             // Get the attachment including the "Can Read" permission for the associated content id.
-            var attachment = new Data.AttachController().Get(attachId, true);
+            var attachment = new Data.AttachController().Get(attachmentId, attachFileId, true);
 
             // Make sure the attachment exists
             if (attachment == null)
@@ -99,7 +100,12 @@ namespace DotNetNuke.Modules.ActiveForums
             if (attachment.FileData != null)
             {
                 Response.ContentType = attachment.ContentType;
-                Response.AddHeader("Content-Disposition", "attachment;filename=" + Server.HtmlEncode(filename));
+                
+                if (attachmentId > 0)
+                    Response.AddHeader("Content-Disposition", "attachment; filename=" + Server.HtmlEncode(filename));
+                else // Handle legacy inline attachments a bit differently
+                    Response.AddHeader("Content-Disposition", "filename=" + Server.HtmlEncode(filename));
+                
                 Response.BinaryWrite(attachment.FileData);
                 Response.End();
                 return;
@@ -145,7 +151,12 @@ namespace DotNetNuke.Modules.ActiveForums
 
             Response.Clear();
             Response.ContentType = attachment.ContentType;
-            Response.AddHeader("Content-Disposition", "attachment; filename=" + Server.HtmlEncode(filename));
+
+            if(attachmentId > 0)
+                Response.AddHeader("Content-Disposition", "attachment; filename=" + Server.HtmlEncode(filename));
+            else // Handle legacy inline attachments a bit differently
+                Response.AddHeader("Content-Disposition", "filename=" + Server.HtmlEncode(filename));
+
             Response.AddHeader("Content-Length", length.ToString());
             Response.WriteFile(filePath);
             Response.Flush();

@@ -7,14 +7,25 @@
 <div class="License">
 	<p class="Owner">
 		<h3>About DotNetNuke Active Forums</h3>
-		<strong>Version 5.1.4</strong><br /><br />		
+		<strong>Version 5.2.1</strong><br /><br />		
 	</p>
 </div>
-<h3>DotNetNuke Active Forums 05.02.00</h3>
+<h3>DotNetNuke Active Forums 05.02.01</h3>
 <hr/>
 <div class="License">
    <h3>Release Notes</h3>
     <p class="Owner">
+	<b>Version 05.02.01
+	<p>
+		Many thanks to the various GitHub users who contributed to this release!
+		<ul>
+			<li>Issue #75 - Proc referenced missing activeforums_UserDetails table</li>
+			<li>Issue #72 - Page links not working for certain users</li>
+			<li>Issue #71 - Tag links not working correctly from topic view</li>
+			<li>Issue #70 - Attachments with long file names being truncated</li>
+			<li>Issue #69 - Images from legacy attachments showing as broken links</li>
+		</ul>
+	</p>
 	<b>Version 05.02.00
 	<p>
 		Many thanks to the various GitHub users who contributed to this release!

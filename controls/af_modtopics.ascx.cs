@@ -453,10 +453,10 @@ namespace DotNetNuke.Modules.ActiveForums
                             case "image/pjpeg":
                             case "image/gif":
                             case "image/png":
-                                sb.Append("<br /><span class=\"afimage\"><img src=\"" + strHost + "DesktopModules/ActiveForums/viewer.aspx?portalid=" + PortalID + "&moduleid=" + ModuleID + "&attachid=" + attachId + "\" border=0 align=center></span><br><br>");
+                                sb.Append("<br /><span class=\"afimage\"><img src=\"" + strHost + "DesktopModules/ActiveForums/viewer.aspx?portalid=" + PortalID + "&moduleid=" + ModuleID + "&attachmentid=" + attachId + "\" border=0 align=center></span><br><br>");
                                 break;
                             default:
-                                sb.Append("<span class=\"afattachlink\"><a href=\"" + strHost + "DesktopModules/ActiveForums/viewer.aspx?portalid=" + PortalID + "&moduleid=" + ModuleID + "&attachid=" + attachId + "\" target=\"_blank\"><img src=\"" + strHost + "DesktopModules/ActiveForums/images/attach.gif\" border=\"0\" align=\"absmiddle\">Attachment: " + Filename + "</a></span><br />");
+                                sb.Append("<span class=\"afattachlink\"><a href=\"" + strHost + "DesktopModules/ActiveForums/viewer.aspx?portalid=" + PortalID + "&moduleid=" + ModuleID + "&attachmentid=" + attachId + "\" target=\"_blank\"><img src=\"" + strHost + "DesktopModules/ActiveForums/images/attach.gif\" border=\"0\" align=\"absmiddle\">Attachment: " + Filename + "</a></span><br />");
                                 break;
                         }
                     }

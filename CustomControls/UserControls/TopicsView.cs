@@ -1242,25 +1242,31 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     }
                     if (UseAjax)
                     {
-                        //sOut &= "<span class=""afpagerminiitem"" onclick=""javascript:afPageJump(" & intPostPages & ");"">" & intPostPages & "</span>&nbsp;"
-                        string[] Params2 = { ParamKeys.ForumId + "=" + ForumID, ParamKeys.TopicId + "=" + PostID, ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.PageJumpId + "=" + intPostPages };
+                        var @params = new List<string> { ParamKeys.ForumId + "=" + ForumID, ParamKeys.TopicId + "=" + PostID, ParamKeys.ViewType + "=" + Views.Topic };
                         if (MainSettings.UseShortUrls)
                         {
-                            Params2 = new string[] { ParamKeys.TopicId + "=" + PostID, ParamKeys.PageJumpId + "=" + intPostPages };
+                            @params = new List<string> { ParamKeys.TopicId + "=" + PostID };
                         }
+                        if (i > 1)
+                        {
+                            @params.Add(ParamKeys.PageJumpId + "=" + i);
+                        }
+                        sOut += "<a href=\"" + NavigateUrl(TabID, "", @params.ToArray()) + "\">" + i + "</a>&nbsp;";
 
-                        sOut += "<a href=\"" + NavigateUrl(TabID, "", Params2) + "\">" + intPostPages + "</a>&nbsp;";
                     }
                     else
                     {
-                        string[] Params2 = { ParamKeys.ForumId + "=" + ForumID, ParamKeys.TopicId + "=" + PostID, ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.PageId + "=" + intPostPages };
+                        var @params = new List<string> { ParamKeys.ForumId + "=" + ForumID, ParamKeys.TopicId + "=" + PostID, ParamKeys.ViewType + "=" + Views.Topic };
                         if (MainSettings.UseShortUrls)
                         {
-                            Params2 = new string[] { ParamKeys.TopicId + "=" + PostID, ParamKeys.PageId + "=" + intPostPages };
+                            @params = new List<string> { ParamKeys.TopicId + "=" + PostID };
                         }
-                        sOut += "<a href=\"" + NavigateUrl(TabID, "", Params2) + "\">" + intPostPages + "</a>&nbsp;";
+                        if (i > 1)
+                        {
+                            @params.Add(ParamKeys.PageId + "=" + i);
+                        }
+                        sOut += "<a href=\"" + NavigateUrl(TabID, "", @params.ToArray()) + "\">" + i + "</a>&nbsp;";
                     }
-
 
                 }
                 else
@@ -1279,7 +1285,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                             {
                                 @params.Add(ParamKeys.PageJumpId + "=" + i);
                             }
-                            sOut += "<a href=\"" + NavigateUrl(TabID, "", Params) + "\">" + i + "</a>&nbsp;";
+                            sOut += "<a href=\"" + NavigateUrl(TabID, "", @params.ToArray()) + "\">" + i + "</a>&nbsp;";
                         }
                         else
                         {

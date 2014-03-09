@@ -747,7 +747,8 @@ namespace DotNetNuke.Modules.ActiveForums
 
 		private static string ParsePreview(int portalId, string template, string message, int moduleId)
 		{
-			if (message.Contains("&#91;IMAGE:"))
+			//TODO: Legacy Attachments Functionality - Probably can remove.
+            if (message.Contains("&#91;IMAGE:"))
 			{
 				var strHost = Common.Globals.AddHTTP(Common.Globals.GetDomainName(HttpContext.Current.Request)) + "/";
 				const string pattern = "(&#91;IMAGE:(.+?)&#93;)";
@@ -758,6 +759,7 @@ namespace DotNetNuke.Modules.ActiveForums
 				}
 			}
 
+            //TODO: Legacy Attachments Functionality - Probably can remove.
 			if (message.Contains("&#91;THUMBNAIL:"))
 			{
 				var strHost = Common.Globals.AddHTTP(Common.Globals.GetDomainName(HttpContext.Current.Request)) + "/";

@@ -38,10 +38,11 @@ namespace DotNetNuke.Modules.ActiveForums.Data
             SqlHelper.ExecuteNonQuery(connectionString, dbPrefix + "Attachments_Delete", attachId);
         }
 
-        public PermissionAttachment Get(int attachmentId, bool withSecurity)
+        // FileId is used for legacy attachments
+        public PermissionAttachment Get(int attachmentId, int fileId, bool withSecurity)
         {
             PermissionAttachment result = null;
-            using (IDataReader dr = SqlHelper.ExecuteReader(connectionString, dbPrefix + "Attachments_Get", attachmentId, withSecurity))
+            using (IDataReader dr = SqlHelper.ExecuteReader(connectionString, dbPrefix + "Attachments_Get", attachmentId, fileId, withSecurity))
             {
                 if (dr.Read())
                 {
