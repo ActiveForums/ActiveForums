@@ -2,10 +2,10 @@
 <%@ Import Namespace="DotNetNuke.Common.Utilities" %>
 <%@ Import Namespace="DotNetNuke.Modules.ActiveForums.Extensions" %>
 <%@ Register TagPrefix="dnn" Namespace="DotNetNuke.Web.Client.ClientResourceManagement" Assembly="DotNetNuke.Web.Client" %>
-<dnn:DnnJsInclude runat="server" FilePath="knockout.js" PathNameAlias="SharedScripts"></dnn:DnnJsInclude>
+<dnn:DnnJsInclude runat="server" FilePath="knockout.js" PathNameAlias="SharedScripts" Priority="100"></dnn:DnnJsInclude>
 <dnn:DnnJsInclude runat="server" FilePath="~/Resources/Shared/Components/UserFileManager/UserFileManager.js" Priority="105"></dnn:DnnJsInclude>
 <dnn:DnnCssInclude runat="server" FilePath="~/Resources/Shared/Components/UserFileManager/UserFileManager.css"></dnn:DnnCssInclude>
-<dnn:DnnJsInclude runat="server" FilePath="~/DesktopModules/ActiveForums/Scripts/afattach.js"></dnn:DnnJsInclude>
+<dnn:DnnJsInclude runat="server" FilePath="~/DesktopModules/ActiveForums/Scripts/afattach.js" Priority="106"></dnn:DnnJsInclude>
 <!-- ko stopBinding: true -->  
 <div id="<%=ClientID%>">
     <!-- ko stopBinding: true -->

@@ -35,6 +35,8 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 
             LocalResourceFile = "~/DesktopModules/ActiveForums/App_LocalResources/SharedResources.resx";
 
+            jQuery.RegisterJQuery(Page);
+            jQuery.RegisterJQueryUI(Page);
             jQuery.RequestDnnPluginsRegistration();
             jQuery.RegisterFileUpload(Page);
 
@@ -53,7 +55,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 // v7.2+
                 ClientResourceManager.RegisterScript(Page, "~/Resources/Shared/Components/UserFileManager/jquery.dnnUserFileUpload.js", 102);
             }
-             */
+            */
 
             ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
         }

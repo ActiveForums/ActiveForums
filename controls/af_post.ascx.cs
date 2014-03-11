@@ -1286,7 +1286,7 @@ namespace DotNetNuke.Modules.ActiveForums
         private void PrepareAttachments(int? contentId = null)
         {
             // Handle the case where we don't yet have a topic id (new posts)
-            if(!contentId.HasValue || contentId.Value == 0)
+            if(!contentId.HasValue || contentId.Value <= 0)
             {
                 hidAttachments.Value = "[]"; // JSON for an empty array
                 return;
