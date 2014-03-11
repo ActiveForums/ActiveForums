@@ -105,8 +105,16 @@ namespace DotNetNuke.Modules.ActiveForums
 
         private void drpSort_SelectedIndexChanged(object sender, System.EventArgs e)
         {
-            string Sort = drpSort.SelectedItem.Value;
-            Response.Redirect(DotNetNuke.Common.Globals.NavigateURL(TabId, "", new string[] { ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + TopicId, ParamKeys.Sort + "=" + Sort }));
+            var sort = drpSort.SelectedItem.Value;
+            var dest = DotNetNuke.Common.Globals.NavigateURL(TabId, "",
+                                                             new[]
+                                                                 {
+                                                                     ParamKeys.ViewType + "=" + Views.Topic,
+                                                                     ParamKeys.ForumId + "=" + ForumId,
+                                                                     ParamKeys.TopicId + "=" + TopicId,
+                                                                     ParamKeys.Sort + "=" + sort
+                                                                 });
+            Response.Redirect(dest);
         }
     }
 

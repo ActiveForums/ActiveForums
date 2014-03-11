@@ -626,10 +626,15 @@ namespace DotNetNuke.Modules.ActiveForums
                 }
 
                 var sort = Request.QueryString[ParamKeys.Sort];
-                if(!string.IsNullOrWhiteSpace(sort) && Request.IsAuthenticated)
+                if(!string.IsNullOrWhiteSpace(sort))
                 {
+                    var defaultSort = (Request.IsAuthenticated &&
+                                       !string.IsNullOrWhiteSpace(ForumUser.Profile.PrefDefaultSort))
+                                          ? ForumUser.Profile.PrefDefaultSort.ToUpperInvariant().Trim()
+                                          : "ASC";
+
                     sort = sort.ToUpperInvariant();
-                    if(sort == "ASC" || sort == "DESC")
+                    if((sort != defaultSort) && (sort == "ASC" || sort == "DESC"))
                         p.Add(ParamKeys.Sort + "=" + sort);
                 }
             }
