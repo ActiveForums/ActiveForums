@@ -38,6 +38,12 @@ IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwn
 DROP PROCEDURE {databaseOwner}[{objectQualifier}activeforums_UI_TopicView]
 GO
 
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_Attachments]') AND type in (N'U'))
+BEGIN
+	ALTER TABLE {databaseOwner}[{objectQualifier}activeforums_Attachments] ALTER COLUMN [Filename] nvarchar(255)
+	ALTER TABLE {databaseOwner}[{objectQualifier}activeforums_Attachments] ALTER COLUMN ContentType nvarchar(255)
+END
+GO
 
 IF NOT EXISTS(SELECT * FROM sys.columns WHERE [name] = N'FileID' AND [object_id] = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_attachments]'))
 ALTER TABLE {databaseOwner}[{objectQualifier}activeforums_Attachments] ADD FileID int
@@ -68,7 +74,7 @@ BEGIN
 		AND ca.DisplayLink = 1
 		AND NOT EXISTS(SELECT * FROM {databaseOwner}[{objectQualifier}activeforums_Attachments] WHERE ContentId = ca.ContentId And FileId = ca.AttachId)
 	   
-	DROP TABLE {databaseOwner}[{objectQualifier}activeforums_Content_Attachments]
+	--DROP TABLE {databaseOwner}[{objectQualifier}activeforums_Content_Attachments]
 	
 END
 GO

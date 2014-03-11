@@ -28,12 +28,13 @@ IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwn
 DROP PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Forums_List]
 GO
 
-IF  EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'[DF_activeforums_Attachments_AllowDownload]') AND type = 'D')
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_Attachments]') AND type in (N'U'))
 BEGIN
 	ALTER TABLE {databaseOwner}[{objectQualifier}activeforums_Attachments] ALTER COLUMN [Filename] nvarchar(255)
 	ALTER TABLE {databaseOwner}[{objectQualifier}activeforums_Attachments] ALTER COLUMN ContentType nvarchar(255)
 END
 GO
+
 
 BEGIN TRY
 
