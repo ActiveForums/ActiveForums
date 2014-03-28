@@ -133,8 +133,7 @@ namespace DotNetNuke.Modules.ActiveForums
                                      LastName = ui.LastName,
                                      Username = ui.Username
                                  };
-                    var oEmail = new Email();
-                    oEmail.SendEmail(fi.ModRejectTemplateId, PortalSettings.PortalId, _moduleId, _tabId, _forumId, _topicId, _replyId, string.Empty, au);
+                    Email.SendEmail(fi.ModRejectTemplateId, PortalSettings.PortalId, _moduleId, _tabId, _forumId, _topicId, _replyId, string.Empty, au);
                 }
 
             }
@@ -200,8 +199,9 @@ namespace DotNetNuke.Modules.ActiveForums
                         LastName = ui.LastName,
                         Username = ui.Username
                     };
-                    var oEmail = new Email();
-                    oEmail.SendEmail(fi.ModDeleteTemplateId, PortalSettings.PortalId, _moduleId, _tabId, _forumId, _topicId, _replyId, string.Empty, null);
+
+                    //Email.SendEmail(fi.ModDeleteTemplateId, PortalSettings.PortalId, _moduleId, _tabId, _forumId, _topicId, _replyId, string.Empty, null);
+                    Email.SendEmailToModerators(fi.ModDeleteTemplateId, PortalSettings.PortalId, _forumId, _topicId, _replyId, _moduleId, _tabId, string.Empty);
                 }
             }
 

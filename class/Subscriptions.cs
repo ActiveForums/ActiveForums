@@ -162,11 +162,6 @@ namespace DotNetNuke.Modules.ActiveForums
 			                     From = sFrom,
 			                     BodyText = BodyText,
 			                     BodyHTML = BodyHTML,
-			                     SmtpServer = Host.SMTPServer,// Convert.ToString(_portalSettings.HostSettings["SMTPServer"]),
-			                     SmtpUserName = Host.SMTPUsername, // Convert.ToString(_portalSettings.HostSettings["SMTPUsername"]),
-			                     SmtpPassword = Host.SMTPPassword, // Convert.ToString(_portalSettings.HostSettings["SMTPPassword"]),
-			                     SmtpAuthentication = Host.SMTPAuthentication, // Convert.ToString(_portalSettings.HostSettings["SMTPAuthentication"]),
-			                     SmtpSSL = Host.EnableSMTPSSL.ToString(), // Convert.ToString(_portalSettings.HostSettings["SMTPEnableSSL"]),
 			                     UseQueue = MainSettings.MailQueue
 			                 };
 

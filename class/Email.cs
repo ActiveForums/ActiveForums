@@ -18,15 +18,15 @@
 // DEALINGS IN THE SOFTWARE.
 //
 
-
-
 using System;
 using System.Collections.Generic;
-using System.Data;
-//ORIGINAL LINE: Imports System.Web.HttpContext
-
+using System.Linq;
+using System.Net.Mail;
+using System.Threading;
 using System.Web;
 using DotNetNuke.Entities.Host;
+using DotNetNuke.Entities.Users;
+
 namespace DotNetNuke.Modules.ActiveForums
 {
 	public class Email
@@ -35,92 +35,30 @@ namespace DotNetNuke.Modules.ActiveForums
 		public string From;
 		public string BodyText;
 		public string BodyHTML;
-		//Public Recipients As ArrayList
+
 		public List<SubscriptionInfo> Recipients;
-		private string _SmtpServer = string.Empty;
-		private string _SmtpUserName = string.Empty;
-		private string _SmtpPassword = string.Empty;
-		private string _SmtpAuthentication = string.Empty;
-		private string _SmtpSSL = string.Empty;
-		public bool UseQueue = false;
+	
+        public bool UseQueue = false;
 
-		public string SmtpServer
+		public static void SendEmail(int templateId, int portalId, int moduleId, int tabId, int forumId, int topicId, int replyId, string comments, Author author)
 		{
-			get
-			{
-				return _SmtpServer;
-			}
-			set
-			{
-				_SmtpServer = value;
-			}
-		}
-		public string SmtpUserName
-		{
-			get
-			{
-				return _SmtpUserName;
-			}
-			set
-			{
-				_SmtpUserName = value;
-			}
-		}
-		public string SmtpPassword
-		{
-			get
-			{
-				return _SmtpPassword;
-			}
-			set
-			{
-				_SmtpPassword = value;
-			}
-		}
-		public string SmtpAuthentication
-		{
-			get
-			{
-				return _SmtpAuthentication;
-			}
-			set
-			{
-				_SmtpAuthentication = value;
-			}
-		}
-		public string SmtpSSL
-		{
-			get
-			{
-				return _SmtpSSL;
-			}
-			set
-			{
-				_SmtpSSL = value;
-			}
-		}
-
-		public void SendEmail(int TemplateId, int PortalId, int ModuleId, int TabId, int ForumId, int TopicId, int ReplyId, string Comments, Author author)
-		{
-			var _portalSettings = (Entities.Portals.PortalSettings)(HttpContext.Current.Items["PortalSettings"]);
-			SettingsInfo MainSettings = DataCache.MainSettings(ModuleId);
-			string Subject;
-			string BodyText;
-			string BodyHTML;
-			string sTemplate = string.Empty;
+			var portalSettings = (Entities.Portals.PortalSettings)(HttpContext.Current.Items["PortalSettings"]);
+			var mainSettings = DataCache.MainSettings(moduleId);
+		    var sTemplate = string.Empty;
 			var tc = new TemplateController();
-			TemplateInfo ti = tc.Template_Get(TemplateId, PortalId, ModuleId);
-			Subject = TemplateUtils.ParseEmailTemplate(ti.Subject, string.Empty, PortalId, ModuleId, TabId, ForumId, TopicId, ReplyId, string.Empty, author.AuthorId, _portalSettings.TimeZoneOffset);
-			BodyText = TemplateUtils.ParseEmailTemplate(ti.TemplateText, string.Empty, PortalId, ModuleId, TabId, ForumId, TopicId, ReplyId, string.Empty, author.AuthorId, _portalSettings.TimeZoneOffset);
-			BodyHTML = TemplateUtils.ParseEmailTemplate(ti.TemplateHTML, string.Empty, PortalId, ModuleId, TabId, ForumId, TopicId, ReplyId, string.Empty, author.AuthorId, _portalSettings.TimeZoneOffset);
-			BodyText = BodyText.Replace("[REASON]", Comments);
-			BodyHTML = BodyHTML.Replace("[REASON]", Comments);
-			string sFrom;
-			var fc = new ForumController();
-			Forum fi = fc.Forums_Get(ForumId, -1, false, true);
-			sFrom = fi.EmailAddress != string.Empty ? fi.EmailAddress : _portalSettings.Email;
-			//Send now
-			var oEmail = new Email();
+			var ti = tc.Template_Get(templateId, portalId, moduleId);
+			var subject = TemplateUtils.ParseEmailTemplate(ti.Subject, string.Empty, portalId, moduleId, tabId, forumId, topicId, replyId, string.Empty, author.AuthorId, portalSettings.TimeZoneOffset);
+			var bodyText = TemplateUtils.ParseEmailTemplate(ti.TemplateText, string.Empty, portalId, moduleId, tabId, forumId, topicId, replyId, string.Empty, author.AuthorId, portalSettings.TimeZoneOffset);
+			var bodyHTML = TemplateUtils.ParseEmailTemplate(ti.TemplateHTML, string.Empty, portalId, moduleId, tabId, forumId, topicId, replyId, string.Empty, author.AuthorId, portalSettings.TimeZoneOffset);
+			bodyText = bodyText.Replace("[REASON]", comments);
+			bodyHTML = bodyHTML.Replace("[REASON]", comments);
+		    var fc = new ForumController();
+			var fi = fc.Forums_Get(forumId, -1, false, true);
+			var sFrom = fi.EmailAddress != string.Empty ? fi.EmailAddress : portalSettings.Email;
+			
+            //Send now
+			
+            var oEmail = new Email();
 			var subs = new List<SubscriptionInfo>();
 			var si = new SubscriptionInfo
 			             {
@@ -131,111 +69,87 @@ namespace DotNetNuke.Modules.ActiveForums
 			                 UserId = author.AuthorId,
 			                 Username = author.Username
 			             };
+
 		    subs.Add(si);
-			oEmail.UseQueue = MainSettings.MailQueue;
+
+			oEmail.UseQueue = mainSettings.MailQueue;
 			oEmail.Recipients = subs;
-			oEmail.Subject = Subject;
+			oEmail.Subject = subject;
 			oEmail.From = sFrom;
-			oEmail.BodyText = BodyText;
-			oEmail.BodyHTML = BodyHTML;
-			oEmail.SmtpServer = Host.SMTPServer;// Convert.ToString(_portalSettings.HostSettings["SMTPServer"]);
-			oEmail.SmtpUserName = Host.SMTPUsername;// Convert.ToString(_portalSettings.HostSettings["SMTPUsername"]);
-			oEmail.SmtpPassword = Host.SMTPPassword;// Convert.ToString(_portalSettings.HostSettings["SMTPPassword"]);
-			oEmail.SmtpAuthentication = Host.SMTPAuthentication;//  Convert.ToString(_portalSettings.HostSettings["SMTPAuthentication"]);
-			var objThread = new System.Threading.Thread(oEmail.Send);
-			objThread.Start();
+			oEmail.BodyText = bodyText;
+			oEmail.BodyHTML = bodyHTML;
 
+			new Thread(oEmail.Send).Start();
+		}
 
-		}
-		public void SendEmailToModerators(int TemplateId, int PortalId, int ForumId, int TopicId, int ReplyId, int ModuleID, int TabID, string Comments)
+		public static void SendEmailToModerators(int templateId, int portalId, int forumId, int topicId, int replyId, int moduleID, int tabID, string comments)
 		{
-			SendEmailToModerators(TemplateId, PortalId, ForumId, TopicId, ReplyId, ModuleID, TabID, Comments, null);
+			SendEmailToModerators(templateId, portalId, forumId, topicId, replyId, moduleID, tabID, comments, null);
 		}
-		public void SendEmailToModerators(int TemplateId, int PortalId, int ForumId, int TopicId, int ReplyId, int ModuleID, int TabID, string Comments, DotNetNuke.Entities.Users.UserInfo User)
+
+		public static void SendEmailToModerators(int templateId, int portalId, int forumId, int topicId, int replyId, int moduleID, int tabID, string comments, UserInfo user)
 		{
-			var _portalSettings = (Entities.Portals.PortalSettings)(HttpContext.Current.Items["PortalSettings"]);
-			SettingsInfo MainSettings = DataCache.MainSettings(ModuleID);
+			var portalSettings = (Entities.Portals.PortalSettings)(HttpContext.Current.Items["PortalSettings"]);
+			var mainSettings = DataCache.MainSettings(moduleID);
 			var fc = new ForumController();
-			Forum fi = fc.Forums_Get(ForumId, -1, false, true);
+			var fi = fc.Forums_Get(forumId, -1, false, true);
 			if (fi == null)
-			{
 				return;
-			}
+
 			var subs = new List<SubscriptionInfo>();
 			var rc = new Security.Roles.RoleController();
 			var uc = new Entities.Users.UserController();
-			SubscriptionInfo si;
-			string modApprove = fi.Security.ModApprove;
-			string[] modRoles = modApprove.Split('|')[0].Split(';');
-			if (modRoles != null)
-			{
-				foreach (string r in modRoles)
-				{
-					if (! (string.IsNullOrEmpty(r)))
-					{
-						int rid = Convert.ToInt32(r);
-						string rName = rc.GetRole(rid, PortalId).RoleName;
-						foreach (Entities.Users.UserRoleInfo usr in rc.GetUserRolesByRoleName(PortalId, rName))
-						{
-							var ui = uc.GetUser(PortalId, usr.UserID);
-							si = new SubscriptionInfo
-							         {
-							             UserId = ui.UserID,
-							             DisplayName = ui.DisplayName,
-							             Email = ui.Email,
-							             FirstName = ui.FirstName,
-							             LastName = ui.LastName
-							         };
-						    if (! (subs.Contains(si)))
-							{
-								subs.Add(si);
-							}
-						}
-					}
-				}
-			}
+		    var modApprove = fi.Security.ModApprove;
+			var modRoles = modApprove.Split('|')[0].Split(';');
+		    foreach (var r in modRoles)
+		    {
+		        if (string.IsNullOrEmpty(r)) continue;
+		        var rid = Convert.ToInt32(r);
+		        var rName = rc.GetRole(rid, portalId).RoleName;
+		        foreach (UserRoleInfo usr in rc.GetUserRolesByRoleName(portalId, rName))
+		        {
+		            var ui = uc.GetUser(portalId, usr.UserID);
+		            var si = new SubscriptionInfo
+		                         {
+		                             UserId = ui.UserID,
+		                             DisplayName = ui.DisplayName,
+		                             Email = ui.Email,
+		                             FirstName = ui.FirstName,
+		                             LastName = ui.LastName
+		                         };
+		            if (! (subs.Contains(si)))
+		            {
+		                subs.Add(si);
+		            }
+		        }
+		    }
 
-			if (subs.Count <= 0)
-			{
+		    if (subs.Count <= 0)
 				return;
-			}
-			string Subject;
-			string BodyText;
-			string BodyHTML;
-			string sTemplate = string.Empty;
-			var tc = new TemplateController();
-			TemplateInfo ti = tc.Template_Get(TemplateId, PortalId, ModuleID);
-			Subject = TemplateUtils.ParseEmailTemplate(ti.Subject, string.Empty, PortalId, ModuleID, TabID, ForumId, TopicId, ReplyId, _portalSettings.TimeZoneOffset);
-			BodyText = TemplateUtils.ParseEmailTemplate(ti.TemplateText, string.Empty, PortalId, ModuleID, TabID, ForumId, TopicId, ReplyId, Comments, User, -1, _portalSettings.TimeZoneOffset);
-			BodyHTML = TemplateUtils.ParseEmailTemplate(ti.TemplateHTML, string.Empty, PortalId, ModuleID, TabID, ForumId, TopicId, ReplyId, Comments, User, -1, _portalSettings.TimeZoneOffset);
-			string sFrom;
 
-			sFrom = fi.EmailAddress != string.Empty ? fi.EmailAddress : _portalSettings.Email;
+		    var sTemplate = string.Empty;
+			var tc = new TemplateController();
+			var ti = tc.Template_Get(templateId, portalId, moduleID);
+			var subject = TemplateUtils.ParseEmailTemplate(ti.Subject, string.Empty, portalId, moduleID, tabID, forumId, topicId, replyId, portalSettings.TimeZoneOffset);
+			var bodyText = TemplateUtils.ParseEmailTemplate(ti.TemplateText, string.Empty, portalId, moduleID, tabID, forumId, topicId, replyId, comments, user, -1, portalSettings.TimeZoneOffset);
+			var bodyHTML = TemplateUtils.ParseEmailTemplate(ti.TemplateHTML, string.Empty, portalId, moduleID, tabID, forumId, topicId, replyId, comments, user, -1, portalSettings.TimeZoneOffset);
+		    var sFrom = fi.EmailAddress != string.Empty ? fi.EmailAddress : portalSettings.Email;
 
 			var oEmail = new Email
 			                 {
 			                     Recipients = subs,
-			                     Subject = Subject,
+			                     Subject = subject,
 			                     From = sFrom,
-			                     BodyText = BodyText,
-			                     BodyHTML = BodyHTML,
-			                     SmtpServer = Host.SMTPServer,// Convert.ToString(_portalSettings.HostSettings["SMTPServer"]),
-			                     SmtpUserName = Host.SMTPUsername,// Convert.ToString(_portalSettings.HostSettings["SMTPUsername"]),
-			                     SmtpPassword = Host.SMTPPassword,// Convert.ToString(_portalSettings.HostSettings["SMTPPassword"]),
-			                     SmtpAuthentication = Host.SMTPAuthentication// Convert.ToString(_portalSettings.HostSettings["SMTPAuthentication"])
+			                     BodyText = bodyText,
+			                     BodyHTML = bodyHTML,
+                                 UseQueue = mainSettings.MailQueue
 			                 };
 
-//#if SKU_ENTERPRISE
-			oEmail.UseQueue = MainSettings.MailQueue;
-//#endif
-			var objThread = new System.Threading.Thread(oEmail.Send);
-			objThread.Start();
 
+			new Thread(oEmail.Send).Start();
 		}
 
-
-
-		public void SendAdminWatchEmail(int PostID, int UserID)
+		public static void SendAdminWatchEmail(int postID, int userID)
 		{
 			//TODO: Come back to fix and mod list
 			// Try
@@ -300,206 +214,120 @@ namespace DotNetNuke.Modules.ActiveForums
 
 		}
 
-		public void SendNotification(string FromEmail, string ToEmail, string Subject, string BodyText, string BodyHTML, int ForumID = 0, int TopicId = 0, int ReplyId = 0)
+        /* 
+         * Note: This is the method that actual sends the email.  The mail queue  
+         */
+		public static void SendNotification(string fromEmail, string toEmail, string subject, string bodyText, string bodyHTML)
 		{
 			try
 			{
-				Subject = Subject.Replace("&#91;", "[");
-				Subject = Subject.Replace("&#93;", "]");
-				if (SmtpServer == string.Empty && SmtpUserName == string.Empty && SmtpPassword == string.Empty && SmtpAuthentication == string.Empty && SmtpSSL == string.Empty)
+                var smtpServer = Host.SMTPServer; 
+                var smtpUserName = Host.SMTPUsername; 
+                var smtpPassword = Host.SMTPPassword;
+                var smtpAuthentication = Host.SMTPAuthentication;
+                var smtpSSL = Host.EnableSMTPSSL.ToString();
+				
+                var email = new MailMessage
+				                {
+				                    From = new MailAddress(fromEmail),
+                                    Subject = subject.Replace("&#91;", "[").Replace("&#93;", "]")
+				                };
+
+			    email.To.Add(new MailAddress(toEmail));
+
+				if (bodyHTML == string.Empty)
 				{
-					var objHost = new Entities.Host.HostSettingsController();
-					IDataReader drHost = objHost.GetHostSettings();
-
-					while (drHost.Read())
-					{
-						if (Convert.ToString(drHost["SettingName"]) == "SMTPServer")
-						{
-							SmtpServer = Convert.ToString(drHost["SettingValue"]);
-						}
-						if (Convert.ToString(drHost["SettingName"]) == "SMTPUsername")
-						{
-							SmtpUserName = Convert.ToString(drHost["SettingValue"]);
-						}
-						if (Convert.ToString(drHost["SettingName"]) == "SMTPPassword")
-						{
-							SmtpPassword = Convert.ToString(drHost["SettingValue"]);
-						}
-						if (Convert.ToString(drHost["SettingName"]) == "SMTPEnableSSL")
-						{
-							SmtpSSL = Convert.ToString(drHost["SettingName"]);
-						}
-
-						if (Convert.ToString(drHost["SettingName"]) == "SMTPAuthentication")
-						{
-							SmtpAuthentication = Convert.ToString(drHost["SettingValue"]);
-						}
-					}
-					drHost.Close();
-					drHost.Dispose();
+					email.Body = bodyText;
+					email.IsBodyHtml = false;
 				}
-
-				var Email = new System.Net.Mail.MailMessage();
-				try
+				else if (bodyText == string.Empty)
 				{
-
-				}
-				catch (Exception ex)
-				{
-
-				}
-				Email.From = new System.Net.Mail.MailAddress(FromEmail);
-				Email.To.Add(new System.Net.Mail.MailAddress(ToEmail));
-
-				string sGuid = "";
-				try
-				{
-
-					//sGuid = DataProvider.Instance.ActiveForums_MC_GetPostGUID(TopicId).ToString
-				}
-				catch (Exception ex)
-				{
-				}
-				if (sGuid == "00000000-0000-0000-0000-000000000000" || sGuid == "")
-				{
-					sGuid = "";
+					email.Body = bodyHTML;
+					email.IsBodyHtml = true;
 				}
 				else
 				{
-					sGuid = "       (" + sGuid + ")";
+					var plainView = AlternateView.CreateAlternateViewFromString(bodyText, null, "text/plain");
+					var htmlView = AlternateView.CreateAlternateViewFromString(bodyHTML, null, "text/html");
 
-				}
-				if (TopicId == 0)
-				{
-					Email.Subject = Subject;
-				}
-				else
-				{
-					Email.Subject = Subject + sGuid;
-				}
-				if (BodyHTML == string.Empty)
-				{
-					Email.Body = BodyText;
-					Email.IsBodyHtml = false;
-				}
-				else if (BodyText == string.Empty)
-				{
-					Email.Body = BodyHTML;
-					Email.IsBodyHtml = true;
-				}
-				else
-				{
-					System.Net.Mail.AlternateView plainView = System.Net.Mail.AlternateView.CreateAlternateViewFromString(BodyText, null, "text/plain");
-
-					System.Net.Mail.AlternateView htmlView = System.Net.Mail.AlternateView.CreateAlternateViewFromString(BodyHTML, null, "text/html");
-
-					Email.AlternateViews.Add(plainView);
-					Email.AlternateViews.Add(htmlView);
-
+					email.AlternateViews.Add(plainView);
+					email.AlternateViews.Add(htmlView);
 				}
 
-				var client = new System.Net.Mail.SmtpClient();
+				var client = new SmtpClient();
 
-				if (SmtpServer != "")
+				if (smtpServer != string.Empty)
 				{
-
-					int portPos = SmtpServer.IndexOf(":");
+					var portPos = smtpServer.IndexOf(":", StringComparison.Ordinal);
 					if (portPos > -1)
 					{
-						client.Port = Convert.ToInt32(SmtpServer.Substring(portPos + 1, SmtpServer.Length - portPos - 1));
-						SmtpServer = SmtpServer.Substring(0, portPos);
+						client.Port = Convert.ToInt32(smtpServer.Substring(portPos + 1, smtpServer.Length - portPos - 1));
+						smtpServer = smtpServer.Substring(0, portPos);
 					}
-					client.Host = SmtpServer;
-					// with authentication
-					//If SmtpUserName <> "" And SmtpPassword <> "" Then
-					//    client.UseDefaultCredentials = False
-					//    client.Credentials = New Net.NetworkCredential(SmtpUserName, SmtpPassword)
-					//End If
+					client.Host = smtpServer;
 				}
-				switch (SmtpAuthentication)
+
+				switch (smtpAuthentication)
 				{
 					case "":
 					case "0": // anonymous
-					break;
+					    break;
+
 					case "1": // basic
-						if (SmtpUserName != "" & SmtpPassword != "")
+						if (smtpUserName != string.Empty & smtpPassword != string.Empty)
 						{
 							client.UseDefaultCredentials = false;
-							client.Credentials = new System.Net.NetworkCredential(SmtpUserName, SmtpPassword);
+							client.Credentials = new System.Net.NetworkCredential(smtpUserName, smtpPassword);
 						}
 						break;
+
 					case "2": // NTLM
 						client.UseDefaultCredentials = true;
 						break;
 				}
-				if (SmtpSSL == "Y" || SmtpServer.Contains("gmail"))
+
+				if (smtpSSL == "Y" || smtpServer.Contains("gmail"))
 				{
 					client.EnableSsl = true;
 				}
-				//Logger.Log("Email.vb line 256")
+
 				try
 				{
-					client.Send(Email);
+					client.Send(email);
 				}
 				catch (Exception ex)
 				{
-					//Logger.Log("Email.vb line 260" & ex.ToString)
 					Services.Exceptions.Exceptions.LogException(ex);
 				}
 			}
 			catch (Exception ex)
 			{
-				//Logger.Log("Email.vb line 264" & ex.ToString)
 				Services.Exceptions.Exceptions.LogException(ex);
 			}
 		}
+
 		public void Send()
 		{
 			try
 			{
-				int intRecipients = 0;
-				int intMessages = 0;
-				string strDistributionList = "";
+				var intRecipients = 0;
+				var intMessages = 0;
+				var strDistributionList = string.Empty;
 				Subject = Subject.Replace("&#91;", "[");
 				Subject = Subject.Replace("&#93;", "]");
-//#if SKU_ENTERPRISE
-				if (UseQueue)
-				{
-					foreach (SubscriptionInfo si in Recipients)
-					{
-						if (si.Email != "")
-						{
-							intRecipients += 1;
-							Queue.Controller.Add(From, si.Email, Subject, BodyHTML, BodyText, string.Empty, string.Empty);
-							//SendNotification(From, si.Email, Subject, BodyText, BodyHTML)
-							intMessages += 1;
-						}
-					}
-				}
-				else
-				{
-					foreach (SubscriptionInfo si in Recipients)
-					{
-						if (si.Email != "")
-						{
-							intRecipients += 1;
-							SendNotification(From, si.Email, Subject, BodyText, BodyHTML);
-							intMessages += 1;
-						}
-					}
-				}
-/*#else
-                foreach (SubscriptionInfo si in Recipients)
-				{
-					if (si.Email != "")
-					{
-						intRecipients += 1;
-						SendNotification(From, si.Email, Subject, BodyText, BodyHTML);
-						intMessages += 1;
-					}
-				}
-#endif*/
 
+
+				foreach (var si in Recipients.Where(si => si.Email != string.Empty))
+				{
+					intRecipients += 1;
+
+                    if(UseQueue)
+					    Queue.Controller.Add(From, si.Email, Subject, BodyHTML, BodyText, string.Empty, string.Empty);
+                    else
+                        SendNotification(From, si.Email, Subject, BodyText, BodyHTML);  
+
+					intMessages += 1;
+				}
 
 			}
 			catch (Exception ex)

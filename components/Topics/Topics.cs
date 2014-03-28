@@ -718,8 +718,7 @@ namespace DotNetNuke.Modules.ActiveForums
 
 			if (fi.ModApproveTemplateId > 0 & topic.Author.AuthorId > 0)
 			{
-				Email oEmail = new Email();
-				oEmail.SendEmail(fi.ModApproveTemplateId, PortalId, ModuleId, TabId, ForumId, TopicId, 0, string.Empty, topic.Author);
+				Email.SendEmail(fi.ModApproveTemplateId, PortalId, ModuleId, TabId, ForumId, TopicId, 0, string.Empty, topic.Author);
 			}
 
 			Subscriptions.SendSubscriptions(PortalId, ModuleId, TabId, ForumId, TopicId, 0, topic.Content.AuthorId);
