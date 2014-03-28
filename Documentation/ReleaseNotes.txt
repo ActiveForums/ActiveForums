@@ -7,13 +7,20 @@
 <div class="License">
 	<p class="Owner">
 		<h3>About DotNetNuke Active Forums</h3>
-		<strong>Version 5.2.2</strong><br /><br />		
+		<strong>Version 5.2.3</strong><br /><br />		
 	</p>
 </div>
-<h3>DotNetNuke Active Forums 05.02.01</h3>
+<h3>DotNetNuke Active Forums 05.02.03</h3>
 <hr/>
 <div class="License">
    <h3>Release Notes</h3>
+    <p class="Owner">
+	<b>Version 05.02.03
+	<p>
+		<ul>
+			<li>Issue #68 - Email notifications not sent on some DNN 7.2 installs</li>
+		</ul>
+	</p>
     <p class="Owner">
 	<b>Version 05.02.02
 	<p>
