@@ -546,7 +546,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 }
                 else
                 {
-                    Params = new string[] { "GroupId=" + SocialGroupId, ParamKeys.ViewType + "=post", ParamKeys.ForumId + "=" + ForumId };
+                    Params = new string[] { ParamKeys.ViewType + "=post", ParamKeys.ForumId + "=" + ForumId, "GroupId=" + SocialGroupId, };
                 }
                 sOutput = sOutput.Replace("[ADDTOPIC]", "<a href=\"" + NavigateUrl(TabId, "", Params) + "\" class=\"dnnPrimaryAction\">[RESX:AddTopic]</a>");
             }
