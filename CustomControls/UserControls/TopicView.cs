@@ -406,6 +406,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 
             if (string.IsNullOrEmpty(sURL))
             {
+
                 var @params = new List<string> { ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + TopicId, ParamKeys.ViewType + "=" + Views.Topic };
                 if (MainSettings.UseShortUrls)
                     @params = new List<string> { ParamKeys.TopicId + "=" + TopicId };
@@ -413,6 +414,9 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 var intPages = Convert.ToInt32(Math.Ceiling(_rowCount / (double)_pageSize));
                 if (intPages > 1)
                     @params.Add(ParamKeys.PageJumpId + "=" + intPages);
+
+                if (SocialGroupId > 0)
+                    @params.Add("GroupId=" + SocialGroupId.ToString());
 
                 sURL = Utilities.NavigateUrl(TabId, "", @params.ToArray()) + sTarget;
             }
