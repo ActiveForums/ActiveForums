@@ -393,7 +393,7 @@ namespace DotNetNuke.Modules.ActiveForums
 
                 const string outSite = "<a href=\"{0}\" target=\"_blank\" rel=\"nofollow\">{1}</a>";
                 const string inSite = "<a href=\"{0}\">{1}</a>";
-                foreach (Match m in Regex.Matches(text, @"http://([\w+?\.\w+])+([a-zA-Z0-9\~\!\@\\#\$\%\^\&amp;\*\(\)_\-\=\+\\\/\?\.\:\;\'\,]*)?", RegexOptions.IgnoreCase))
+                foreach (Match m in Regex.Matches(text, @"(http|https)://([\w+?\.\w+])+([a-zA-Z0-9\~\!\@\\#\$\%\^\&amp;\*\(\)_\-\=\+\\\/\?\.\:\;\'\,]*)?", RegexOptions.IgnoreCase))
                 {
                     var url = m.Value;
                     if (url.ToLowerInvariant().Contains("jpg") || url.ToLowerInvariant().Contains("gif") || url.ToLowerInvariant().Contains("png") || url.ToLowerInvariant().Contains("jpeg"))
