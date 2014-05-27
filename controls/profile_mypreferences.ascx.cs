@@ -29,6 +29,7 @@ namespace DotNetNuke.Modules.ActiveForums
     public partial class profile_mypreferences : SettingsBase
     {
         public int UID { get; set; }
+
         protected override void OnLoad(EventArgs e)
 		{
 			base.OnLoad(e);
@@ -56,7 +57,7 @@ namespace DotNetNuke.Modules.ActiveForums
                 UserController up = new UserController();
                 ui = up.GetUser(PortalId, ForumModuleId, UID).Profile;
             }
-            if (ui != null)
+            if (ui != null && !Page.IsPostBack )
             {
 
                 drpPrefDefaultSort.SelectedIndex = drpPrefDefaultSort.Items.IndexOf(drpPrefDefaultSort.Items.FindByValue(ui.PrefDefaultSort.Trim()));
@@ -69,7 +70,6 @@ namespace DotNetNuke.Modules.ActiveForums
                 txtSignature.Text = ui.Signature;
             }
         }
-
 
         public string GetString(string key)
         {
@@ -106,7 +106,7 @@ namespace DotNetNuke.Modules.ActiveForums
                     }
                     upc.Profiles_Save(upi);
 
-
+                    Response.Redirect(NavigateUrl(TabId));
 
                 }
 
