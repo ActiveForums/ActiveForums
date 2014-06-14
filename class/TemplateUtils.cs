@@ -25,11 +25,17 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Text.RegularExpressions;
+using System.Configuration;
+using Microsoft.ApplicationBlocks.Data;
+using System.Data;
+using System.Collections.Generic;
 
 namespace DotNetNuke.Modules.ActiveForums
 {
 	public class TemplateUtils
 	{
+        public static List<SubscriptionInfo> lstSubscriptionInfo { get; set; }
+
 	    public static string ShowIcon(bool canView, int forumID, int userId, DateTime dateAdded, DateTime lastRead, int lastPostId)
 		{		
             if(!canView)
@@ -247,6 +253,21 @@ namespace DotNetNuke.Modules.ActiveForums
             result.Replace("[FORUMURL]", forumURL);
             result.Replace("[FORUMLINK]", "<a href=\"" + forumURL + "\">" + forumURL + "</a>");
 
+             // Introduced for Active Forum Email Connector plug-in Starts
+			if (result.ToString().Contains("[EMAILCONNECTORITEMID]"))
+            {
+                // This Try with empty catch is introduced here because this code section is for Email Connector functionality only and this section should not 
+                // cause any issue to Active Forums functionality in case it does not run successfully.
+                try
+                {
+                    long itemID = GetEmailInfo(portalID, moduleID, forumID, topicId, HttpContext.Current.Request.UserHostAddress);
+                    result.Replace("[EMAILCONNECTORITEMID]", itemID.ToString());
+                }
+                catch
+                { }
+            }
+            // Introduced for Active Forum Email Connector plug-in Ends
+
 
 			if (user != null)
 			{
@@ -269,7 +290,56 @@ namespace DotNetNuke.Modules.ActiveForums
 
             return result.ToString();
 		}
+        
+        private static long GetEmailInfo(int siteID, int instanceID, int forumID, int topicID, string ipAddress)
+        {
+            long ItemID = -1;
 
+            DotNetNuke.Framework.Providers.ProviderConfiguration _providerConfiguration = DotNetNuke.Framework.Providers.ProviderConfiguration.GetProviderConfiguration("data");
+		    string connectionString;
+		    string objectQualifier;
+		    string databaseOwner;
+            connectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
+            var objProvider = (DotNetNuke.Framework.Providers.Provider)(_providerConfiguration.Providers[_providerConfiguration.DefaultProvider]);
+
+            objectQualifier = objProvider.Attributes["objectQualifier"];
+            if (objectQualifier != "" && objectQualifier.EndsWith("_") == false)
+            {
+                objectQualifier += "_";
+            }
+
+            databaseOwner = objProvider.Attributes["databaseOwner"];
+            if (databaseOwner != "" && databaseOwner.EndsWith(".") == false)
+            {
+                databaseOwner += ".";
+            }
+
+            StringBuilder userIds = new StringBuilder(); 
+            userIds.Append("(");
+
+            SubscriptionInfo[] arrSubscriptionInfo = lstSubscriptionInfo.ToArray();
+            for (int i = 0; i < arrSubscriptionInfo.Length; i++)
+            {
+                userIds.Append(arrSubscriptionInfo[i].UserId);
+                if (i < arrSubscriptionInfo.Length - 1)
+                {
+                    userIds.Append(",");
+                }
+                else
+                {
+                    userIds.Append(")");
+                }
+            }
+
+            //dbPrefix = databaseOwner + objectQualifier + databaseObjectPrefix;
+            IDataReader dataReader = (IDataReader)(SqlHelper.ExecuteReader(connectionString, databaseOwner + objectQualifier + "ActiveForumsEmailConnector_GetEmailInfo", siteID, instanceID, forumID, topicID, ipAddress, userIds.ToString()));
+            if (dataReader.Read())
+            {
+                ItemID = Convert.ToInt32(dataReader["RecordID"]);
+            }
+
+            return ItemID;
+        }
         #endregion
 
         #region Profile
