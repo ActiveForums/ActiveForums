@@ -55,8 +55,8 @@
             </asp:DropDownList>
         </div>
         <div class="af-adv-search-footer">
-            <asp:Button runat="server" ID="btnSearch2" Text="Search" />
-            <button runat="server" id="btnReset2" type="reset" />
+            <asp:Button runat="server" CssClass="afbtn-b" ID="btnSearch2" Text="Search" />
+            <button runat="server" class="afbtn" id="btnReset2" type="reset" />
         </div>
     </div>
 </div>
