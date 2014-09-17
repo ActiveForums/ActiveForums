@@ -804,6 +804,20 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 sOutput = Regex.Replace(sOutput, pattern, sBanner);
             }
 
+            // Hide Toolbar
+
+            if (sOutput.Contains("[NOTOOLBAR]"))
+            {
+                if (HttpContext.Current.Items.Contains("ShowToolbar"))
+                {
+                    HttpContext.Current.Items["ShowToolbar"] = false;
+                }
+                else
+                {
+                    HttpContext.Current.Items.Add("ShowToolbar", false);
+                }
+            }
+
             // Now use the string builder to do all replacements
             var sbOutput = new StringBuilder(sOutput);
 
