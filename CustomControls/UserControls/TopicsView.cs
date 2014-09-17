@@ -546,7 +546,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 }
                 else
                 {
-                    Params = new string[] { "GroupId=" + SocialGroupId, ParamKeys.ViewType + "=post", ParamKeys.ForumId + "=" + ForumId };
+                    Params = new string[] { ParamKeys.ViewType + "=post", ParamKeys.ForumId + "=" + ForumId, "GroupId=" + SocialGroupId, };
                 }
                 sOutput = sOutput.Replace("[ADDTOPIC]", "<a href=\"" + NavigateUrl(TabId, "", Params) + "\" class=\"dnnPrimaryAction\">[RESX:AddTopic]</a>");
             }
@@ -861,7 +861,13 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     ControlUtils ctlUtils = new ControlUtils();
                     sTopicURL = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, ForumInfo.PrefixURL, ForumGroupId, ForumId, TopicId, TopicURL, -1, -1, string.Empty, 1, -1, SocialGroupId);
 
-                    string sLastReplyURL = NavigateUrl(TabId, "", new string[] { ParamKeys.TopicId + "=" + TopicId, ParamKeys.ContentJumpId + "=" + LastReplyId });
+                    var @params = new List<string> { ParamKeys.TopicId + "=" + TopicId, ParamKeys.ContentJumpId + "=" + LastReplyId };
+
+                    if (SocialGroupId > 0)
+                        @params.Add("GroupId=" + SocialGroupId.ToString());
+
+                    string sLastReplyURL = NavigateUrl(TabId, "", @params.ToArray());
+
                     if (!(string.IsNullOrEmpty(sTopicURL)))
                     {
                         if (sTopicURL.EndsWith("/"))
@@ -873,10 +879,20 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     string sUserJumpUrl = string.Empty;
                     if (UserLastReplyRead > 0)
                     {
-                        sLastReadURL = NavigateUrl(TabId, "", new string[] { ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + TopicId, ParamKeys.ViewType + "=topic", ParamKeys.FirstNewPost + "=" + UserLastReplyRead });
+                        @params = new List<string> { ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + TopicId, ParamKeys.ViewType + "=topic", ParamKeys.FirstNewPost + "=" + UserLastReplyRead };
+                        if (SocialGroupId > 0)
+                            @params.Add("GroupId=" + SocialGroupId.ToString());
+
+                        sLastReadURL = NavigateUrl(TabId, "", @params.ToArray());
+
                         if (MainSettings.UseShortUrls)
                         {
-                            sLastReadURL = NavigateUrl(TabId, "", new string[] { ParamKeys.TopicId + "=" + TopicId, ParamKeys.FirstNewPost + "=" + UserLastReplyRead });
+                            @params = new List<string> { ParamKeys.TopicId + "=" + TopicId, ParamKeys.FirstNewPost + "=" + UserLastReplyRead };
+                            if (SocialGroupId > 0)
+                                @params.Add("GroupId=" + SocialGroupId.ToString());
+
+                            sLastReadURL = NavigateUrl(TabId, "", @params.ToArray());
+
                         }
                         if (sTopicURL.EndsWith("/"))
                         {

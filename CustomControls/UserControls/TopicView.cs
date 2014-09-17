@@ -406,6 +406,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 
             if (string.IsNullOrEmpty(sURL))
             {
+
                 var @params = new List<string> { ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + TopicId, ParamKeys.ViewType + "=" + Views.Topic };
                 if (MainSettings.UseShortUrls)
                     @params = new List<string> { ParamKeys.TopicId + "=" + TopicId };
@@ -413,6 +414,9 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 var intPages = Convert.ToInt32(Math.Ceiling(_rowCount / (double)_pageSize));
                 if (intPages > 1)
                     @params.Add(ParamKeys.PageJumpId + "=" + intPages);
+
+                if (SocialGroupId > 0)
+                    @params.Add("GroupId=" + SocialGroupId.ToString());
 
                 sURL = Utilities.NavigateUrl(TabId, "", @params.ToArray()) + sTarget;
             }
@@ -919,12 +923,18 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 sbOutput.Replace("[PARENTFORUMNAME]", ForumInfo.ParentForumName);
 
             // ForumLinks
-            sbOutput.Replace("[FORUMMAINLINK]", "<a href=\"" + Utilities.NavigateUrl(TabId) + "\">[RESX:ForumMain]</a>");
-            sbOutput.Replace("[FORUMGROUPLINK]", "<a href=\"" + Utilities.NavigateUrl(TabId, "", ParamKeys.GroupId + "=" + ForumGroupId) + "\">" + _groupName + "</a>");
+
+            var ctlUtils = new ControlUtils();
+            var groupUrl = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, string.Empty, ForumInfo.ForumGroupId, -1, -1, -1, string.Empty, 1, -1, SocialGroupId);
+            var forumUrl = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, ForumInfo.PrefixURL, ForumInfo.ForumGroupId, ForumInfo.ForumID, -1, -1, string.Empty, 1, -1, SocialGroupId);
+            var topicUrl = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, ForumInfo.PrefixURL, ForumInfo.ForumGroupId, ForumInfo.ForumID, TopicId, _topicURL, -1, -1, string.Empty, 1, -1, SocialGroupId);
+
+            sbOutput.Replace("[FORUMMAINLINK]", "<a href=\"" + forumUrl + "\">[RESX:ForumMain]</a>");
+            sbOutput.Replace("[FORUMGROUPLINK]", "<a href=\"" + groupUrl + "\">" + _groupName + "</a>");
             if (MainSettings.UseShortUrls)
-                sbOutput.Replace("[FORUMLINK]", "<a href=\"" + Utilities.NavigateUrl(TabId, "", ParamKeys.ForumId + "=" + ForumId) + "\">" + _forumName + "</a>");
+                sbOutput.Replace("[FORUMLINK]", "<a href=\"" + forumUrl + "\">" + _forumName + "</a>");
             else
-                sbOutput.Replace("[FORUMLINK]", "<a href=\"" + Utilities.NavigateUrl(TabId, "", ParamKeys.ViewType + "=" + Views.Topics + "&" + ParamKeys.ForumId + "=" + ForumId) + "\">" + _forumName + "</a>");
+                sbOutput.Replace("[FORUMLINK]", "<a href=\"" + forumUrl + "\">" + _forumName + "</a>");
 
             // Names and Ids
             sbOutput.Replace("[FORUMID]", ForumId.ToString());

@@ -26,6 +26,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 namespace DotNetNuke.Modules.ActiveForums.Controls
 {
@@ -760,7 +761,12 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     }
                     else
                     {
-                        sURL = Utilities.NavigateUrl(TabID, "", new[] { ParamKeys.TopicId + "=" + ParentPostID, ParamKeys.ContentJumpId + "=" + PostId });
+                        var @params = new List<string> { ParamKeys.TopicId + "=" + ParentPostID, ParamKeys.ContentJumpId + "=" + PostId };
+
+                        if (SocialGroupId > 0)
+                            @params.Add("GroupId=" + SocialGroupId.ToString());
+
+                        sURL = Utilities.NavigateUrl(TabID, "", @params.ToArray());
                     }
 
 

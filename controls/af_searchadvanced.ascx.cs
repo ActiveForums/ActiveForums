@@ -196,6 +196,12 @@ namespace DotNetNuke.Modules.ActiveForums
 
             try
             {
+
+                if (Request.QueryString["GroupId"] != null && SimulateIsNumeric.IsNumeric(Request.QueryString["GroupId"]))
+                {
+                    SocialGroupId = Convert.ToInt32(Request.QueryString["GroupId"]);
+                }
+
                 btnSearch.Click += btnSearch_Click;
                 btnSearch2.Click += btnSearch_Click;
 
@@ -356,6 +362,9 @@ namespace DotNetNuke.Modules.ActiveForums
 
             if(!string.IsNullOrWhiteSpace(forums))
                 @params.Add("f=" + Server.UrlEncode(forums));
+
+            if (SocialGroupId > 0)
+                @params.Add("GroupId=" + SocialGroupId.ToString());
 
             Response.Redirect(NavigateUrl(TabId, string.Empty, @params.ToArray()));
         }

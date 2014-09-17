@@ -263,7 +263,9 @@ namespace DotNetNuke.Modules.ActiveForums
 			u.LastName = cu.LastName;
 			u.DisplayName = cu.DisplayName;
 			u.Email = cu.Email;
-			u.UserRoles = GetRoleIds(cu.Roles, _portalSettings.PortalId); //RolesToString(cu.Roles)
+            u.UserRoles = GetRoleIds(cu, _portalSettings.PortalId); //RolesToString(cu.Roles)
+
+           
 			if (cu.IsSuperUser)
 			{
 				u.UserRoles += Globals.DefaultAnonRoles + _portalSettings.AdministratorRoleId + ";";
@@ -279,15 +281,14 @@ namespace DotNetNuke.Modules.ActiveForums
 			return u;
 		}
 
-
-		private string GetRoleIds(string[] Roles, int SiteId)
+        private string GetRoleIds(UserInfo u, int SiteId)
 		{
 			string RoleIds = "";
 			DotNetNuke.Security.Roles.RoleController rc = new DotNetNuke.Security.Roles.RoleController();
 			foreach (DotNetNuke.Security.Roles.RoleInfo r in rc.GetPortalRoles(SiteId))
 			{
 				string roleName = r.RoleName;
-				foreach (string role in Roles)
+				foreach (string role in u.Roles)
 				{
 					if (role != "" && role != null)
 					{
@@ -299,6 +300,12 @@ namespace DotNetNuke.Modules.ActiveForums
 					}
 				}
 			}
+
+            foreach (DotNetNuke.Security.Roles.RoleInfo r in u.Social.Roles)
+            {
+                RoleIds += r.RoleID.ToString() + ";";
+            }
+
 			return RoleIds;
 		}
 		public Hashtable GetUserProperties(DotNetNuke.Entities.Users.UserInfo dnnUser)

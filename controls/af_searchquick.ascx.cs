@@ -22,6 +22,7 @@
 
 using System;
 using System.Web;
+using System.Collections.Generic;
 
 namespace DotNetNuke.Modules.ActiveForums
 {
@@ -45,6 +46,12 @@ namespace DotNetNuke.Modules.ActiveForums
                 {
                     ForumId = FID;
                 }
+
+                if (Request.QueryString["GroupId"] != null && SimulateIsNumeric.IsNumeric(Request.QueryString["GroupId"]))
+                {
+                    SocialGroupId = Convert.ToInt32(Request.QueryString["GroupId"]);
+                }
+
                 //Put user code to initialize the page here
                 txtSearch.Attributes.Add("onkeydown", "if(event.keyCode == 13){document.getElementById('" + lnkSearch.ClientID + "').click();}");
             }
@@ -71,8 +78,12 @@ namespace DotNetNuke.Modules.ActiveForums
         {
             if (txtSearch.Text.Trim() != "")
             {
-                string[] Params = { ParamKeys.ViewType + "=search", ParamKeys.ForumId + "=" + ForumId, "q=" + HttpUtility.UrlEncode(txtSearch.Text.Trim()) };
-                Response.Redirect(NavigateUrl(TabId, "", Params));
+                var @params = new List<string> { ParamKeys.ViewType + "=search", ParamKeys.ForumId + "=" + ForumId, "q=" + HttpUtility.UrlEncode(txtSearch.Text.Trim()) };
+
+                if (SocialGroupId > 0)
+                    @params.Add("GroupId=" + SocialGroupId.ToString());
+
+                Response.Redirect(NavigateUrl(TabId, "", @params.ToArray()));
             }
 
         }
