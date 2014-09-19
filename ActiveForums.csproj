@@ -262,7 +262,9 @@
     <Content Include="controls\af_searchadvanced.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
-    <Content Include="controls\htmlcontrols\movetopic.ascx" />
+    <Content Include="controls\htmlcontrols\movetopic.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <Content Include="controls\htmlcontrols\quickedit.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
@@ -1358,7 +1360,7 @@
   </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MSBee\MSBuildExtras.FX1_1.CSharp.targets" Condition=" '$(BuildingInsideVisualStudio)' == '' AND '$(TargetFX1_1)'=='true'" />
-  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <!--<Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />-->
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <PropertyGroup>
     <Extension>zip</Extension>
