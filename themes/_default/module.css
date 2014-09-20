@@ -881,8 +881,9 @@ td.afnormal {
 
 .afsubrow {
 	font-size: 11px;
-	border-bottom: solid 1px #333;
+	/* border-bottom: solid 1px #333; */
 	text-decoration: none;
+	padding-left: 10px;
 }
 
 .afsubrow a:link,.afsubrow a:visited,.afsubrow a:active {
@@ -957,10 +958,6 @@ font-weight: 700;
 .afpostinfo1, .afpostinfo2 {
 	min-height: 100px;
 	vertical-align: top;
-	/*
-	border-left: solid 1px #cdcdcd;
-	border-right: solid 1px #cdcdcd;
-	border-bottom: solid 1px #cdcdcd;*/
 }
 
 .afpostinfo2, .afpostreply2 {
@@ -973,15 +970,15 @@ font-weight: 700;
 	min-height: 100px;
 	width: 100%;
 	vertical-align: top;
-	/*border-right: solid 1px #cdcdcd;
-	border-bottom: solid 1px #cdcdcd;*/
 }
 
-.afposttopic .afpostbody, .afpostreply1 .afpostbody, .afpostreply2 .afpostbody {
-	/* min-height: 140px; */
+.afposttopic .afpostbody, 
+.afpostreply1 .afpostbody, 
+.afpostreply2 .afpostbody {
 	font-family: Georgia,Times,"Times New Roman",serif;
 	font-size: 15px;
 	line-height: 1.4;
+	padding: 0 10px;
 }
 
 .afborder {
@@ -1231,13 +1228,13 @@ font-weight: 700;
 }
 /*End Calendar Picker */
 .afcodeblock {
-	border: solid 1px #808080;
 	overflow: auto;
-	width: 100%;
-	background-color: #fff;
+	width: auto;
+	background-color: rgba(0, 0, 0, 0.05);
 	height: auto;
 	padding: 5px;
-	padding-bottom: 0px;
+	font-size: 16px;
+	color: rgba(0, 0, 0, 0.6);
 	margin: 0px;
 }
 
