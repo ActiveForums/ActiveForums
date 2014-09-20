@@ -1233,7 +1233,7 @@ font-weight: 700;
 .afcodeblock {
 	border: solid 1px #808080;
 	overflow: auto;
-	width: 550px;
+	width: 100%;
 	background-color: #fff;
 	height: auto;
 	padding: 5px;
