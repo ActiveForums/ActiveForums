@@ -20,8 +20,14 @@
 				</ul>
 			</div>
 		</td>
-		<td class="_hide" align="right" valign="top"><div style="padding:5px;"><span class="afactionicon">[AF:CONTROL:ADDTHIS:0]</span><span class="afactionicon">[AF:CONTROL:PRINTER]</span><span class="afactionicon">[AF:CONTROL:EMAIL]</span></div>
-[POSTRATINGBUTTON][AF:CONTROL:STATUS]<div style="padding-top:5px;">[RESX:SortPosts]:[SORTDROPDOWN]</div>
+		<td class="_hide" align="right" valign="top">
+			<div style="padding:5px;">
+				<span class="afactionicon">[AF:CONTROL:ADDTHIS:0]</span>
+				<span class="afactionicon">[AF:CONTROL:PRINTER]</span>
+				<span class="afactionicon">[AF:CONTROL:EMAIL]</span>
+			</div>
+			[POSTRATINGBUTTON][AF:CONTROL:STATUS]
+			<div style="padding-top:5px;">[RESX:SortPosts]:[SORTDROPDOWN]</div>
 		</td>
 	</tr>
 </table>
@@ -32,7 +38,9 @@
 		<td class="afnormal">[TOPICSUBSCRIBE]</td>
 	</tr>
 	<tr>
-		<td valign="bottom" style="white-space:nowrap;padding-bottom:5px;"><div class="afbuttonarea">[ADDREPLY]</div></td>
+		<td valign="bottom" style="white-space:nowrap;padding-bottom:5px;">
+			<div class="afbuttonarea">[ADDREPLY]</div>
+		</td>
 		<td valign="bottom" align="right" width="100%" style="padding-bottom:5px;">[PAGER1]</td>
 	</tr>
 </table>	
@@ -56,13 +64,13 @@
 								<td class="afsubrow af-actions">[AF:CONTROL:TOPICACTIONS]</td>
 							</tr>
 							<tr>
-								<td colspan="2"><div class="afpostbody">[AF:CONTROL:POLL][BODY]</div></td>
+								<td colspan="2">
+									<div class="afpostbody">[AF:CONTROL:POLL][BODY]</div>
+									<div class="afpostsig">[SIGNATURE]</div>
+								</td>
 							</tr>
 							<tr>
 								<td colspan="2" class="afpostattach">[ATTACHMENTS]</td>
-							</tr>
-							<tr>
-								<td colspan="2" class="afpostsig">[SIGNATURE]</td>
 							</tr>
 							[AF:CONTROL:TAGS]
 							<tr>
@@ -86,13 +94,13 @@
 								<td class="afsubrow af-actions">[AF:CONTROL:POSTACTIONS]</td>
 							</tr>
 							<tr>
-								<td colspan="2"><div class="afpostbody">[BODY]</div></td>
+								<td colspan="2">
+									<div class="afpostbody">[BODY]</div>
+									<div class="afpostsig">[SIGNATURE]</div>
+								</td>
 							</tr>
 							<tr>
 								<td colspan="2" class="afpostattach">[ATTACHMENTS]</td>
-							</tr>
-							<tr>
-								<td colspan="2" class="afpostsig">[SIGNATURE]</td>
 							</tr>
 							<tr>
 								<td colspan="2" class="afposteditdate" align="right">[MODEDITDATE]</td>
