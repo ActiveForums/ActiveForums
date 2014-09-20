@@ -851,7 +851,10 @@ td.afnormal {
 }
 
 .afpostsig {
-	border-top: solid 1px #cdcdcd;
+	border-top: solid 1px rgba(0, 0, 0, 0.05);
+	margin-top: 15px;
+	margin-left: 10px;
+	margin-right: 10px;
 }
 
 .afemoticons {
@@ -979,6 +982,8 @@ font-weight: 700;
 	font-size: 15px;
 	line-height: 1.4;
 	padding: 0 10px;
+	word-wrap: normal;
+	word-break: break-word;
 }
 
 .afborder {

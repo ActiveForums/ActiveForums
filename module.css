@@ -237,10 +237,18 @@ color: #888;}
 td.af-colstats.af-colstats-replies {
 	font-weight: 700;
 }
-td.af-lastpost div{text-align:left;/* width:175px; */}
-td.af-lastpost div a:link,td.af-lastpost div a:visited{text-decoration:none;font-size: 14px;
+td.af-lastpost div{
+text-align: left;
+width: 175px;
+overflow: hidden;
+white-space: normal !important;
+}
+td.af-lastpost div a:link,td.af-lastpost div a:visited{
+text-decoration:none;
+font-size: 14px;
 font-weight: 700;
-color: #333;}
+color: #333;
+word-break: break-word;}
 td.af-title{width:100%;padding-left:25px;}
 td.af-groupname{padding-left:10px;width:100%;}
 td.af-groupcollapse{text-align:right;padding-right:10px;}
