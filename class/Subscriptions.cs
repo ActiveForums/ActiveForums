@@ -166,7 +166,12 @@ namespace DotNetNuke.Modules.ActiveForums
 			                     SmtpPassword = Convert.ToString(_portalSettings.HostSettings["SMTPPassword"]),
 			                     SmtpAuthentication = Convert.ToString(_portalSettings.HostSettings["SMTPAuthentication"]),
 			                     SmtpSSL = Convert.ToString(_portalSettings.HostSettings["SMTPEnableSSL"]),
-			                     UseQueue = MainSettings.MailQueue
+			                     UseQueue = MainSettings.MailQueue,
+                                 PortalID = PortalId,
+                                 ModuleID = ModuleId,
+                                 ForumID = fi.ForumID,
+                                 UserID = AuthorId,
+                                 TopicID = TopicId
 			                 };
 
 

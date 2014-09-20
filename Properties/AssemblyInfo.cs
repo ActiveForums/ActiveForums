@@ -75,3 +75,4 @@ using System.Security;
 [assembly: AssemblyDelaySign(false)]
 [assembly: AssemblyKeyFile("")]
 [assembly: AssemblyKeyName("")]
+[assembly: ComVisibleAttribute(false)]

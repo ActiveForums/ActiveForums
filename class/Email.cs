@@ -23,6 +23,8 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Net;
+using System.Net.Mail;
 //ORIGINAL LINE: Imports System.Web.HttpContext
 
 using System.Web;
@@ -98,6 +100,12 @@ namespace DotNetNuke.Modules.ActiveForums
 				_SmtpSSL = value;
 			}
 		}
+
+        public int PortalID { get; set; }
+        public int ModuleID { get; set; }
+        public int ForumID { get; set; }
+        public int UserID { get; set; }
+        public int TopicID { get; set; }
 
 		public void SendEmail(int TemplateId, int PortalId, int ModuleId, int TabId, int ForumId, int TopicId, int ReplyId, string Comments, Author author)
 		{
@@ -376,18 +384,22 @@ namespace DotNetNuke.Modules.ActiveForums
 				{
 					Email.Subject = Subject + sGuid;
 				}
-				if (BodyHTML == string.Empty)
+                //if (BodyHTML == string.Empty)
+                //{
+                //    Email.Body = BodyText;
+                //    Email.IsBodyHtml = false;
+                //}
+                //else 
+                if (BodyHTML != string.Empty)
 				{
-					Email.Body = BodyText;
-					Email.IsBodyHtml = false;
-				}
-				else if (BodyText == string.Empty)
-				{
-					Email.Body = BodyHTML;
-					Email.IsBodyHtml = true;
+
+                    string value = string.Format("([SiteID]=[{0}]) ([InstanceID]=[{1}]) ([ForumID]=[{2}]) ([UserID]=[{3}]) ([TopicID]=[{4}])", this.PortalID, this.ModuleID, this.ForumID, this.UserID, this.TopicID);
+                    Email.Body = BodyHTML + "<input type=\"hidden\" name=\"HiddnFieldToReply\" value=\"" + value + "\"/>";
+                    Email.IsBodyHtml = true;
 				}
 				else
 				{
+
 					System.Net.Mail.AlternateView plainView = System.Net.Mail.AlternateView.CreateAlternateViewFromString(BodyText, null, "text/plain");
 
 					System.Net.Mail.AlternateView htmlView = System.Net.Mail.AlternateView.CreateAlternateViewFromString(BodyHTML, null, "text/html");
@@ -438,7 +450,16 @@ namespace DotNetNuke.Modules.ActiveForums
 				//Logger.Log("Email.vb line 256")
 				try
 				{
-					client.Send(Email);
+                    //client.Send(Email);
+                    var smtpClient = new SmtpClient(SmtpServer, Convert.ToInt32(client.Port))
+                    {
+                        Credentials = new NetworkCredential(SmtpUserName, "Hrhk@1234"),
+                        EnableSsl = true
+                    };
+                    //Email.ReplyToList.Add(FromEmail);
+
+                    smtpClient.Send(Email);
+ 
 				}
 				catch (Exception ex)
 				{
