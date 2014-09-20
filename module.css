@@ -1,4 +1,65 @@
-﻿.afcontainer{font-size:12px;padding:0px;text-align:left;}
+﻿/* TEMP until all image icons are taken out for responsive optimizations!*/
+._hide,
+td.af-lastpost img,
+.afsearchgo {
+	display: none !important;
+}
+
+
+*, :active, :focus {
+	outline: 0;
+	outline-style: none;
+	outline-width: 0;
+	-moz-outline-width: 0;
+}
+
+* {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+input[type="text"], 
+select, 
+textarea, 
+input[type="email"], 
+input[type="search"], 
+input[type="password"] {
+	color: rgba(0, 0, 0, 0.44);
+	font-size: 12px;
+}
+
+
+:before, 
+:after {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+table {
+	max-width: 100%;
+	background-color: transparent;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+td, 
+th {
+	padding: 0;
+}
+
+.afcontainer{
+	padding:0px;
+	text-align:left;
+	color: #333;
+	font-weight: 400;
+	font-family: "Helvetica Neue","HelveticaNeue",Helvetica,Arial,"Lucida Grande",sans-serif;
+	font-size: 15px;
+	line-height: 1.4;
+	-webkit-font-smoothing: subpixel-antialiased;
+}
+ 
 * .afcontainer a,.afcontainer a:link, .afcontainer a:active,.afcontainer a:visited{text-decoration:none;}
 * .afcontainer a:hover{text-decoration:underline;}
 
@@ -7,6 +68,93 @@
 .afgrid{width:100%;font-size: 12px;}
 table.afgrid{padding:0px;margin:0px; border-collapse:collapse;}
 * .afcontainer blockquote{border:solid 1px #a9a9a9;padding:5px;display: block;font-size: 8pt;margin: 10px;background-color: #f5f5f5;}
+
+mark,
+.mark {
+	background: transparent !important;
+}
+
+.afgrid tr {
+width: 100%;
+position: relative;
+display: inline-table;
+}
+
+td.afgrouprow.afgrouprow-f {
+width: 60%;
+text-align: left;
+}
+td.afgrouprow.afgrouprow-m {
+width: 10%;
+text-align: center
+}
+td.afgrouprow.afgrouprow-l {
+width: 20%;
+text-align: left;
+}
+
+.afcontrolheader {
+color: #888;
+font-weight: bold;
+font-size: 13px;
+letter-spacing: 0.05px;
+text-transform: uppercase;
+}
+
+.afgroupsection {
+    font-size: 14px;
+    margin-bottom: 10px;
+    margin-top: 25px;
+    text-transform: uppercase;
+    color: #999;
+    display: block;
+    text-align: center;
+    position: relative;
+}
+.afgroupsection img {
+	-moz-opacity: 0.00;
+	-khtml-opacity: 0.00;
+	opacity: 0.00;
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha"(opacity=0);
+	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0);
+	filter:alpha(opacity=0);
+   
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 20px;
+    cursor: pointer;
+}
+.afgroupsection:before,
+.afgroupsectiononline:before {
+    content: "";
+    width: 100%;
+    height: 2px;
+    background-color: rgba(0, 0, 0, 0.05);
+    position: absolute;
+    top: 50%;
+    display: block;
+    left: 0;
+    right: 0;
+}
+.afgroupsectiononline:before {
+	top: 10px;
+}
+
+.afgrouponline {
+	clear: both;
+	text-transform: none;
+	color: rgba(0, 0, 0, 0.44);
+	margin-top: 10px;
+}
+.afgroupsectiontitle {
+	position: relative;
+	background: #FFF;
+	display: inline-block;
+	padding: 2px 10px;
+}
+
 .afquote{border:solid 1px #a9a9a9;padding:5px;display: block;font-size: 8pt;margin: 10px;background-color: #f5f5f5;}
 .afsubgrid {width:100%;border: none 0px #cdcdcd;}
 table.afsubgrid{padding:0px;margin:0px; border-collapse:collapse;}
@@ -71,20 +219,111 @@ td.afprop-label{white-space:nowrap;}
 .afactionicon{padding-left:5px;padding-right:0px;}
 
 
+
 td.af-minicon{width:20px;vertical-align:top;}
 td.af-forumdetail{vertical-align: middle;width:100%;}
 td.af-subforumdetail{vertical-align: top;width:100%;}
-td.af-colstats{text-align:center;width:50px;}
-td.af-lastpost{width:175px;white-space:nowrap;text-align:center;}
-td.af-lastpost div{text-align:left;width:175px;}
-td.af-lastpost div a:link,td.af-lastpost div a:visited{text-decoration:none;}
+td.af-colstats{text-align: center;
+width: 10%;
+font-size: 19px;
+font-weight: 300;
+color: #333;}
+td.af-lastpost{width: 20%;
+white-space: nowrap;
+text-align: center;
+font-size: 14px;
+font-weight: 400;
+color: #888;}
+td.af-colstats.af-colstats-replies {
+	font-weight: 700;
+}
+td.af-lastpost div{text-align:left;/* width:175px; */}
+td.af-lastpost div a:link,td.af-lastpost div a:visited{text-decoration:none;font-size: 14px;
+font-weight: 700;
+color: #333;}
 td.af-title{width:100%;padding-left:25px;}
 td.af-groupname{padding-left:10px;width:100%;}
 td.af-groupcollapse{text-align:right;padding-right:10px;}
 td.af-right{text-align:right;}
 td.af-posticon{width:20px;}
-td.af-content{width:100%;}
-td.af-content td.afsubject{vertical-align:top;width:100%;}
+td.af-content{width:60%;}
+td.af-content td.afsubject{vertical-align:top;width:100%;padding-right: 10px;}
+td.af-content td.afsubject > a {
+	color: #333; font-weight: 700;font-size: 13px;
+}
+
+.aftopictitle,
+.aftopictitle a,
+.aftopicrownew .aftopictitle a,
+.aftopicrownew .aftopictitle a:link,
+.aftopicrownewalt .aftopictitle a, 
+.aftopicrownewalt .aftopictitle a:link {
+	font-size: 19px;
+	display: block;
+	font-weight: 700;
+	color: #333!important;
+	letter-spacing: -0.5px;
+	line-height: 1.25;
+}
+
+
+td.af-content td.afsubject .aftopicstarted *,
+.aftopicrownew .aftopicstarted a, 
+.aftopicrownew .aftopicstarted a:link {
+color: #333;
+font-weight: 700;
+font-size: 14px;
+display: inline-block;
+margin-top: 4px;
+margin-bottom: 4px;
+}
+
+.aftopicstarted {
+display: block !important;
+color: #888;
+font-size: 14px;
+}
+
+.aftopicsubtitle,
+.aftopicsubtitle .clearboth,
+.aftruncateellipsis {
+	display: inline-block;
+}
+.aftopicsubtitle {
+font-size: 15px;
+font-weight: 400;
+display: inline-block;
+color: #888;
+word-break: break-word;
+overflow: hidden;
+}
+.aftopictools * {
+cursor: pointer;
+}
+td.af-content td.afsubject .aftruncatemorelink {
+font-size: 15px;
+color: #285a8f;
+font-weight: 400;
+display: inline;
+margin-left: 3px;
+}
+
+.afhiddenstats,
+.afhiddentime {
+	font-size: 15px;
+	display: none;
+	font-weight: 400;
+	color: #888;
+	text-transform: lowercase;
+}
+.afhiddentime {
+	display: block;
+	float: right;
+font-size: 11px;
+color: #bbb;
+}
+
+
 .af-right{float:right;}
 td.af-actions{text-align:right;vertical-align:top;}
 td.af-actions ul{float:right;margin-top:0px;margin-bottom:0px;}
@@ -109,9 +348,17 @@ a.af-actions,span.af-actions{display:inline-block;margin-right:2px;border:1px so
 
 
 
-.aftoolbarpanel{border: solid 1px #dcdcdc;background-color: #f5f5f5; margin-bottom:2px;width:100%;}
-.aftoolbarpanel ul.af-list-flat{padding:4px;}
-.aftoolbarpanel ul.af-list-flat li a,.aftoolbarpanel ul.af-list-flat li a:link,.aftoolbarpanel ul.af-list-flat li a:visited,.aftoolbarpanel ul.af-list-flat li a:active,.aftoolbarpanel ul.af-list-flat li a:hover{color: #666;padding-left:2px;padding-right:2px;}
+.aftoolbarpanel{border-bottom: solid 1px #dcdcdc;
+background-color: transparent;
+margin-bottom: 15px;
+width: 100%;
+margin-top: 15px;}
+.aftoolbarpanel ul.af-list-flat{padding:10px 0;}
+.aftoolbarpanel ul.af-list-flat li a, .aftoolbarpanel ul.af-list-flat li a:link, .aftoolbarpanel ul.af-list-flat li a:visited, .aftoolbarpanel ul.af-list-flat li a:active, .aftoolbarpanel ul.af-list-flat li a:hover {
+color: #888;
+padding-left: 0;
+padding-right: 5px;
+}
 
 
 .amnotify{width:500px;border:2px solid #cdcdcd;height:48px;float:left;display:none;position:absolute;margin-left:auto;margin-right:auto;}
@@ -298,3 +545,19 @@ a.dnnTertiaryAction, a.dnnTertiaryAction:link, a.dnnTertiaryAction:visited {
 
 .dnnForm .dnnFormItem .afavatarform input{width:55px;min-width:inherit; float:none;padding:1px}
 .afavatarform li{display:inline;margin-right:8px; list-style-type:none;}
+
+@media only screen and (max-width: 768px), 
+only screen and (max-device-width: 768px) {
+.af-lastpost,
+.af-colstats,
+.afgrouprow-m,
+.afgrouprow-l {
+	display: none;
+}
+
+.afhiddenstats,
+.afhiddentime {
+	display: inline-block;
+}
+
+}
