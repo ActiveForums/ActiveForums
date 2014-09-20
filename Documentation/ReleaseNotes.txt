@@ -7,6 +7,27 @@
 <div class="License">
 	<p class="Owner">
 		<h3>About DotNetNuke Active Forums</h3>
+		<strong>Version 6.0.1</strong><br />		
+	</p>
+</div>
+<hr/>
+<div class="License">
+   <h3>Release Notes</h3>
+    <p class="Owner">
+	<b>Version 06.00.01
+	<p>
+		<ul>
+			<li>Issue #143 - Overall UX/UI overhaul modification with responsive design</li>
+			<li>Issue #132 - Fixing issue #132 default attachment type allowed</li>
+			<li> Side note - cleaned up release notes from previous releases.  Moved to documentation\old_ReleaseNotes.txt</li>
+		</ul>
+	</p>
+	
+</div>
+<hr/>
+<div class="License">
+	<p class="Owner">
+		<h3>About DotNetNuke Active Forums</h3>
 		<strong>Version 5.2.4</strong><br />		
 	</p>
 </div>
