@@ -534,6 +534,7 @@ namespace DotNetNuke.Modules.ActiveForums
                 result.Replace("[AF:PROFILE:REPLYCOUNT]", up.Profile.ReplyCount.ToString());
                 result.Replace("[AF:PROFILE:ANSWERCOUNT]", up.Profile.AnswerCount.ToString());
                 result.Replace("[AF:PROFILE:REWARDPOINTS]", up.Profile.RewardPoints.ToString());
+                result.Replace("[AF:PROFILE:EMAIL]", up.Email);
                 
 
 				return result.ToString();

@@ -1141,6 +1141,8 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             var dateLastActivity = dr.GetDateTime("DateLastActivity");
             var signatureDisabled = dr.GetBoolean("SignatureDisabled");
             
+            DotNetNuke.Entities.Users.UserController uc = new DotNetNuke.Entities.Users.UserController();
+            DotNetNuke.Entities.Users.UserInfo author = uc.GetUser(DotNetNuke.Entities.Portals.PortalController.GetCurrentPortalSettings().PortalId, authorId);
             // Populate the user object with the post author info.  
             var up = new User
             {
@@ -1149,6 +1151,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 FirstName = firstName.Replace("&amp;#", "&#"),
                 LastName = lastName.Replace("&amp;#", "&#"),
                 DisplayName = displayName.Replace("&amp;#", "&#"),
+                Email = author.Email,
                 Profile =
                     {
                         UserCaption = userCaption,
