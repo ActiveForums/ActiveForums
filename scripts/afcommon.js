@@ -3,7 +3,7 @@
 };
 function afreload() {
     af_showLoad();
-    window.location.href = window.location.href;
+    document.location.reload(true);
 };
 var amaf_timerID = null;
 var amaf_timerRunning = false;
