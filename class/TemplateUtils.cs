@@ -25,11 +25,17 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Text.RegularExpressions;
+using System.Configuration;
+using Microsoft.ApplicationBlocks.Data;
+using System.Data;
+using System.Collections.Generic;
 
 namespace DotNetNuke.Modules.ActiveForums
 {
 	public class TemplateUtils
 	{
+		public static List<SubscriptionInfo> lstSubscriptionInfo { get; set; }
+
 	    public static string ShowIcon(bool canView, int forumID, int userId, DateTime dateAdded, DateTime lastRead, int lastPostId)
 		{		
             if(!canView)
