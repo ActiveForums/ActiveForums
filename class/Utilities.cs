@@ -174,8 +174,8 @@ namespace DotNetNuke.Modules.ActiveForums
 
             if (HttpContext.Current.Request.IsAuthenticated)
             {
-                template = template.Replace("[AF:TB:NotRead]", string.Format("<a href=\"{0}\">[RESX:NotRead]</a>", ctlUtils.BuildUrl(tabId, moduleId, string.Empty, string.Empty, -1, -1, -1, -1, "notread", 1, -1)));
-                template = template.Replace("[AF:TB:MyTopics]", string.Format("<a href=\"{0}\">[RESX:MyTopics]</a>", ctlUtils.BuildUrl(tabId, moduleId, string.Empty, string.Empty, -1, -1, -1, -1, "mytopics", 1, -1)));
+                template = template.Replace("[AF:TB:NotRead]", string.Format("<a href=\"{0}\">[RESX:NotRead]</a>", ctlUtils.BuildUrl(tabId, moduleId, string.Empty, string.Empty, -1, -1, -1, -1, "notread", 1, -1, -1)));
+                template = template.Replace("[AF:TB:MyTopics]", string.Format("<a href=\"{0}\">[RESX:MyTopics]</a>", ctlUtils.BuildUrl(tabId, moduleId, string.Empty, string.Empty, -1, -1, -1, -1, "mytopics", 1, -1, -1)));
              
                 if (currentUserType == CurrentUserTypes.Admin || currentUserType == CurrentUserTypes.SuperUser)
                     template = template.Replace("[AF:TB:ControlPanel]", string.Format("<a href=\"{0}\">[RESX:ControlPanel]</a>",  NavigateUrl(tabId, "EDIT", "mid=" + moduleId)));
@@ -195,8 +195,8 @@ namespace DotNetNuke.Modules.ActiveForums
                 template = template.Replace("[AF:TB:ControlPanel]", string.Empty);
             }
 
-            template = template.Replace("[AF:TB:Unanswered]", string.Format("<a href=\"{0}\">[RESX:Unanswered]</a>", ctlUtils.BuildUrl(tabId, moduleId, string.Empty, string.Empty, -1, -1, -1, -1, "unanswered", 1, -1)));
-            template = template.Replace("[AF:TB:ActiveTopics]", string.Format("<a href=\"{0}\">[RESX:ActiveTopics]</a>", ctlUtils.BuildUrl(tabId, moduleId, string.Empty, string.Empty, -1, -1, -1, -1, "activetopics", 1, -1)));
+            template = template.Replace("[AF:TB:Unanswered]", string.Format("<a href=\"{0}\">[RESX:Unanswered]</a>", ctlUtils.BuildUrl(tabId, moduleId, string.Empty, string.Empty, -1, -1, -1, -1, "unanswered", 1, -1, -1)));
+            template = template.Replace("[AF:TB:ActiveTopics]", string.Format("<a href=\"{0}\">[RESX:ActiveTopics]</a>", ctlUtils.BuildUrl(tabId, moduleId, string.Empty, string.Empty, -1, -1, -1, -1, "activetopics", 1, -1, -1)));
             template = template.Replace("[AF:TB:Forums]", string.Format("<a href=\"{0}\">[RESX:FORUMS]</a>", NavigateUrl(tabId)));
 
 
@@ -393,7 +393,7 @@ namespace DotNetNuke.Modules.ActiveForums
 
                 const string outSite = "<a href=\"{0}\" target=\"_blank\" rel=\"nofollow\">{1}</a>";
                 const string inSite = "<a href=\"{0}\">{1}</a>";
-                foreach (Match m in Regex.Matches(text, @"http://([\w+?\.\w+])+([a-zA-Z0-9\~\!\@\\#\$\%\^\&amp;\*\(\)_\-\=\+\\\/\?\.\:\;\'\,]*)?", RegexOptions.IgnoreCase))
+                foreach (Match m in Regex.Matches(text, @"(http|https)://([\w+?\.\w+])+([a-zA-Z0-9\~\!\@\\#\$\%\^\&amp;\*\(\)_\-\=\+\\\/\?\.\:\;\'\,]*)?", RegexOptions.IgnoreCase))
                 {
                     var url = m.Value;
                     if (url.ToLowerInvariant().Contains("jpg") || url.ToLowerInvariant().Contains("gif") || url.ToLowerInvariant().Contains("png") || url.ToLowerInvariant().Contains("jpeg"))
@@ -1362,6 +1362,31 @@ namespace DotNetNuke.Modules.ActiveForums
             try
             {
                 return Convert.ToInt32(value);
+            }
+            catch (Exception)
+            {
+                return defaultValue;
+            }
+        }
+
+        public static long SafeConvertLong(object value, long defaultValue = 0)
+        {
+            if (value == null)
+                return defaultValue;
+
+            if (value is long)
+                return (long)value;
+
+            var s = value as string;
+            if (s != null)
+            {
+                long parsedValue;
+                return long.TryParse(s, out parsedValue) ? parsedValue : defaultValue;
+            }
+
+            try
+            {
+                return Convert.ToInt64(value);
             }
             catch (Exception)
             {

@@ -28,7 +28,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using DotNetNuke;
 using System.Text.RegularExpressions;
-using DotNetNuke.Services.ClientCapability;
+//using DotNetNuke.Services.ClientCapability;
 using DotNetNuke.Services.Social.Notifications;
 using DotNetNuke.Services.Localization;
 
@@ -55,7 +55,7 @@ namespace DotNetNuke.Modules.ActiveForums
         #endregion
         #region Public Members
         public string SubscribedChecked = string.Empty;
-        public IClientCapability device = ClientCapabilityProvider.CurrentClientCapability;
+        //public IClientCapability device = ClientCapabilityProvider.CurrentClientCapability;
         #endregion
         #region Public Properties
         public bool UseFilter
@@ -423,7 +423,7 @@ namespace DotNetNuke.Modules.ActiveForums
             ControlUtils ctlUtils = new ControlUtils();
             TopicsController tc = new TopicsController();
             TopicInfo ti = tc.Topics_Get(PortalId, ForumModuleId, TopicId, ForumId, -1, false);
-            string fullURL = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, ForumInfo.PrefixURL, ForumInfo.ForumGroupId, ForumInfo.ForumID, TopicId, ti.TopicUrl, -1, -1, string.Empty, 1, SocialGroupId);
+            string fullURL = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, ForumInfo.PrefixURL, ForumInfo.ForumGroupId, ForumInfo.ForumID, TopicId, ti.TopicUrl, -1, -1, string.Empty, -1, ReplyId, SocialGroupId);
 
             if (fullURL.Contains("~/") || Request.QueryString["asg"] != null)
             {

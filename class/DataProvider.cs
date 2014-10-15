@@ -168,7 +168,11 @@ namespace DotNetNuke.Modules.ActiveForums
         public abstract void Topics_UpdateStatus(int PortalId, int ModuleId, int TopicId, int ReplyId, int TopicStatusId, int ReplyStatusId, int UserId);
         #endregion
 
+        #region Content
 
+        public abstract int Content_GetID(int topicId, int? replyId);
+
+        #endregion
 
 
 

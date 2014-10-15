@@ -24,6 +24,7 @@ using System.Data;
 
 using System.Web;
 using System.Xml;
+using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Services.Journal;
 
 namespace DotNetNuke.Modules.ActiveForums
@@ -576,19 +577,38 @@ namespace DotNetNuke.Modules.ActiveForums
 		}
 		public void Topics_Delete(int PortalId, int ModuleId, int ForumId, int TopicId, int DelBehavior)
 		{
-
-			DataProvider.Instance().Topics_Delete(ForumId, TopicId, DelBehavior);
-			string cachekey = string.Format("AF-FV-{0}-{1}", PortalId, ModuleId);
+            DataProvider.Instance().Topics_Delete(ForumId, TopicId, DelBehavior);
+			var cachekey = string.Format("AF-FV-{0}-{1}", PortalId, ModuleId);
 			DataCache.CacheClearPrefix(cachekey);
 			try
 			{
-				string objectKey = string.Format("{0}:{1}", ForumId.ToString(), TopicId.ToString());
+				var objectKey = string.Format("{0}:{1}", ForumId, TopicId);
 				JournalController.Instance.DeleteJournalItemByKey(PortalId, objectKey);
 			}
 			catch (Exception ex)
 			{
 
 			}
+
+            if (DelBehavior != 0)
+                return;
+
+            // If it's a hard delete, delete associated attachments
+            var attachmentController = new Data.AttachController();
+            var fileManager = FileManager.Instance;
+            var folderManager = FolderManager.Instance;
+            var attachmentFolder = folderManager.GetFolder(PortalId, "activeforums_Attach");
+
+            foreach (var attachment in attachmentController.ListForPost(TopicId, null))
+            {
+                attachmentController.Delete(attachment.AttachmentId);
+
+                var file = attachment.FileId.HasValue ? fileManager.GetFile(attachment.FileId.Value) : fileManager.GetFile(attachmentFolder, attachment.FileName);
+
+                // Only delete the file if it exists in the attachment folder
+                if (file != null && file.FolderId == attachmentFolder.FolderID)
+                    fileManager.DeleteFile(file);
+            }
 
 
 		}
@@ -698,8 +718,7 @@ namespace DotNetNuke.Modules.ActiveForums
 
 			if (fi.ModApproveTemplateId > 0 & topic.Author.AuthorId > 0)
 			{
-				Email oEmail = new Email();
-				oEmail.SendEmail(fi.ModApproveTemplateId, PortalId, ModuleId, TabId, ForumId, TopicId, 0, string.Empty, topic.Author);
+				Email.SendEmail(fi.ModApproveTemplateId, PortalId, ModuleId, TabId, ForumId, TopicId, 0, string.Empty, topic.Author);
 			}
 
 			Subscriptions.SendSubscriptions(PortalId, ModuleId, TabId, ForumId, TopicId, 0, topic.Content.AuthorId);
@@ -707,7 +726,7 @@ namespace DotNetNuke.Modules.ActiveForums
 			try
 			{
 				ControlUtils ctlUtils = new ControlUtils();
-				string sUrl = ctlUtils.BuildUrl(TabId, ModuleId, fi.ForumGroup.PrefixURL, fi.PrefixURL, fi.ForumGroupId, fi.ForumID, TopicId, topic.TopicUrl, -1, -1, string.Empty, 1, fi.SocialGroupId);
+				string sUrl = ctlUtils.BuildUrl(TabId, ModuleId, fi.ForumGroup.PrefixURL, fi.PrefixURL, fi.ForumGroupId, fi.ForumID, TopicId, topic.TopicUrl, -1, -1, string.Empty, 1, -1, fi.SocialGroupId);
 				Social amas = new Social();
 				amas.AddTopicToJournal(PortalId, ModuleId, ForumId, TopicId, topic.Author.AuthorId, sUrl, topic.Content.Subject, string.Empty, topic.Content.Body, fi.ActiveSocialSecurityOption, fi.Security.Read, fi.SocialGroupId);
 			}

@@ -1,48 +1,99 @@
 <%@ Register TagPrefix="af" Assembly="DotNetNuke.Modules.ActiveForums" Namespace="DotNetNuke.Modules.ActiveForums.Controls"%>
 [BREADCRUMB]
 [GROUPSECTION]
-<table class="afgrid">
+<div class="afgrid">
+<div class="afgrid-inner">
+	<div class="afgroupsection">
 	<tr>
-		<td class="afgrouprow af-groupname">[GROUPNAME]</td>
+		<td class="afgrouprow af-groupname"><div class="afgroupsectiontitle">[GROUPNAME]</div></td>
 		<td class="afgrouprow af-groupcollapse">[GROUPCOLLAPSE]</td>
 	</tr>
+	</div>
 	<tr>
 		<td colspan="2">
 			[GROUP]
-				<table class="afsubgrid">
+				<table class="afgrid" cellspacing="0" cellpadding="0" width="100%">
 					<tr>
-						<td class="afheader">[SPACER:10:1]</td>
-						<td class="afheader" width="100%" colspan="2">[RESX:FORUMHEADER]</td>
-						<td class="afheader af-colstats">[RESX:TOPICSHEADER]</td>
-						<td class="afheader af-colstats">[RESX:REPLIESHEADER]</td>
-						<td class="afheader af-lastpost">[RESX:LASTPOSTHEADER]</td>
+						<td class="afgrouprow afgrouprow-f">
+							<div class="afcontrolheader">[RESX:FORUMHEADER]</div>
+						</td>
+						<td class="afgrouprow afgrouprow-m">
+							<div class="afcontrolheader">[RESX:TOPICSHEADER]</div>
+						</td>
+						<td class="afgrouprow afgrouprow-m">
+							<div class="afcontrolheader">[RESX:REPLIESHEADER]</div>
+						</td>
+						<td class="afgrouprow afgrouprow-l">
+							<div class="afcontrolheader">[RESX:LASTPOSTHEADER]</div>
+						</td>
 					</tr>
+					
+						
 					[FORUMS]
 					<tr>
-						<td class="[CSS:afforumrowtop:afforumrowmid:afforumrowbottom]">[FORUMICON]</td>
-						<td class="[CSS:afforumrowtop:afforumrowmid:afforumrowbottom] af-forumdetail" colspan="2">[FORUMNAME]<br />[FORUMDESCRIPTION]</td>
-						<td class="[CSS:afforumrowtop:afforumrowmid:afforumrowbottom] af-colstats">[TOTALTOPICS]</td>
-						<td class="[CSS:afforumrowtop:afforumrowmid:afforumrowbottom] af-colstats">[TOTALREPLIES]</td>
-						<td class="[CSS:afforumrowtop:afforumrowmid:afforumrowbottom] af-lastpost"><div>[LASTPOSTSUBJECT:25]<br />[RESX:BY] [DISPLAYNAME]<br />[LASTPOSTDATE]</div></td>
+						<td colspan="0">
+							 <table class="afgrid" cellspacing="0" cellpadding="0" width="100%">
+								<tr>
+									<td class="aftopicrow _hide" width="20">[FORUMICON]</td>
+									<td class="aftopicrow af-content">
+										<table>
+											<tr>
+												<td rowspan="2" class="afsubject">
+												
+												<span class="afhiddenstats">[TOTALTOPICS] [RESX:TOPICSHEADER] and [TOTALREPLIES] [RESX:REPLIESHEADER]</span>
+												<span class="aftopictitle">[FORUMNAME]</span> 
+												<span class="aftopicsubtitle">[FORUMDESCRIPTION]</span>
+												
+											</tr>
+										</table>
+									</td>
+									<td class="aftopicrow af-colstats af-colstats-replies">[TOTALTOPICS]</td>
+									<td class="aftopicrow af-colstats af-colstats-views">[TOTALREPLIES]</td>
+									<td class="aftopicrow af-lastpost"><div class="af_lastpost" style="white-space:nowrap;">[LASTPOSTSUBJECT:25]<br />[RESX:BY] [DISPLAYNAME]<br />[LASTPOSTDATE]</div></td>
+								</tr>
+							</table>	
+									</td>
+								</tr>
+							</table>
+						</td>
 					</tr>
 					[SUBFORUMS]
-						<tr>
-							<td class="[CSS:afsubforumrowtop:afsubforumrowmid:afsubforumrowbottom]"></td>
-							<td class="[CSS:afsubforumrowtop:afsubforumrowmid:afsubforumrowbottom] af-minicon">[FORUMICONSM]</td>
-							<td class="[CSS:afsubforumrowtop:afsubforumrowmid:afsubforumrowbottom] af-subforumdetail">[FORUMNAME]<br />[FORUMDESCRIPTION]</td>
-							<td class="[CSS:afsubforumrowtop:afsubforumrowmid:afsubforumrowbottom] af-colstats">[TOTALTOPICS]</td>
-						<td class="[CSS:afsubforumrowtop:afsubforumrowmid:afsubforumrowbottom] af-colstats">[TOTALREPLIES]</td>
-						<td class="[CSS:afsubforumrowtop:afsubforumrowmid:afsubforumrowbottom] af-lastpost"><div>[LASTPOSTSUBJECT:25]<br />[RESX:BY] [DISPLAYNAME]<br />[LASTPOSTDATE]</div></td>
-						</tr>
+					<tr>
+						<td colspan="0">
+							 <table class="afgrid" cellspacing="0" cellpadding="0" width="100%">
+								<tr>
+									<td class="aftopicrow _hide" width="20">[FORUMICONSM]</td>
+									<td class="aftopicrow af-content">
+										<table>
+											<tr>
+												<td rowspan="2" class="afsubject">
+												
+												<span class="afhiddenstats">[TOTALTOPICS] Topics and [TOTALREPLIES] Replies</span>
+												<span class="aftopictitle">[FORUMNAME]</span> 
+												<span class="aftopicsubtitle">[FORUMDESCRIPTION]</span>
+												
+											</tr>
+										</table>
+									</td>
+									<td class="aftopicrow af-colstats af-colstats-replies">[TOTALTOPICS]</td>
+									<td class="aftopicrow af-colstats af-colstats-views">[TOTALREPLIES]</td>
+									<td class="aftopicrow af-lastpost"><div class="af_lastpost" style="white-space:nowrap;">[LASTPOSTSUBJECT:25]<br />[RESX:BY] [DISPLAYNAME]<br />[LASTPOSTDATE]</div></td>
+								</tr>
+							</table>	
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
 					[/SUBFORUMS]
 					[/FORUMS]
 				</table>		
 			[/GROUP]
 		</td>
 	</tr>
-</table>
+</div>
+</div>
 [/GROUPSECTION]
+
 [WHOSONLINE]
 <div style="text-align:right;">[JUMPTO]</div>
-
-

@@ -85,6 +85,11 @@ namespace DotNetNuke.Modules.ActiveForums
                 if (_tags == null)
                 {
                     _tags = Request.Params["tg"] + string.Empty;
+
+                    // The tag links are generated with "aftg"
+                    if (_tags == string.Empty)
+                        _tags = Request.Params["aftg"] + string.Empty;
+
                     _tags = Utilities.XSSFilter(_tags);
                     _tags = Utilities.StripHTMLTag(_tags);
                     _tags = Utilities.CheckSqlString(_tags);
@@ -287,6 +292,10 @@ namespace DotNetNuke.Modules.ActiveForums
             try
             {
 
+                if (Request.QueryString["GroupId"] != null && SimulateIsNumeric.IsNumeric(Request.QueryString["GroupId"]))
+                {
+                    SocialGroupId = Convert.ToInt32(Request.QueryString["GroupId"]);
+                }
 
                 litSearchTitle.Text = GetSharedResource("[RESX:SearchTitle]");
 
@@ -455,6 +464,9 @@ namespace DotNetNuke.Modules.ActiveForums
             var @params = new List<string> { ParamKeys.ViewType + "=searchadvanced" };
             @params.AddRange(Parameters);
 
+            if (SocialGroupId > 0)
+                @params.Add("GroupId=" + SocialGroupId.ToString());
+
             return NavigateUrl(TabId, string.Empty, @params.ToArray());
         }
 
@@ -465,9 +477,13 @@ namespace DotNetNuke.Modules.ActiveForums
 
             var forumId = _currentRow["ForumID"].ToString();
 
-            var @params = new[] { ParamKeys.ForumId + "=" + forumId, ParamKeys.ViewType + "=" + Views.Topics };
+            var @params = new List<string> { ParamKeys.ForumId + "=" + forumId, ParamKeys.ViewType + "=" + Views.Topics };
+            
 
-            return NavigateUrl(TabId, string.Empty, @params); 
+            if (SocialGroupId > 0)
+                @params.Add("GroupId=" + SocialGroupId.ToString());
+
+            return NavigateUrl(TabId, string.Empty, @params.ToArray()); 
         }
 
         public string GetThreadUrl()
@@ -478,9 +494,14 @@ namespace DotNetNuke.Modules.ActiveForums
             var forumId = _currentRow["ForumID"].ToString();
             var topicId = _currentRow["TopicId"].ToString();
 
-            var @params = new[] { ParamKeys.ForumId + "=" + forumId, ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.TopicId + "=" + topicId };
+            var @params = new List<string> { ParamKeys.ForumId + "=" + forumId, ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.TopicId + "=" + topicId };
+            
 
-            return NavigateUrl(TabId, string.Empty, @params);
+            if (SocialGroupId > 0)
+                @params = new List<string> { ParamKeys.TopicId + "=" + topicId };
+                @params.Add("GroupId=" + SocialGroupId.ToString());
+
+            return NavigateUrl(TabId, string.Empty, @params.ToArray());
         }
 
         // Jumps to post for post view, or last reply for topics view
@@ -493,9 +514,13 @@ namespace DotNetNuke.Modules.ActiveForums
             var topicId = _currentRow["TopicId"].ToString();
             var contentId = _currentRow["ContentId"].ToString();
 
-            var @params = new[] { ParamKeys.ForumId + "=" + forumId, ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.TopicId + "=" + topicId, ParamKeys.ContentJumpId + "=" + contentId };
+            var @params = new List<string> { ParamKeys.ForumId + "=" + forumId, ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.TopicId + "=" + topicId, ParamKeys.ContentJumpId + "=" + contentId };
+           
 
-            return NavigateUrl(TabId, string.Empty, @params);
+            if (SocialGroupId > 0)
+                @params.Add("GroupId=" + SocialGroupId.ToString());
+
+            return NavigateUrl(TabId, string.Empty, @params.ToArray());
         }
 
         // Todo: Localize today and yesterday
@@ -630,7 +655,7 @@ namespace DotNetNuke.Modules.ActiveForums
             if (pageCount <= 1)
                 return null;
 
-            string[] @params;
+             List<string> @params;
 
             var result = string.Empty;
 
@@ -638,8 +663,12 @@ namespace DotNetNuke.Modules.ActiveForums
             {
                 for (var i = 1; i <= pageCount; i++)
                 {
-                    @params = new[] { ParamKeys.ForumId + "=" + forumId, ParamKeys.TopicId + "=" + topicId, ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.PageId + "=" + i };
-                    result += "<a href=\"" + NavigateUrl(TabId, string.Empty, @params) + "\">" + i + "</a>";
+                    @params = new List<string> { ParamKeys.ForumId + "=" + forumId, ParamKeys.TopicId + "=" + topicId, ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.PageId + "=" + i };
+
+                    if (SocialGroupId > 0)
+                        @params.Add("GroupId=" + SocialGroupId.ToString());
+
+                    result += "<a href=\"" + NavigateUrl(TabId, string.Empty, @params.ToArray()) + "\">" + i + "</a>";
                 }
 
                 return result;
@@ -649,14 +678,20 @@ namespace DotNetNuke.Modules.ActiveForums
 
             for(var i = 1; i <= 3; i++)
             {
-                @params = new[] { ParamKeys.ForumId + "=" + forumId, ParamKeys.TopicId + "=" + topicId, ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.PageId + "=" + i };
-                result += "<a href=\"" + NavigateUrl(TabId, string.Empty, @params) + "\">" + i + "</a>";  
+                @params = new List<string> { ParamKeys.ForumId + "=" + forumId, ParamKeys.TopicId + "=" + topicId, ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.PageId + "=" + i };
+                if (SocialGroupId > 0)
+                    @params.Add("GroupId=" + SocialGroupId.ToString());
+
+                result += "<a href=\"" + NavigateUrl(TabId, string.Empty, @params.ToArray()) + "\">" + i + "</a>";  
             }
 
             result += "<span>...</span>";
 
-            @params = new[] { ParamKeys.ForumId + "=" + forumId, ParamKeys.TopicId + "=" + topicId, ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.PageId + "=" + pageCount };
-            result += "<a href=\"" + NavigateUrl(TabId, string.Empty, @params) + "\">" + pageCount + "</a>";  
+            @params = new List<string>  { ParamKeys.ForumId + "=" + forumId, ParamKeys.TopicId + "=" + topicId, ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.PageId + "=" + pageCount };
+            if (SocialGroupId > 0)
+                @params.Add("GroupId=" + SocialGroupId.ToString());
+
+            result += "<a href=\"" + NavigateUrl(TabId, string.Empty, @params.ToArray()) + "\">" + pageCount + "</a>";  
 
             return result;
         }

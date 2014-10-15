@@ -690,11 +690,23 @@
   <data name="[RESX:Announce].Text" xml:space="preserve">
     <value>Announcement</value>
   </data>
+  <data name="[RESX:Attach].Text" xml:space="preserve">
+    <value>Attach</value>
+  </data>
   <data name="[RESX:Attachments].Text" xml:space="preserve">
     <value>Attachments</value>
   </data>
   <data name="[RESX:Attacments:Note].Text" xml:space="preserve">
     <value>Explanation for attachments</value>
+  </data>
+  <data name="[RESX:Attachments:Confirm:Remove].Text" xml:space="preserve">
+    <value>Are you sure you want to remove this attachment?</value>
+  </data>
+  <data name="[RESX:Attachments:BrowseSite:Title].Text" xml:space="preserve">
+    <value>Select a File to Attach</value>
+  </data>
+  <data name="[RESX:Attachments:Error].Text" xml:space="preserve">
+    <value>A server error has occured.</value>
   </data>
   <data name="[RESX:Confirm:Delete].Text" xml:space="preserve">
     <value>Are you sure you wish to delete this item?</value>
@@ -1145,7 +1157,7 @@ From,
     <value>You are not authorized to post a reply.</value>
   </data>
   <data name="[RESX:NotAuthorizedTopic].Text" xml:space="preserve">
-    <value>You are not authorized to create a new topic.</value>
+    <value>&lt;span class="afnotauthorized"&gt;You are not authorized to create a new topic&lt;/span&gt;</value>
   </data>
   <data name="[RESX:DateCreated].Text" xml:space="preserve">
     <value>Date Created</value>
@@ -1251,6 +1263,12 @@ From,
   </data>
   <data name="[RESX:FileSize].Text" xml:space="preserve">
     <value>File Size</value>
+  </data>
+  <data name="[RESX:LastModified].Text" xml:space="preserve">
+    <value>Last Modified</value>
+  </data>
+  <data name="[RESX:FileType].Text" xml:space="preserve">
+    <value>File Type</value>
   </data>
   <data name="[RESX:InsertImage].Text" xml:space="preserve">
     <value>Insert Image</value>
@@ -1545,5 +1563,14 @@ From,
   </data>
   <data name="MarkAllReadConfirm.Text" xml:space="preserve">
     <value>Mark all items read?</value>
+  </data>
+  <data name="[RESX:BrowseFromSite].Text" xml:space="preserve">
+    <value>Browse From Site</value>
+  </data>
+  <data name="[RESX:UploadButton].Text" xml:space="preserve">
+    <value>Choose File</value>
+  </data>
+  <data name="[RESX:Uploading].Text" xml:space="preserve">
+    <value>Uploading</value>
   </data>
 </root>

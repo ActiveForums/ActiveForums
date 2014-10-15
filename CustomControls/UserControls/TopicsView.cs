@@ -29,6 +29,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Text.RegularExpressions;
 using System.Xml;
+using DotNetNuke.Modules.ActiveForums.Constants;
 
 namespace DotNetNuke.Modules.ActiveForums.Controls
 {
@@ -267,8 +268,8 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                         bModApprove = Permissions.HasPerm(drSecurity["CanModApprove"].ToString(), ForumUser.UserRoles);
 
                         ControlUtils ctlUtils = new ControlUtils();
-                        sGroupURL = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, string.Empty, ForumInfo.ForumGroupId, -1, -1, -1, string.Empty, 1, SocialGroupId);
-                        sForumURL = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, ForumInfo.PrefixURL, ForumInfo.ForumGroupId, ForumInfo.ForumID, -1, -1, string.Empty, 1, SocialGroupId);
+                        sGroupURL = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, string.Empty, ForumInfo.ForumGroupId, -1, -1, -1, string.Empty, 1, -1, SocialGroupId);
+                        sForumURL = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, ForumInfo.PrefixURL, ForumInfo.ForumGroupId, ForumInfo.ForumID, -1, -1, string.Empty, 1, -1, SocialGroupId);
                         if (bView)
                         {
                             ForumName = drForum["ForumName"].ToString();
@@ -355,7 +356,9 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                                 MetaTemplate = MetaTemplate.Replace("[BODY]", Utilities.StripHTMLTag(ForumInfo.ForumDesc));
 
                                 MetaTitle = TemplateUtils.GetTemplateSection(MetaTemplate, "[TITLE]", "[/TITLE]").Replace("[TITLE]", string.Empty).Replace("[/TITLE]", string.Empty);
+                                MetaTitle = MetaTitle.TruncateAtWord(SEOConstants.MaxMetaTitleLength);
                                 MetaDescription = TemplateUtils.GetTemplateSection(MetaTemplate, "[DESCRIPTION]", "[/DESCRIPTION]").Replace("[DESCRIPTION]", string.Empty).Replace("[/DESCRIPTION]", string.Empty);
+                                MetaDescription = MetaDescription.TruncateAtWord(SEOConstants.MaxMetaDescriptionLength);
                                 MetaKeywords = TemplateUtils.GetTemplateSection(MetaTemplate, "[KEYWORDS]", "[/KEYWORDS]").Replace("[KEYWORDS]", string.Empty).Replace("[/KEYWORDS]", string.Empty);
                             }
                             BindTopics(TopicsTemplate);
@@ -543,7 +546,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 }
                 else
                 {
-                    Params = new string[] { "GroupId=" + SocialGroupId, ParamKeys.ViewType + "=post", ParamKeys.ForumId + "=" + ForumId };
+                    Params = new string[] { ParamKeys.ViewType + "=post", ParamKeys.ForumId + "=" + ForumId, "GroupId=" + SocialGroupId, };
                 }
                 sOutput = sOutput.Replace("[ADDTOPIC]", "<a href=\"" + NavigateUrl(TabId, "", Params) + "\" class=\"dnnPrimaryAction\">[RESX:AddTopic]</a>");
             }
@@ -856,9 +859,15 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     }
                     string sTopicURL = string.Empty;
                     ControlUtils ctlUtils = new ControlUtils();
-                    sTopicURL = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, ForumInfo.PrefixURL, ForumGroupId, ForumId, TopicId, TopicURL, -1, -1, string.Empty, 1, SocialGroupId);
+                    sTopicURL = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, ForumInfo.PrefixURL, ForumGroupId, ForumId, TopicId, TopicURL, -1, -1, string.Empty, 1, -1, SocialGroupId);
 
-                    string sLastReplyURL = NavigateUrl(TabId, "", new string[] { ParamKeys.TopicId + "=" + TopicId, ParamKeys.ContentJumpId + "=" + LastReplyId });
+                    var @params = new List<string> { ParamKeys.TopicId + "=" + TopicId, ParamKeys.ContentJumpId + "=" + LastReplyId };
+
+                    if (SocialGroupId > 0)
+                        @params.Add("GroupId=" + SocialGroupId.ToString());
+
+                    string sLastReplyURL = NavigateUrl(TabId, "", @params.ToArray());
+
                     if (!(string.IsNullOrEmpty(sTopicURL)))
                     {
                         if (sTopicURL.EndsWith("/"))
@@ -870,10 +879,20 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     string sUserJumpUrl = string.Empty;
                     if (UserLastReplyRead > 0)
                     {
-                        sLastReadURL = NavigateUrl(TabId, "", new string[] { ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + TopicId, ParamKeys.ViewType + "=topic", ParamKeys.FirstNewPost + "=" + UserLastReplyRead });
+                        @params = new List<string> { ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + TopicId, ParamKeys.ViewType + "=topic", ParamKeys.FirstNewPost + "=" + UserLastReplyRead };
+                        if (SocialGroupId > 0)
+                            @params.Add("GroupId=" + SocialGroupId.ToString());
+
+                        sLastReadURL = NavigateUrl(TabId, "", @params.ToArray());
+
                         if (MainSettings.UseShortUrls)
                         {
-                            sLastReadURL = NavigateUrl(TabId, "", new string[] { ParamKeys.TopicId + "=" + TopicId, ParamKeys.FirstNewPost + "=" + UserLastReplyRead });
+                            @params = new List<string> { ParamKeys.TopicId + "=" + TopicId, ParamKeys.FirstNewPost + "=" + UserLastReplyRead };
+                            if (SocialGroupId > 0)
+                                @params.Add("GroupId=" + SocialGroupId.ToString());
+
+                            sLastReadURL = NavigateUrl(TabId, "", @params.ToArray());
+
                         }
                         if (sTopicURL.EndsWith("/"))
                         {
@@ -1239,25 +1258,31 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     }
                     if (UseAjax)
                     {
-                        //sOut &= "<span class=""afpagerminiitem"" onclick=""javascript:afPageJump(" & intPostPages & ");"">" & intPostPages & "</span>&nbsp;"
-                        string[] Params2 = { ParamKeys.ForumId + "=" + ForumID, ParamKeys.TopicId + "=" + PostID, ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.PageJumpId + "=" + intPostPages };
+                        var @params = new List<string> { ParamKeys.ForumId + "=" + ForumID, ParamKeys.TopicId + "=" + PostID, ParamKeys.ViewType + "=" + Views.Topic };
                         if (MainSettings.UseShortUrls)
                         {
-                            Params2 = new string[] { ParamKeys.TopicId + "=" + PostID, ParamKeys.PageJumpId + "=" + intPostPages };
+                            @params = new List<string> { ParamKeys.TopicId + "=" + PostID };
                         }
+                        if (i > 1)
+                        {
+                            @params.Add(ParamKeys.PageJumpId + "=" + i);
+                        }
+                        sOut += "<a href=\"" + NavigateUrl(TabID, "", @params.ToArray()) + "\">" + i + "</a>&nbsp;";
 
-                        sOut += "<a href=\"" + NavigateUrl(TabID, "", Params2) + "\">" + intPostPages + "</a>&nbsp;";
                     }
                     else
                     {
-                        string[] Params2 = { ParamKeys.ForumId + "=" + ForumID, ParamKeys.TopicId + "=" + PostID, ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.PageId + "=" + intPostPages };
+                        var @params = new List<string> { ParamKeys.ForumId + "=" + ForumID, ParamKeys.TopicId + "=" + PostID, ParamKeys.ViewType + "=" + Views.Topic };
                         if (MainSettings.UseShortUrls)
                         {
-                            Params2 = new string[] { ParamKeys.TopicId + "=" + PostID, ParamKeys.PageId + "=" + intPostPages };
+                            @params = new List<string> { ParamKeys.TopicId + "=" + PostID };
                         }
-                        sOut += "<a href=\"" + NavigateUrl(TabID, "", Params2) + "\">" + intPostPages + "</a>&nbsp;";
+                        if (i > 1)
+                        {
+                            @params.Add(ParamKeys.PageId + "=" + i);
+                        }
+                        sOut += "<a href=\"" + NavigateUrl(TabID, "", @params.ToArray()) + "\">" + i + "</a>&nbsp;";
                     }
-
 
                 }
                 else
@@ -1276,7 +1301,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                             {
                                 @params.Add(ParamKeys.PageJumpId + "=" + i);
                             }
-                            sOut += "<a href=\"" + NavigateUrl(TabID, "", Params) + "\">" + i + "</a>&nbsp;";
+                            sOut += "<a href=\"" + NavigateUrl(TabID, "", @params.ToArray()) + "\">" + i + "</a>&nbsp;";
                         }
                         else
                         {

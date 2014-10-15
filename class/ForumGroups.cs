@@ -136,26 +136,14 @@ namespace DotNetNuke.Modules.ActiveForums
 			get { return Utilities.SafeConvertInt(GroupSettings[ForumSettingKeys.AttachMaxWidth], 500); }
 		}
 
-		public AttachStores AttachStore
-		{
-			get
-			{
-			    AttachStores parsedValue;
-			    return Enum.TryParse(Utilities.SafeConvertString(GroupSettings[ForumSettingKeys.AttachStore], "0"), true,
-			                         out parsedValue)
-			               ? parsedValue
-                           : AttachStores.FILESYSTEM;
-			}
-		}
-
 		public string AttachTypeAllowed
 		{
 			get { return Utilities.SafeConvertString(GroupSettings[ForumSettingKeys.AttachTypeAllowed], ".jpg,.gif,.png"); }
 		}
 
-		public bool AttachUniqueFileNames
+		public bool AttachAllowBrowseSite
 		{
-			get { return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.AttachUniqueFileNames]); }
+			get { return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.AttachAllowBrowseSite]); }
 		}
 
 		public string EditorHeight

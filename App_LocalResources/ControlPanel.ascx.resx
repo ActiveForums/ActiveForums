@@ -238,7 +238,7 @@
     <value># of Files</value>
   </data>
   <data name="[RESX:MaxFileSize].Text" xml:space="preserve">
-    <value>Max. File Size</value>
+    <value>Max. File Size (KB)</value>
   </data>
   <data name="[RESX:MaxImageHeight].Text" xml:space="preserve">
     <value>Max. Height</value>
@@ -1422,5 +1422,8 @@ Your removal method is currently set to {0}.  Your topics will be {1} based upon
   </data>
   <data name="[RESX:Tips:ReplyPostCount].Text" xml:space="preserve">
     <value>The minumum number of posts a user must have in order to reply to a topic.</value>
+  </data>
+  <data name="[RESX:AllowBrowseSite].Text" xml:space="preserve">
+    <value>Allow Browse Site</value>
   </data>
 </root>

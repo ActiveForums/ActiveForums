@@ -18,23 +18,23 @@
 // DEALINGS IN THE SOFTWARE.
 //
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-
+using System.Diagnostics;
 using System.IO;
+using System.Text.RegularExpressions;
+using DotNetNuke.Entities.Users;
+using DotNetNuke.Modules.ActiveForums.Extensions;
 using DotNetNuke.Services.FileSystem;
 
 
 namespace DotNetNuke.Modules.ActiveForums
 {
-    public class af_viewer : DotNetNuke.Framework.PageBase
+    public class af_viewer : Framework.PageBase
     {
 
         #region  Web Form Designer Generated Code
 
         //This call is required by the Web Form Designer.
-        [System.Diagnostics.DebuggerStepThrough()]
+        [DebuggerStepThrough]
         private void InitializeComponent()
         {
         }
@@ -44,8 +44,8 @@ namespace DotNetNuke.Modules.ActiveForums
         private object designerPlaceholderDeclaration;
 
         protected override void OnInit(EventArgs e)
-		{
-			base.OnInit(e);
+        {
+            base.OnInit(e);
 
             //CODEGEN: This method call is required by the Web Form Designer
             //Do not modify it using the code editor.
@@ -55,208 +55,113 @@ namespace DotNetNuke.Modules.ActiveForums
         #endregion
 
         protected override void OnLoad(EventArgs e)
-		{
-			base.OnLoad(e);
+        {
+            base.OnLoad(e);
 
-            //Put user code to initialize the page here
-            try
+            var attachmentId = Utilities.SafeConvertInt(Request.Params["AttachmentID"], -1);// Used for new attachments where the attachment is the actual file link (shouldn't appear in posts)
+            var attachFileId = Utilities.SafeConvertInt(Request.Params["AttachID"], -1); // Used for legacy attachments where the attachid was actually the file id. (appears in posts)
+            var portalId = Utilities.SafeConvertInt(Request.Params["PortalID"], -1);
+            var moduleId = Utilities.SafeConvertInt(Request.Params["ModuleID"], -1);
+
+            if (Page.IsPostBack || (attachmentId < 0 && attachFileId < 0) || portalId < 0 || moduleId < 0)
             {
-                byte[] bindata = null;
-                bool canView = false;
-                string sContentType = string.Empty;
-                if (!Page.IsPostBack)
+                Response.StatusCode = 400;
+                Response.Write("Invalid Request");
+                Response.End();
+                return;
+            }
+
+            // Get the attachment including the "Can Read" permission for the associated content id.
+            var attachment = new Data.AttachController().Get(attachmentId, attachFileId, true);
+
+            // Make sure the attachment exists
+            if (attachment == null)
+            {
+                Response.StatusCode = 404;
+                Response.Write("Not Found");
+                Response.End();
+                return;
+            }
+
+            // Make sure the user has read access
+            var u = new UserController().GetUser(portalId, moduleId);
+            if (u == null || !Permissions.HasAccess(attachment.CanRead, u.UserRoles))
+            {
+                Response.StatusCode = 401;
+                Response.Write("Unauthorized");
+                Response.End();
+                return;
+            }
+
+            // Get the filename with the unique identifier prefix removed.
+            var filename = Regex.Replace(attachment.FileName.TextOrEmpty(), @"__\d+__\d+__", string.Empty);
+
+            // Some legacy attachments may still be stored in the DB.
+            if (attachment.FileData != null)
+            {
+                Response.ContentType = attachment.ContentType;
+                
+                if (attachmentId > 0)
+                    Response.AddHeader("Content-Disposition", "attachment; filename=" + Server.HtmlEncode(filename));
+                else // Handle legacy inline attachments a bit differently
+                    Response.AddHeader("Content-Disposition", "filename=" + Server.HtmlEncode(filename));
+                
+                Response.BinaryWrite(attachment.FileData);
+                Response.End();
+                return;
+            }
+
+            var fileManager = FileManager.Instance;
+
+            string filePath = null;
+
+            // If there is a file id, access the file using the file manager
+            if (attachment.FileId.HasValue && attachment.FileId.Value > 0)
+            {
+                var file = fileManager.GetFile(attachment.FileId.Value);
+                if (file != null)
                 {
-                    int AttachId = 0;
-                    int intPortalID = 0;
-                    int intModuleID = 0;
-                    if (Request.Params["AttachID"] != null)
-                    {
-                        if (SimulateIsNumeric.IsNumeric(Request.Params["AttachID"]))
-                        {
-                            AttachId = Int32.Parse(Request.Params["AttachID"]);
-                        }
-                        else
-                        {
-                            AttachId = 0;
-                        }
-                    }
-                    else
-                    {
-                        AttachId = 0;
-                    }
-                    if (Request.Params["PortalID"] != null)
-                    {
-                        if (SimulateIsNumeric.IsNumeric(Request.Params["PortalID"]))
-                        {
-                            intPortalID = Int32.Parse(Request.Params["PortalID"]);
-                        }
-                        else
-                        {
-                            intPortalID = 0;
-                        }
-                    }
-                    else
-                    {
-                        intPortalID = 0;
-                    }
-                    if (Request.Params["ModuleID"] != null)
-                    {
-                        if (SimulateIsNumeric.IsNumeric(Request.Params["ModuleID"]))
-                        {
-                            intModuleID = Int32.Parse(Request.Params["ModuleID"]);
-                        }
-                        else
-                        {
-                            intModuleID = -1;
-                        }
-                    }
-                    else
-                    {
-                        intModuleID = -1;
-                    }
-                    IFileManager _fileManager = FileManager.Instance;
-                    IFileInfo _file = null;
-                    if (AttachId > 0)
-                    {
-                        DotNetNuke.Entities.Users.UserInfo ui = DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo();
-                        //DotNetNuke.Modules.ActiveForums.Settings.LoadUser(objUserInfo.UserID, intPortalID, intModuleID)
-                        UserController uc = new UserController();
-                        User u = uc.GetUser(intPortalID, intModuleID);
-
-                        Data.AttachController ac = new Data.AttachController();
-                        AttachInfo ai = null;
-                        try
-                        {
-                            if (Request.UrlReferrer.AbsolutePath.Contains("HtmlEditorProviders") | (Request.UrlReferrer.AbsolutePath.Contains("afv") & Request.UrlReferrer.AbsolutePath.Contains("post")))
-                            {
-                                ai = ac.Attach_Get(AttachId, -1, ui.UserID, false);
-                            }
-                            else
-                            {
-                                ai = ac.Attach_Get(AttachId, -1, ui.UserID, true);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            ai = ac.Attach_Get(AttachId, -1, ui.UserID, true);
-                        }
-                        if (ai == null)
-                        {
-                            ai = new AttachInfo();
-                            _file = _fileManager.GetFile(AttachId);
-                            ai.AttachID = _file.FileId;
-                            ai.AllowDownload = true;
-                            ai.Filename = _file.FileName;
-                            ai.FileUrl = _file.PhysicalPath;
-                            ai.CanRead = "0;1;-3;-1;|||";
-                            ai.ContentType = _file.ContentType;
-                        }
-
-                        if (ai != null & u != null)
-                        {
-                            Response.ContentType = ai.ContentType.ToString();
-                            if (ai.FileData != null)
-                            {
-                                if (Permissions.HasAccess(ai.CanRead, u.UserRoles))
-                                {
-                                    bindata = (byte[])ai.FileData;
-                                    Response.BinaryWrite(bindata);
-                                    Response.AddHeader("Content-Disposition", "attachment;filename=" + Server.HtmlEncode(ai.Filename.ToString()));
-                                }
-
-                            }
-                            else
-                            {
-                                if (Permissions.HasAccess(ai.CanRead, u.UserRoles))
-                                {
-                                    string fpath = string.Empty;
-                                    string fName = string.Empty;
-                                    if (string.IsNullOrEmpty(ai.FileUrl))
-                                    {
-                                        fpath = Server.MapPath(PortalSettings.HomeDirectory + "activeforums_Attach/");
-                                        fpath += ai.Filename;
-                                        fName = System.IO.Path.GetFileName(fpath);
-                                    }
-                                    else
-                                    {
-
-                                        _file = _fileManager.GetFile(ai.AttachID);
-                                        fpath = _file.PhysicalPath;
-                                        fName = _file.FileName;
-                                    }
-
-                                    if (System.IO.File.Exists(fpath))
-                                    {
-
-                                        //Dim vpath As String
-                                        //vpath = PortalSettings.HomeDirectory & "activeforums_Attach/" & Server.HtmlEncode(ai.Filename)
-                                        FileStream fs = new FileStream(fpath, FileMode.Open, FileAccess.Read);
-                                        long contentLength = 0;
-                                        if (fs != null)
-                                        {
-                                            bindata = GetStreamAsByteArray(fs);
-                                            fs.Close();
-                                        }
-                                        string sExt = System.IO.Path.GetExtension(fName);
-                                        Response.Clear();
-                                        Response.AddHeader("Content-Disposition", "attachment; filename=" + Server.HtmlEncode(fName));
-                                        Response.AddHeader("Content-Length", bindata.LongLength.ToString());
-                                        sContentType = ai.ContentType;
-                                        switch (sExt.ToLowerInvariant())
-                                        {
-                                            case ".png":
-                                                sContentType = "image/png";
-                                                break;
-                                            case ".jpg":
-                                            case ".jpeg":
-                                                sContentType = "image/jpeg";
-                                                break;
-                                            case ".gif":
-                                                sContentType = "image/gif";
-                                                break;
-                                            case ".bmp":
-                                                sContentType = "image/bmp";
-                                                break;
-                                        }
-
-
-                                        Response.ContentType = sContentType;
-                                        Response.OutputStream.Write(bindata, 0, bindata.Length);
-                                        Response.End();
-                                    }
-                                    else
-                                    {
-                                        fpath = Server.MapPath(PortalSettings.HomeDirectory + "NTForums_Attach/");
-                                        fpath += ai.Filename;
-                                        if (System.IO.File.Exists(fpath))
-                                        {
-                                            string vpath = null;
-                                            vpath = PortalSettings.HomeDirectory + "activeforums_Attach/" + Server.HtmlEncode(ai.Filename);
-                                            Response.Redirect(Page.ResolveUrl(vpath));
-                                        }
-                                    }
-                                }
-
-
-                            }
-                        }
-                    }
-
+                    filePath = file.PhysicalPath;
                 }
             }
-            catch (Exception ex)
+                // Otherwise check the attachments directory (current and legacy)
+            else
             {
+                filePath = Server.MapPath(PortalSettings.HomeDirectory + "activeforums_Attach/") + attachment.FileName;
 
+                // This is another check to support legacy attachments.
+                if (!File.Exists(filePath))
+                {
+                    filePath = Server.MapPath(PortalSettings.HomeDirectory + "NTForums_Attach/") + attachment.FileName;
+                }
             }
 
-        }
-        private byte[] GetStreamAsByteArray(System.IO.Stream stream)
-        {
-            int streamLength = Convert.ToInt32(stream.Length);
-            byte[] fileData = new byte[Convert.ToInt32(stream.Length - 1) + 1];
-            stream.Read(fileData, 0, Convert.ToInt32(stream.Length));
-            stream.Close();
-            return fileData;
+            // At this point, we should have a valid file path
+            if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
+            {
+                Response.StatusCode = 404;
+                Response.Write("Not Found");
+                Response.End();
+                return;
+            }
+
+            var length = attachment.FileSize;
+            if (length <= 0)
+                length = new System.IO.FileInfo(filePath).Length;
+
+            Response.Clear();
+            Response.ContentType = attachment.ContentType;
+
+            if(attachmentId > 0)
+                Response.AddHeader("Content-Disposition", "attachment; filename=" + Server.HtmlEncode(filename));
+            else // Handle legacy inline attachments a bit differently
+                Response.AddHeader("Content-Disposition", "filename=" + Server.HtmlEncode(filename));
+
+            Response.AddHeader("Content-Length", length.ToString());
+            Response.WriteFile(filePath);
+            Response.Flush();
+            Response.Close();
+            Response.End();
         }
     }
 }

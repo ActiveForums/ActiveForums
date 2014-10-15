@@ -598,6 +598,15 @@ namespace DotNetNuke.Modules.ActiveForums {
         protected global::System.Web.UI.WebControls.RadioButton rdAttachOff;
         
         /// <summary>
+        /// cfgAttach control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl cfgAttach;
+        
+        /// <summary>
         /// Img8 control.
         /// </summary>
         /// <remarks>
@@ -895,24 +904,6 @@ namespace DotNetNuke.Modules.ActiveForums {
         protected global::System.Web.UI.WebControls.TextBox txtEditorWidth;
         
         /// <summary>
-        /// txtEditorToolBar control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtEditorToolBar;
-        
-        /// <summary>
-        /// drpEditorStyle control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList drpEditorStyle;
-        
-        /// <summary>
         /// drpDefaultTrust control.
         /// </summary>
         /// <remarks>
@@ -974,6 +965,42 @@ namespace DotNetNuke.Modules.ActiveForums {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList drpModDeleteTemplateId;
+        
+        /// <summary>
+        /// txtMaxAttach control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtMaxAttach;
+        
+        /// <summary>
+        /// txtMaxAttachSize control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtMaxAttachSize;
+        
+        /// <summary>
+        /// txtAllowedTypes control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtAllowedTypes;
+        
+        /// <summary>
+        /// ckAllowBrowseSite control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox ckAllowBrowseSite;
         
         /// <summary>
         /// chkTopicsOnly control.

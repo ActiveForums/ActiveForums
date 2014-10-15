@@ -1,0 +1,227 @@
+﻿SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_Attachments_Save]') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Attachments_Get]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_Attachments_Save]') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Attachments_Save]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_Attachments_Delete]') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Attachments_Delete]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_Attachments_ListForContent]') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Attachments_ListForContent]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_Attachments_ListForPost]') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Attachments_ListForPost]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_Forums_List]') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Forums_List]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_Attachments]') AND type in (N'U'))
+BEGIN
+	ALTER TABLE {databaseOwner}[{objectQualifier}activeforums_Attachments] ALTER COLUMN [Filename] nvarchar(255)
+	ALTER TABLE {databaseOwner}[{objectQualifier}activeforums_Attachments] ALTER COLUMN ContentType nvarchar(255)
+END
+GO
+
+
+BEGIN TRY
+
+DECLARE @MailQueueScheduleID int
+
+SET @MailQueueScheduleID = (SELECT ScheduleID 
+	FROM {databaseOwner}{objectQualifier}Schedule 
+	WHERE TypeFullName = 'DotNetNuke.Modules.ActiveForums.Queue.Scheduler,DotNetNuke.Modules.ActiveForums')
+		
+IF @MailQueueScheduleID IS NULL
+	EXEC {databaseOwner}{objectQualifier}AddSchedule 
+		@TypeFullName = 'DotNetNuke.Modules.ActiveForums.Queue.Scheduler,DotNetNuke.Modules.ActiveForums',
+		@TimeLapse = 1,
+		@TimeLapseMeasurement = 'm',
+		@RetryTimeLapse = 1,
+		@RetryTimeLapseMeasurement = 'm',
+		@RetainHistoryNum = 5,
+		@AttachToEvent = '',
+		@CatchUpEnabled = 0,
+		@Enabled = 1,
+		@ObjectDependencies = '',
+		@Servers = null,
+		@CreatedByUserID = null,
+		@FriendlyName = 'Active Forums Mail Queue'	
+ELSE
+	EXEC {databaseOwner}{objectQualifier}UpdateSchedule 
+		@ScheduleID = @MailQueueScheduleID,
+		@TypeFullName = 'DotNetNuke.Modules.ActiveForums.Queue.Scheduler,DotNetNuke.Modules.ActiveForums',
+		@TimeLapse = 1,
+		@TimeLapseMeasurement = 'm',
+		@RetryTimeLapse = 1,
+		@RetryTimeLapseMeasurement = 'm',
+		@RetainHistoryNum = 5,
+		@AttachToEvent = '',
+		@CatchUpEnabled = 0,
+		@Enabled = 1,
+		@ObjectDependencies = '',
+		@Servers = null,
+		@LastModifiedByUserID = null,
+		@FriendlyName = 'Active Forums Mail Queue'
+
+END TRY
+BEGIN CATCH
+END CATCH
+	
+GO
+
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Attachments_Get]
+@AttachmentID int,
+@FileID int,
+@WithSecurity bit = 0
+AS
+BEGIN
+	SET NOCOUNT ON
+	If @WithSecurity = 0
+		SELECT AttachID, ContentId, IsNull(UserID,-1) as UserID, [Filename], FileData, ContentType, FileSize, FileID, AllowDownload
+		FROM {databaseOwner}{objectQualifier}activeforums_Attachments 
+		WHERE (@AttachmentId > 0 AND AttachID = @AttachmentID)
+			OR (@FileID > 0 AND @FileID = FileID)
+	ELSE
+		SELECT A.AttachID, A.ContentId, IsNull(A.UserID,-1) as UserID, A.[Filename], A.FileData, A.ContentType, A.FileSize, A.FileID, A.AllowDownload, P.CanRead
+		FROM {databaseOwner}{objectQualifier}activeforums_Attachments AS A INNER JOIN
+				{databaseOwner}{objectQualifier}vw_activeforums_TopicView AS T ON a.ContentId = T.ContentId INNER JOIN
+				{databaseOwner}{objectQualifier}activeforums_Forums as F on f.ForumId = t.ForumId INNER JOIN
+				{databaseOwner}{objectQualifier}activeforums_Permissions as p on p.PermissionsId = f.PermissionsId 			   
+		WHERE (@AttachmentID > 0 AND AttachID = @AttachmentID)
+			OR (@FileID > 0 AND @FileID = FileID)
+END
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Attachments_Save]
+@ContentId int,
+@UserID int,
+@FileName nvarchar(255),
+@ContentType nvarchar(255),
+@FileSize int,
+@FileID int = null
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	DECLARE @AttachID int
+
+	INSERT INTO {databaseOwner}{objectQualifier}activeforums_Attachments (ContentId, UserID, [Filename], DateAdded, ContentType, FileSize, FileID)
+	VALUES (@ContentId, @UserID, @Filename, GetDate(), @ContentType, @FileSize, @FileID)
+
+	SET @AttachID = SCOPE_IDENTITY()
+
+	SELECT @AttachID
+END
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Attachments_Delete]
+@AttachID int
+AS
+BEGIN
+	SET NOCOUNT ON
+	DELETE FROM {databaseOwner}{objectQualifier}activeforums_Attachments WHERE AttachID = @AttachID
+END
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Attachments_ListForContent]
+@ContentId int
+AS
+BEGIN
+	SET NOCOUNT ON
+	SELECT AttachID, UserID, [Filename], ContentType, FileSize, AllowDownload, FileID
+		FROM {databaseOwner}{objectQualifier}activeforums_Attachments
+		WHERE ContentId = @ContentId
+END
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Attachments_ListForPost]
+@TopicID int,
+@ReplyID int = null
+AS
+BEGIN
+	SET NOCOUNT ON
+	SELECT at.AttachID, at.UserID, at.[Filename], at.ContentType, at.FileSize, at.AllowDownload, at.FileID
+		FROM {databaseOwner}{objectQualifier}activeforums_Attachments at inner join {databaseOwner}{objectQualifier}vw_activeforums_TopicView as tv on at.ContentId = tv.ContentId
+		WHERE tv.TopicId = @TopicID 
+			AND (@ReplyID IS NULL OR @ReplyID < 1 OR tv.ReplyID = @ReplyID)
+END
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Forums_List]
+@ModuleId int,
+@ForumGroupId int,
+@ParentForumId int,
+@FillLastPost bit
+AS
+IF @ForumGroupId = -1 AND @ParentForumId = -1 AND @FillLastPost = 0
+	--Return all Forums
+SELECT     IsNull(F.ForumId,-1) as ForumId, G.ModuleId, G.ForumGroupId, IsNull(F.ParentForumId,'-1') as ParentForumId, IsNull(F.ForumName,'') as ForumName, F.ForumDesc, F.SortOrder, F.Active, F.Hidden, F.TotalTopics, 
+                      F.TotalReplies, F.LastTopicId, F.LastReplyId, F.ForumSettingsKey, F.ForumSecurityKey, G.GroupName, ISNULL(P.ForumName, '') AS ParentForumName,
+		TopicsTemplateId = IsNull((SELECT SettingValue FROM {databaseOwner}{objectQualifier}activeforums_Settings WHERE SettingName = 'TOPICSTEMPLATEID' and GroupKey = F.ForumSettingsKey),0),
+		TopicTemplateId =  IsNull((SELECT SettingValue FROM {databaseOwner}{objectQualifier}activeforums_Settings WHERE SettingName = 'TOPICTEMPLATEID' and GroupKey = F.ForumSettingsKey),0)
+FROM         {databaseOwner}{objectQualifier}activeforums_Forums AS F RIGHT OUTER JOIN
+                      {databaseOwner}{objectQualifier}activeforums_Groups AS G ON F.ForumGroupId = G.ForumGroupId LEFT OUTER JOIN
+                      {databaseOwner}{objectQualifier}activeforums_Forums AS P ON F.ParentForumId = P.ForumId
+WHERE     (G.ModuleId = @ModuleId)
+ORDER BY G.SortOrder, F.SortOrder
+	
+ELSE
+	IF @ForumGroupId > 0 AND @ParentForumId = -1 AND @FillLastPost = 0
+		--Return Forums in Group
+		SELECT     F.ForumId, F.ModuleId, F.ForumGroupId, F.ParentForumId, F.ForumName, F.ForumDesc, F.SortOrder, F.Active, F.Hidden, F.TotalTopics, 
+						  F.TotalReplies, F.LastTopicId, F.LastReplyId, F.ForumSettingsKey, F.ForumSecurityKey, G.GroupName, ISNULL(P.ForumName, '') AS ParentForumName,
+		TopicsTemplateId = IsNull((SELECT SettingValue FROM {databaseOwner}{objectQualifier}activeforums_Settings WHERE SettingName = 'TOPICSTEMPLATEID' and GroupKey = F.ForumSettingsKey),0),
+		TopicTemplateId =  IsNull((SELECT SettingValue FROM {databaseOwner}{objectQualifier}activeforums_Settings WHERE SettingName = 'TOPICTEMPLATEID' and GroupKey = F.ForumSettingsKey),0)
+		FROM         {databaseOwner}{objectQualifier}activeforums_Forums AS F INNER JOIN
+						  {databaseOwner}{objectQualifier}activeforums_Groups AS G ON F.ForumGroupId = G.ForumGroupId LEFT OUTER JOIN
+						  {databaseOwner}{objectQualifier}activeforums_Forums AS P ON F.ParentForumId = P.ForumId
+		WHERE F.ModuleId = @ModuleId AND F.ForumGroupId = @ForumGroupId
+		ORDER By F.SortOrder
+	ELSE
+		If @ForumGroupId > 0 AND @ParentForumId > 0 AND @FillLastPost = 0
+			--Return Sub Forums
+			
+			SELECT     F.ForumId, F.ModuleId, F.ForumGroupId, F.ParentForumId, F.ForumName, F.ForumDesc, F.SortOrder, F.Active, F.Hidden, F.TotalTopics, 
+							  F.TotalReplies, F.LastTopicId, F.LastReplyId, F.ForumSettingsKey, F.ForumSecurityKey, G.GroupName, ISNULL(P.ForumName, '') AS ParentForumName,
+		TopicsTemplateId = IsNull((SELECT SettingValue FROM {databaseOwner}{objectQualifier}activeforums_Settings WHERE SettingName = 'TOPICSTEMPLATEID' and GroupKey = F.ForumSettingsKey),0),
+		TopicTemplateId =  IsNull((SELECT SettingValue FROM {databaseOwner}{objectQualifier}activeforums_Settings WHERE SettingName = 'TOPICTEMPLATEID' and GroupKey = F.ForumSettingsKey),0)
+			FROM         {databaseOwner}{objectQualifier}activeforums_Forums AS F INNER JOIN
+							  {databaseOwner}{objectQualifier}activeforums_Groups AS G ON F.ForumGroupId = G.ForumGroupId LEFT OUTER JOIN
+							  {databaseOwner}{objectQualifier}activeforums_Forums AS P ON F.ParentForumId = P.ForumId
+			WHERE F.ModuleId = @ModuleId AND F.ParentForumId = @ParentForumId
+			ORDER By G.SortOrder, F.SortOrder
+		ELSE
+			---Returns Forums In Group with Last Post Info
+SELECT     F.ForumId, F.ModuleId, F.ForumGroupId, F.ParentForumId, F.ForumName, F.ForumDesc, F.SortOrder, F.Active, F.Hidden, F.TotalTopics, 
+                      F.TotalReplies, F.LastTopicId, F.LastReplyId, F.ForumSettingsKey, F.ForumSecurityKey, G.GroupName, ISNULL(P.ForumName, '') AS ParentForumName, ISNULL(U.FirstName, '') 
+                      AS LastPostFirstName, ISNULL(U.LastName, '') AS LastPostLastName, ISNULL(C.AuthorId, - 1) AS LastPostUserId, ISNULL(C.AuthorName, '') AS LastPostUserName, 
+                      C.Subject AS LastPostSubject, C.DateCreated AS LastPostDateTime,
+		TopicsTemplateId = IsNull((SELECT SettingValue FROM {databaseOwner}{objectQualifier}activeforums_Settings WHERE SettingName = 'TOPICSTEMPLATEID' and GroupKey = F.ForumSettingsKey),0),
+		TopicTemplateId =  IsNull((SELECT SettingValue FROM {databaseOwner}{objectQualifier}activeforums_Settings WHERE SettingName = 'TOPICTEMPLATEID' and GroupKey = F.ForumSettingsKey),0)
+FROM         {databaseOwner}{objectQualifier}activeforums_Content AS C INNER JOIN
+                      {databaseOwner}{objectQualifier}activeforums_Topics AS T ON C.ContentId = T.ContentId INNER JOIN
+                      {databaseOwner}{objectQualifier}activeforums_UserProfiles AS UD INNER JOIN
+                      {databaseOwner}{objectQualifier}Users AS U ON UD.UserID = U.UserID ON C.AuthorId = UD.UserID RIGHT OUTER JOIN
+                      {databaseOwner}{objectQualifier}activeforums_Forums AS F INNER JOIN
+                      {databaseOwner}{objectQualifier}activeforums_Groups AS G ON F.ForumGroupId = G.ForumGroupId ON T.TopicId = F.LastPostId LEFT OUTER JOIN
+                      {databaseOwner}{objectQualifier}activeforums_Forums AS P ON F.ParentForumId = P.ForumId
+WHERE     (F.ModuleId = @ModuleId) AND (F.ForumGroupId = @ForumGroupId)
+ORDER BY G.SortOrder, F.SortOrder
+GO
+
+
+

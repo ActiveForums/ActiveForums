@@ -308,7 +308,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     else
                     {
                         var ctlUtils = new ControlUtils();
-                        sTopicUrl = ctlUtils.BuildUrl(topicTabId, topicModuleId, sGroupPrefixUrl, sForumUrl, groupId, forumId, topicId, sTopicUrl, -1, -1, string.Empty, 1, -1);
+                        sTopicUrl = ctlUtils.BuildUrl(topicTabId, topicModuleId, sGroupPrefixUrl, sForumUrl, groupId, forumId, topicId, sTopicUrl, -1, -1, string.Empty, 1, replyId, -1);
                         if (sHost.EndsWith("/") && sTopicUrl.StartsWith("/"))
                         {
                             sHost = sHost.Substring(0, sHost.Length - 1);
@@ -325,6 +325,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                         {
                             bodyHtml = TemplateUtils.GetTemplateSection(bodyHtml, "<body>", "</body>");
                         }
+                        // Legacy Attachment functionality uses "attachid"
                         if (bodyHtml.Contains("&#91;IMAGE:"))
                         {
                             var strHost = Common.Globals.AddHTTP(Common.Globals.GetDomainName(HttpContext.Current.Request)) + "/";
@@ -337,6 +338,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                                 bodyHtml = bodyHtml.Replace(match.Value, sImage);
                             }
                         }
+                        // Legacy Attachment functionality uses "attachid"
                         if (bodyHtml.Contains("&#91;THUMBNAIL:"))
                         {
                             var strHost = Common.Globals.AddHTTP(Common.Globals.GetDomainName(HttpContext.Current.Request)) + "/";

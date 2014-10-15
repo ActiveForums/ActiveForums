@@ -1,10 +1,17 @@
 <%@ Register TagPrefix="am" Namespace="DotNetNuke.Modules.ActiveForums.Controls" Assembly="DotNetNuke.Modules.ActiveForums" %>
+
+	<div class="aftopicjumper">
+				<div class="afprevtopic">[PREVTOPIC] <span class="aftopicjumperdesc _hide">Go to previous topic</span></div>
+				<div class="afnexttopic">[NEXTTOPIC] <span class="aftopicjumperdesc _hide">Go to next topic</span></div>
+			</div>
 <table class="afgrid">
 	<tr>
 		<td>
 			[BREADCRUMB]<div class="afcrumb">[FORUMMAINLINK] > [FORUMGROUPLINK] > [FORUMLINK]</div>[/BREADCRUMB]
+
+			<div class="aftopicsum">[RESX:LastPost] [AF:LABEL:LastPostDate] [RESX:BY] <strong>[AF:LABEL:LastPostAuthor]</strong></div>
 			<div class="aftitlelg">[SUBJECT]</div>
-			<div class="aftopicsum">[RESX:LastPost] [AF:LABEL:LastPostDate] [RESX:BY] [AF:LABEL:LastPostAuthor]. [AF:LABEL:ReplyCount] [RESX:REPLIES].</div>
+			<div class="aftopicreplies">[AF:LABEL:ReplyCount] [RESX:REPLIES]</div>
 		    <div class="afprop-list">
 				<ul>
 				[AF:PROPERTIES]
@@ -13,8 +20,14 @@
 				</ul>
 			</div>
 		</td>
-		<td align="right" valign="top"><div style="padding:5px;"><span class="afactionicon">[AF:CONTROL:ADDTHIS:0]</span><span class="afactionicon">[AF:CONTROL:PRINTER]</span><span class="afactionicon">[AF:CONTROL:EMAIL]</span></div>
-[POSTRATINGBUTTON][AF:CONTROL:STATUS]<div style="padding-top:5px;">[RESX:SortPosts]:[SORTDROPDOWN]</div>
+		<td class="_hide" align="right" valign="top">
+			<div style="padding:5px;">
+				<span class="afactionicon">[AF:CONTROL:ADDTHIS:0]</span>
+				<span class="afactionicon">[AF:CONTROL:PRINTER]</span>
+				<span class="afactionicon">[AF:CONTROL:EMAIL]</span>
+			</div>
+			[POSTRATINGBUTTON][AF:CONTROL:STATUS]
+			<div style="padding-top:5px;">[RESX:SortPosts]:[SORTDROPDOWN]</div>
 		</td>
 	</tr>
 </table>
@@ -23,10 +36,11 @@
 <table class="afgrid">
 	<tr>
 		<td class="afnormal">[TOPICSUBSCRIBE]</td>
-		<td class="afnormalbold" style="text-align:right;vertical-align:bottom;">[PREVTOPIC] [NEXTTOPIC]</td>
 	</tr>
 	<tr>
-		<td valign="bottom" style="white-space:nowrap;padding-bottom:5px;"><div class="afbuttonarea">[ADDREPLY]</div></td>
+		<td valign="bottom" style="white-space:nowrap;padding-bottom:5px;">
+			<div class="afbuttonarea">[ADDREPLY]</div>
+		</td>
 		<td valign="bottom" align="right" width="100%" style="padding-bottom:5px;">[PAGER1]</td>
 	</tr>
 </table>	
@@ -34,9 +48,9 @@
 <div id="afgrid" style="position:relative;">
 <table class="afgrid" cellpadding="4">
 	<tr>
-		<td class="afgrouprow" style="width:125px;text-align:center;">[RESX:Author]</td>
-		<td class="afgrouprow" align="center">[RESX:Messages]</td>
-		<td class="afgrouprow" width="24" style="text-align:right;">[AF:CONTROL:STATUSICON]</td>
+		<td class="afgrouprow aftopicviewheader" style="width:125px;text-align:left;">[RESX:Author]</td>
+		<td class="afgrouprow aftopicviewheader" align="left">[RESX:Messages]</td>
+		<td class="afgrouprow aftopicviewheader" width="24" style="text-align:right;">[AF:CONTROL:STATUSICON]</td>
 	</tr>
 </table>
 		<table class="afgrid" cellpadding="4">
@@ -46,17 +60,17 @@
 					<td class="[POSTREPLYCSS]">
 						<table class="afgrid" cellpadding="4">
 							<tr>
-								<td class="afsubrow"><a name="[POSTID]"></a>[POSTDATE]</td>
+								<td class="afsubrow afsubrowdate"><a name="[POSTID]"></a>[POSTDATE]</td>
 								<td class="afsubrow af-actions">[AF:CONTROL:TOPICACTIONS]</td>
 							</tr>
 							<tr>
-								<td colspan="2"><div class="afpostbody">[AF:CONTROL:POLL][BODY]</div></td>
+								<td colspan="2">
+									<div class="afpostbody">[AF:CONTROL:POLL][BODY]</div>
+									<div class="afpostsig">[SIGNATURE]</div>
+								</td>
 							</tr>
 							<tr>
 								<td colspan="2" class="afpostattach">[ATTACHMENTS]</td>
-							</tr>
-							<tr>
-								<td colspan="2" class="afpostsig">[SIGNATURE]</td>
 							</tr>
 							[AF:CONTROL:TAGS]
 							<tr>
@@ -80,13 +94,13 @@
 								<td class="afsubrow af-actions">[AF:CONTROL:POSTACTIONS]</td>
 							</tr>
 							<tr>
-								<td colspan="2"><div class="afpostbody">[BODY]</div></td>
+								<td colspan="2">
+									<div class="afpostbody">[BODY]</div>
+									<div class="afpostsig">[SIGNATURE]</div>
+								</td>
 							</tr>
 							<tr>
 								<td colspan="2" class="afpostattach">[ATTACHMENTS]</td>
-							</tr>
-							<tr>
-								<td colspan="2" class="afpostsig">[SIGNATURE]</td>
 							</tr>
 							<tr>
 								<td colspan="2" class="afposteditdate" align="right">[MODEDITDATE]</td>
@@ -99,7 +113,7 @@
 </div>	
 <table class="afgrid" cellpadding="4">
 	<tr>
-		<td class="afnormal">[ADDREPLY]</td>
+		<td class="afbuttonarea">[ADDREPLY]</td>
 		<td class="af-right"><div class="af-fright">[PAGER2]<br />[JUMPTO]</div></td>
 	</tr>
 </table>

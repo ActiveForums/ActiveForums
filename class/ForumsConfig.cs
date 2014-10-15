@@ -212,11 +212,11 @@ namespace DotNetNuke.Modules.ActiveForums
 						Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AllowAttach, "true");
 						Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachCount, "3");
 						Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachMaxSize, "1000");
-						Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachTypeAllowed, ".jpg,.png,.gif,.zip");
-						Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachStore, "FILESYSTEM");
+						Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachTypeAllowed, "txt,tiff,pdf,xls,xlsx,doc,docx,ppt,pptx");
+						//Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachStore, "FILESYSTEM");
 						Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachMaxHeight, "450");
 						Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachMaxWidth, "450");
-						Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachUniqueFileNames, "false");
+						Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachAllowBrowseSite, "true");
 						Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AllowHTML, sAllowHTML);
 						Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorType, "0");
 						Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorHeight, "350");

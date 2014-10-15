@@ -26,6 +26,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 namespace DotNetNuke.Modules.ActiveForums.Controls
 {
@@ -529,7 +530,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 Template = Template.Replace("[FORUMICONCSS]", "<div class=\"" + sFolderCSS + "\"></div>");
             }
             var ctlUtils = new ControlUtils();
-            ForumURL = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, fi.ForumGroup.PrefixURL, fi.PrefixURL, fi.ForumGroupId, fi.ForumID, -1, string.Empty, -1, -1, string.Empty, 1, SocialGroupId);
+            ForumURL = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, fi.ForumGroup.PrefixURL, fi.PrefixURL, fi.ForumGroupId, fi.ForumID, -1, string.Empty, -1, -1, string.Empty, 1, -1, SocialGroupId);
 
             //ForumURL = GetForumLink(.ForumID, TabId, canView, MainSettings.UseShortUrls, .PrefixURL)
             Template = Template.Replace("[FORUMNAME]", GetForumLink(fi.ForumName, fi.ForumID, TabId, canView, ForumURL));
@@ -740,7 +741,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             {
                 string sTopicURL;
                 var ctlUtils = new ControlUtils();
-                sTopicURL = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, fi.ForumGroup.PrefixURL, fi.PrefixURL, fi.ForumGroupId, ForumID, ParentPostID, fi.TopicUrl, -1, -1, string.Empty, 1, SocialGroupId);
+                sTopicURL = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, fi.ForumGroup.PrefixURL, fi.PrefixURL, fi.ForumGroupId, ForumID, ParentPostID, fi.TopicUrl, -1, -1, string.Empty, 1, -1, SocialGroupId);
 
                 string sURL;
                 if (ParentPostID == 0 || LastPostID == ParentPostID)
@@ -760,7 +761,12 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     }
                     else
                     {
-                        sURL = Utilities.NavigateUrl(TabID, "", new[] { ParamKeys.TopicId + "=" + ParentPostID, ParamKeys.ContentJumpId + "=" + PostId });
+                        var @params = new List<string> { ParamKeys.TopicId + "=" + ParentPostID, ParamKeys.ContentJumpId + "=" + PostId };
+
+                        if (SocialGroupId > 0)
+                            @params.Add("GroupId=" + SocialGroupId.ToString());
+
+                        sURL = Utilities.NavigateUrl(TabID, "", @params.ToArray());
                     }
 
 

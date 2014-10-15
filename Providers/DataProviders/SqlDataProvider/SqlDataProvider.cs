@@ -670,6 +670,15 @@ namespace DotNetNuke.Modules.ActiveForums
 
         #endregion
 
+        #region Content
+
+        public override int Content_GetID(int topicId, int? replyId)
+        {
+            return Utilities.SafeConvertInt(SqlHelper.ExecuteScalar(ConnectionString, DatabaseOwner + ObjectQualifier + "activeforums_Content_GetID", topicId, replyId));
+        }
+
+        #endregion
+
         #region MailQueue
 
         public override IDataReader Queue_List()

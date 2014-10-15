@@ -302,8 +302,11 @@ tr.afgroupback td.afgroupback_right{background-image:url(images/groupback_right.
 .amModalHeaderText{padding-left:10px;padding-top:5px;font-family:Tahoma;font-size:11px; font-weight:bold;background-color:#666666;color:#fff;text-align:left;float:left}
 .amModalCloseImg{text-align:right;padding-right:2px;cursor:pointer;float:right}
 .amModalFrame{padding:10px;}
-* html .ammodalpop {margin:0px;padding:0px;}
-.ammodalpop{margin:0px;width:250;position:absolute;background-color:#f0f0f0;padding:0px;border:solid 1px #ccc;z-index:50000}
+* html .ammodalpop { margin:0px; padding:0px;}
+.ammodalpop{margin:0px;position:absolute;background-color:#f0f0f0;padding:0px;border:solid 1px #ccc;z-index:50000}
+.ammodalpop select, .ammodalpop input, .ammodalpop textarea { margin: 0px;padding: 4px;background-color: #fff;border: solid 1px black;}
+.ammodalpop td { vertical-align: middle;padding: 2px 10px 2px 0px; }
+.ammodalpop td:nth-child(2) { min-width: 100px; }
 .afsuccess{color:Green;}
 .aferror{color:Red;}
 

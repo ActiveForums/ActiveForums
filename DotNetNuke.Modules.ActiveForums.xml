@@ -2488,9 +2488,9 @@
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.af_post.hidAttachIds">
+        <member name="F:DotNetNuke.Modules.ActiveForums.af_post.hidAttachments">
             <summary>
-            hidAttachIds control.
+            hidAttachments control.
             </summary>
             <remarks>
             Auto-generated field.
@@ -3294,6 +3294,15 @@
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.admin_manageforums_forumeditor.cfgAttach">
+            <summary>
+            cfgAttach control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
         <member name="F:DotNetNuke.Modules.ActiveForums.admin_manageforums_forumeditor.Img8">
             <summary>
             Img8 control.
@@ -3591,24 +3600,6 @@
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.admin_manageforums_forumeditor.txtEditorToolBar">
-            <summary>
-            txtEditorToolBar control.
-            </summary>
-            <remarks>
-            Auto-generated field.
-            To modify move field declaration from designer file to code-behind file.
-            </remarks>
-        </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.admin_manageforums_forumeditor.drpEditorStyle">
-            <summary>
-            drpEditorStyle control.
-            </summary>
-            <remarks>
-            Auto-generated field.
-            To modify move field declaration from designer file to code-behind file.
-            </remarks>
-        </member>
         <member name="F:DotNetNuke.Modules.ActiveForums.admin_manageforums_forumeditor.drpDefaultTrust">
             <summary>
             drpDefaultTrust control.
@@ -3666,6 +3657,42 @@
         <member name="F:DotNetNuke.Modules.ActiveForums.admin_manageforums_forumeditor.drpModDeleteTemplateId">
             <summary>
             drpModDeleteTemplateId control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.admin_manageforums_forumeditor.txtMaxAttach">
+            <summary>
+            txtMaxAttach control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.admin_manageforums_forumeditor.txtMaxAttachSize">
+            <summary>
+            txtMaxAttachSize control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.admin_manageforums_forumeditor.txtAllowedTypes">
+            <summary>
+            txtAllowedTypes control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.admin_manageforums_forumeditor.ckAllowBrowseSite">
+            <summary>
+            ckAllowBrowseSite control.
             </summary>
             <remarks>
             Auto-generated field.
@@ -3897,15 +3924,6 @@
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.af_quickreplyform.btnSubmit">
-            <summary>
-            btnSubmit control.
-            </summary>
-            <remarks>
-            Auto-generated field.
-            To modify move field declaration from designer file to code-behind file.
-            </remarks>
-        </member>
         <member name="F:DotNetNuke.Modules.ActiveForums.af_quickreplyform.btnSubmitLink">
             <summary>
             btnSubmitLink control.
@@ -3951,83 +3969,11 @@
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.af_uploader.btnUpload">
-            <summary>
-            btnUpload control.
-            </summary>
-            <remarks>
-            Auto-generated field.
-            To modify move field declaration from designer file to code-behind file.
-            </remarks>
-        </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.af_uploader.cbAttach">
-            <summary>
-            cbAttach control.
-            </summary>
-            <remarks>
-            Auto-generated field.
-            To modify move field declaration from designer file to code-behind file.
-            </remarks>
-        </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.af_uploader.plhAttach">
-            <summary>
-            plhAttach control.
-            </summary>
-            <remarks>
-            Auto-generated field.
-            To modify move field declaration from designer file to code-behind file.
-            </remarks>
-        </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.af_uploader.cbMyFiles">
-            <summary>
-            cbMyFiles control.
-            </summary>
-            <remarks>
-            Auto-generated field.
-            To modify move field declaration from designer file to code-behind file.
-            </remarks>
-        </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.af_uploader.plhMyFiles">
-            <summary>
-            plhMyFiles control.
-            </summary>
-            <remarks>
-            Auto-generated field.
-            To modify move field declaration from designer file to code-behind file.
-            </remarks>
-        </member>
         <member name="M:DotNetNuke.Modules.ActiveForums.UserProfiles.GetUserRank(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
             Returns the Rank for the user
             </summary>
             <returns>ReturnType 0 Returns RankDisplay ReturnType 1 Returns RankName</returns>
-        </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.uploader.frm1">
-            <summary>
-            frm1 control.
-            </summary>
-            <remarks>
-            Auto-generated field.
-            To modify move field declaration from designer file to code-behind file.
-            </remarks>
-        </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.uploader.inpFile">
-            <summary>
-            inpFile control.
-            </summary>
-            <remarks>
-            Auto-generated field.
-            To modify move field declaration from designer file to code-behind file.
-            </remarks>
-        </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.uploader.isUploaded">
-            <summary>
-            isUploaded control.
-            </summary>
-            <remarks>
-            Auto-generated field.
-            To modify move field declaration from designer file to code-behind file.
-            </remarks>
         </member>
         <member name="F:DotNetNuke.Modules.ActiveForums._default.btnContinue">
             <summary>

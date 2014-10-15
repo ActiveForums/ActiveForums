@@ -138,10 +138,9 @@ namespace DotNetNuke.Modules.ActiveForums
                 string sUrl = NavigateUrl(Convert.ToInt32(Request.QueryString["TabId"]), "", new string[] { ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + TopicId, ParamKeys.ViewType + "=confirmaction", ParamKeys.ConfirmActionId + "=" + ConfirmActions.SendToComplete });
                 try
                 {
-                    Email oEmail = new Email();
                     if (!(sMessage == string.Empty) && !(sSubject == string.Empty))
                     {
-                        oEmail.SendNotification(UserInfo.Email, sEmail, sSubject, sMessage, sMessage.Replace(System.Environment.NewLine, "<br />"));
+                        Email.SendNotification(UserInfo.Email, sEmail, sSubject, sMessage, sMessage.Replace(System.Environment.NewLine, "<br />"));
                     }
 
 

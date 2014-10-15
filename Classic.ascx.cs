@@ -30,6 +30,9 @@ using DotNetNuke.Web.Client.ClientResourceManagement;
 using System.Text;
 using DotNetNuke.Security.Roles;
 
+//using DotNetNuke.Framework.JavaScriptLibraries;
+
+
 namespace DotNetNuke.Modules.ActiveForums
 {
     public partial class Classic : ForumBase
@@ -46,9 +49,8 @@ namespace DotNetNuke.Modules.ActiveForums
 
         protected override void OnInit(EventArgs e)
 		{
-			base.OnInit(e);
-
-
+            //JavaScript.RequestRegistration(CommonJs.DnnPlugins);
+            base.OnInit(e);
         }
         protected override void OnLoad(EventArgs e)
 		{
@@ -187,6 +189,7 @@ namespace DotNetNuke.Modules.ActiveForums
                 }
                 else
                 {
+                    // this is where af_post.ascx is used
                     string ctlPath = string.Empty;
                     ctlPath = "~/DesktopModules/ActiveForums/controls/af_" + view + ".ascx";
                     if (!(System.IO.File.Exists(Server.MapPath(ctlPath))))
@@ -334,8 +337,9 @@ namespace DotNetNuke.Modules.ActiveForums
                 lang = "en-US";
             }
 
-            Framework.jQuery.RequestRegistration();
-            Framework.jQuery.RequestUIRegistration();
+            //Framework.jQuery.RequestRegistration();
+            //Framework.jQuery.RequestUIRegistration();
+            Framework.jQuery.RequestDnnPluginsRegistration();
 
             ClientResourceManager.RegisterScript(this.Page, "~/desktopmodules/activeforums/scripts/jquery-searchPopup.js");
 

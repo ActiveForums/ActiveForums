@@ -43,8 +43,8 @@ namespace DotNetNuke.Modules.ActiveForums
 
         #region Event Handlers
         protected override void OnLoad(EventArgs e)
-		{
-			base.OnLoad(e);
+        {
+            base.OnLoad(e);
 
             try
             {
@@ -106,8 +106,8 @@ namespace DotNetNuke.Modules.ActiveForums
         private object designerPlaceholderDeclaration;
 
         protected override void OnInit(EventArgs e)
-		{
-			base.OnInit(e);
+        {
+            base.OnInit(e);
 
             //CODEGEN: This method call is required by the Web Form Designer
             //Do not modify it using the code editor.
@@ -165,7 +165,7 @@ namespace DotNetNuke.Modules.ActiveForums
 
                 }
                 ControlUtils ctlUtils = new ControlUtils();
-                string fullURL = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, ForumInfo.PrefixURL, ForumInfo.ForumGroupId, ForumInfo.ForumID, TopicId, sTopicURL, -1, -1, string.Empty, 1, SocialGroupId);
+                string fullURL = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, ForumInfo.PrefixURL, ForumInfo.ForumGroupId, ForumInfo.ForumID, TopicId, sTopicURL, -1, -1, string.Empty, 1, ReplyId, SocialGroupId);
                 string subject = Utilities.GetSharedResource("AlertSubject");
                 subject = subject.Replace("[DisplayName]", authorName);
                 subject = subject.Replace("[Subject]", sSubject);

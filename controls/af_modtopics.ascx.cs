@@ -45,8 +45,8 @@ namespace DotNetNuke.Modules.ActiveForums
         }
 
         protected override void OnLoad(EventArgs e)
-		{
-			base.OnLoad(e);
+        {
+            base.OnLoad(e);
 
             if (Request.IsAuthenticated && ForumUser.Profile.IsMod)
             {
@@ -103,8 +103,8 @@ namespace DotNetNuke.Modules.ActiveForums
                                 {
                                     try
                                     {
-                                        Email oEmail = new Email();
-                                        oEmail.SendEmail(fi.ModDeleteTemplateId, PortalId, ForumModuleId, ForumTabId, tmpForumId, tmpTopicId, tmpReplyId, string.Empty, auth);
+                                        //Email.SendEmail(fi.ModDeleteTemplateId, PortalId, ForumModuleId, ForumTabId, tmpForumId, tmpTopicId, tmpReplyId, string.Empty, auth);
+                                        Email.SendEmailToModerators(fi.ModDeleteTemplateId, PortalId, tmpForumId, tmpTopicId, tmpReplyId, ForumModuleId, ForumTabId, string.Empty);
                                     }
                                     catch (Exception ex)
                                     {
@@ -161,8 +161,7 @@ namespace DotNetNuke.Modules.ActiveForums
                                     au.FirstName = ui.FirstName;
                                     au.LastName = ui.LastName;
                                     au.Username = ui.Username;
-                                    Email oEmail = new Email();
-                                    oEmail.SendEmail(fi.ModRejectTemplateId, PortalId, ForumModuleId, ForumTabId, tmpForumId, tmpTopicId, tmpReplyId, string.Empty, au);
+                                    Email.SendEmail(fi.ModRejectTemplateId, PortalId, ForumModuleId, ForumTabId, tmpForumId, tmpTopicId, tmpReplyId, string.Empty, au);
                                 }
 
                             }
@@ -193,8 +192,7 @@ namespace DotNetNuke.Modules.ActiveForums
                                     //TODO: Add Audit log for who approved topic
                                     if (fi.ModApproveTemplateId > 0 & ti.Author.AuthorId > 0)
                                     {
-                                        Email oEmail = new Email();
-                                        oEmail.SendEmail(fi.ModApproveTemplateId, PortalId, ForumModuleId, ForumTabId, tmpForumId, tmpTopicId, tmpReplyId, string.Empty, ti.Author);
+                                        Email.SendEmail(fi.ModApproveTemplateId, PortalId, ForumModuleId, ForumTabId, tmpForumId, tmpTopicId, tmpReplyId, string.Empty, ti.Author);
                                     }
 
                                     Subscriptions.SendSubscriptions(PortalId, ForumModuleId, ForumTabId, tmpForumId, tmpTopicId, 0, ti.Content.AuthorId);
@@ -202,7 +200,7 @@ namespace DotNetNuke.Modules.ActiveForums
                                     try
                                     {
                                         ControlUtils ctlUtils = new ControlUtils();
-                                        string sUrl = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, fi.ForumGroup.PrefixURL, fi.PrefixURL, fi.ForumGroupId, fi.ForumID, TopicId, ti.TopicUrl, -1, -1, string.Empty, 1, fi.SocialGroupId); // Utilities.NavigateUrl(ForumTabId, "", ParamKeys.ViewType & "=" & Views.Topic & "&" & ParamKeys.ForumId & "=" & ForumId, ParamKeys.TopicId & "=" & TopicId)
+                                        string sUrl = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, fi.ForumGroup.PrefixURL, fi.PrefixURL, fi.ForumGroupId, fi.ForumID, TopicId, ti.TopicUrl, -1, -1, string.Empty, 1, -1, fi.SocialGroupId); // Utilities.NavigateUrl(ForumTabId, "", ParamKeys.ViewType & "=" & Views.Topic & "&" & ParamKeys.ForumId & "=" & ForumId, ParamKeys.TopicId & "=" & TopicId)
                                         if (sUrl.Contains("~/") || Request.QueryString["asg"] != null)
                                         {
                                             sUrl = Utilities.NavigateUrl(ForumTabId, "", ParamKeys.TopicId + "=" + TopicId);
@@ -240,8 +238,7 @@ namespace DotNetNuke.Modules.ActiveForums
                                     //TODO: Add Audit log for who approved topic
                                     if (fi.ModApproveTemplateId > 0 & ri.Author.AuthorId > 0)
                                     {
-                                        Email oEmail = new Email();
-                                        oEmail.SendEmail(fi.ModApproveTemplateId, PortalId, ForumModuleId, ForumTabId, tmpForumId, tmpTopicId, tmpReplyId, string.Empty, ri.Author);
+                                        Email.SendEmail(fi.ModApproveTemplateId, PortalId, ForumModuleId, ForumTabId, tmpForumId, tmpTopicId, tmpReplyId, string.Empty, ri.Author);
                                     }
 
                                     Subscriptions.SendSubscriptions(PortalId, ForumModuleId, ForumTabId, tmpForumId, tmpTopicId, tmpReplyId, ri.Content.AuthorId);
@@ -249,7 +246,7 @@ namespace DotNetNuke.Modules.ActiveForums
                                     try
                                     {
                                         ControlUtils ctlUtils = new ControlUtils();
-                                        string fullURL = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, fi.ForumGroup.PrefixURL, fi.PrefixURL, fi.ForumGroupId, fi.ForumID, TopicId, ti.TopicUrl, -1, -1, string.Empty, 1, fi.SocialGroupId);
+                                        string fullURL = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, fi.ForumGroup.PrefixURL, fi.PrefixURL, fi.ForumGroupId, fi.ForumID, TopicId, ti.TopicUrl, -1, -1, string.Empty, 1, -1, fi.SocialGroupId);
                                         if (fullURL.Contains("~/") || Request.QueryString["asg"] != null)
                                         {
                                             fullURL = Utilities.NavigateUrl(ForumTabId, "", new string[] { ParamKeys.TopicId + "=" + TopicId, ParamKeys.ContentJumpId + "=" + tmpReplyId });
@@ -453,10 +450,10 @@ namespace DotNetNuke.Modules.ActiveForums
                             case "image/pjpeg":
                             case "image/gif":
                             case "image/png":
-                                sb.Append("<br /><span class=\"afimage\"><img src=\"" + strHost + "DesktopModules/ActiveForums/viewer.aspx?portalid=" + PortalID + "&moduleid=" + ModuleID + "&attachid=" + attachId + "\" border=0 align=center></span><br><br>");
+                                sb.Append("<br /><span class=\"afimage\"><img src=\"" + strHost + "DesktopModules/ActiveForums/viewer.aspx?portalid=" + PortalID + "&moduleid=" + ModuleID + "&attachmentid=" + attachId + "\" border=0 align=center></span><br><br>");
                                 break;
                             default:
-                                sb.Append("<span class=\"afattachlink\"><a href=\"" + strHost + "DesktopModules/ActiveForums/viewer.aspx?portalid=" + PortalID + "&moduleid=" + ModuleID + "&attachid=" + attachId + "\" target=\"_blank\"><img src=\"" + strHost + "DesktopModules/ActiveForums/images/attach.gif\" border=\"0\" align=\"absmiddle\">Attachment: " + Filename + "</a></span><br />");
+                                sb.Append("<span class=\"afattachlink\"><a href=\"" + strHost + "DesktopModules/ActiveForums/viewer.aspx?portalid=" + PortalID + "&moduleid=" + ModuleID + "&attachmentid=" + attachId + "\" target=\"_blank\"><img src=\"" + strHost + "DesktopModules/ActiveForums/images/attach.gif\" border=\"0\" align=\"absmiddle\">Attachment: " + Filename + "</a></span><br />");
                                 break;
                         }
                     }

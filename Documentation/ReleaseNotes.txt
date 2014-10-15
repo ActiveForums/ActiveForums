@@ -7,137 +7,62 @@
 <div class="License">
 	<p class="Owner">
 		<h3>About DotNetNuke Active Forums</h3>
-		<strong>Version 5.1.4</strong><br /><br />		
+		<strong>Version 6.0.2</strong><br />		
 	</p>
 </div>
-<h3>DotNetNuke Active Forums 05.01.03</h3>
-<p class="Contributor">
-	Will Morgenweck <br />
-	Benjiro Nelson <br />
-   Chris Hammond <br />
-   Jay Mathis <br />
-   Jason Brunken <br />
-</p>
 <hr/>
 <div class="License">
    <h3>Release Notes</h3>
     <p class="Owner">
-	<b>Version 05.01.04
+	<b>Version 06.00.02
 	<p>
 		<ul>
-			<li>Fixed Issue #27 - Subscribe Link Label Text</li>
-			<li>Fixed Issue #28 - Editor Selection Does Not Work
+			<li>Issue #148 - More overflow fixes for TopicView</li>
+
 		</ul>
 	</p>
+	
+</div>
+<hr/>
+<div class="License">
+	<p class="Owner">
+		<h3>About DotNetNuke Active Forums</h3>
+		<strong>Version 6.0.1</strong><br />		
+	</p>
+</div>
+<hr/>
+<div class="License">
+   <h3>Release Notes</h3>
     <p class="Owner">
-	<b>Version 05.01.03</b><br /><br />
-	</p>
+	<b>Version 06.00.01
 	<p>
 		<ul>
-			<li>Fixed coalation bug in standard search procedure.</li>
+			<li>Issue #143 - Overall UX/UI overhaul modification with responsive design</li>
+			<li>Issue #132 - Fixing issue #132 default attachment type allowed</li>
+			<li> Side note - cleaned up release notes from previous releases.  Moved to documentation\old_ReleaseNotes.txt</li>
 		</ul>
 	</p>
+	
+</div>
+<hr/>
+<div class="License">
+	<p class="Owner">
+		<h3>About DotNetNuke Active Forums</h3>
+		<strong>Version 5.2.4</strong><br />		
+	</p>
+</div>
+<hr/>
+<div class="License">
+   <h3>Release Notes</h3>
     <p class="Owner">
-	<b>Version 05.01.02</b><br /><br />
-	</p>
+	<b>Version 05.02.04
 	<p>
 		<ul>
-			<li>Fixed blocking in full text search proc that was causing timeouts when searching large forums.</li>
-			<li>Fixed missing localization on search results page.</li>
-			<li>Fixed missing images when viewing topics lists.</li>
-			<li>Removed old/orphan images from emoticons directory.</li>
+			<li>Issue #108 - (Issues #96 group permissions issues and partial #97 group permissions fix</li>
+			<li>Issue #109 - Console module links disappearing</li>
+			<li>Issue #110 - Fixes https links not being recognized</li>
+			<li>Issue #113 - No toolbar support for topic view</li>
 		</ul>
 	</p>
-    <p class="Owner">
-	<b>Version 05.01.01</b><br /><br />
-	</p>
-	<p>
-		<ul>
-			<li>Fix for occasional &quot;code contains code blocks&quot; error on search page.</li>
-		</ul>
-	</p>
-    <p class="Owner">
-	<b>Version 05.01.00</b><br /><br />
-	</p>
-	<p>
-		<ul>
-			<li>Revamped full text installation process so that it gives better feedback as to whether or not full text search is/can be enabled.</li>
-			<li>Consolidates SQL Updates from 5.0.4 and 5.0.5 (resolves issues for 5.0.4 beta users).</li>
-			<li>Removed debug code that was preventing full text from working on some systems.</li>
-			<li><a href="http://activeforums.codeplex.com/workitem/2047" target="_blank">Item 2047</a> - Fixed issue where user was logged out of the site when replying to a post on a child portal. Thanks Ben!</li>
-		</ul>
-	</p>
-   <p class="Owner">
-	<b>Version 05.00.05</b><br /><br />
-	</p>
-	<p>
-		<ul>
-			<li>Updated performance for the FullText search on sites with large amounts of topics/replies.</li>
-			<li>Added/updated copyright statements in all C# code files.</li>
-			<li>Fixed Moderation trust AJAX issue when trying to edit a user's profile to apply trust.</li>
-			<li>Should now be compatible with Azure.</li>
-		</ul>
-	</p>
-   <p class="Owner">
-	<b>Version 05.00.04</b><br /><br />
-	</p>
-	<p>
-		<ul>
-			<li><a href="http://activeforums.codeplex.com/workitem/1830" target="_blank">Item 1830</a> - Full-text search doesn't work as expected</li>
-			<li>Redesigned Search UI</li>
-			<li>Added JQuery UI Theme to Default Theme (.ActiveForums scope)</li>
-			<li>Added Mini User Editor to Profile Info: [AF:BUTTON:EDITUSER]</li>
-			<li>Fixed Moderation Service</li>
-			<li>Added ability to restrict the ability to create topics/replies in a forum or forum group by the number of posts a user has.</li>
-			<li>Made the loading of forum/group setting more resiliant to old data</li>
-			<li>Fixed duplicate afpg tag in URL</li>
-			<li>Fixed support for the [BANNER] token in the Topic View template</li>
-			<li>Added [REPLYSEPARATOR][/REPLYSEPARATOR] and [REPLYSEPARATOR:?][/REPLYSEPARATOR:?] tokens to the Topic View template</li>
-			<li>Added afpostinfo, afreplyinfo and aftopicinfo classes to the [CSS????INFO] tokens in the Topic View template</li>
-			<li>Reworked Unanswered/Not Read/My Topics/Active Topics to match new Search UI.<li>
-			<li>Reworked stored procedures related to Unanswered/Not Read/My Topics/Active Topics to provide more information and be more performant</li>
-			<li>Active Topics now defaults to "last day" rather than the timestamp of the last visit.</li>
-			<li>Date and Time display formats are now configurable in settings.</li>
-			<li>Users Online functionality can now be enabled/disabled in settings.</li>
-			<li>Site BreadCrumb usage can now be enabled/disabled in settings.</li>
-			<li>Profile links can now be disabled in settings.</li>
-			<li>Made loading of forum settings more resiliant to old data.</li>
-			<li>Fixed bug that may have prevented to control panel from loading in some circumstances.</li>
-		</ul>
-	</p>
-   <p class="Owner">
-	<b>Version 05.00.03</b><br /><br />
-	</p>
-	<p>
-		<ul>
-			<li><a href="http://activeforums.codeplex.com/workitem/1778" target="_blank">Item 1778</a> - Migrate 6.2 MVC based web services to 7.0 WebAPI based web services</li>
-			<li><a href="http://activeforums.codeplex.com/workitem/1767" target="_blank">Item 1767</a> - Post HTML making it in to journal entries</li>
-			<li><a href="http://activeforums.codeplex.com/workitem/1762" target="_blank">Item 1762</a> - Quick Reply does not adhere to auto-subscribe settings</li>
-			<li><a href="http://activeforums.codeplex.com/workitem/1789" target="_blank">Item 1789</a> - Add CKEditor support</li>
-			<li><a href="http://activeforums.codeplex.com/workitem/1801" target="_blank">Item 1801</a> - Attachments in DNN 7</li>
-			<li><a href="http://activeforums.codeplex.com/workitem/1805" target="_blank">Item 1805</a> - Add "Send Message" button to profile info</li>
-			<li>Saving settings now clears the cache</li>
-			<li>Whot's New Module available again</li>
-			<li>Minor CSS tweaks</li>
-			<li>Fixed bug that prevented replies from shoing in the journal</li>
-			<li>Fixed missing icons for Theme on the active threads and search pages</li>
-		</ul>
-	</p>
-        <p class="Owner">
-       <b>Version 05.00.02</b><br /><br />
-   </p>
-   <p>
-        <ul>
-            <li><a href="http://activeforums.codeplex.com/workitem/1746" target="_blank">Item 1746</a> - table missing clustered index</li>
-            <li><a href="http://activeforums.codeplex.com/workitem/1725" target="_blank">Item 1725</a> - No apostrophe in topic title (topics view)</li>
-			<li><a href="http://activeforums.codeplex.com/workitem/1600" target="_blank">Item 1600</a> - IE9 Attachment stop to 100% and not go ahead</li>
-			<li><a href="http://activeforums.codeplex.com/workitem/1587" target="_blank">Item 1587</a> - Forum post time stamp incorrect</li>
-			<li><a href="http://activeforums.codeplex.com/workitem/1640" target="_blank">Item 1640</a> - Active Topics render only first post</li>
-        </ul>
-    </p>
-   <p class="Owner">
-       <b>Version 05.00.00</b><br /><br />
-   </p>
-   <p>This initial release of Active Forums 5.0</p>
-   
+	
 </div>

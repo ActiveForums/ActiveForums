@@ -18,19 +18,18 @@
 // DEALINGS IN THE SOFTWARE.
 //
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data;
+using DotNetNuke.Services.Scheduling;
 
 namespace DotNetNuke.Modules.ActiveForums.Queue
 {
 	public class Controller
 	{
-		public static void Add(string EmailFrom, string EmailTo, string EmailSubject, string EmailBody, string EmailBodyPlainText, string EmailCC, string EmailBCC)
+		public static void Add(string emailFrom, string emailTo, string emailSubject, string emailBody, string emailBodyPlainText, string emailCC, string emailBcc)
 		{
 			try
 			{
-				DataProvider.Instance().Queue_Add(EmailFrom, EmailTo, EmailSubject, EmailBody, EmailBodyPlainText, EmailCC, EmailBCC);
+				DataProvider.Instance().Queue_Add(emailFrom, emailTo, emailSubject, emailBody, emailBodyPlainText, emailCC, emailBcc);
 			}
 			catch (Exception ex)
 			{
@@ -39,26 +38,21 @@ namespace DotNetNuke.Modules.ActiveForums.Queue
 
 		}
 	}
-	public class Scheduler : Services.Scheduling.SchedulerClient
+
+	public class Scheduler : SchedulerClient
 	{
-
-		private string SMTPServer;
-		private string SmtpUserName;
-		private string SMTPPassword;
-		private string SMTPAuthentication;
-
-		public Scheduler(Services.Scheduling.ScheduleHistoryItem objScheduleHistoryItem) : base()
+		public Scheduler(ScheduleHistoryItem objScheduleHistoryItem)
 		{
 			ScheduleHistoryItem = objScheduleHistoryItem;
 		}
+
 		public override void DoWork()
 		{
 			try
 			{
-				int intQueueCount;
-				intQueueCount = ProcessQueue();
+			    var intQueueCount = ProcessQueue();
 				ScheduleHistoryItem.Succeeded = true;
-				ScheduleHistoryItem.AddLogNote("Processed " + intQueueCount.ToString() + " messages");
+				ScheduleHistoryItem.AddLogNote("Processed " + intQueueCount + " messages");
 			}
 			catch (Exception ex)
 			{
@@ -68,16 +62,13 @@ namespace DotNetNuke.Modules.ActiveForums.Queue
 				Services.Exceptions.Exceptions.LogException(ex);
 			}
 		}
-		private int ProcessQueue()
+
+		private static int ProcessQueue()
 		{
-			int intQueueCount = 0;
+			var intQueueCount = 0;
 			try
 			{
-				//Get Host SMTP Settings
-				Hashtable objHost = Entities.Portals.PortalSettings.GetHostSettings();
-				//Get Queue
-
-				IDataReader dr = DataProvider.Instance().Queue_List();
+				var dr = DataProvider.Instance().Queue_List();
 				while (dr.Read())
 				{
 					intQueueCount += 1;
@@ -88,14 +79,9 @@ namespace DotNetNuke.Modules.ActiveForums.Queue
 					                       SendTo = dr["EmailTo"].ToString(),
 					                       Body = dr["EmailBody"].ToString(),
 					                       BodyText = dr["EmailBodyPlainText"].ToString(),
-					                       SmtpServer = objHost["SMTPServer"].ToString(),
-					                       SmtpUserName = objHost["SMTPUsername"].ToString(),
-					                       SmtpPassword = objHost["SMTPPassword"].ToString(),
-					                       SmtpAuthentication = objHost["SMTPAuthentication"].ToString(),
-					                       SmtpSSL = objHost["SMTPEnableSSL"].ToString()
 					                   };
 
-				    bool canDelete = objEmail.SendMail();
+				    var canDelete = objEmail.SendMail();
 					if (canDelete)
 					{
 						try
@@ -126,6 +112,7 @@ namespace DotNetNuke.Modules.ActiveForums.Queue
 		}
 
 	}
+
 	public class Message
 	{
 		public string Subject;
@@ -133,39 +120,13 @@ namespace DotNetNuke.Modules.ActiveForums.Queue
 		public string SendTo;
 		public string Body;
 		public string BodyText;
-		//Public Recipients As ArrayList
-		public string SmtpServer;
-		public string SmtpUserName;
-		public string SmtpPassword;
-		public string SmtpAuthentication;
-		public string SmtpSSL;
-		//Public Subs As List(Of SubscriptionInfo)
-
 
 		public bool SendMail()
 		{
 			try
 			{
-				Hashtable objHost;
-				if (SmtpServer == "")
-				{
-					objHost = Entities.Portals.PortalSettings.GetHostSettings();
-					SmtpServer = Convert.ToString(objHost["SMTPServer"]);
-					SmtpUserName = Convert.ToString(objHost["SMTPUsername"]);
-					SmtpPassword = Convert.ToString(objHost["SMTPPassword"]);
-					SmtpAuthentication = Convert.ToString(objHost["SMTPAuthentication"]);
-					SmtpSSL = Convert.ToString(objHost["SMTPEnableSSL"]);
-				}
-				//Dim Email As New System.Net.Mail.MailMessage
-
-				//Email.From = New System.Net.Mail.MailAddress(SendFrom)
-				//Email.To.Add(New System.Net.Mail.MailAddress(SendTo))
-				//Email.Subject = Subject
-				//Email.IsBodyHtml = True
-				//Email.Body = Body
 				var subs = new List<SubscriptionInfo>();
-				var si = new SubscriptionInfo
-				             {Email = SendTo, DisplayName = string.Empty, LastName = string.Empty, FirstName = string.Empty};
+				var si = new SubscriptionInfo { Email = SendTo, DisplayName = string.Empty, LastName = string.Empty, FirstName = string.Empty };
 			    subs.Add(si);
 				var oEmail = new Email
 				                 {
@@ -175,11 +136,6 @@ namespace DotNetNuke.Modules.ActiveForums.Queue
 				                     From = SendFrom,
 				                     BodyText = BodyText,
 				                     BodyHTML = Body,
-				                     SmtpServer = SmtpServer,
-				                     SmtpUserName = SmtpUserName,
-				                     SmtpPassword = SmtpPassword,
-				                     SmtpAuthentication = SmtpAuthentication,
-				                     SmtpSSL = SmtpSSL
 				                 };
 			    try
 				{

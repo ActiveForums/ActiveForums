@@ -26,6 +26,7 @@ using System.Web;
 using System.Web.Services;
 using System.Text;
 using System.Xml;
+using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Services.Journal;
 
 namespace DotNetNuke.Modules.ActiveForums.Handlers
@@ -474,6 +475,14 @@ namespace DotNetNuke.Modules.ActiveForums.Handlers
 			forumId = db.Forum_GetByTopicId(TopicId);
 			ForumController fc = new ForumController();
 			Forum f = fc.Forums_Get(forumId, this.UserId, true);
+
+            // Need to get the list of attachments BEFORE we remove the post recods
+            var attachmentController = new Data.AttachController();
+		    var attachmentList = (MainSettings.DeleteBehavior == 0)
+		                             ? attachmentController.ListForPost(TopicId, replyId)
+		                             : null;
+
+
 			if (TopicId > 0 & replyId < 1)
 			{
 				TopicsController tc = new TopicsController();
@@ -507,7 +516,31 @@ namespace DotNetNuke.Modules.ActiveForums.Handlers
 				}
 
 			}
-            string cachekey = string.Format("AF-FV-{0}-{1}", PortalId, ModuleId);
+
+            // If it's a hard delete, delete associated attachments
+            // attachmentList will only be populated if the DeleteBehavior is 0
+            if (attachmentList != null)
+            {      
+                var fileManager = FileManager.Instance;
+                var folderManager = FolderManager.Instance;
+                var attachmentFolder = folderManager.GetFolder(PortalId, "activeforums_Attach");
+
+                foreach (var attachment in attachmentList)
+                {
+                    attachmentController.Delete(attachment.AttachmentId);
+
+                    var file = attachment.FileId.HasValue
+                                   ? fileManager.GetFile(attachment.FileId.Value)
+                                   : fileManager.GetFile(attachmentFolder, attachment.FileName);
+
+                    // Only delete the file if it exists in the attachment folder
+                    if (file != null && file.FolderId == attachmentFolder.FolderID)
+                        fileManager.DeleteFile(file);
+                }
+            }
+
+            // Return the result
+		    string cachekey = string.Format("AF-FV-{0}-{1}", PortalId, ModuleId);
             DataCache.CacheClearPrefix(cachekey);
 			return BuildOutput(TopicId + "|" + replyId, OutputCodes.Success, true);
 		}

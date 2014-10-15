@@ -2,7 +2,7 @@
 <%@ Register TagPrefix="am" Namespace="DotNetNuke.Modules.ActiveForums.Controls" assembly="DotNetNuke.Modules.ActiveForums" %>
 
 <script type="text/javascript">
-<!--
+
 	var img1 = new Image();
 	img1.src = '<%=Spinner%>';
 var animate;
@@ -53,7 +53,8 @@ function togglePreview(obj) {
 		animate = setInterval("showPreview(true," + prevWidth + "," + growX + ',' + growY + "," + afPos.x + "," + (position.y - 302) + "," + (position.x + (obj.offsetWidth / 2)) + "," + position.y + ")",1);
 	};
 };
-function showPreview(bool,prevWidth,growX,growY,endX,endY,startX,startY) {
+
+function showPreview(bool, prevWidth, growX, growY, endX, endY, startX, startY) {
 
 	var preview = document.getElementById('afPreview');
 	if (bool) {
@@ -67,9 +68,9 @@ function showPreview(bool,prevWidth,growX,growY,endX,endY,startX,startY) {
 		if (animatecount == 10) {
 			clearInterval(animate);
 			animate = null;
-			var editor = document.getElementById("<%=EditorClientId%>")
+		    var editor = document.getElementById("<%=EditorClientId%>");
 			var sBody = amaf_getBody();
-			<%=cbPreview.ClientID%>.Callback('preview',sBody)
+		    <%=cbPreview.ClientID%>.Callback('preview', sBody);
 			var out = document.getElementById('divPreviewWindow');
 			out.style.display = 'block';
 			preview.parentNode.removeChild(preview);
@@ -95,6 +96,7 @@ function showPreview(bool,prevWidth,growX,growY,endX,endY,startX,startY) {
 		};
 	};
 };
+
 function cbPreview_render(){
 	var sPreview = document.getElementById("<%=hidPreviewText.ClientID%>").value;
 	var out = document.getElementById("divPreviewText");
@@ -116,10 +118,12 @@ function getPreviewPosition(e){
 
 	return {x:left, y:top};
 };
+
 function closePreview(){
 	var obj = document.getElementById('ancPreview');
 	togglePreview(obj);
 };
+
 function showLoading(button){
 	var pos = getPreviewPosition(button);
 	var out = document.getElementById("divPreviewWindow");
@@ -134,67 +138,16 @@ function showLoading(button){
 	out.style.left = afPos.x;
 	pt.appendChild(img1);
 }
-var upl;
-function af_preShowLoad(){
-	var grid = document.getElementById("afgrid");
-	if (grid.style.position == 'static' || grid.style.position == ''){
-		grid.style.position = 'relative';
-	}else{
-		grid.style.position = '';
-	};
-};
-function af_preClearLoad(){
-var grid = document.getElementById("afgrid");
-grid.style.position = 'relative';
-};
-function af_checkupload(){
-	if ($('#attachments') != null) {
-		var attachIds = '';
-		$('#attachments tbody tr').each(function() {
-			var fid = $(this).attr('id');
-			attachIds += fid + ';';
-		});
-		$('#<%=hidAttachIds.ClientID%>').val(attachIds);
-	}
-	amPostback();
-};
 
-function amaf_addAttachId(attachid){
-  var hidAttachIds = document.getElementById("<%=hidAttachIds.ClientID%>");
-
-  if (attachid != ''){
-  hidAttachIds.value = hidAttachIds.value + attachid + ';';
-  };
-};
-function amaf_getAttachIds(){
-  var hidAttachIds = document.getElementById("<%=hidAttachIds.ClientID%>");
-  return hidAttachIds.value;
-};
-function amaf_setAttachIds(attachids){
-	var hidAttachIds = document.getElementById("<%=hidAttachIds.ClientID%>");
-	hidAttachIds.value = attachids;
-};
-function amaf_removeAttachId(attachid){
-	var attachids = amaf_getAttachIds().split(';');
-	var hidAttachIds = document.getElementById("<%=hidAttachIds.ClientID%>");
-	hidAttachIds.value = '';
-	var tmp = 0;
-	while (tmp < attachids.length){
-		if (attachids[tmp] != attachid){
-			amaf_addAttachId(attachids[tmp]);
-		};
-		tmp+=1;
-	};
-};
+//var upl;
 
 
-//-->
 </script>
 <style type="text/css">
 	blockquote{border:solid 1px #666;}
 </style>
 <div id="afgrid">
-<asp:HiddenField ID="hidAttachIds" runat="server" />
+<asp:HiddenField ID="hidAttachments" runat="server"  />
 <asp:PlaceHolder ID="plhMessage" runat="server" />
 <asp:placeholder id="plhContent" runat="server" />
 

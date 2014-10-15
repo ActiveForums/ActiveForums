@@ -18,24 +18,46 @@
 // DEALINGS IN THE SOFTWARE.
 //
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-
-using DotNetNuke.Services.Localization;
 using DotNetNuke.Framework;
+using DotNetNuke.Web.Client.ClientResourceManagement;
 
 namespace DotNetNuke.Modules.ActiveForums.Controls
 {
     public partial class af_attach : ForumBase
     {
         public EditorTypes EditorType { get; set; }
-        protected override void OnLoad(EventArgs e)
+
+        public string AttachmentsClientId { get; set;  }
+
+        protected override void OnInit(EventArgs e)
 		{
-			base.OnLoad(e);
+            base.OnInit(e);
+
+            LocalResourceFile = "~/DesktopModules/ActiveForums/App_LocalResources/SharedResources.resx";
+
+            jQuery.RegisterJQuery(Page);
+            jQuery.RegisterJQueryUI(Page);
+            jQuery.RequestDnnPluginsRegistration();
+            jQuery.RegisterFileUpload(Page);
+
+            ClientResourceManager.RegisterScript(Page, "~/DesktopModules/ActiveForums/scripts/jquery.afFileUpload.js", 102);
+
+            /*
+            var version = System.Reflection.Assembly.GetAssembly(typeof(Common.Globals)).GetName().Version;
+            if (version != null && version.Major == 7 && version.Minor < 2)
+            {
+                // v7.0, 7.1
+                ClientResourceManager.RegisterScript(Page, "~/DesktopModules/Journal/scripts/jquery.iframe-transport.js", 101);
+                ClientResourceManager.RegisterScript(Page, "~/DesktopModules/Journal/scripts/jquery.dnnUserFileUpload.js", 102);
+            }
+            else
+            {
+                // v7.2+
+                ClientResourceManager.RegisterScript(Page, "~/Resources/Shared/Components/UserFileManager/jquery.dnnUserFileUpload.js", 102);
+            }
+            */
 
             ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
-
         }
     }
 }

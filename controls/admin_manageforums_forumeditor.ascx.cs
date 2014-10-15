@@ -91,10 +91,11 @@ namespace DotNetNuke.Modules.ActiveForums
             reqGroups.Text = "<img src=\"" + Page.ResolveUrl(RequiredImage) + "\" />";
             var propImage = "<img src=\"" + Page.ResolveUrl("~/DesktopModules/ActiveForums/images/properties16.png") + "\" alt=\"[RESX:ConfigureProperties]\" />";
 
-            //rdAttachOn.Attributes.Add("onclick", "toggleAttach(this);");
-            //rdAttachOn.Attributes.Add("value", "1");
-            //rdAttachOff.Attributes.Add("onclick", "toggleAttach(this);");
-            //rdAttachOff.Attributes.Add("value", "0");
+            rdAttachOn.Attributes.Add("onclick", "toggleAttach(this);");
+            rdAttachOn.Attributes.Add("value", "1");
+            rdAttachOff.Attributes.Add("onclick", "toggleAttach(this);");
+            rdAttachOff.Attributes.Add("value", "0");
+            cfgAttach.InnerHtml = propImage;
 
             rdHTMLOn.Attributes.Add("onclick", "toggleEditor(this);");
             rdHTMLOff.Attributes.Add("onclick", "toggleEditor(this);");
@@ -150,6 +151,8 @@ namespace DotNetNuke.Modules.ActiveForums
                 cfgMod.Attributes.Add("onclick", "showProp(this,'modProp')");
 
                 cfgAutoSub.Attributes.Add("onclick", "showProp(this,'subProp')");
+
+                cfgAttach.Attributes.Add("onclick", "showProp(this,'attachProp')");
 
                 var sb = new StringBuilder();
                 sb.Append("<script type=\"text/javascript\">");
@@ -389,15 +392,12 @@ namespace DotNetNuke.Modules.ActiveForums
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachCount, parameters[12]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachMaxSize, parameters[13]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachTypeAllowed, parameters[14]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachStore, parameters[15]);
+            //AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachStore, parameters[15]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachMaxHeight, parameters[16]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachMaxWidth, parameters[17]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachUniqueFileNames, parameters[18]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachAllowBrowseSite, parameters[18]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AllowHTML, parameters[19]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorType, parameters[20]);
-
-            var test = parameters[20];
-
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorHeight, parameters[21]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorWidth, parameters[22]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorToolbar, parameters[23]);
@@ -504,6 +504,16 @@ namespace DotNetNuke.Modules.ActiveForums
             rdAttachOn.Checked = fi.AllowAttach;
             rdAttachOff.Checked = !fi.AllowAttach;
 
+            if (fi.AllowAttach)
+                cfgAttach.Attributes.Remove("style");
+            else
+                cfgAttach.Attributes.Add("style", "display:none;");
+
+            txtMaxAttach.Text = fi.AttachCount.ToString();
+            txtMaxAttachSize.Text = fi.AttachMaxSize.ToString();
+            txtAllowedTypes.Text = fi.AttachTypeAllowed;
+            ckAllowBrowseSite.Checked = fi.AttachAllowBrowseSite;
+
             rdHTMLOn.Checked = fi.AllowHTML;
             rdHTMLOff.Checked = !fi.AllowHTML;
 
@@ -530,19 +540,10 @@ namespace DotNetNuke.Modules.ActiveForums
 
             chkTopicsOnly.Checked = fi.AutoSubscribeNewTopicsOnly;
 
-            Utilities.SelectListItemByValue(drpEditorTypes, (int)fi.EditorType);
-            if (Convert.ToInt32(fi.EditorType).ToString() != "1") // Active Editor should not be used anymore
-            {
-                txtEditorToolBar.Enabled = false;
-                drpEditorStyle.Enabled = false;
-            }
-
-            Utilities.SelectListItemByValue(drpEditorStyle, fi.EditorStyle);
             Utilities.SelectListItemByValue(drpPermittedRoles, (int)fi.EditorPermittedUsers);
 
             txtEditorHeight.Text = (fi.EditorHeight == string.Empty) ? "400" : fi.EditorHeight;
             txtEditorWidth.Text = (fi.EditorWidth == string.Empty) ? "99%" : fi.EditorWidth;
-            txtEditorToolBar.Text = (fi.EditorToolBar == string.Empty) ? "bold,italic,underline|bulletedlist,numberedlist" : fi.EditorToolBar;
 
             hidRoles.Value = fi.AutoSubscribeRoles;
             BindAutoSubRoles(fi.AutoSubscribeRoles);
@@ -616,6 +617,16 @@ namespace DotNetNuke.Modules.ActiveForums
             rdAttachOn.Checked = gi.AllowAttach;
             rdAttachOff.Checked = !gi.AllowAttach;
 
+            if (gi.AllowAttach)
+                cfgAttach.Attributes.Remove("style");
+            else
+                cfgAttach.Attributes.Add("style", "display:none;");
+
+            txtMaxAttach.Text = gi.AttachCount.ToString();
+            txtMaxAttachSize.Text = gi.AttachMaxSize.ToString();
+            txtAllowedTypes.Text = gi.AttachTypeAllowed;
+            ckAllowBrowseSite.Checked = gi.AttachAllowBrowseSite;
+
             rdHTMLOn.Checked = gi.AllowHTML;
             rdHTMLOff.Checked = !gi.AllowHTML;
 
@@ -643,12 +654,10 @@ namespace DotNetNuke.Modules.ActiveForums
             var x = gi.EditorType;
 
             Utilities.SelectListItemByValue(drpEditorTypes, (int)gi.EditorType);
-            Utilities.SelectListItemByValue(drpEditorStyle, gi.EditorStyle);
             Utilities.SelectListItemByValue(drpPermittedRoles, gi.EditorPermittedUsers);
 
             txtEditorHeight.Text = (gi.EditorHeight == string.Empty) ? "400" : gi.EditorHeight;
             txtEditorWidth.Text = (gi.EditorWidth == string.Empty) ? "99%" : gi.EditorWidth;
-            txtEditorToolBar.Text = (gi.EditorToolBar == string.Empty) ? "bold,italic,underline|bulletedlist,numberedlist" : gi.EditorToolBar;
             chkTopicsOnly.Checked = gi.AutoSubscribeNewTopicsOnly;
             hidRoles.Value = gi.AutoSubscribeRoles;
             BindAutoSubRoles(gi.AutoSubscribeRoles);

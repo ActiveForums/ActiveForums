@@ -1,257 +1,90 @@
-﻿<%@ Control Language="C#" AutoEventWireup="false" CodeBehind="af_attach.ascx.cs"
-	Inherits="DotNetNuke.Modules.ActiveForums.Controls.af_attach" %>
+﻿<%@ Control Language="C#" AutoEventWireup="false" CodeBehind="af_attach.ascx.cs" Inherits="DotNetNuke.Modules.ActiveForums.Controls.af_attach" %>
 <%@ Import Namespace="DotNetNuke.Common.Utilities" %>
+<%@ Import Namespace="DotNetNuke.Modules.ActiveForums.Extensions" %>
 <%@ Register TagPrefix="dnn" Namespace="DotNetNuke.Web.Client.ClientResourceManagement" Assembly="DotNetNuke.Web.Client" %>
-<dnn:DnnJsInclude runat="server" FilePath="~/DesktopModules/Journal/scripts/jquery.iframe-transport.js" />
-<dnn:DnnJsInclude runat="server" PathNameAlias="SharedScripts" FilePath="knockout.js" />
-<dnn:DnnJsInclude runat="server" FilePath="~/DesktopModules/Journal/scripts/jquery.fileupload.js" Priority="101"/>
-<dnn:DnnJsInclude runat="server" FilePath="~/DesktopModules/Journal/scripts/jquery.dnnUserFileUpload.js" Priority="102" />
+<dnn:DnnJsInclude runat="server" FilePath="knockout.js" PathNameAlias="SharedScripts" Priority="100"></dnn:DnnJsInclude>
 <dnn:DnnJsInclude runat="server" FilePath="~/Resources/Shared/Components/UserFileManager/UserFileManager.js" Priority="105"></dnn:DnnJsInclude>
 <dnn:DnnCssInclude runat="server" FilePath="~/Resources/Shared/Components/UserFileManager/UserFileManager.css"></dnn:DnnCssInclude>
+<dnn:DnnJsInclude runat="server" FilePath="~/DesktopModules/ActiveForums/Scripts/afattach.js" Priority="106"></dnn:DnnJsInclude>
+<!-- ko stopBinding: true -->  
+<div id="<%=ClientID%>">
+    <!-- ko stopBinding: true -->
+    <div class="af-userFileManager"></div>
+    <div class="af-attach-upload af-fileupload">
+	    <div class="fileupload-picker">
+            <span>
+                <input type="file" name="files[]" />
+                <a href="#" id="photoFromSite" class="dnnSecondaryAction"><%=GetSharedResource("[RESX:BrowseFromSite]")%></a>
+            </span>	
+	    </div>
+	    <div class="fileupload-status">
+		    <div class="fileupload-error dnnFormMessage dnnFormValidationSummary" style="display: none;"></div>
+            <div class="fileupload-progress" style="display:none;">
+		        <span class="fileupload-progress-percent">0%</span>
+                <span><%=GetSharedResource("[RESX:Uploading]")%> </span><span class="fileupload-filename"></span>
+                <div class="fileupload-progress-bar"></div>
+            </div>
+	    </div>
+    </div>
+    <!-- /ko -->
+    <div class="af-attach-editor-list" style="clear:left;">
+        <!-- ko if:hasAttachments -->
+	    <table>
+		    <thead>
+			    <tr>
+				    <td><%=GetSharedResource("[RESX:FileName]")%></td>
+				    <td><%=GetSharedResource("[RESX:FileSize]")%></td>
+				    <td><%=GetSharedResource("[RESX:Delete]")%></td>
+			    </tr>
+		    </thead>
+		    <tbody data-bind="foreach: attachments">
+		        <tr>
+                    <td><i data-bind="attr: { 'class' : $root.getIconClass($data) }"></i> <span data-bind="text:fileName"></span></td>
+                    <td data-bind="text:(fileSize || fileSizeText)"></td>
+                    <td><span class="ui-icon ui-icon-trash" data-bind="click:$root.removeAttachment" /></td>
+		        </tr>
+		    </tbody>
+	    </table>
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->
 
 
-<div id="userFileManager">
-</div>
-<div class="fileUploadArea">
-	<div class="jpa" id="tbar-attach-Area">
-		<span id="tbar-photoText">attach</span> <a href="#" id="photoFromSite">Browse From Site</a>
-		<span>|</span> <span class="browser-upload-btn">Upload <span style="position:relative;"></span><input type="file" name="files[]" /></span>
-	</div>
-	<div id="itemUpload">
-		<div class="fileupload-error dnnFormMessage dnnFormValidationSummary" style="display: none;">
-		</div>
-		<div class="progress_bar_wrapper">
-			<div class="progress_context" style="margin: 10px 0px; display: none;">
-				<div class="upload_file_name" style="margin-top: 5px; margin-bottom: -5px;">
-				</div>
-				<div class="progress-bar green">
-					<div style="width: 0px;">
-						<span></span>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="filePreviewArea">
-		</div>
-	</div>
-</div>
-<div id="attachments" style="clear:left;">
-	<table>
-		<thead>
-			<tr>
-				<td>
-					 <%=GetSharedResource("[RESX:FileName]")%>
-				</td>
-				<td>
-					 <%=GetSharedResource("[RESX:FileSize]")%>
-				</td>
-				<td>
-					<%=GetSharedResource("[RESX:CreateThumbnail]")%>
-				</td>
-				<td>
-					 <%=GetSharedResource("[RESX:InsertImage]")%>
-				</td>
-				<td>
-					 <%=GetSharedResource("[RESX:DisplayLink]")%>
-				</td>
-				<td>
-					 <%=GetSharedResource("[RESX:Delete]")%>
-				</td>
-			</tr>
-		</thead>
-		<tbody>
-		</tbody>
-	</table>
-</div>
-<div id="divThumbnail" class="afDialog" style="display: none;">
-	<h2 class="dnnFormSectionHead">
-		<%=GetSharedResource("[RESX:CreateThumbnail]")%></h2>
-	<div class="options">
-		<table>
-			<tbody>
-				<tr>
-					<td>
-						Width:
-					</td>
-					<td>
-						<input type="text" value="175" class="aftextbox" style="width: 30px" onkeyup="amaf_recalc(2)"
-							name="txtWidth" id="txtWidth">
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Height:
-					</td>
-					<td>
-						<input type="text" value="175" class="aftextbox" style="width: 30px" onkeyup="amaf_recalc(1)"
-							name="txtHeight" id="txtHeight">
-					</td>
-				</tr>
-				<tr>
-					<td colspan="4">
-						Constrain proportions:<input type="checkbox" checked="" id="chkProp">
-					</td>
-				</tr>
-				<tr>
-					<td colspan="4">
-						Link to original image:<input type="checkbox" checked="" id="chkOpenOrig">
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-	<ul class="dnnActions dnnClear">
-		<li><a href="javascript:void(0);" class="dnnPrimaryAction" onclick="javascript:dnnaf_createThumbnail(100,2,150,150);">
-			<%=GetSharedResource("[RESX:Create]")%></a></li>
-	</ul>
-	<input type="hidden" id="thumb-id" value="" />
-</div>
 <script type="text/javascript">
-	var editorType = <%=(int)EditorType%>;
-	function dnnaf_createThumbnail() {
-		var sf = $.ServicesFramework(<%=ModuleId%>);
-		var data = {};
-		data.FileId = $('#thumb-id').val();
-		data.Height = $('#txtHeight').val();
-		data.Width = $('#txtWidth').val();
-		//sf.getAntiForgeryProperty(data);
 
-		$.ajax({
-			type: "POST",
-			url: sf.getServiceRoot('ActiveForums') + "ForumService/CreateThumbnail",
-			beforeSend: sf.setModuleHeaders,
-			data: data,
-			success: function (data) {
+    $(document).ready(function () {
 
-			    data = $.parseJSON(data);
+        var options = {
+            elementId: "<%= ClientID %>",
+            editorType: <%=(int)ForumInfo.EditorType%>,
+            moduleId: <%=ModuleId%>,
+            forumId: <%=ForumId%>,
+            attachmentsClientId: "<%=AttachmentsClientId %>",
+            titleText: "<%=DotNetNuke.UI.Utilities.ClientAPI.GetSafeJSString(LocalizeString("[RESX:Attachments:BrowseSite:Title]"))%>",
+            nameHeaderText: "<%=DotNetNuke.UI.Utilities.ClientAPI.GetSafeJSString(LocalizeString("[RESX:FileName]"))%>",
+            typeHeaderText: "<%=DotNetNuke.UI.Utilities.ClientAPI.GetSafeJSString(LocalizeString("[RESX:FileType]"))%>",
+            maxUploadSize: <%=ForumInfo.AttachMaxSize * 1024%>,
+            lastModifiedHeaderText: "<%=DotNetNuke.UI.Utilities.ClientAPI.GetSafeJSString(LocalizeString("[RESX:LastModified]"))%>",
+            fileSizeText: "<%=DotNetNuke.UI.Utilities.ClientAPI.GetSafeJSString(LocalizeString("[RESX:FileSize]"))%>",
+            templatePath: "<%=Page.ResolveUrl("~/Resources/Shared/Components/UserFileManager/Templates/")%>",
+            confirmRemoveText : "<%=DotNetNuke.UI.Utilities.ClientAPI.GetSafeJSString(LocalizeString("[RESX:Attachments:Confirm:Remove]"))%>",
+            cancelText : "<%=DotNetNuke.UI.Utilities.ClientAPI.GetSafeJSString(LocalizeString("[RESX:Cancel]"))%>",
+            attachText : "<%=DotNetNuke.UI.Utilities.ClientAPI.GetSafeJSString(LocalizeString("[RESX:Attach]"))%>",
+            serverErrorMessage: "<%=DotNetNuke.UI.Utilities.ClientAPI.GetSafeJSString(LocalizeString("[RESX:Attachments:Error]"))%>",
+            fileTypeNotAllowedMsg: "<%=DotNetNuke.UI.Utilities.ClientAPI.GetSafeJSString(LocalizeString("[RESX:Error:BlockedFile]"))%>",      
+            allowedFileTypes: "<%= ForumInfo.AttachTypeAllowed %>",
+            allowBrowseSite: <%= ForumInfo.AttachAllowBrowseSite ? 1 : 0 %>,
+            maxFileSizeExceededMsg: "<%=DotNetNuke.UI.Utilities.ClientAPI.GetSafeJSString(string.Format(LocalizeString("[RESX:Error:FileTooLarge]").TextOrEmpty(), ForumInfo.AttachMaxSize))%>",
+            maxAttachmentCount: <%= ForumInfo.AttachCount %>,
+            uploadButtonText: "<%=DotNetNuke.UI.Utilities.ClientAPI.GetSafeJSString(LocalizeString("[RESX:UploadButton]"))%>"
+        };
 
-				 if (editorType == 0) {
-					amaf_insertHTML('[THUMBNAIL:' + data.FileId + ':' + $('#thumb-id').val() + ']');
-				 }else{
-					getFileTicket('FileId=' +  data.FileId);
-				}
-				$('#thumb-id').val('');
-				$('#divThumbnail').dialog('close');
-				if (typeof (callback) != "undefined") {
-					//callback();
+        var attachmentMgr = new AFAttachmentManager(jQuery, ko, options);
 
-				}
-			},
-			error: function (xhr, status, error) {
-				alert(error);
-			}
-		});
-	};
-	$(document).ready(function () {
+        attachmentMgr.initialize();
 
-		$('#divThumbnail').dialog({ autoOpen: false, minWidth: 450, title: '<%=GetSharedResource("[RESX:CreateThumbnail]")%>' });
-		var createThumbnail = "<img src='<%=Page.ResolveUrl("~/DesktopModules/ActiveForums/Images/image_thumb.png")%>' />"
-			var insertImage = "<img src='<%=Page.ResolveUrl("~/DesktopModules/ActiveForums/Images/image_insert.png")%>' />"
-			var deleteImage = "<img src='<%=Page.ResolveUrl("~/DesktopModules/ActiveForums/Images/delete12.png")%>' />"
-			var uncheckedImage = "<img src='<%=Page.ResolveUrl("~/DesktopModules/ActiveForums/Images/checkbox_unchecked.png")%>' />"
-			var checkedImage = "<img src='<%=Page.ResolveUrl("~/DesktopModules/ActiveForums/Images/checkbox.png")%>' />"
-			var sf = $.ServicesFramework(<%=ModuleId%>);
-			 var maxUploadSize = <%=Config.GetMaxUploadSize()%>;
-			$('.fileUploadArea').dnnUserFileUpload({
-				maxFileSize: maxUploadSize,
-				serverErrorMessage: 'Some Error Message',
-				addImageServiceUrl: sf.getServiceRoot('Journal') + 'FileUpload/UploadFile',
-				beforeSend: sf.setModuleHeaders,
-				callback: function (file) {
-					var $previewArea = $('.filePreviewArea');
-					var fileId = -1;
-					if (typeof(file.id) == 'undefined') {
-						fileId = file.file_id;
-					}else{
-						fileId = file.id;
-					}
-					$('#attachments table tbody').append('<tr id="' + fileId + '"><td>' + file.name + '</td><td>' + file.size + '</td><td class="createThumb">' + createThumbnail + '</td><td class="insertImage">' + insertImage + '</td><td>' + checkedImage + '</td><td>' + deleteImage + '</td></tr>');
-					$('#' + fileId + ' .insertImage').click(function(){
-						if (editorType == 0) {
-							amaf_insertHTML('[IMAGE:' + this.parentNode.id + ']');
-						}else{
-							getFileTicket('FileId=' + this.parentNode.id);
+    });
 
-						}
-					}); 
-					 $('#' + fileId + ' .createThumb').click(function(){
-						$('#thumb-id').val(this.parentNode.id);
-						$('#divThumbnail').dialog('open');
-					});
-
-				}
-			});
-			$('#userFileManager').userFileManager({
-				title: '<%=DotNetNuke.UI.Utilities.ClientAPI.GetSafeJSString(LocalizeString("Title.Text"))%>',
-				cancelText: 'Cancel',
-				attachText: 'Attach',
-				getItemsServiceUrl: sf.getServiceRoot('InternalServices') + 'UserFile/GetItems',
-				nameHeaderText: '<%=DotNetNuke.UI.Utilities.ClientAPI.GetSafeJSString(LocalizeString("Name.Header"))%>',
-				typeHeaderText: '<%=DotNetNuke.UI.Utilities.ClientAPI.GetSafeJSString(LocalizeString("Type.Header"))%>',
-				lastModifiedHeaderText: '<%=DotNetNuke.UI.Utilities.ClientAPI.GetSafeJSString(LocalizeString("LastModified.Header"))%>',
-				fileSizeText: '<%=DotNetNuke.UI.Utilities.ClientAPI.GetSafeJSString(LocalizeString("FileSize.Header"))%>',
-				templatePath: '<%=Page.ResolveUrl("~/Resources/Shared/Components/UserFileManager/Templates/")%>',
-				templateName: 'Default',
-				templateExtension: '.html',
-				attachCallback: function (file) {
-					$('#attachments table tbody').append('<tr id="' + file.id + '"><td>' + file.name + '</td><td>' + file.size + '</td><td class="createThumb">' + createThumbnail + '</td><td class="insertImage">' + insertImage + '</td><td>' + checkedImage + '</td><td>' + deleteImage + '</td></tr>');
-					$('#' + file.id + ' .insertImage').click(function(){
-						if (editorType == 0) {
-							amaf_insertHTML('[IMAGE:' + this.parentNode.id + ']');
-						}else{
-							getFileTicket('FileId=' + this.parentNode.id);
-
-						}
-					});
-					$('#' + file.id + ' .createThumb').click(function(){
-						$('#thumb-id').val(this.parentNode.id);
-						$('#divThumbnail').dialog('open');
-					});
-				}
-			});
-	});
-
-function getFileTicket(url){
-	var sf = $.ServicesFramework(<%=ModuleId%>);
-	var data = {};
-	data.Url = url;
-	 //sf.getAntiForgeryProperty(data);
-	$.ajax({
-			type: "POST",
-			url: sf.getServiceRoot('ActiveForums') + "ForumService/EncryptTicket",
-			beforeSend: sf.setModuleHeaders,
-			data: data,
-			async: false,
-			success: function (data) {
-				amaf_insertHTML('<img src="<%=Page.ResolveUrl("~/LinkClick.aspx")%>?fileticket=' + data + '" />');
-
-
-			},
-			error: function (xhr, status, error) {
-				alert(error);
-			}
-		});  
-};
-  var amaf_imgH;
-	var amaf_imgW;
-  function amaf_recalc(src){
-	   var chk = document.getElementById("chkProp");
-	   var h = document.getElementById("txtHeight");
-	   var w = document.getElementById("txtWidth");
-	   if (chk.checked && h.value != '' && w.value != ''){
-			var tmp;
-			var tmpH = parseInt(h.value);
-			var tmpW = parseInt(w.value)
-			if (tmpH < amaf_imgH || tmpW < amaf_imgW){
-				if (src == 1){
-					tmp = (tmpH / amaf_imgH);
-					w.value = Math.round(amaf_imgW * tmp);
-				};
-				if (src == 2){
-					var dif = (tmpW / amaf_imgW);
-					h.value = Math.round(amaf_imgH * dif);
-				};
-			};
-	   };
-	};
+    
 </script>
