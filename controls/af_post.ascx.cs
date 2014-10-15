@@ -994,8 +994,6 @@ namespace DotNetNuke.Modules.ActiveForums
                             {
                                 amas.AddForumItemToJournal(PortalId, ForumModuleId, UserId, "forumtopic", sUrl, subject, body);
                             }
-
-                            sUrl = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, ForumInfo.ForumGroup.PrefixURL, ForumInfo.PrefixURL, 0, 0, -1, "", -1, -1, "notread", 1, SocialGroupId);
                         }
                         catch (Exception ex)
                         {
