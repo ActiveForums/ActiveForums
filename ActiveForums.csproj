@@ -39,7 +39,7 @@
     <SccProvider>SAK</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>D:\Projects\DNN07.02.00\bin\</OutputPath>
+    <OutputPath>..\..\bin\</OutputPath>
     <DocumentationFile>DotNetNuke.Modules.ActiveForums.xml</DocumentationFile>
     <DefineConstants>TRACE;DEBUG;</DefineConstants>
     <DebugSymbols>true</DebugSymbols>
@@ -49,8 +49,6 @@
     <DebugType>full</DebugType>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <UseVSHostingProcess>true</UseVSHostingProcess>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <RegisterForComInterop>true</RegisterForComInterop>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>..\..\bin\</OutputPath>
@@ -102,40 +100,42 @@
   <ItemGroup>
     <Reference Include="ClientDependency.Core, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Projects\DNN07.02.00\bin\ClientDependency.Core.dll</HintPath>
+      <HintPath>..\..\..\References\DNN 7.0.0\ClientDependency.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DotNetNuke">
-      <HintPath>D:\Projects\DNN07.02.00\bin\DotNetNuke.dll</HintPath>
+    <Reference Include="DotNetNuke, Version=7.0.2.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\References\DNN 7.0.0\DotNetNuke.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DotNetNuke.Web, Version=7.0.2.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Projects\DNN07.02.00\bin\DotNetNuke.Web.dll</HintPath>
+      <HintPath>..\..\..\References\DNN 7.0.0\DotNetNuke.Web.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DotNetNuke.Web.Client, Version=6.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Projects\DNN07.02.00\bin\DotNetNuke.Web.Client.dll</HintPath>
+      <HintPath>..\..\..\References\DNN 7.0.0\DotNetNuke.Web.Client.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DotNetNuke.WebControls, Version=2.4.0.598, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Projects\DNN07.02.00\bin\DotNetNuke.WebControls.dll</HintPath>
+      <HintPath>..\..\..\References\DNN 7.0.0\DotNetNuke.WebControls.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DotNetNuke.WebUtility, Version=4.2.1.783, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Projects\DNN07.02.00\bin\DotNetNuke.WebUtility.dll</HintPath>
+      <HintPath>..\..\..\References\DNN 7.0.0\DotNetNuke.WebUtility.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.ApplicationBlocks.Data, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Projects\DNN07.02.00\bin\Microsoft.ApplicationBlocks.Data.dll</HintPath>
+      <HintPath>..\..\..\References\DNN 7.0.0\Microsoft.ApplicationBlocks.Data.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Projects\DNN07.02.00\bin\Microsoft.Web.Helpers.dll</HintPath>
+      <HintPath>..\..\..\References\DNN 7.0.0\Microsoft.Web.Helpers.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -187,7 +187,7 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Telerik.Web.UI, Version=2012.3.1205.40, Culture=neutral, PublicKeyToken=121fae78165ba3d4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Projects\DNN07.02.00\bin\Telerik.Web.UI.dll</HintPath>
+      <HintPath>..\..\..\References\DNN 7.0.0\Telerik.Web.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
@@ -586,9 +586,7 @@
     <Content Include="controls\af_confirmaction.ascx">
       <SubType>Form</SubType>
     </Content>
-    <Content Include="controls\af_modtopics.ascx">
-      <SubType>ASPXCodeBehind</SubType>
-    </Content>
+    <Content Include="controls\af_modtopics.ascx" />
     <Content Include="controls\af_posticonlist.ascx" />
     <Content Include="controls\af_profile.ascx" />
     <Content Include="controls\af_quickjump.ascx">
@@ -596,9 +594,6 @@
     </Content>
     <Content Include="controls\af_subscribe.ascx" />
     <Content Include="controls\af_topicrating.ascx" />
-    <Content Include="controls\af_uploader.ascx">
-      <SubType>ASPXCodeBehind</SubType>
-    </Content>
     <Content Include="controls\af_markallread.ascx">
       <SubType>Form</SubType>
     </Content>
@@ -606,9 +601,6 @@
       <SubType>ASPXCodeBehind</SubType>
     </Content>
     <Content Include="controls\af_quickreply.ascx">
-      <SubType>ASPXCodeBehind</SubType>
-    </Content>
-    <Content Include="controls\uploader.aspx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
     <Content Include="controls\_default.ascx">
@@ -1379,17 +1371,4 @@
   <Import Project="BuildScripts\ModulePackage.Targets" />
   <Target Name="AfterBuild" DependsOnTargets="PackageModule">
   </Target>
-  <PropertyGroup>
-    <PostBuildEvent>XCOPY C:\Users\ravi1895\Documents\GitHub\ActiveForums\*.ascx D:\Projects\DNN07.02.00\DesktopModules\ActiveForums /q /sy
-
-XCOPY C:\Users\ravi1895\Documents\GitHub\ActiveForums\*.css D:\Projects\DNN07.02.00\DesktopModules\ActiveForums /q /sy
-
-XCOPY C:\Users\ravi1895\Documents\GitHub\ActiveForums\*.js D:\Projects\DNN07.02.00\DesktopModules\ActiveForums /q /sy
-
-XCOPY C:\Users\ravi1895\Documents\GitHub\ActiveForums\*.resx D:\Projects\DNN07.02.00\DesktopModules\ActiveForums /q /sy</PostBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-  </PropertyGroup>
 </Project>
