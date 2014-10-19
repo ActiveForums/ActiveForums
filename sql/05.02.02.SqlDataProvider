@@ -1,0 +1,98 @@
+﻿SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Replies_Split]
+@OldTopicId int,
+@NewTopicId int,
+@listreplies varchar(8000)
+AS
+BEGIN
+    UPDATE {databaseOwner}{objectQualifier}activeforums_Replies
+	SET TopicId = @NewTopicId, ReplyToId = 0
+    WHERE TopicId = @OldTopicId and ReplyId in (SELECT id FROM {databaseOwner}{objectQualifier}activeforums_Functions_Split(@listreplies,'|'))
+END
+BEGIN
+    DECLARE @TopicId int
+    DECLARE @Subject nvarchar(255)
+    DECLARE @AuthorName nvarchar(150)
+    DECLARE @AuthorId int
+    DECLARE @DateCreated datetime
+    DECLARE @ReplyId int  
+    DECLARE @MaxReplyId int
+    DECLARE @TotalReplies int
+    SELECT @MaxReplyId = IsNull(Max(R.ReplyId),0),@TotalReplies = Count(ReplyId) FROM {databaseOwner}{objectQualifier}activeforums_Replies WHERE TopicId = @OldTopicId AND IsDeleted = 0 AND IsApproved = 1
+    UPDATE {databaseOwner}{objectQualifier}activeforums_Topics
+		SET ReplyCount = @TotalReplies
+		WHERE TopicId = @OldTopicId
+    UPDATE {databaseOwner}{objectQualifier}activeforums_ForumTopics
+		SET LastReplyId = @MaxReplyId
+		WHERE TopicId = @OldTopicId
+    SELECT @MaxReplyId = IsNull(Max(R.ReplyId),0),@TotalReplies = Count(ReplyId) FROM {databaseOwner}{objectQualifier}activeforums_Replies WHERE TopicId = @NewTopicId AND IsDeleted = 0 AND IsApproved = 1
+    UPDATE {databaseOwner}{objectQualifier}activeforums_Topics
+		SET ReplyCount = @TotalReplies
+		WHERE TopicId = @NewTopicId
+    UPDATE {databaseOwner}{objectQualifier}activeforums_ForumTopics
+		SET LastReplyId = @MaxReplyId
+		WHERE TopicId = @NewTopicId
+    DECLARE @OldForumId int
+    DECLARE @NewForumId int
+    SET @OldForumId = (SELECT ForumId FROM {databaseOwner}{objectQualifier}activeforums_ForumTopics WHERE TopicId = @OldTopicId)
+    SET @NewForumId = (SELECT ForumId FROM {databaseOwner}{objectQualifier}activeforums_ForumTopics WHERE TopicId = @NewTopicId)
+    IF (@OldForumId <> @NewForumId)
+    BEGIN
+	    SELECT @MaxReplyId = IsNull(Max(R.ReplyId),0),@TotalReplies = Count(R.ReplyId)
+        FROM {databaseOwner}{objectQualifier}activeforums_replies AS R INNER JOIN
+            {databaseOwner}{objectQualifier}activeforums_topics as t ON t.topicid = r.topicid AND r.isapproved = 1 AND r.isdeleted = 0 INNER JOIN
+            {databaseOwner}{objectQualifier}activeforums_forumtopics AS ft ON t.topicid = ft.topicid
+        WHERE ft.forumid = @OldForumId
+        IF(@MaxReplyId > 0)
+            BEGIN
+                SELECT @TopicId = R.TopicId, @Subject = C.Subject, @DateCreated = C.DateCreated, @AuthorId = C.AuthorId, @AuthorName = C.AuthorName
+                    FROM dbo.activeforums_Replies AS R INNER JOIN
+                    dbo.activeforums_Content AS C ON R.ContentId = C.ContentId
+                    WHERE R.ReplyId = @MaxReplyId
+                UPDATE {databaseOwner}{objectQualifier}activeforums_Forums 
+                    SET LastPostSubject = @Subject, LastPostAuthorName = @AuthorName, LastPostAuthorId = IsNull(@AuthorId,-1), 
+                    LastPostDate = @DateCreated, LastTopicId = IsNull(@TopicId,0), LastReplyId = @MaxReplyId,
+                    TotalReplies = @TotalReplies
+                    WHERE ForumId = @OldForumId
+            END
+        ELSE
+            BEGIN
+                UPDATE {databaseOwner}{objectQualifier}activeforums_Forums 
+                    SET LastPostSubject = NULL, LastPostAuthorName = NULL, LastPostAuthorId = -1, 
+                    LastPostDate = NULL, LastReplyId = 0, TotalReplies = 0
+                    WHERE ForumId = @OldForumId
+            END
+    
+        SELECT @MaxReplyId = IsNull(Max(ReplyId),0),@TotalReplies = Count(ReplyId)
+        FROM {databaseOwner}{objectQualifier}activeforums_replies as r inner join
+            {databaseOwner}{objectQualifier}activeforums_topics as t on t.topicid = r.topicid and r.isapproved = 1 and r.isdeleted = 0 INNER JOIN
+            {databaseOwner}{objectQualifier}activeforums_forumtopics as ft on t.topicid = ft.topicid
+        WHERE ft.forumid = @NewForumId
+        IF(@MaxReplyId > 0)
+            BEGIN
+                SELECT @TopicId = R.TopicId, @Subject = C.Subject, @DateCreated = C.DateCreated, @AuthorId = C.AuthorId, @AuthorName = C.AuthorName
+                    FROM dbo.activeforums_Replies AS R INNER JOIN
+                    dbo.activeforums_Content AS C ON R.ContentId = C.ContentId
+                    WHERE R.ReplyId = @MaxReplyId
+                UPDATE {databaseOwner}{objectQualifier}activeforums_Forums 
+                    SET LastPostSubject = @Subject, LastPostAuthorName = @AuthorName, LastPostAuthorId = IsNull(@AuthorId,-1), 
+                    LastPostDate = @DateCreated, LastTopicId = IsNull(@TopicId,0), LastReplyId = @MaxReplyId,
+                    TotalReplies = @TotalReplies
+                    WHERE ForumId = @NewForumId
+            END
+        ELSE
+            BEGIN
+                UPDATE {databaseOwner}{objectQualifier}activeforums_Forums 
+                    SET LastPostSubject = NULL, LastPostAuthorName = NULL, LastPostAuthorId = -1, 
+                    LastPostDate = NULL, LastReplyId = 0, TotalReplies = 0
+                    WHERE ForumId = @NewForumId
+            END
+    END
+END
+
+GO

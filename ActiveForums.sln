@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActiveForums", "ActiveForums.csproj", "{2D42BCCC-D1B2-4831-B80C-41199DE25798}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Enterprise|Any CPU = Enterprise|Any CPU
+		Express|Any CPU = Express|Any CPU
+		LITE|Any CPU = LITE|Any CPU
+		Release|Any CPU = Release|Any CPU
+		Standard|Any CPU = Standard|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2D42BCCC-D1B2-4831-B80C-41199DE25798}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D42BCCC-D1B2-4831-B80C-41199DE25798}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D42BCCC-D1B2-4831-B80C-41199DE25798}.Enterprise|Any CPU.ActiveCfg = Enterprise|Any CPU
+		{2D42BCCC-D1B2-4831-B80C-41199DE25798}.Enterprise|Any CPU.Build.0 = Enterprise|Any CPU
+		{2D42BCCC-D1B2-4831-B80C-41199DE25798}.Express|Any CPU.ActiveCfg = Express|Any CPU
+		{2D42BCCC-D1B2-4831-B80C-41199DE25798}.Express|Any CPU.Build.0 = Express|Any CPU
+		{2D42BCCC-D1B2-4831-B80C-41199DE25798}.LITE|Any CPU.ActiveCfg = LITE|Any CPU
+		{2D42BCCC-D1B2-4831-B80C-41199DE25798}.LITE|Any CPU.Build.0 = LITE|Any CPU
+		{2D42BCCC-D1B2-4831-B80C-41199DE25798}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D42BCCC-D1B2-4831-B80C-41199DE25798}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D42BCCC-D1B2-4831-B80C-41199DE25798}.Standard|Any CPU.ActiveCfg = Standard|Any CPU
+		{2D42BCCC-D1B2-4831-B80C-41199DE25798}.Standard|Any CPU.Build.0 = Standard|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

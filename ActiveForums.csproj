@@ -100,47 +100,47 @@
   <ItemGroup>
     <Reference Include="ClientDependency.Core, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\References\DNN 7.0.0\ClientDependency.Core.dll</HintPath>
+      <HintPath>..\..\..\Мои документы\My Web Sites\WebSite1\bin\ClientDependency.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DotNetNuke, Version=7.0.2.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\References\DNN 7.0.0\DotNetNuke.dll</HintPath>
+      <HintPath>..\..\..\Мои документы\My Web Sites\WebSite1\bin\DotNetNuke.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DotNetNuke.Web, Version=7.0.2.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\References\DNN 7.0.0\DotNetNuke.Web.dll</HintPath>
+      <HintPath>..\..\..\Мои документы\My Web Sites\WebSite1\bin\DotNetNuke.Web.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DotNetNuke.Web.Client, Version=6.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\References\DNN 7.0.0\DotNetNuke.Web.Client.dll</HintPath>
+      <HintPath>..\..\..\Мои документы\My Web Sites\WebSite1\bin\DotNetNuke.Web.Client.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DotNetNuke.WebControls, Version=2.4.0.598, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\References\DNN 7.0.0\DotNetNuke.WebControls.dll</HintPath>
+      <HintPath>..\..\..\Мои документы\My Web Sites\WebSite1\bin\DotNetNuke.WebControls.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DotNetNuke.WebUtility, Version=4.2.1.783, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\References\DNN 7.0.0\DotNetNuke.WebUtility.dll</HintPath>
+      <HintPath>..\..\..\Мои документы\My Web Sites\WebSite1\bin\DotNetNuke.WebUtility.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.ApplicationBlocks.Data, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\References\DNN 7.0.0\Microsoft.ApplicationBlocks.Data.dll</HintPath>
+      <HintPath>..\..\..\Мои документы\My Web Sites\WebSite1\bin\Microsoft.ApplicationBlocks.Data.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\References\DNN 7.0.0\Microsoft.Web.Helpers.dll</HintPath>
+      <HintPath>..\..\..\Мои документы\My Web Sites\WebSite1\bin\Microsoft.Web.Helpers.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\References\DNN 7.0.0\Microsoft.Web.Infrastructure.dll</HintPath>
+      <HintPath>..\..\..\Мои документы\My Web Sites\WebSite1\bin\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -159,12 +159,12 @@
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\References\DNN 7.0.0\System.Net.Http.dll</HintPath>
+      <HintPath>..\..\..\Мои документы\My Web Sites\WebSite1\bin\System.Net.Http.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\References\DNN 7.0.0\System.Net.Http.Formatting.dll</HintPath>
+      <HintPath>..\..\..\Мои документы\My Web Sites\WebSite1\bin\System.Net.Http.Formatting.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
@@ -175,7 +175,7 @@
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\References\DNN 7.0.0\System.Web.Http.dll</HintPath>
+      <HintPath>..\..\..\Мои документы\My Web Sites\WebSite1\bin\System.Web.Http.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Web.RegularExpressions" />
@@ -187,7 +187,7 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Telerik.Web.UI, Version=2012.3.1205.40, Culture=neutral, PublicKeyToken=121fae78165ba3d4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\References\DNN 7.0.0\Telerik.Web.UI.dll</HintPath>
+      <HintPath>..\..\..\Мои документы\My Web Sites\WebSite1\bin\Telerik.Web.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
@@ -351,6 +351,7 @@
     <None Include="sql\04.03.06.SqlDataProvider" />
     <None Include="sql\04.03.09.SqlDataProvider" />
     <Content Include="scripts\usereditor.js" />
+    <Content Include="scripts\splitmanager.js" />
     <Content Include="sql\CoreForumsToActiveForums.sql" />
     <Content Include="themes\_default\emoticons\angry.gif" />
     <Content Include="themes\_default\emoticons\arrow.gif" />
@@ -586,7 +587,9 @@
     <Content Include="controls\af_confirmaction.ascx">
       <SubType>Form</SubType>
     </Content>
-    <Content Include="controls\af_modtopics.ascx" />
+    <Content Include="controls\af_modtopics.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <Content Include="controls\af_posticonlist.ascx" />
     <Content Include="controls\af_profile.ascx" />
     <Content Include="controls\af_quickjump.ascx">
@@ -650,7 +653,9 @@
     <Content Include="config\defaultsetup.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="controls\af_modsplittopic.ascx" />
+    <Content Include="controls\af_modsplittopic.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <Content Include="images\ranks\blue_square_01.gif" />
     <Content Include="images\ranks\blue_square_02.gif" />
     <Content Include="images\ranks\blue_square_03.gif" />
@@ -1332,6 +1337,7 @@
     <None Include="config\templates\BlogsView.txt" />
     <None Include="sql\05.00.01.SqlDataProvider" />
     <None Include="sql\05.01.00.SqlDataProvider" />
+    <None Include="sql\05.02.02.SqlDataProvider" />
     <None Include="WhatsNewResources.zip" />
   </ItemGroup>
   <ItemGroup>

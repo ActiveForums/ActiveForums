@@ -34,6 +34,9 @@ using DotNetNuke.Modules.ActiveForums.Extensions;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Web.Api;
 using DotNetNuke.Web.Api.Internal;
+using System.Data;
+using System.Web.Script.Serialization;
+using System.Collections.Generic;
 
 
 namespace DotNetNuke.Modules.ActiveForums
@@ -204,6 +207,91 @@ namespace DotNetNuke.Modules.ActiveForums
 
             return task;
         }
+
+        [HttpGet]
+        public HttpResponseMessage GetTopicList(int ForumId)
+        {
+            var portalSettings = PortalSettings;
+            var userInfo = portalSettings.UserInfo;
+            var forumUser = new UserController().GetUser(portalSettings.PortalId, ActiveModule.ModuleID, userInfo.UserID);
+            var fc = new ForumController();
+            var forumIds = fc.GetForumsForUser(forumUser.UserRoles, portalSettings.PortalId, ActiveModule.ModuleID, "CanEdit");
+
+            DataSet ds = DataProvider.Instance().UI_TopicsView(portalSettings.PortalId, ActiveModule.ModuleID, ForumId, userInfo.UserID, 0, 20, userInfo.IsSuperUser, SortColumns.ReplyCreated);
+            if (ds.Tables.Count > 0)
+            {
+                DataTable dtTopics = ds.Tables[3];
+
+                Dictionary<string, string> rows = new Dictionary<string, string>(); ;
+                foreach (DataRow dr in dtTopics.Rows)
+                {
+                    rows.Add(dr["TopicId"].ToString(), dr["Subject"].ToString());
+                }
+
+                return Request.CreateResponse(HttpStatusCode.OK, rows.ToJson());
+            }
+            return Request.CreateResponse(HttpStatusCode.NotFound);
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetForumsList()
+        {
+            var portalSettings = PortalSettings;
+            var userInfo = portalSettings.UserInfo;
+            var forumUser = new UserController().GetUser(portalSettings.PortalId, ActiveModule.ModuleID, userInfo.UserID);
+            var fc = new ForumController();
+            var forumIds = fc.GetForumsForUser(forumUser.UserRoles, portalSettings.PortalId, ActiveModule.ModuleID, "CanEdit");
+
+            DataTable ForumTable = fc.GetForumView(portalSettings.PortalId, ActiveModule.ModuleID, userInfo.UserID, userInfo.IsSuperUser, forumIds);
+
+            Dictionary<string, string> rows = new Dictionary<string, string>();;
+            foreach (DataRow dr in ForumTable.Rows)
+            {
+                rows.Add(dr["ForumId"].ToString(),dr["ForumName"].ToString());
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, rows.ToJson());
+        }
+
+        public class CreateSplitDTO
+        {
+            public int OldTopicId { get; set; }
+            public int NewTopicId { get; set; }
+            public int NewForumId { get; set; }
+            public string Subject { get; set; }
+            public string Replies { get; set; }
+        }
+
+        [HttpPost]
+        public HttpResponseMessage CreateSplit(CreateSplitDTO dto)
+        {
+            //var modSplit = Permissions.HasPerm(_drSecurity["CanModSplit"].ToString(), ForumUser.UserRoles);
+
+            var portalSettings = PortalSettings;
+            var userInfo = portalSettings.UserInfo;
+            var forumUser = new UserController().GetUser(portalSettings.PortalId, ActiveModule.ModuleID, userInfo.UserID);
+            var fc = new ForumController();
+            //var forumIds = fc.GetForumsForUser(forumUser.UserRoles, portalSettings.PortalId, ActiveModule.ModuleID, "CanEdit");
+            
+            var tc = new TopicsController();
+
+            int topicId;
+
+            if (dto.NewTopicId < 1)
+            {   
+                var subject = Utilities.CleanString(portalSettings.PortalId, dto.Subject, false, EditorTypes.TEXTBOX, false, false, ActiveModule.ModuleID, string.Empty, false);
+                
+                topicId = tc.Topic_QuickCreate(portalSettings.PortalId, ActiveModule.ModuleID, dto.NewForumId, subject, string.Empty, userInfo.UserID, userInfo.DisplayName, true, userInfo.LastIPAddress);
+            }
+            else
+            {
+                topicId = dto.NewTopicId;
+            }
+
+            tc.Replies_Split(dto.OldTopicId, topicId, dto.Replies);
+
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
 
         public class CreateThumbnailDTO
         {

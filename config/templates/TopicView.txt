@@ -41,7 +41,7 @@
 		<td valign="bottom" style="white-space:nowrap;padding-bottom:5px;">
 			<div class="afbuttonarea">[ADDREPLY]</div>
 		</td>
-		<td valign="bottom" align="right" width="100%" style="padding-bottom:5px;">[PAGER1]</td>
+		<td valign="bottom" align="right" width="100%" style="padding-bottom:5px;">[SPLITBUTTONS] [PAGER1]</td>
 	</tr>
 </table>	
 
@@ -86,7 +86,7 @@
 				[/TOPIC]
 				[REPLIES]
 				<tr>
-					<td class="[POSTINFOCSS]">[POSTINFO]<br />[SPACER:1:125]</td>
+					<td class="[POSTINFOCSS]">[SPLITCHECKBOX][POSTINFO]<br />[SPACER:1:125]</td>
 					<td class="[POSTREPLYCSS]">
 						<table class="afgrid" cellpadding="4">
 							<tr>
@@ -114,7 +114,7 @@
 <table class="afgrid" cellpadding="4">
 	<tr>
 		<td class="afbuttonarea">[ADDREPLY]</td>
-		<td class="af-right"><div class="af-fright">[PAGER2]<br />[JUMPTO]</div></td>
+		<td class="af-right"><div class="af-fright">[SPLITBUTTONS2][PAGER2]<br />[JUMPTO]</div></td>
 	</tr>
 </table>
 [/AF:CONTROL:CALLBACK]
