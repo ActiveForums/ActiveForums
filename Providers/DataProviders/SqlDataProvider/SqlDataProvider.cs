@@ -593,9 +593,9 @@ namespace DotNetNuke.Modules.ActiveForums
         {
             return Convert.ToInt32(SqlHelper.ExecuteScalar(ConnectionString, DatabaseOwner + ObjectQualifier + "activeforums_Topics_SaveToForum", ForumId, TopicId, GetNull(LastReplyId)));
         }
-        public override void Replies_Split(int OldTopicId, int NewTopicId, string listreplies)
+        public override void Replies_Split(int OldTopicId, int NewTopicId, string listreplies, DateTime DateUpdate, int FirstReplyId)
         {
-            SqlHelper.ExecuteNonQuery(ConnectionString, DatabaseOwner + ObjectQualifier + "activeforums_Replies_Split", OldTopicId, NewTopicId, listreplies);
+            SqlHelper.ExecuteNonQuery(ConnectionString, DatabaseOwner + ObjectQualifier + "activeforums_Replies_Split", OldTopicId, NewTopicId, listreplies, DateUpdate, FirstReplyId);
         }
         public override IDataReader Topics_Replies(int TopicId)
         {

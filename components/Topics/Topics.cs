@@ -435,12 +435,20 @@ namespace DotNetNuke.Modules.ActiveForums
 			}
 			return topicId;
 		}
-        public void Replies_Split(int OldTopicId, int NewTopicId, string listreplies)
+        public void Replies_Split(int OldTopicId, int NewTopicId, string listreplies, bool isNew)
         {
             Regex rgx = new Regex(@"^\d+(\|\d+)*$");
             if (OldTopicId > 0 && NewTopicId > 0 && rgx.IsMatch(listreplies))
             {
-                DataProvider.Instance().Replies_Split(OldTopicId, NewTopicId, listreplies);
+                if (isNew)
+                {
+                    string[] slistreplies = listreplies.Split("|".ToCharArray(), 2);
+                    DataProvider.Instance().Replies_Split(OldTopicId, NewTopicId, slistreplies[1], DateTime.Now, Convert.ToInt32(slistreplies[0]));
+                }
+                else
+                {
+                    DataProvider.Instance().Replies_Split(OldTopicId, NewTopicId, listreplies, DateTime.Now, 0);
+                }
             }
         }
 		public int TopicSave(int PortalId, TopicInfo ti)

@@ -213,9 +213,6 @@ namespace DotNetNuke.Modules.ActiveForums
         {
             var portalSettings = PortalSettings;
             var userInfo = portalSettings.UserInfo;
-            var forumUser = new UserController().GetUser(portalSettings.PortalId, ActiveModule.ModuleID, userInfo.UserID);
-            var fc = new ForumController();
-            var forumIds = fc.GetForumsForUser(forumUser.UserRoles, portalSettings.PortalId, ActiveModule.ModuleID, "CanEdit");
 
             DataSet ds = DataProvider.Instance().UI_TopicsView(portalSettings.PortalId, ActiveModule.ModuleID, ForumId, userInfo.UserID, 0, 20, userInfo.IsSuperUser, SortColumns.ReplyCreated);
             if (ds.Tables.Count > 0)
@@ -240,7 +237,7 @@ namespace DotNetNuke.Modules.ActiveForums
             var userInfo = portalSettings.UserInfo;
             var forumUser = new UserController().GetUser(portalSettings.PortalId, ActiveModule.ModuleID, userInfo.UserID);
             var fc = new ForumController();
-            var forumIds = fc.GetForumsForUser(forumUser.UserRoles, portalSettings.PortalId, ActiveModule.ModuleID, "CanEdit");
+            var forumIds = fc.GetForumsForUser(forumUser.UserRoles, portalSettings.PortalId, ActiveModule.ModuleID, "CanView", true);
 
             DataTable ForumTable = fc.GetForumView(portalSettings.PortalId, ActiveModule.ModuleID, userInfo.UserID, userInfo.IsSuperUser, forumIds);
 
@@ -264,31 +261,51 @@ namespace DotNetNuke.Modules.ActiveForums
         [HttpPost]
         public HttpResponseMessage CreateSplit(CreateSplitDTO dto)
         {
-            //var modSplit = Permissions.HasPerm(_drSecurity["CanModSplit"].ToString(), ForumUser.UserRoles);
+            if (dto.NewTopicId == dto.OldTopicId) return Request.CreateResponse(HttpStatusCode.OK);
 
             var portalSettings = PortalSettings;
             var userInfo = portalSettings.UserInfo;
             var forumUser = new UserController().GetUser(portalSettings.PortalId, ActiveModule.ModuleID, userInfo.UserID);
-            var fc = new ForumController();
-            //var forumIds = fc.GetForumsForUser(forumUser.UserRoles, portalSettings.PortalId, ActiveModule.ModuleID, "CanEdit");
             
-            var tc = new TopicsController();
+            var fc = new ForumController();
 
-            int topicId;
-
-            if (dto.NewTopicId < 1)
-            {   
-                var subject = Utilities.CleanString(portalSettings.PortalId, dto.Subject, false, EditorTypes.TEXTBOX, false, false, ActiveModule.ModuleID, string.Empty, false);
-                
-                topicId = tc.Topic_QuickCreate(portalSettings.PortalId, ActiveModule.ModuleID, dto.NewForumId, subject, string.Empty, userInfo.UserID, userInfo.DisplayName, true, userInfo.LastIPAddress);
-            }
-            else
+            var forum_out = fc.Forums_Get(portalSettings.PortalId, ActiveModule.ModuleID, 0, forumUser.UserId, false, true, dto.OldTopicId);
+            var forum_in = fc.GetForum(portalSettings.PortalId, ActiveModule.ModuleID,dto.NewForumId);
+            if (forum_out != null && forum_in != null)
             {
-                topicId = dto.NewTopicId;
+                var perm = false;
+
+                if (forum_out == forum_in)
+                {
+                    perm = Permissions.HasPerm(forum_out.Security.View, forumUser.UserRoles);
+                }
+                else
+                {
+                    perm = Permissions.HasPerm(forum_out.Security.View, forumUser.UserRoles) && Permissions.HasPerm(forum_in.Security.View, forumUser.UserRoles);
+                }
+
+                var modSplit = Permissions.HasPerm(forum_out.Security.ModSplit, forumUser.UserRoles);
+                
+                if(perm && modSplit)
+                {
+                    var tc = new TopicsController();
+
+                    int topicId;
+
+                    if (dto.NewTopicId < 1)
+                    {   
+                        var subject = Utilities.CleanString(portalSettings.PortalId, dto.Subject, false, EditorTypes.TEXTBOX, false, false, ActiveModule.ModuleID, string.Empty, false);
+                
+                        topicId = tc.Topic_QuickCreate(portalSettings.PortalId, ActiveModule.ModuleID, dto.NewForumId, subject, string.Empty, userInfo.UserID, userInfo.DisplayName, true, userInfo.LastIPAddress);
+                        tc.Replies_Split(dto.OldTopicId, topicId, dto.Replies, true);
+                    }
+                    else
+                    {
+                        topicId = dto.NewTopicId;
+                        tc.Replies_Split(dto.OldTopicId, topicId, dto.Replies, false);
+                    }
+                }
             }
-
-            tc.Replies_Split(dto.OldTopicId, topicId, dto.Replies);
-
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
