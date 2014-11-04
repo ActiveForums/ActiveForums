@@ -31,8 +31,21 @@ namespace DotNetNuke.Modules.ActiveForums
 	{
 		public static string GetAvatar(int userID, int avatarWidth, int avatarHeight)
 		{
-            return "<img class='af-avatar' src='" + string.Format(Common.Globals.UserProfilePicFormattedUrl(), userID, avatarWidth, avatarHeight) + "' />";
-		}
+            var portalSettings = HttpContext.Current.Items["PortalSettings"] as PortalSettings;
+            if (portalSettings == null)
+                return string.Empty;
+
+            //GIF files when reduced using DNN class losses its animation, so for gifs send them as is
+            string imgUrl = new Entities.Users.UserController().GetUser(portalSettings.PortalId, userID).Profile.PhotoURL;
+            if (!string.IsNullOrWhiteSpace(imgUrl) && imgUrl.ToLower().EndsWith("gif"))
+            {
+                return "<img class='af-avatar' src='" + imgUrl + "' height='" + avatarHeight + "px' width='" + avatarWidth + "px' />";
+            }
+            else
+            {
+                return "<img class='af-avatar' src='" + string.Format(Common.Globals.UserProfilePicFormattedUrl(), userID, avatarWidth, avatarHeight) + "' />";
+            }
+        }
 
 	    public static string GetDisplayName(int moduleId, int userID, string username, string firstName = "", string lastName = "", string displayName = "", string profileNameClass = "af-profile-name")
 		{

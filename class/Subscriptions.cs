@@ -150,6 +150,7 @@ namespace DotNetNuke.Modules.ActiveForums
 			var tc = new TemplateController();
 			TemplateInfo ti;
 			ti = TemplateId > 0 ? tc.Template_Get(TemplateId) : tc.Template_Get("SubscribedEmail", PortalId, ModuleId);
+			TemplateUtils.lstSubscriptionInfo = subs;
 			Subject = TemplateUtils.ParseEmailTemplate(ti.Subject, string.Empty, PortalId, ModuleId, TabId, fi.ForumID, TopicId, ReplyId, string.Empty, AuthorId, _portalSettings.TimeZoneOffset);
 			BodyText = TemplateUtils.ParseEmailTemplate(ti.TemplateText, string.Empty, PortalId, ModuleId, TabId, fi.ForumID, TopicId, ReplyId, string.Empty, AuthorId, _portalSettings.TimeZoneOffset);
 			BodyHTML = TemplateUtils.ParseEmailTemplate(ti.TemplateHTML, string.Empty, PortalId, ModuleId, TabId, fi.ForumID, TopicId, ReplyId, string.Empty, AuthorId, _portalSettings.TimeZoneOffset);

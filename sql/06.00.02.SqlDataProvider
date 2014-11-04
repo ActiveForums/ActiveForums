@@ -1,0 +1,130 @@
+﻿SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_Reply_Save]') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Reply_Save]
+GO
+
+
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Reply_Save]
+@PortalId int,
+@TopicId int,
+@ReplyId int,
+@ReplyToId int,
+@StatusId int,
+@IsApproved bit,
+@IsDeleted bit,
+@Subject nvarchar(255),
+@Body ntext,
+@DateCreated datetime,
+@DateUpdated datetime,
+@AuthorId int,
+@AuthorName nvarchar(150),
+@IPAddress nvarchar(50)
+AS
+DECLARE @ContentId int
+DECLARE @IsEdit bit
+SET @IsEdit = 0
+DECLARE @ApprovedStatus bit
+SET @ApprovedStatus = @IsApproved
+
+-- This part is a work around for Quick Reply feature not working for Tapatalk STARTS
+
+DECLARE @TopicSubject NVARCHAR(255) =	(
+											SELECT top 1 afc.Subject FROM activeforums_Topics aft
+												JOIN activeforums_Content afc ON aft.ContentId = afc.ContentId
+											WHERE TopicId = @TopicId
+										)	
+										
+SET @Subject = ISNULL(NULLIF(@Subject, ''), 'RE: ' + @TopicSubject)	
+
+IF (@Subject NOT LIKE 'RE:%')
+BEGIN
+	SET @Subject = 'RE: ' + @Subject
+END
+-- This part is a work around for Quick Reply feature not working for Tapatalk ENDS
+
+
+IF EXISTS(SELECT ContentId FROM {databaseOwner}{objectQualifier}activeforums_Replies WHERE ReplyId = @ReplyId)
+	BEGIN
+		SELECT @ContentId = ContentId, @ApprovedStatus = IsApproved FROM {databaseOwner}{objectQualifier}activeforums_Replies WHERE ReplyId = @ReplyId
+		
+		BEGIN
+			SET @IsEdit = 1
+			UPDATE {databaseOwner}{objectQualifier}activeforums_Content
+				SET Subject = @Subject,
+					Body = @Body,
+					DateCreated = @DateCreated,
+					DateUpdated = @DateUpdated,
+					AuthorId = @AuthorId,
+					AuthorName = @AuthorName,
+					IsDeleted = @IsDeleted,
+					IPAddress = @IPAddress
+				WHERE ContentId = @ContentId
+			UPDATE {databaseOwner}{objectQualifier}activeforums_Replies
+				SET StatusId = @StatusId,
+					TopicId = @TopicId,
+					IsApproved = @IsApproved,
+					IsDeleted = @IsDeleted,
+					ReplyToId = @ReplyToId					
+				WHERE ReplyId = @ReplyId	
+		END
+	END
+ELSE
+--INSERT
+BEGIN
+	BEGIN
+		INSERT INTO {databaseOwner}{objectQualifier}activeforums_Content
+			(Subject, Body, DateCreated, DateUpdated, AuthorId, AuthorName, IsDeleted, IPAddress)
+			VALUES
+			(@Subject, @Body, @DateCreated, @DateUpdated, @AuthorId, @AuthorName, @IsDeleted, @IPAddress)
+		SET @ContentId = SCOPE_IDENTITY()
+	END
+	BEGIN
+		INSERT INTO {databaseOwner}{objectQualifier}activeforums_Replies
+			(ContentId, TopicId, StatusId, IsApproved, IsDeleted, ReplyToId)
+			VALUES
+			(@ContentId, @TopicId, @StatusId, @IsApproved, @IsDeleted, @ReplyToId)
+		SET @ReplyId = SCOPE_IDENTITY()
+		
+	END
+	
+
+END
+IF @IsApproved = 1
+	BEGIN
+		DECLARE @ForumId int
+		SELECT @ForumId = ForumId FROM {databaseOwner}{objectQualifier}activeforums_ForumTopics WHERE TopicId = @TopicId
+		DECLARE @TotalReplies int
+		SET @TotalReplies = (SELECT Count(ReplyId) from {databaseOwner}{objectQualifier}activeforums_replies as r inner join {databaseOwner}{objectQualifier}activeforums_topics as t on t.topicid = r.topicid and r.isapproved = 1 and r.isdeleted = 0 INNER JOIN {databaseOwner}{objectQualifier}activeforums_forumtopics as ft on t.topicid = ft.topicid WHERE ft.forumid = @ForumId)
+		DECLARE @LastReplyDate int
+		SET @LastReplyDate = (SELECT DATEDIFF(ss,'01/01/1970 00:00:00 AM',rc.DATECREATED) FROM {databaseOwner}{objectQualifier}activeforums_Content as rc INNER JOIN {databaseOwner}{objectQualifier}activeforums_Replies as r ON r.ContentId = rc.ContentId WHERE ReplyId = @ReplyId)
+		UPDATE {databaseOwner}{objectQualifier}activeforums_Forums 
+		SET LastPostSubject = @Subject, LastPostAuthorName = @AuthorName, LastPostAuthorId = IsNull(@AuthorId,-1), 
+			LastPostDate = @DateCreated, LastTopicId = IsNull(@TopicId,0), LastReplyId = IsNull(@ReplyId,0),
+			TotalReplies = ISNULL(@TotalReplies,0)
+		WHERE ForumId = @ForumId
+		UPDATE {databaseOwner}{objectQualifier}activeforums_Topics
+			SET ReplyCount = (Select Count(ReplyId) from {databaseOwner}{objectQualifier}activeforums_Replies WHERE TopicId = @TopicId AND IsDeleted = 0 AND IsApproved = 1)
+			WHERE TopicId = @TopicId
+			If @IsEdit = 0
+				UPDATE {databaseOwner}{objectQualifier}activeforums_ForumTopics SET LastReplyId = @ReplyId, LastReplyDate = @LastReplyDate 	WHERE TopicId = @TopicId
+			IF @AuthorId > 0
+				UPDATE {databaseOwner}{objectQualifier}activeforums_UserProfiles 
+					SET ReplyCount = ISNULL((Select Count(ReplyId) from {databaseOwner}{objectQualifier}activeforums_Replies as r INNER JOIN 
+							{databaseOwner}{objectQualifier}activeforums_Content as c ON r.ContentId = c.ContentId AND c.AuthorId=@AuthorId INNER JOIN
+							{databaseOwner}{objectQualifier}activeforums_ForumTopics as ft ON ft.TopicId = r.TopicId INNER JOIN
+							{databaseOwner}{objectQualifier}activeforums_Forums as f ON ft.ForumId = f.ForumId
+							WHERE r.IsApproved = 1 AND r.IsDeleted=0 AND f.PortalId=@PortalId),0)
+					WHERE UserId = @AuthorId AND PortalId = @PortalId					
+			
+		
+		-- reset thread order
+		EXEC {databaseOwner}{objectQualifier}activeforums_SaveTopicNextPrev @ForumId
+	END
+SELECT @ReplyId
+GO
