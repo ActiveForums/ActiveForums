@@ -233,6 +233,12 @@ function amaf_setParam(name, value, days) {
     };
     document.cookie = name + "=" + value + expires + "; path=/";
 };
+function amaf_getParam(name) {
+    var value = "; " + document.cookie;
+    var parts = value.split("; " + name + "=");
+    if (parts.length == 2) return parts.pop().split(";").shift();
+    return "";
+};
 function afAddBookmark(title, url) {
     if (window.external) {
         window.external.AddFavorite(url, title);

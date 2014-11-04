@@ -198,3 +198,68 @@ function amaf_postDelComplete(result) {
     };
 };
 
+function amaf_splitRestore() {
+    var split_topicid = amaf_getParam('splitId');
+    if (typeof (split_topicid) != 'undefined') {
+        if (split_topicid == current_topicid) {
+            var sv = amaf_getParam('splitValue');
+            if (sv != '') splitposts = sv.split('|');
+            amaf_splitButtons(true);
+            return;
+        }
+    }
+    amaf_splitButtons(false);
+}
+
+
+function amaf_splitCheck(el) {
+    if (el.checked) {
+        if (splitposts.indexOf(el.value)<0) splitposts.push(el.value);
+        var saved_split = splitposts.join('|');
+        amaf_setParam('splitValue', saved_split, 0);
+    }
+    else {
+        var index = splitposts.indexOf(el.value);
+        splitposts.splice(index,1);
+        var saved_split = splitposts.join('|');
+        amaf_setParam('splitValue', saved_split, 0);
+    }
+};
+function amaf_splitCreate(el,tid) {
+    amaf_setParam('splitId', tid, 0);
+    amaf_setParam('splitValue', '', 0);
+    splitposts = new Array();
+    amaf_splitButtons(true);
+};
+
+function amaf_splitButtons(opt) {
+    var btns = document.getElementById('splitbuttons');
+    if (typeof (btns) == 'undefined') return;
+    if (opt) {
+        btns.childNodes[0].style.display = 'none';
+        btns.childNodes[1].style.display = 'block';
+        var objs = am.Utils.GetElementsByClassName('split-checkbox', 'afgrid');
+        for (var i = 0; i < objs.length; i++) {
+            objs[i].style.display = 'block';
+            if (splitposts.indexOf(objs[i].firstChild.value) > -1) objs[i].firstChild.checked = true;
+        };
+    }
+    else {
+        btns.childNodes[0].style.display = 'block';
+        btns.childNodes[1].style.display = 'none';
+        var objs = am.Utils.GetElementsByClassName('split-checkbox', 'afgrid');
+        for (var i = 0; i < objs.length; i++) {
+            objs[i].style.display = 'none';
+            objs[i].firstChild.checked = false;
+        };
+    }
+
+    
+};
+
+function amaf_splitCancel() {
+    amaf_setParam('splitId', '', 0);
+    amaf_setParam('splitValue', '', 0);
+    splitposts = new Array();
+    amaf_splitButtons(false);
+};

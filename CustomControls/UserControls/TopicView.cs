@@ -58,6 +58,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
         private bool _bPin;
         private bool _bSubscribe;
         private bool _bModApprove;
+        private bool _bModSplit;
         private bool _bModDelete;
         private bool _bModEdit;
         private bool _bAllowRSS;
@@ -336,7 +337,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             _bAttach = Permissions.HasPerm(_drSecurity["CanAttach"].ToString(), ForumUser.UserRoles);
             _bSubscribe = Permissions.HasPerm(_drSecurity["CanSubscribe"].ToString(), ForumUser.UserRoles);
             // bModMove = Permissions.HasPerm(_drSecurity["CanModMove"].ToString(), ForumUser.UserRoles);
-            // bModSplit = Permissions.HasPerm(_drSecurity["CanModSplit"].ToString(), ForumUser.UserRoles);
+            _bModSplit = Permissions.HasPerm(_drSecurity["CanModSplit"].ToString(), ForumUser.UserRoles);
             _bModDelete = Permissions.HasPerm(_drSecurity["CanModDelete"].ToString(), ForumUser.UserRoles);
             _bModApprove = Permissions.HasPerm(_drSecurity["CanModApprove"].ToString(), ForumUser.UserRoles);
             _bTrust = Permissions.HasPerm(_drSecurity["CanTrust"].ToString(), ForumUser.UserRoles);
@@ -902,6 +903,20 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     sbOutput.Replace("[ADDREPLY]", "<span class=\"afnormal\">[RESX:NotAuthorizedReply]</span>");
                     sbOutput.Replace("[QUICKREPLY]", string.Empty);
                 }
+				
+				//TODO: Check for owner
+                if (_bModSplit && (_replyCount>0))
+                {
+                    /*var @params = new List<string> { ParamKeys.ViewType + "=post", ParamKeys.TopicId + "=" + TopicId, ParamKeys.ForumId + "=" + ForumId };*/
+                    sbOutput.Replace("[SPLITBUTTONS]", "<div id=\"splitbuttons\"><div><a href=\"javascript:void(0);\" onclick=\"amaf_splitCreate(this," + TopicId + ");\" title=\"[RESX:SplitCreate]\" class=\"dnnPrimaryAction\">[RESX:SplitCreate]</a></div><div><span class=\"NormalBold\">[RESX:SplitHeader]</span> <a href=\"javascript:void(0);\" title=\"[RESX:SplitSave]\" class=\"dnnPrimaryAction af-button-split\" data-id='" + TopicId + "'>[RESX:SplitSave]</a>  <a href=\"javascript:void(0);\" onclick=\"amaf_splitCancel();\" title=\"[RESX:SplitCancel]\" class=\"dnnPrimaryAction\">[RESX:SplitCancel]</a></div></div><script type=\"text/javascript\">var splitposts=new Array();var current_topicid = " + TopicId + ";</script>");
+
+                    //sbOutput.Replace("[QUICKREPLY]", "<asp:placeholder id=\"plhQuickReply\" runat=\"server\" />");
+                }
+                else
+                {
+                    //sbOutput.Replace("[SPLIT]", "<span class=\"afnormal\">[RESX:NotAuthorizedSplit]</span>");
+                    sbOutput.Replace("[SPLITBUTTONS]", string.Empty);
+                }
             }
 
             // Parent Forum Link
@@ -983,6 +998,17 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             // Topic Info
             sbOutput.Replace("[AF:LABEL:TopicAuthor]", UserProfiles.GetDisplayName(ModuleId, _topicAuthorId, _topicAuthorDisplayName, string.Empty, string.Empty, _topicAuthorDisplayName));
             sbOutput.Replace("[AF:LABEL:TopicDateCreated]", _topicDateCreated);
+
+            if (_bModSplit && (_replyCount > 0))
+            {
+                /*var @params = new List<string> { ParamKeys.ViewType + "=post", ParamKeys.TopicId + "=" + TopicId, ParamKeys.ForumId + "=" + ForumId };*/
+
+                sbOutput.Replace("[SPLITBUTTONS2]", "<script type=\"text/javascript\">amaf_splitRestore();</script>");
+            }
+            else
+            {
+                sbOutput.Replace("[SPLITBUTTONS2]", string.Empty);
+            }
 
             // Pagers
             if (_pageSize == int.MaxValue)
@@ -1224,6 +1250,15 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             // Use a string builder from here on out.
 
             var sbOutput = new StringBuilder(sOutput);
+
+            if (_bModSplit)
+            {
+                sbOutput = sbOutput.Replace("[SPLITCHECKBOX]", "<div class=\"split-checkbox\" style=\"display:none;\"><input type=\"checkbox\" onChange=\"amaf_splitCheck(this);\" value=\"" + replyId + "\" /></div>");
+            }
+            else
+            {
+                sbOutput = sbOutput.Replace("[SPLITCHECKBOX]", string.Empty);
+            }
 
             // Row CSS Classes
             if (rowcount % 2 == 0)

@@ -26,6 +26,7 @@ using System.Web;
 using System.Xml;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Services.Journal;
+using System.Text.RegularExpressions;
 
 namespace DotNetNuke.Modules.ActiveForums
 {
@@ -434,6 +435,22 @@ namespace DotNetNuke.Modules.ActiveForums
 			}
 			return topicId;
 		}
+        public void Replies_Split(int OldTopicId, int NewTopicId, string listreplies, bool isNew)
+        {
+            Regex rgx = new Regex(@"^\d+(\|\d+)*$");
+            if (OldTopicId > 0 && NewTopicId > 0 && rgx.IsMatch(listreplies))
+            {
+                if (isNew)
+                {
+                    string[] slistreplies = listreplies.Split("|".ToCharArray(), 2);
+                    DataProvider.Instance().Replies_Split(OldTopicId, NewTopicId, slistreplies[1], DateTime.Now, Convert.ToInt32(slistreplies[0]));
+                }
+                else
+                {
+                    DataProvider.Instance().Replies_Split(OldTopicId, NewTopicId, listreplies, DateTime.Now, 0);
+                }
+            }
+        }
 		public int TopicSave(int PortalId, TopicInfo ti)
 		{
             return Convert.ToInt32(DataProvider.Instance().Topics_Save(PortalId, ti.TopicId, ti.ViewCount, ti.ReplyCount, ti.IsLocked, ti.IsPinned, ti.TopicIcon, ti.StatusId, ti.IsApproved, ti.IsDeleted, ti.IsAnnounce, ti.IsArchived, ti.AnnounceStart, ti.AnnounceEnd, ti.Content.Subject.Trim(), ti.Content.Body.Trim(), ti.Content.Summary.Trim(), ti.Content.DateCreated, ti.Content.DateUpdated, ti.Content.AuthorId, ti.Content.AuthorName, ti.Content.IPAddress, (int)ti.TopicType, ti.Priority, ti.TopicUrl, ti.TopicData));
