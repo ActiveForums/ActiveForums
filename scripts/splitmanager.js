@@ -127,8 +127,6 @@
                 Replies: amaf_getParam('splitValue')
             };
 
-            alert(JSON.stringify(params));
-
             $.ajax({
                 url: opts.serviceurlbase + "CreateSplit",
                 type: "POST",

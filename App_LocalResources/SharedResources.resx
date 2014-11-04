@@ -1588,4 +1588,7 @@ From,
   <data name="[RESX:Uploading].Text" xml:space="preserve">
     <value>Uploading</value>
   </data>
+  <data name="[RESX:SplitHeader].Text" xml:space="preserve">
+    <value>Split mode:</value>
+  </data>
 </root>

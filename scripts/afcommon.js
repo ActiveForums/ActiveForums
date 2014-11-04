@@ -237,8 +237,7 @@ function amaf_splitButtons(opt) {
     if (typeof (btns) == 'undefined') return;
     if (opt) {
         btns.childNodes[0].style.display = 'none';
-        btns.childNodes[1].style.display = 'inline';
-        btns.childNodes[2].style.display = 'inline';
+        btns.childNodes[1].style.display = 'block';
         var objs = am.Utils.GetElementsByClassName('split-checkbox', 'afgrid');
         for (var i = 0; i < objs.length; i++) {
             objs[i].style.display = 'block';
@@ -246,9 +245,8 @@ function amaf_splitButtons(opt) {
         };
     }
     else {
-        btns.childNodes[0].style.display = 'inline';
+        btns.childNodes[0].style.display = 'block';
         btns.childNodes[1].style.display = 'none';
-        btns.childNodes[2].style.display = 'none';
         var objs = am.Utils.GetElementsByClassName('split-checkbox', 'afgrid');
         for (var i = 0; i < objs.length; i++) {
             objs[i].style.display = 'none';
