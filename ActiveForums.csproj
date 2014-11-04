@@ -351,6 +351,7 @@
     <None Include="sql\04.03.06.SqlDataProvider" />
     <None Include="sql\04.03.09.SqlDataProvider" />
     <Content Include="scripts\usereditor.js" />
+    <Content Include="scripts\splitmanager.js" />
     <Content Include="sql\CoreForumsToActiveForums.sql" />
     <Content Include="themes\_default\emoticons\angry.gif" />
     <Content Include="themes\_default\emoticons\arrow.gif" />
@@ -586,7 +587,9 @@
     <Content Include="controls\af_confirmaction.ascx">
       <SubType>Form</SubType>
     </Content>
-    <Content Include="controls\af_modtopics.ascx" />
+    <Content Include="controls\af_modtopics.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <Content Include="controls\af_posticonlist.ascx" />
     <Content Include="controls\af_profile.ascx" />
     <Content Include="controls\af_quickjump.ascx">
@@ -651,7 +654,9 @@
     <Content Include="config\defaultsetup.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="controls\af_modsplittopic.ascx" />
+    <Content Include="controls\af_modsplittopic.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <Content Include="images\ranks\blue_square_01.gif" />
     <Content Include="images\ranks\blue_square_02.gif" />
     <Content Include="images\ranks\blue_square_03.gif" />
@@ -1333,6 +1338,7 @@
     <None Include="config\templates\BlogsView.txt" />
     <None Include="sql\05.00.01.SqlDataProvider" />
     <None Include="sql\05.01.00.SqlDataProvider" />
+    <None Include="sql\05.02.02.SqlDataProvider" />
     <None Include="WhatsNewResources.zip" />
   </ItemGroup>
   <ItemGroup>

@@ -165,6 +165,7 @@ namespace DotNetNuke.Modules.ActiveForums
         public abstract IDataReader Topics_Replies(int TopicId);
         public abstract int Topics_Save(int PortalId, int TopicId, int ViewCount, int ReplyCount, bool IsLocked, bool IsPinned, string TopicIcon, int StatusId, bool IsApproved, bool IsDeleted, bool IsAnnounce, bool IsArchived, DateTime AnnounceStart, DateTime AnnounceEnd, string Subject, string Body, string Summary, DateTime DateCreated, DateTime DateUpdated, int AuthorId, string AuthorName, string IPAddress, int TopicType, int TopicPriority, string URL, string TopicData);
         public abstract int Topics_SaveToForum(int ForumId, int TopicId, int LastReplyId);
+        public abstract void Replies_Split(int OldTopicId, int NewTopicId, string listreplies, DateTime DateUpdated, int FirstReplyId);
         public abstract void Topics_UpdateStatus(int PortalId, int ModuleId, int TopicId, int ReplyId, int TopicStatusId, int ReplyStatusId, int UserId);
         #endregion
 
