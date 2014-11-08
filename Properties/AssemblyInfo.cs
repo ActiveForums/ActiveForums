@@ -35,7 +35,7 @@ using System.Security;
 [assembly: AssemblyDescription("Discussion Forum Module for DotNetNuke")]
 [assembly: AssemblyCompany("DNN Corp")]
 [assembly: AssemblyProduct("Active Forums")]
-[assembly: AssemblyCopyright("Copyright © 2004-2014 DNN Corporation.")]
+[assembly: AssemblyCopyright("Copyright Â© 2004-2014 DNN Corporation.")]
 [assembly: AssemblyTrademark("")]
 
 
@@ -52,9 +52,9 @@ using System.Security;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("06.00.02")]
+[assembly: AssemblyVersion("06.01.00")]
 
-[assembly: AssemblyFileVersionAttribute("06.00.02")]
+[assembly: AssemblyFileVersionAttribute("06.01.00")]
 [assembly: WebResource("DotNetNuke.Modules.ActiveForums.CustomControls.Resources.cb.js", "text/javascript")]
 [assembly: WebResource("DotNetNuke.Modules.ActiveForums.scripts.afadmin.properties.js", "text/javascript")]
 
