@@ -7,6 +7,33 @@
 <div class="License">
 	<p class="Owner">
 		<h3>About DotNetNuke Active Forums</h3>
+		<strong>Version 6.1.0</strong><br />		
+	</p>
+</div>
+<hr/>
+<div class="License">
+   <h3>Release Notes</h3>
+    <p class="Owner">
+	<b>Version 06.01.00
+	<p>
+		<ul>
+			<li>Correct issue with tapatalk stripping topic subject when using quick reply</li>
+			<li>Fix avatar display to allow animated GIF</li>
+			<li>Added token [AF:PROFILE:EMAIL] to show users email address in templates</li>
+			<li>Fix to reload page after delete even when URL contains # character in reference to anchor</li>
+			<li>Fix to correct blockquote when using simple editor</li>
+			<li>Introduction of new code for later use of mail connector module</li>
+			<li>Addition of code to allow for topic/reply split feature - controlled via security mod split</li>
+			<li>Fix from @artfuld to correct Token FORUMMAINLINK points to forum root</li>
+			
+
+		</ul>
+	</p>
+	
+</div>
+<div class="License">
+	<p class="Owner">
+		<h3>About DotNetNuke Active Forums</h3>
 		<strong>Version 6.0.2</strong><br />		
 	</p>
 </div>
