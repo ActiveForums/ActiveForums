@@ -52,7 +52,7 @@ namespace DotNetNuke.Modules.ActiveForums
         {
             base.OnLoad(e);
 
-            if (Request.QueryString["afgt"] == "afprofile")
+            if (Request.QueryString["afgt"] == "afprofile" || PortalSettings.UserTabId == PortalSettings.ActiveTab.ParentId)
             {
                 int userId;
 
