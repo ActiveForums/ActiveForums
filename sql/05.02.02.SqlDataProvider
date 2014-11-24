@@ -17,17 +17,21 @@ BEGIN
     DECLARE @id int
     DECLARE @ReplyIds TABLE (id int)
 	DECLARE @ContentId int
-    INSERT INTO @ReplyIds (id) SELECT id FROM {databaseOwner}{objectQualifier}activeforums_Functions_Split(@listreplies,'|')
-    
-    UPDATE {databaseOwner}{objectQualifier}activeforums_Content
-	SET DateCreated = @DateUpdated, DateUpdated = @DateUpdated
-    WHERE ContentId in (SELECT ContentId FROM activeforums_Replies WHERE TopicId = @OldTopicId AND ReplyId in (SELECT id FROM @ReplyIds))
-    
-	INSERT INTO {databaseOwner}{objectQualifier}activeforums_Replies(TopicID,ReplyToId,ContentId,IsApproved,IsRejected,StatusId,IsDeleted) 
-	(SELECT @NewTopicId,0,ContentId,IsApproved,IsRejected,StatusId,IsDeleted FROM activeforums_Replies WHERE ReplyId in (SELECT id FROM @ReplyIds))
 
-    DELETE FROM {databaseOwner}{objectQualifier}activeforums_Replies
-    WHERE TopicId = @OldTopicId AND ReplyId in (SELECT id FROM @ReplyIds)
+	IF @listreplies <> ''
+	BEGIN
+		INSERT INTO @ReplyIds (id) SELECT id FROM {databaseOwner}{objectQualifier}activeforums_Functions_Split(@listreplies,'|')
+    
+		UPDATE {databaseOwner}{objectQualifier}activeforums_Content
+		SET DateCreated = @DateUpdated, DateUpdated = @DateUpdated
+		WHERE ContentId in (SELECT ContentId FROM activeforums_Replies WHERE TopicId = @OldTopicId AND ReplyId in (SELECT id FROM @ReplyIds))
+    
+		INSERT INTO {databaseOwner}{objectQualifier}activeforums_Replies(TopicID,ReplyToId,ContentId,IsApproved,IsRejected,StatusId,IsDeleted) 
+		(SELECT @NewTopicId,0,ContentId,IsApproved,IsRejected,StatusId,IsDeleted FROM activeforums_Replies WHERE ReplyId in (SELECT id FROM @ReplyIds))
+
+		DELETE FROM {databaseOwner}{objectQualifier}activeforums_Replies
+		WHERE TopicId = @OldTopicId AND ReplyId in (SELECT id FROM @ReplyIds)
+	END
 	IF @FirstReplyId > 0
 	BEGIN
 		DECLARE @Body NVARCHAR(MAX)
@@ -35,7 +39,7 @@ BEGIN
 		SELECT @ContentId = ContentId FROM {databaseOwner}{objectQualifier}activeforums_Replies WHERE TopicId = @OldTopicId AND ReplyId = @FirstReplyId
 		SELECT @Body = Body FROM {databaseOwner}{objectQualifier}activeforums_Content WHERE ContentId = @ContentId
 
-		DELETE FROM {databaseOwner}{objectQualifier}activeforums_Replies WHERE TopicId = @NewTopicId AND ReplyId = @FirstReplyId
+		DELETE FROM {databaseOwner}{objectQualifier}activeforums_Replies WHERE TopicId = @OldTopicId AND ReplyId = @FirstReplyId
 		DELETE FROM {databaseOwner}{objectQualifier}activeforums_Content WHERE ContentId = @ContentId 
 		
 		SELECT @TopicContentId = ContentId FROM {databaseOwner}{objectQualifier}activeforums_Topics WHERE TopicId = @NewTopicId
@@ -53,7 +57,7 @@ BEGIN
 		WHERE TopicId = @OldTopicId
     UPDATE {databaseOwner}{objectQualifier}activeforums_ForumTopics
 		SET LastReplyId = @MaxReplyId
-		WHERE TopicId = @OldTopicId
+		WHERE TopicId = @OldTopicId     
     SELECT @MaxReplyId = IsNull(Max(ReplyId),0),@TotalReplies = Count(ReplyId) FROM {databaseOwner}{objectQualifier}activeforums_Replies WHERE TopicId = @NewTopicId AND IsDeleted = 0 AND IsApproved = 1
     UPDATE {databaseOwner}{objectQualifier}activeforums_Topics
 		SET ReplyCount = @TotalReplies
@@ -63,8 +67,8 @@ BEGIN
 		WHERE TopicId = @NewTopicId
     DECLARE @OldForumId int
     DECLARE @NewForumId int
-    SET @OldForumId = (SELECT ForumId FROM {databaseOwner}{objectQualifier}activeforums_ForumTopics WHERE TopicId = @OldTopicId)
-    SET @NewForumId = (SELECT ForumId FROM {databaseOwner}{objectQualifier}activeforums_ForumTopics WHERE TopicId = @NewTopicId)
+    SELECT @OldForumId = ForumId FROM {databaseOwner}{objectQualifier}activeforums_ForumTopics WHERE TopicId = @OldTopicId
+    SELECT @NewForumId = ForumId FROM {databaseOwner}{objectQualifier}activeforums_ForumTopics WHERE TopicId = @NewTopicId
     exec {databaseOwner}{objectQualifier}activeforums_Forums_LastUpdates @OldForumId
     EXEC {databaseOwner}{objectQualifier}activeforums_SaveTopicNextPrev @OldForumId
     IF (@OldForumId <> @NewForumId)

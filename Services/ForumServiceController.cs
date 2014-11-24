@@ -266,11 +266,11 @@ namespace DotNetNuke.Modules.ActiveForums
             var portalSettings = PortalSettings;
             var userInfo = portalSettings.UserInfo;
             var forumUser = new UserController().GetUser(portalSettings.PortalId, ActiveModule.ModuleID, userInfo.UserID);
-            
+
             var fc = new ForumController();
 
             var forum_out = fc.Forums_Get(portalSettings.PortalId, ActiveModule.ModuleID, 0, forumUser.UserId, false, true, dto.OldTopicId);
-            var forum_in = fc.GetForum(portalSettings.PortalId, ActiveModule.ModuleID,dto.NewForumId);
+            var forum_in = fc.GetForum(portalSettings.PortalId, ActiveModule.ModuleID, dto.NewForumId);
             if (forum_out != null && forum_in != null)
             {
                 var perm = false;
@@ -285,18 +285,18 @@ namespace DotNetNuke.Modules.ActiveForums
                 }
 
                 var modSplit = Permissions.HasPerm(forum_out.Security.ModSplit, forumUser.UserRoles);
-                
-                if(perm && modSplit)
+
+                if (perm && modSplit)
                 {
                     var tc = new TopicsController();
 
                     int topicId;
 
                     if (dto.NewTopicId < 1)
-                    {   
+                    {
                         var subject = Utilities.CleanString(portalSettings.PortalId, dto.Subject, false, EditorTypes.TEXTBOX, false, false, ActiveModule.ModuleID, string.Empty, false);
-                
-                        topicId = tc.Topic_QuickCreate(portalSettings.PortalId, ActiveModule.ModuleID, dto.NewForumId, subject, string.Empty, userInfo.UserID, userInfo.DisplayName, true, userInfo.LastIPAddress);
+
+                        topicId = tc.Topic_QuickCreate(portalSettings.PortalId, ActiveModule.ModuleID, dto.NewForumId, subject, string.Empty, userInfo.UserID, userInfo.DisplayName, true, string.Empty);
                         tc.Replies_Split(dto.OldTopicId, topicId, dto.Replies, true);
                     }
                     else
