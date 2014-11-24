@@ -34,6 +34,7 @@
 			    <tr>
 				    <td><%=GetSharedResource("[RESX:FileName]")%></td>
 				    <td><%=GetSharedResource("[RESX:FileSize]")%></td>
+                    <td><%=GetSharedResource("[RESX:InsertImage]")%></td>
 				    <td><%=GetSharedResource("[RESX:Delete]")%></td>
 			    </tr>
 		    </thead>
@@ -41,6 +42,7 @@
 		        <tr>
                     <td><i data-bind="attr: { 'class' : $root.getIconClass($data) }"></i> <span data-bind="text:fileName"></span></td>
                     <td data-bind="text:(fileSize || fileSizeText)"></td>
+                    <td><span class="ui-icon ui-icon-plus" data-bind="click:$root.insertImage" /></td>
                     <td><span class="ui-icon ui-icon-trash" data-bind="click:$root.removeAttachment" /></td>
 		        </tr>
 		    </tbody>
@@ -75,6 +77,7 @@
             fileTypeNotAllowedMsg: "<%=DotNetNuke.UI.Utilities.ClientAPI.GetSafeJSString(LocalizeString("[RESX:Error:BlockedFile]"))%>",      
             allowedFileTypes: "<%= ForumInfo.AttachTypeAllowed %>",
             allowBrowseSite: <%= ForumInfo.AttachAllowBrowseSite ? 1 : 0 %>,
+            attachInsertAllowed: <%= ForumInfo.AttachInsertAllowed ? 1 : 0 %>,
             maxFileSizeExceededMsg: "<%=DotNetNuke.UI.Utilities.ClientAPI.GetSafeJSString(string.Format(LocalizeString("[RESX:Error:FileTooLarge]").TextOrEmpty(), ForumInfo.AttachMaxSize))%>",
             maxAttachmentCount: <%= ForumInfo.AttachCount %>,
             uploadButtonText: "<%=DotNetNuke.UI.Utilities.ClientAPI.GetSafeJSString(LocalizeString("[RESX:UploadButton]"))%>"

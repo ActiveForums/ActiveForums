@@ -160,6 +160,9 @@ function saveSettings(gs){
         var at5 = 400; // Not USed
         var at6 = 400;
         var at7 = document.getElementById("<%=ckAllowBrowseSite.ClientID%>").checked;
+        var at8 = document.getElementById("<%=txtMaxAttachWidth.ClientID%>").value;
+		var at9 = document.getElementById("<%=txtMaxAttachHeight.ClientID%>").value;
+        var at10 = document.getElementById("<%=ckAttachInsertAllowed.ClientID%>").checked;
         
         var ed = document.getElementById("<%=rdHTMLOn.ClientID%>").checked;
 	    var ed1 = document.getElementById("<%=drpEditorTypes.ClientID%>");
@@ -207,7 +210,7 @@ function saveSettings(gs){
 
     var as2 = null;
     if (as2 != null){as2 = as2.checked;}else{as2 = false;};
-    <%=cbEditorAction.ClientID%>.Callback(settingsAction,forumid,tt1,tt2,em,ef,pi,ei,sp,ix,rs,at,at1,at2,at3,at4,at5,at6,at7,ed,ed1,ed2,ed3,ed4,ed5,ed6,tt3,tt4,tt5,tt6,md,md1,md2,md3,md4,md5,md6,md7,as,as1,tg,mc,mc1,mc2,mc3,mc4,mc5,mc6,mc7,mc8,mc9,mc10,mc11,mc12,mc13,mc14,mc15,as2,socialOn,socialTopics,socialSec,cpc,rpc);
+    <%=cbEditorAction.ClientID%>.Callback(settingsAction,forumid,tt1,tt2,em,ef,pi,ei,sp,ix,rs,at,at1,at2,at3,at4,at5,at6,at7,at10,at8,at9,ed,ed1,ed2,ed3,ed4,ed5,ed6,tt3,tt4,tt5,tt6,md,md1,md2,md3,md4,md5,md6,md7,as,as1,tg,mc,mc1,mc2,mc3,mc4,mc5,mc6,mc7,mc8,mc9,mc10,mc11,mc12,mc13,mc14,mc15,as2,socialOn,socialTopics,socialSec,cpc,rpc);
 
 
 };
@@ -1335,6 +1338,24 @@ function afadmin_getProperties() {
                 <td></td>
                 <td class="amcpbold">[RESX:AllowBrowseSite]:</td>
                 <td><asp:CheckBox runat="server" ID="ckAllowBrowseSite" Checked="True" /></td>
+                <td></td>
+            </tr>
+                        <tr>
+                <td></td>
+                <td class="amcpbold">[RESX:AttachInsertAllowed]:</td>
+                <td><asp:CheckBox runat="server" ID="ckAttachInsertAllowed" Checked="True" /></td>
+                <td></td>
+            </tr>
+			<tr>
+                <td></td>
+                <td class="amcpbold">[RESX:MaxAttachWidth]:</td>
+                <td><asp:TextBox ID="txtMaxAttachWidth" runat="server" CssClass="amcptxtbx" Text="" /></td>
+                <td></td>
+            </tr>
+			<tr>
+                <td></td>
+                <td class="amcpbold">[RESX:MaxAttachHeight]:</td>
+                <td><asp:TextBox ID="txtMaxAttachHeight" runat="server" CssClass="amcptxtbx" Text="" /></td>
                 <td></td>
             </tr>
         </table>

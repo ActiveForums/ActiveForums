@@ -1426,4 +1426,13 @@ Your removal method is currently set to {0}.  Your topics will be {1} based upon
   <data name="[RESX:AllowBrowseSite].Text" xml:space="preserve">
     <value>Allow Browse Site</value>
   </data>
+  <data name="[RESX:AttachInsertAllowed].Text" xml:space="preserve">
+    <value>Insert files as tokens</value>
+  </data>
+  <data name="[RESX:MaxAttachWidth].Text" xml:space="preserve">
+    <value>Max. width</value>
+  </data>
+  <data name="[RESX:MaxAttachHeight].Text" xml:space="preserve">
+    <value>Max. height</value>
+  </data>
 </root>

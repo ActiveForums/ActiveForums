@@ -237,6 +237,9 @@ namespace DotNetNuke.Modules.ActiveForums
 		//public const string AttachStore = "ATTACHSTORE";
 		public const string AttachMaxHeight = "ATTACHMAXHEIGHT";
 		public const string AttachMaxWidth = "ATTACHMAXWIDTH";
+        public const string MaxAttachWidth = "MAXATTACHWIDTH";
+        public const string MaxAttachHeight = "MAXATTACHHEIGHT";
+        public const string AttachInsertAllowed = "ATTACHINSERTALLOWED";
 		//public const string AttachUniqueFileNames = "ATTACHUNIQUEFILENAMES";  
 		public const string IndexContent = "INDEXCONTENT";
 		public const string AllowRSS = "ALLOWRSS";

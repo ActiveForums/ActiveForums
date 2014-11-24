@@ -217,6 +217,9 @@ namespace DotNetNuke.Modules.ActiveForums
 						Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachMaxHeight, "450");
 						Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachMaxWidth, "450");
 						Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachAllowBrowseSite, "true");
+                        Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.MaxAttachHeight, "800");
+                        Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.MaxAttachWidth, "800");
+                        Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachInsertAllowed, "false");
 						Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AllowHTML, sAllowHTML);
 						Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorType, "0");
 						Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorHeight, "350");

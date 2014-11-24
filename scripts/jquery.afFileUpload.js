@@ -9,7 +9,7 @@
 
     $.fn.afFileUpload = function (options) {
 
-        var opts = $.extend({ }, $.fn.afFileUpload.defaultOptions, options),
+        var opts = $.extend({}, $.fn.afFileUpload.defaultOptions, options),
             $wrap = $(this),
             $fileUploadWrapperSelector = $(opts.fileUploadWrapperSelector),
             $picker = $fileUploadWrapperSelector.find(opts.pickerContextSelector),
@@ -46,12 +46,12 @@
 
             opts.callback(result);
         });
-        
+
         // Reset the button text
         $fileUploadWrapperSelector.bind('fileuploadalways', function (e, data) {
             resetButtonText();
         });
-        
+
 
         var url = opts.uploadServiceUrl;
         if (!supportAjaxUpload()) {
@@ -70,12 +70,12 @@
                 add: function (e, data) {
 
                     var uploadErrors = [];
-                    
-                    if(opts.allowedFileTypes) {
-                        var fileName = data.originalFiles[0].name;
-                        var fileExtension = fileName.substr((~-fileName.lastIndexOf(".") >>> 0) + 2);
 
-                        var acceptableFileExtensions = opts.allowedFileTypes.toLowerCase().replace(' ', '').replace('.', '').split(',');
+                    if (opts.allowedFileTypes) {
+                        var fileName = data.originalFiles[0].name;
+                        var fileExtension = fileName.substr((~ -fileName.lastIndexOf(".") >>> 0) + 2);
+
+                        var acceptableFileExtensions = opts.allowedFileTypes.toLowerCase().replace(/[\.\s]+/g, '').split(',');
 
                         if ($.inArray(fileExtension, acceptableFileExtensions) === -1) {
                             uploadErrors.push(opts.fileTypeNotAllowedMsg);
@@ -85,7 +85,7 @@
                     if (opts.maxFileSize && data.originalFiles[0]['size'] && data.originalFiles[0]['size'] > opts.maxFileSize) {
                         uploadErrors.push(opts.maxFileSizeExceededMsg);
                     }
-                    
+
                     if (uploadErrors.length > 0) {
                         resetButtonText();
                         alert(uploadErrors.join("\n"));
