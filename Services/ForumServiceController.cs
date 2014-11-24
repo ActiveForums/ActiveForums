@@ -37,7 +37,8 @@ using DotNetNuke.Web.Api.Internal;
 using System.Data;
 using System.Web.Script.Serialization;
 using System.Collections.Generic;
-
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace DotNetNuke.Modules.ActiveForums
 {
@@ -104,7 +105,7 @@ namespace DotNetNuke.Modules.ActiveForums
             const string uploadPath = "activeforums_Upload";
 
             var folderManager = FolderManager.Instance;
-            if(!folderManager.FolderExists(ActiveModule.PortalID, uploadPath))
+            if (!folderManager.FolderExists(ActiveModule.PortalID, uploadPath))
             {
                 folderManager.AddFolder(ActiveModule.PortalID, uploadPath);
             }
@@ -129,7 +130,7 @@ namespace DotNetNuke.Modules.ActiveForums
 
                 // Check to make sure that a forum was specified and that the the user has upload permissions
                 // This is only an initial check, it will be done again when the file is saved to a post.
-                
+
                 int forumId;
                 if (!int.TryParse(provider.FormData["forumId"], out forumId))
                 {
@@ -148,21 +149,21 @@ namespace DotNetNuke.Modules.ActiveForums
                 }
 
                 // Make sure the user has permissions to attach files
-                if(forumUser == null || !Permissions.HasPerm(forum.Security.Attach, forumUser.UserRoles))
+                if (forumUser == null || !Permissions.HasPerm(forum.Security.Attach, forumUser.UserRoles))
                 {
                     File.Delete(file.LocalFileName);
                     return request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Not Authorized");
                 }
 
-           
+
                 // Make sure that the file size does not exceed the limit (in KB) for the forum
                 // Have to do this since content length is not available when using MultipartFormDataStreamProvider
                 var di = new DirectoryInfo(folder.PhysicalPath);
                 var fileSize = di.GetFiles(localFileName)[0].Length;
 
-                var maxAllowedFileSize = (long)forum.AttachMaxSize*1024;
+                var maxAllowedFileSize = (long)forum.AttachMaxSize * 1024;
 
-                if((forum.AttachMaxSize > 0) && (fileSize > maxAllowedFileSize))
+                if ((forum.AttachMaxSize > 0) && (fileSize > maxAllowedFileSize))
                 {
                     File.Delete(file.LocalFileName);
                     return request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "Exceeds Max File Size");
@@ -172,7 +173,7 @@ namespace DotNetNuke.Modules.ActiveForums
                 // Get the original file name from the content disposition header
                 var fileName = file.Headers.ContentDisposition.FileName.Replace("\"", "");
 
-                if(string.IsNullOrWhiteSpace(fileName))
+                if (string.IsNullOrWhiteSpace(fileName))
                 {
                     File.Delete(file.LocalFileName);
                     return request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "Invalid File");
@@ -183,26 +184,140 @@ namespace DotNetNuke.Modules.ActiveForums
                 // Check against both the forum configuration and the host configuration
                 var extension = Path.GetExtension(fileName).TextOrEmpty().Replace(".", string.Empty).ToLower();
                 var isForumAllowedExtension = string.IsNullOrWhiteSpace(forum.AttachTypeAllowed) || forum.AttachTypeAllowed.Replace(".", "").Split(',').Any(val => val == extension);
-                if(string.IsNullOrEmpty(extension) || !isForumAllowedExtension || !Host.AllowedExtensionWhitelist.IsAllowedExtension(extension))
+                if (string.IsNullOrEmpty(extension) || !isForumAllowedExtension || !Host.AllowedExtensionWhitelist.IsAllowedExtension(extension))
                 {
                     File.Delete(file.LocalFileName);
                     return request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "File Type Not Allowed");
                 }
-                
+
+                const string newFileName = "{0}_{1}{2}";
+                var fileNameOnly = Path.GetFileNameWithoutExtension(fileName);
+                var userFolder = folderManager.GetUserFolder(userInfo);
+                var attachmentFolder = folderManager.GetFolder(userFolder.FolderID);
+                var fileManager = FileManager.Instance;
+                IFileInfo ufile = null;
+                string sExt = Path.GetExtension(fileName);
+
+                if (sExt.ToLower() == ".jpg" || sExt.ToLower() == ".bmp" || sExt.ToLower() == ".png" || sExt.ToLower() == ".jpeg")
+                {
+                    var sExtOut = ".jpg";
+                    ImageFormat imf, imfout = ImageFormat.Jpeg;
+
+                    Image img = Image.FromFile(file.LocalFileName);
+                    Image nimg;
+
+                    var maxWidth = forum.MaxAttachWidth;
+                    var maxHeight = forum.MaxAttachHeight;
+
+                    int imgWidth = img.Width;
+                    int imgHeight = img.Height;
+
+                    var ratioWidth = (double)imgWidth / maxWidth;
+                    var ratioHeight = (double)imgHeight / maxHeight;
+
+                    switch (sExt.ToLower())
+                    {
+                        case ".png":
+                            {
+                                imf = ImageFormat.Png;
+                                if (!forum.ConvertingToJpegAllowed)
+                                {
+                                    sExtOut = ".png";
+                                    imfout = ImageFormat.Png;
+                                }
+                                break;
+                            }
+                        case ".bmp": imf = ImageFormat.Bmp; break;
+                        default: imf = ImageFormat.Jpeg; break;
+                    }
+
+                    MemoryStream mst = new MemoryStream();
+
+                    if (ratioWidth > 1 || ratioHeight > 1)
+                    {
+                        if (ratioWidth > ratioHeight)
+                        {
+                            imgWidth = maxWidth;
+                            imgHeight = (int)Math.Round(imgHeight / ratioWidth);
+                        }
+                        else if (ratioWidth < ratioHeight)
+                        {
+                            imgHeight = maxHeight;
+                            imgWidth = (int)Math.Round(imgWidth / ratioHeight);
+                        }
+                        else
+                        {
+                            imgWidth = maxWidth;
+                            imgHeight = maxHeight;
+                        }
+                    }
+
+                    Bitmap res = new Bitmap(imgWidth, imgHeight);
+                    using (Graphics gr = Graphics.FromImage(res))
+                    {
+                        gr.Clear(Color.Transparent);
+                        gr.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                        gr.DrawImage(img, new Rectangle(0, 0, imgWidth, imgHeight), new Rectangle(0, 0, img.Width, img.Height), GraphicsUnit.Pixel);
+                        gr.Dispose();
+                    }
+
+                    img.Dispose();
+                    res.Save(mst, imfout);
+                    res.Dispose();
+
+                    var index = 0;
+                    fileName = fileNameOnly + sExtOut;
+
+                    while (fileManager.FileExists(attachmentFolder, fileName))
+                    {
+                        index++;
+                        fileName = string.Format(newFileName, fileNameOnly, index, sExtOut);
+                    }
+
+                    ufile = fileManager.AddFile(attachmentFolder, fileName, (Stream)mst);
+                    mst.Close();
+
+                }
+                else
+                {
+                    using (var fileStream = new FileStream(file.LocalFileName, FileMode.Open, FileAccess.Read))
+                    {
+                        var index = 0;
+                        while (fileManager.FileExists(attachmentFolder, fileName))
+                        {
+                            index++;
+                            fileName = string.Format(newFileName, fileNameOnly, index, sExt);
+                        }
+
+                        ufile = fileManager.AddFile(attachmentFolder, fileName, fileStream);
+                    }
+                }
+
 
                 // IE<=9 Hack - can't return application/json
                 var mediaType = "application/json";
-                if (!request.Headers.Accept .Any(h => h.MediaType.Equals("application/json", StringComparison.OrdinalIgnoreCase)))
+                if (!request.Headers.Accept.Any(h => h.MediaType.Equals("application/json", StringComparison.OrdinalIgnoreCase)))
                     mediaType = "text/html";
-                   
-                var result = new ClientAttachment() {
-                    ContentType = file.Headers.ContentType.MediaType,
-                    FileName = fileName,
-                    FileSize = fileSize,
-                    UploadId =  localFileName
-                };
 
-                return Request.CreateResponse(HttpStatusCode.Accepted, result, mediaType);
+                File.Delete(file.LocalFileName);
+
+                if (ufile != null)
+                {
+                    var result = new ClientAttachment()
+                    {
+                        FileId = ufile.FileId,
+                        ContentType = file.Headers.ContentType.MediaType,
+                        FileName = fileName,
+                        FileSize = ufile.Size,
+                        UploadId = localFileName,
+                    };
+
+                    return Request.CreateResponse(HttpStatusCode.Accepted, result, mediaType);
+                }
+                else
+                {
+                    return request.CreateErrorResponse(HttpStatusCode.NotAcceptable, "No File Found");
+                }
             });
 
             return task;

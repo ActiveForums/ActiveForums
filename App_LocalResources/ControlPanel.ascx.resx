@@ -1435,4 +1435,7 @@ Your removal method is currently set to {0}.  Your topics will be {1} based upon
   <data name="[RESX:MaxAttachHeight].Text" xml:space="preserve">
     <value>Max. height</value>
   </data>
+  <data name="[RESX:ConvertingToJpegAllowed].Text" xml:space="preserve">
+    <value>Convert *.png to *.jpg</value>
+  </data>
 </root>

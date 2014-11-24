@@ -161,6 +161,11 @@ namespace DotNetNuke.Modules.ActiveForums
             get { return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.AttachInsertAllowed]); }
         }
 
+        public bool ConvertingToJpegAllowed
+        {
+            get { return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.ConvertingToJpegAllowed]); }
+        }
+
 		public string EditorHeight
 		{
 			get { return Utilities.SafeConvertString(GroupSettings[ForumSettingKeys.EditorHeight], "400"); }

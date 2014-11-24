@@ -163,7 +163,8 @@ function saveSettings(gs){
         var at8 = document.getElementById("<%=txtMaxAttachWidth.ClientID%>").value;
 		var at9 = document.getElementById("<%=txtMaxAttachHeight.ClientID%>").value;
         var at10 = document.getElementById("<%=ckAttachInsertAllowed.ClientID%>").checked;
-        
+        var at11 = document.getElementById("<%=ckConvertingToJpegAllowed.ClientID%>").checked;
+
         var ed = document.getElementById("<%=rdHTMLOn.ClientID%>").checked;
 	    var ed1 = document.getElementById("<%=drpEditorTypes.ClientID%>");
         if (ed1.selectedIndex >= 0){ed1 = ed1.options[ed1.selectedIndex].value;}else{ed1 = 0;};
@@ -210,7 +211,7 @@ function saveSettings(gs){
 
     var as2 = null;
     if (as2 != null){as2 = as2.checked;}else{as2 = false;};
-    <%=cbEditorAction.ClientID%>.Callback(settingsAction,forumid,tt1,tt2,em,ef,pi,ei,sp,ix,rs,at,at1,at2,at3,at4,at5,at6,at7,at10,at8,at9,ed,ed1,ed2,ed3,ed4,ed5,ed6,tt3,tt4,tt5,tt6,md,md1,md2,md3,md4,md5,md6,md7,as,as1,tg,mc,mc1,mc2,mc3,mc4,mc5,mc6,mc7,mc8,mc9,mc10,mc11,mc12,mc13,mc14,mc15,as2,socialOn,socialTopics,socialSec,cpc,rpc);
+    <%=cbEditorAction.ClientID%>.Callback(settingsAction,forumid,tt1,tt2,em,ef,pi,ei,sp,ix,rs,at,at1,at2,at3,at4,at5,at6,at7,at10,at8,at9,at11,ed,ed1,ed2,ed3,ed4,ed5,ed6,tt3,tt4,tt5,tt6,md,md1,md2,md3,md4,md5,md6,md7,as,as1,tg,mc,mc1,mc2,mc3,mc4,mc5,mc6,mc7,mc8,mc9,mc10,mc11,mc12,mc13,mc14,mc15,as2,socialOn,socialTopics,socialSec,cpc,rpc);
 
 
 };
@@ -1340,7 +1341,13 @@ function afadmin_getProperties() {
                 <td><asp:CheckBox runat="server" ID="ckAllowBrowseSite" Checked="True" /></td>
                 <td></td>
             </tr>
-                        <tr>
+            <tr>
+                <td></td>
+                <td class="amcpbold">[RESX:ConvertingToJpegAllowed]:</td>
+                <td><asp:CheckBox runat="server" ID="ckConvertingToJpegAllowed" Checked="True" /></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td></td>
                 <td class="amcpbold">[RESX:AttachInsertAllowed]:</td>
                 <td><asp:CheckBox runat="server" ID="ckAttachInsertAllowed" Checked="True" /></td>

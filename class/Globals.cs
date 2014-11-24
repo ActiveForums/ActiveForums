@@ -240,6 +240,7 @@ namespace DotNetNuke.Modules.ActiveForums
         public const string MaxAttachWidth = "MAXATTACHWIDTH";
         public const string MaxAttachHeight = "MAXATTACHHEIGHT";
         public const string AttachInsertAllowed = "ATTACHINSERTALLOWED";
+        public const string ConvertingToJpegAllowed = "CONVERTINGTOJPEGALLOWED";
 		//public const string AttachUniqueFileNames = "ATTACHUNIQUEFILENAMES";  
 		public const string IndexContent = "INDEXCONTENT";
 		public const string AllowRSS = "ALLOWRSS";

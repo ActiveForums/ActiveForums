@@ -227,6 +227,11 @@ namespace DotNetNuke.Modules.ActiveForums
             get { return Utilities.SafeConvertBool(ForumSettings[ForumSettingKeys.AttachInsertAllowed]); }
         }
 
+        public bool ConvertingToJpegAllowed
+        {
+            get { return Utilities.SafeConvertBool(ForumSettings[ForumSettingKeys.ConvertingToJpegAllowed]); }
+        }
+
 		public string EditorHeight
 		{
             get { return Utilities.SafeConvertString(ForumSettings[ForumSettingKeys.EditorHeight], "400"); }
