@@ -92,11 +92,24 @@ function AFAttachmentManager($, ko, options) {
                 filetype = filetype.substr(filetype.lastIndexOf("/") + 1);
 
                 if ($.inArray(filetype, imageTypes.split(',')) > -1) {
-                    $.post('/DesktopModules/ActiveForums/API/ForumService/GetUserFileUrl', { FileId: fileid }).done(function (data) { self.getImageUrl(data); });
+                    $.ajax({
+                        type: "GET",
+                        url: '/DesktopModules/ActiveForums/API/ForumService/GetUserFileUrl?FileId=' + fileid,
+                        beforeSend: sf.setModuleHeaders
+                    })
+                    .done(function (data) { self.getImageUrl(data); })
+                    .fail(function (xhr, status) {alert('Topics Not Found')});
+                    
                     return;
                 }
             }
-            $.post('/DesktopModules/ActiveForums/API/ForumService/GetUserFileUrl', { FileId: fileid }).done(function (data) { self.getFileUrl(data); });
+            $.ajax({
+                type: "GET",
+                url: '/DesktopModules/ActiveForums/API/ForumService/GetUserFileUrl?FileId=' + fileid,
+                beforeSend: sf.setModuleHeaders,
+            })
+            .done(function (data) { self.getImageUrl(data); })
+            .fail(function (xhr, status) {alert('Topics Not Found')});
         };
 
         this.getFileUrl = function (url) {

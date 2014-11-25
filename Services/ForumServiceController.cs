@@ -324,6 +324,35 @@ namespace DotNetNuke.Modules.ActiveForums
         }
 
         [HttpGet]
+        public HttpResponseMessage GetUserFileUrl(int FileId)
+        {
+            var fileManager = FileManager.Instance;
+            var file = fileManager.GetFile(FileId);
+
+            if (file == null)
+                return Request.CreateResponse(HttpStatusCode.Accepted, "File not found");
+
+            const string fullpath = "/Portals/{0}/{1}{2}";
+            var userInfo = PortalSettings.UserInfo;
+            string portalid;
+
+            if (userInfo.IsSuperUser)
+            {
+                portalid = "_default";
+            }
+            else
+            {
+                portalid = userInfo.PortalID.ToString();
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, string.Format(fullpath, portalid, file.Folder, file.FileName));
+        }
+
+        /*public class GetUserFileUrlDTO
+        {
+            public int FileId { get; set; }
+        }*/
+
+        [HttpGet]
         public HttpResponseMessage GetTopicList(int ForumId)
         {
             var portalSettings = PortalSettings;
@@ -411,7 +440,7 @@ namespace DotNetNuke.Modules.ActiveForums
                     {
                         var subject = Utilities.CleanString(portalSettings.PortalId, dto.Subject, false, EditorTypes.TEXTBOX, false, false, ActiveModule.ModuleID, string.Empty, false);
 
-                        topicId = tc.Topic_QuickCreate(portalSettings.PortalId, ActiveModule.ModuleID, dto.NewForumId, subject, string.Empty, userInfo.UserID, userInfo.DisplayName, true, string.Empty);
+                        topicId = tc.Topic_QuickCreate(portalSettings.PortalId, ActiveModule.ModuleID, dto.NewForumId, subject, string.Empty, userInfo.UserID, userInfo.DisplayName, true, Request.GetIPAddress());
                         tc.Replies_Split(dto.OldTopicId, topicId, dto.Replies, true);
                     }
                     else
