@@ -296,7 +296,7 @@ namespace DotNetNuke.Modules.ActiveForums
                     {
                         var subject = Utilities.CleanString(portalSettings.PortalId, dto.Subject, false, EditorTypes.TEXTBOX, false, false, ActiveModule.ModuleID, string.Empty, false);
 
-                        topicId = tc.Topic_QuickCreate(portalSettings.PortalId, ActiveModule.ModuleID, dto.NewForumId, subject, string.Empty, userInfo.UserID, userInfo.DisplayName, true, string.Empty);
+                        topicId = tc.Topic_QuickCreate(portalSettings.PortalId, ActiveModule.ModuleID, dto.NewForumId, subject, string.Empty, userInfo.UserID, userInfo.DisplayName, true, Request.GetIPAddress());
                         tc.Replies_Split(dto.OldTopicId, topicId, dto.Replies, true);
                     }
                     else
