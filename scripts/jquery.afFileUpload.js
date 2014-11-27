@@ -73,9 +73,9 @@
                     
                     if(opts.allowedFileTypes) {
                         var fileName = data.originalFiles[0].name;
-                        var fileExtension = fileName.substr((~-fileName.lastIndexOf(".") >>> 0) + 2);
+                        var fileExtension = fileName.substr((~-fileName.lastIndexOf(".") >>> 0) + 2).toLowerCase();
 
-                        var acceptableFileExtensions = opts.allowedFileTypes.toLowerCase().replace(' ', '').replace('.', '').split(',');
+                        var acceptableFileExtensions = opts.allowedFileTypes.toLowerCase().replace(' ', '').replace(/\./g, '').split(',');
 
                         if ($.inArray(fileExtension, acceptableFileExtensions) === -1) {
                             uploadErrors.push(opts.fileTypeNotAllowedMsg);
