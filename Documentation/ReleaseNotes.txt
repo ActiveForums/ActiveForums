@@ -1,95 +1,61 @@
-<h3>DotNetNuke Active Forums</h3>
-<p class="Contributor">
-	DotNetNuke&reg; <br />
-	<a href=http://www.dotnetnuke.com>http://www.dotnetnuke.com</a><br />
-</p>
-<hr/>
-<div class="License">
-	<p class="Owner">
-		<h3>About DotNetNuke Active Forums</h3>
-		<strong>Version 6.1.0</strong><br />		
-	</p>
-</div>
-<hr/>
-<div class="License">
-   <h3>Release Notes</h3>
-    <p class="Owner">
-	<b>Version 06.01.00
-	<p>
-		<ul>
-			<li>Correct issue with tapatalk stripping topic subject when using quick reply</li>
-			<li>Fix avatar display to allow animated GIF</li>
-			<li>Added token [AF:PROFILE:EMAIL] to show users email address in templates</li>
-			<li>Fix to reload page after delete even when URL contains # character in reference to anchor</li>
-			<li>Fix to correct blockquote when using simple editor</li>
-			<li>Introduction of new code for later use of mail connector module</li>
-			<li>Addition of code to allow for topic/reply split feature - controlled via security mod split</li>
-			<li>Fix from @artfuld to correct Token FORUMMAINLINK points to forum root</li>
-			
+<h1>Active Forums for DNN</h1>
 
-		</ul>
-	</p>
-	
-</div>
-<div class="License">
-	<p class="Owner">
-		<h3>About DotNetNuke Active Forums</h3>
-		<strong>Version 6.0.2</strong><br />		
-	</p>
-</div>
-<hr/>
-<div class="License">
-   <h3>Release Notes</h3>
-    <p class="Owner">
-	<b>Version 06.00.02
-	<p>
-		<ul>
-			<li>Issue #148 - More overflow fixes for TopicView</li>
+<p class="Contributor"><h3>Active Forums Community</h3>
+<a href="http://activeforums.org">http://activeforums.org</a>
+</p><hr />
 
-		</ul>
-	</p>
-	
-</div>
-<hr/>
 <div class="License">
-	<p class="Owner">
-		<h3>About DotNetNuke Active Forums</h3>
-		<strong>Version 6.0.1</strong><br />		
-	</p>
+<p class="Owner"><h2>About DotNetNuke Active Forums</h2></p>
+Active Forums is an award winning, DotNetNuke module that allows you to easily build a complete on-line community. By leveraging the DotNetNuke framework, Active Forums allows you to quickly setup a feature-rich discussion forum for your website. Whether you are a hobbyist who just needs a single forum or building an on-line community for your enterprise, Active Forums is your solution.
 </div>
-<hr/>
+<hr />
 <div class="License">
-   <h3>Release Notes</h3>
-    <p class="Owner">
-	<b>Version 06.00.01
-	<p>
-		<ul>
-			<li>Issue #143 - Overall UX/UI overhaul modification with responsive design</li>
-			<li>Issue #132 - Fixing issue #132 default attachment type allowed</li>
-			<li> Side note - cleaned up release notes from previous releases.  Moved to documentation\old_ReleaseNotes.txt</li>
-		</ul>
-	</p>
-	
-</div>
-<hr/>
-<div class="License">
-	<p class="Owner">
-		<h3>About DotNetNuke Active Forums</h3>
-		<strong>Version 5.2.4</strong><br />		
-	</p>
-</div>
-<hr/>
-<div class="License">
-   <h3>Release Notes</h3>
-    <p class="Owner">
-	<b>Version 05.02.04
-	<p>
-		<ul>
-			<li>Issue #108 - (Issues #96 group permissions issues and partial #97 group permissions fix</li>
-			<li>Issue #109 - Console module links disappearing</li>
-			<li>Issue #110 - Fixes https links not being recognized</li>
-			<li>Issue #113 - No toolbar support for topic view</li>
-		</ul>
-	</p>
-	
+<h2>Release Notes</h2>
+
+
+<h3>Version 06.01.02</h3>
+
+<ul>
+ <li>Pull #172 Visible link for users to open my forum settings without leaving forum</li>
+ <li>Pull #186 fixing attachments and case sensitive extension</li>
+ <li>Pull #192 corrected topic split feature released in 6.1.0 not working properly</li>
+</ul>
+
+
+<h3>Version 06.01.00</h3>
+
+<ul>
+ <li>Correct issue with tapatalk stripping topic subject when using quick reply</li>
+ <li>Fix avatar display to allow animated GIF</li>
+ <li>Added token [AF:PROFILE:EMAIL] to show users email address in templates</li>
+ <li>Fix to reload page after delete even when URL contains # character in reference to anchor</li>
+ <li>Fix to correct blockquote when using simple editor</li>
+ <li>Introduction of new code for later use of mail connector module</li>
+ <li>Addition of code to allow for topic/reply split feature - controlled via security mod split</li>
+ <li>Fix from @artfuld to correct Token FORUMMAINLINK points to forum root</li>
+</ul>
+
+
+<h3>Version 06.00.02</h3>
+
+<ul>
+ <li>Issue #148 - More overflow fixes for TopicView</li>
+</ul>
+
+<h3>Version 06.00.01</h3>
+
+<ul>
+ <li>Issue #143 - Overall UX/UI overhaul modification with responsive design</li>
+ <li>Issue #132 - Fixing issue #132 default attachment type allowed</li>
+ <li>Side note - cleaned up release notes from previous releases. Moved to documentation\old_ReleaseNotes.txt</li>
+</ul>
+
+<h3>Version 05.02.04</h3>
+
+<ul>
+ <li>Issue #108 - (Issues #96 group permissions issues and partial #97 group permissions fix</li>
+ <li>Issue #109 - Console module links disappearing</li>
+ <li>Issue #110 - Fixes https links not being recognized</li>
+ <li>Issue #113 - No toolbar support for topic view</li>
+</ul>
 </div>

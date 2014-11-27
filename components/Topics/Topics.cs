@@ -443,7 +443,9 @@ namespace DotNetNuke.Modules.ActiveForums
                 if (isNew)
                 {
                     string[] slistreplies = listreplies.Split("|".ToCharArray(), 2);
-                    DataProvider.Instance().Replies_Split(OldTopicId, NewTopicId, slistreplies[1], DateTime.Now, Convert.ToInt32(slistreplies[0]));
+                    string str = "";
+                    if (slistreplies.Length > 1) str = slistreplies[1];
+                    DataProvider.Instance().Replies_Split(OldTopicId, NewTopicId, str, DateTime.Now, Convert.ToInt32(slistreplies[0]));
                 }
                 else
                 {
