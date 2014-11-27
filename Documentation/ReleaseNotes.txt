@@ -1,19 +1,15 @@
-<big>Active Forums for DNN</big><br />
-<hr />
+<h3>Active Forums for DNN</h3>
 
 <a href="http://activeforums.org">http://activeforums.org</a>
 
 <div class="License">
 <p class="Owner"><b>About DotNetNuke Active Forums</b></p>
 Active Forums is an award winning, DotNetNuke module that allows you to easily build a complete on-line community. By leveraging the DotNetNuke framework, Active Forums allows you to quickly setup a feature-rich discussion forum for your website. Whether you are a hobbyist who just needs a single forum or building an on-line community for your enterprise, Active Forums is your solution.
-</div>
 
-<div class="License">
     <hr />
-    <big>Release Notes</big><br />
-    <br />
+	</div>
+    <h3>Release Notes</h3>
 
-</div>
 
 <b>Version 06.01.02</b>
 
