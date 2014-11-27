@@ -1,28 +1,31 @@
-<h1>Active Forums for DNN</h1>
+<big>Active Forums for DNN</big><br />
+<hr />
 
-<p class="Contributor"><h3>Active Forums Community</h3>
 <a href="http://activeforums.org">http://activeforums.org</a>
-</p><hr />
 
 <div class="License">
-<p class="Owner"><h2>About DotNetNuke Active Forums</h2></p>
+<p class="Owner"><b>About DotNetNuke Active Forums</b></p>
 Active Forums is an award winning, DotNetNuke module that allows you to easily build a complete on-line community. By leveraging the DotNetNuke framework, Active Forums allows you to quickly setup a feature-rich discussion forum for your website. Whether you are a hobbyist who just needs a single forum or building an on-line community for your enterprise, Active Forums is your solution.
 </div>
-<hr />
+
 <div class="License">
-<h2>Release Notes</h2>
+    <hr />
+    <big>Release Notes</big><br />
+    <br />
 
+</div>
 
-<h3>Version 06.01.02</h3>
+<b>Version 06.01.02</b>
 
 <ul>
  <li>Pull #172 Visible link for users to open my forum settings without leaving forum</li>
  <li>Pull #186 fixing attachments and case sensitive extension</li>
  <li>Pull #192 corrected topic split feature released in 6.1.0 not working properly</li>
+ <li>Pull #195 letting the module editor be able to edit user profile via edit profile token link</li>
 </ul>
 
 
-<h3>Version 06.01.00</h3>
+<b>Version 06.01.00</b>
 
 <ul>
  <li>Correct issue with tapatalk stripping topic subject when using quick reply</li>
@@ -36,13 +39,13 @@ Active Forums is an award winning, DotNetNuke module that allows you to easily b
 </ul>
 
 
-<h3>Version 06.00.02</h3>
+<b>Version 06.00.02</b>
 
 <ul>
  <li>Issue #148 - More overflow fixes for TopicView</li>
 </ul>
 
-<h3>Version 06.00.01</h3>
+<b>Version 06.00.01</b>
 
 <ul>
  <li>Issue #143 - Overall UX/UI overhaul modification with responsive design</li>
@@ -50,7 +53,7 @@ Active Forums is an award winning, DotNetNuke module that allows you to easily b
  <li>Side note - cleaned up release notes from previous releases. Moved to documentation\old_ReleaseNotes.txt</li>
 </ul>
 
-<h3>Version 05.02.04</h3>
+<b>Version 05.02.04</b>
 
 <ul>
  <li>Issue #108 - (Issues #96 group permissions issues and partial #97 group permissions fix</li>
@@ -58,4 +61,3 @@ Active Forums is an award winning, DotNetNuke module that allows you to easily b
  <li>Issue #110 - Fixes https links not being recognized</li>
  <li>Issue #113 - No toolbar support for topic view</li>
 </ul>
-</div>
