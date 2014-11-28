@@ -1,5 +1,6 @@
 ﻿<div class="aftoolbarpanel">
 	<ul class="af-list-flat af-right">
+		<li>[AF:TB:ModList]</li>
 		<li>[AF:TB:Forums]</li>
 		<li>[AF:TB:MySettings]</li>
 		<li>[AF:TB:Search]</li>
