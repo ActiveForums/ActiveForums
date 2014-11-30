@@ -30,6 +30,8 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using DotNetNuke.Modules.ActiveForums.Constants;
 using DotNetNuke.Modules.ActiveForums.Extensions;
+using System.Linq;
+using System.Web.Services;
 
 namespace DotNetNuke.Modules.ActiveForums.Controls
 {
@@ -84,6 +86,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
         private bool _isTrusted;
         private int _topicRating;
         private bool _allowHTML;
+        private bool _allowLikes;
         private bool _allowScript;
         private bool _allowSubscribe;
         private int _nextTopic;
@@ -362,6 +365,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             _topicAuthorDisplayName = _drForum["TopicAuthor"].ToString();
             _topicRating = Utilities.SafeConvertInt(_drForum["TopicRating"]);
             _allowHTML = Utilities.SafeConvertBool(_drForum["AllowHTML"]);
+            _allowLikes = Utilities.SafeConvertBool(_drForum["AllowLikes"]);
             _allowScript = Utilities.SafeConvertBool(_drForum["AllowScript"]);
             _rowCount = Utilities.SafeConvertInt(_drForum["ReplyCount"]) + 1;
             _nextTopic = Utilities.SafeConvertInt(_drForum["NextTopic"]);
@@ -1406,6 +1410,43 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             else
             {
                 sbOutput.Replace("[MODEDITDATE]", string.Empty);
+            }
+
+            if (_allowLikes)
+            {
+                Image likeImage = new Image();
+                var likesController = new LikesController();
+                var likes = likesController.GetForPost(contentId);
+
+                bool youLike = likes.Where(o => o.UserId == UserId)
+                    .Select(o => o.Checked)
+                    .FirstOrDefault();
+                string image = string.Empty;
+                if (youLike)
+                    image = "fa-thumbs-o-up";
+                else
+                    image = "fa-thumbs-up";
+
+                likeImage.ImageUrl = image;
+                if (CanReply)
+                {
+                    sbOutput = sbOutput.Replace("[LIKES]", "<i class=\"fa " + image + "\" onclick=\"amaf_likePost(" + UserId + "," + contentId + ")\" > " + likes.Count.ToString() + "</i>");
+                    sbOutput = sbOutput.Replace("[LIKESx2]", "<i class=\"fa " + image + " fa-2x\" onclick=\"amaf_likePost(" + UserId + "," + contentId + ")\" > " + likes.Count.ToString() + "</i>");
+                    sbOutput = sbOutput.Replace("[LIKESx3]", "<i class=\"fa " + image + " fa-3x\" onclick=\"amaf_likePost(" + UserId + "," + contentId + ")\" > " + likes.Count.ToString() + "</i>");
+                }
+                else
+                {
+                    sbOutput = sbOutput.Replace("[LIKES]", "<i class=\"fa " + image + "\" /> " + likes.Count.ToString());
+                    sbOutput = sbOutput.Replace("[LIKESx2]", "<i class=\"fa " + image + " fa-2x\" /> " + likes.Count.ToString());
+                    sbOutput = sbOutput.Replace("[LIKESx3]", "<i class=\"fa " + image + " fa-3x\" /> " + likes.Count.ToString());
+                    //sbOutput = sbOutput.Replace("[LIKES]", "<img src=\"" + image + "\" onclick=\"amaf_likePost(" + UserId + "," + contentId + ")\" /> " + likes.Count.ToString());
+                }
+            }
+            else
+            {
+                sbOutput = sbOutput.Replace("[LIKES]", string.Empty);
+                sbOutput = sbOutput.Replace("[LIKESx2]", string.Empty);
+                sbOutput = sbOutput.Replace("[LIKESx3]", string.Empty);
             }
 
             // Poll Results

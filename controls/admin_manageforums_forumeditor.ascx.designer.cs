@@ -688,6 +688,33 @@ namespace DotNetNuke.Modules.ActiveForums {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl cfgAutoSub;
         
         /// <summary>
+        /// trAllowLikes control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow trAllowLikes;
+        
+        /// <summary>
+        /// rdLikesOn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButton rdLikesOn;
+        
+        /// <summary>
+        /// rdLikesOff control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButton rdLikesOff;
+        
+        /// <summary>
         /// lblMaintWarn control.
         /// </summary>
         /// <remarks>

@@ -831,6 +831,9 @@
   <data name="[RESX:AutoSubscribe].Text" xml:space="preserve">
     <value>Auto Subscriptions</value>
   </data>
+  <data name="[RESX:AllowLikes].Text" xml:space="preserve">
+    <value>Allow Likes</value>
+  </data>
   <data name="[RESX:SelectRoles].Text" xml:space="preserve">
     <value>Select Roles</value>
   </data>
