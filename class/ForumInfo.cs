@@ -26,56 +26,56 @@ using System.Collections.Generic;
 namespace DotNetNuke.Modules.ActiveForums
 {
 	public class Forum
-    {
-        #region AF Forums DB Fields
+	{
+		#region AF Forums DB Fields
 
-        public int ForumID { get; set; }
+		public int ForumID { get; set; }
 
-	    public int ModuleId { get; set; }
+		public int ModuleId { get; set; }
 
-        public int PortalId { get; set; }
+		public int PortalId { get; set; }
 
-        public int TabId { get; set; }
+		public int TabId { get; set; }
 
-	    public int ForumGroupId { get; set; }
+		public int ForumGroupId { get; set; }
 
-	    public int ParentForumId { get; set; }
+		public int ParentForumId { get; set; }
 
-	    public string ForumName { get; set; }
+		public string ForumName { get; set; }
 
-	    public string ForumDesc { get; set; }
+		public string ForumDesc { get; set; }
 
-	    public int SortOrder { get; set; }
+		public int SortOrder { get; set; }
 
-	    public bool Active { get; set; }
+		public bool Active { get; set; }
 
-	    public bool Hidden { get; set; }
+		public bool Hidden { get; set; }
 
-	    public int TotalTopics { get; set; }
+		public int TotalTopics { get; set; }
 
-	    public int TotalReplies { get; set; }
+		public int TotalReplies { get; set; }
 
-	    public int LastPostID { get; set; }
+		public int LastPostID { get; set; }
 
-	    public string GroupName { get; set; }
+		public string GroupName { get; set; }
 
-	    public string ParentForumName { get; set; }
+		public string ParentForumName { get; set; }
 
-	    public string ForumSettingsKey { get; set; }
+		public string ForumSettingsKey { get; set; }
 
-	    public string ForumSecurityKey { get; set; }
+		public string ForumSecurityKey { get; set; }
 
-	    public int LastTopicId { get; set; }
+		public int LastTopicId { get; set; }
 
-	    public int LastReplyId { get; set; }
+		public int LastReplyId { get; set; }
 
-        public int PermissionsId { get; set; }
+		public int PermissionsId { get; set; }
 
-	    public bool InheritSecurity { get; set; }
+		public bool InheritSecurity { get; set; }
 
-	    public ForumGroupInfo ForumGroup { get; set; }
+		public ForumGroupInfo ForumGroup { get; set; }
 
-        public string PrefixURL { get; set; }
+		public string PrefixURL { get; set; }
 
 		public string ForumURL
 		{
@@ -95,59 +95,59 @@ namespace DotNetNuke.Modules.ActiveForums
 
 		public bool HasProperties { get; set; }
 
-        #endregion
+		#endregion
 
-        #region Settings & Security
+		#region Settings & Security
 
-	    public PermissionInfo Security { get; set; }
+		public PermissionInfo Security { get; set; }
 
-        public Hashtable ForumSettings { get; set; }
+		public Hashtable ForumSettings { get; set; }
 
-        #endregion
+		#endregion
 
-        #region Last Post
+		#region Last Post
 
-	    public DateTime LastRead { get; set; }
+		public DateTime LastRead { get; set; }
 
-	    public DateTime LastPostDateTime { get; set; }
+		public DateTime LastPostDateTime { get; set; }
 
-	    public int LastPostUserID { get; set; }
+		public int LastPostUserID { get; set; }
 
-	    public string LastPostUserName { get; set; }
+		public string LastPostUserName { get; set; }
 
-	    public string LastPostFirstName { get; set; }
+		public string LastPostFirstName { get; set; }
 
-	    public string LastPostLastName { get; set; }
+		public string LastPostLastName { get; set; }
 
-	    public string LastPostSubject { get; set; }
+		public string LastPostSubject { get; set; }
 
-	    public int LastPostLastPostID { get; set; }
+		public int LastPostLastPostID { get; set; }
 
-	    public string LastPostDisplayName { get; set; }
+		public string LastPostDisplayName { get; set; }
 
-	    public int LastPostParentPostID { get; set; }
+		public int LastPostParentPostID { get; set; }
 
-	    #endregion
-        
-	    // initialization
+		#endregion
+		
+		// initialization
 		public Forum()
 		{
-		    PortalId = -1;
-		    TabId = -1;
-		    PermissionsId = -1;
-		    PrefixURL = string.Empty;
-            ForumSettings = new Hashtable();
+			PortalId = -1;
+			TabId = -1;
+			PermissionsId = -1;
+			PrefixURL = string.Empty;
+			ForumSettings = new Hashtable();
 
 			Security = new PermissionInfo();
 		}
 
-	    public string TopicSubject { get; set; }
+		public string TopicSubject { get; set; }
 
-	    public int TopicId { get; set; }
+		public int TopicId { get; set; }
 
-        public int CustomFieldType { get; set; }
+		public int CustomFieldType { get; set; }
 
-	    public bool AllowAttach
+		public bool AllowAttach
 		{
 			get { return Utilities.SafeConvertBool(ForumSettings[ForumSettingKeys.AllowAttach]); }
 		}
@@ -160,6 +160,11 @@ namespace DotNetNuke.Modules.ActiveForums
 		public bool AllowHTML
 		{
 			get { return Utilities.SafeConvertBool(ForumSettings[ForumSettingKeys.AllowHTML]); }
+		}
+
+		public bool AllowLikes
+		{
+			get { return Utilities.SafeConvertBool(ForumSettings[ForumSettingKeys.AllowLikes]); }
 		}
 
 		public bool AllowPostIcon
@@ -212,29 +217,29 @@ namespace DotNetNuke.Modules.ActiveForums
 			get { return Utilities.SafeConvertBool(ForumSettings[ForumSettingKeys.AttachAllowBrowseSite]); }
 		}
 
-        public int MaxAttachWidth
-        {
-            get { return Utilities.SafeConvertInt(ForumSettings[ForumSettingKeys.MaxAttachWidth], 800); }
-        }
+		public int MaxAttachWidth
+		{
+			get { return Utilities.SafeConvertInt(ForumSettings[ForumSettingKeys.MaxAttachWidth], 800); }
+		}
 
-        public int MaxAttachHeight
-        {
-            get { return Utilities.SafeConvertInt(ForumSettings[ForumSettingKeys.MaxAttachHeight], 800); }
-        }
+		public int MaxAttachHeight
+		{
+			get { return Utilities.SafeConvertInt(ForumSettings[ForumSettingKeys.MaxAttachHeight], 800); }
+		}
 
-        public bool AttachInsertAllowed
-        {
-            get { return Utilities.SafeConvertBool(ForumSettings[ForumSettingKeys.AttachInsertAllowed]); }
-        }
+		public bool AttachInsertAllowed
+		{
+			get { return Utilities.SafeConvertBool(ForumSettings[ForumSettingKeys.AttachInsertAllowed]); }
+		}
 
-        public bool ConvertingToJpegAllowed
-        {
-            get { return Utilities.SafeConvertBool(ForumSettings[ForumSettingKeys.ConvertingToJpegAllowed]); }
-        }
+		public bool ConvertingToJpegAllowed
+		{
+			get { return Utilities.SafeConvertBool(ForumSettings[ForumSettingKeys.ConvertingToJpegAllowed]); }
+		}
 
 		public string EditorHeight
 		{
-            get { return Utilities.SafeConvertString(ForumSettings[ForumSettingKeys.EditorHeight], "400"); }
+			get { return Utilities.SafeConvertString(ForumSettings[ForumSettingKeys.EditorHeight], "400"); }
 		}
 
 		public int EditorStyle
@@ -244,34 +249,34 @@ namespace DotNetNuke.Modules.ActiveForums
 
 		public string EditorToolBar
 		{
-            get { return Utilities.SafeConvertString(ForumSettings[ForumSettingKeys.EditorToolbar], "bold,italic,underline"); }
+			get { return Utilities.SafeConvertString(ForumSettings[ForumSettingKeys.EditorToolbar], "bold,italic,underline"); }
 		}
 
-        public EditorTypes EditorType
-        {
-            get
-            {
-                EditorTypes parseValue;
-                return Enum.TryParse(Utilities.SafeConvertString(ForumSettings[ForumSettingKeys.EditorType], "0"), true, out parseValue)
-                           ? parseValue
-                           : EditorTypes.TEXTBOX;
-            }
-        }
+		public EditorTypes EditorType
+		{
+			get
+			{
+				EditorTypes parseValue;
+				return Enum.TryParse(Utilities.SafeConvertString(ForumSettings[ForumSettingKeys.EditorType], "0"), true, out parseValue)
+						   ? parseValue
+						   : EditorTypes.TEXTBOX;
+			}
+		}
 
-        public HTMLPermittedUsers EditorPermittedUsers
-        {
-            get
-            {
-                HTMLPermittedUsers parseValue;
-                return Enum.TryParse(Utilities.SafeConvertString(ForumSettings[ForumSettingKeys.EditorPermittedUsers], "1"), true, out parseValue)
-                           ? parseValue
-                           : HTMLPermittedUsers.AuthenticatedUsers;
-            }
-        }
+		public HTMLPermittedUsers EditorPermittedUsers
+		{
+			get
+			{
+				HTMLPermittedUsers parseValue;
+				return Enum.TryParse(Utilities.SafeConvertString(ForumSettings[ForumSettingKeys.EditorPermittedUsers], "1"), true, out parseValue)
+						   ? parseValue
+						   : HTMLPermittedUsers.AuthenticatedUsers;
+			}
+		}
 
 		public string EditorWidth
 		{
-            get { return Utilities.SafeConvertString(ForumSettings[ForumSettingKeys.EditorWidth], "100%"); }
+			get { return Utilities.SafeConvertString(ForumSettings[ForumSettingKeys.EditorWidth], "100%"); }
 		}
 
 		public string EmailAddress
@@ -333,10 +338,10 @@ namespace DotNetNuke.Modules.ActiveForums
 		{
 			get
 			{
-                TrustTypes parseValue;
-                return Enum.TryParse(Utilities.SafeConvertString(ForumSettings[ForumSettingKeys.DefaultTrustValue], "0"), true, out parseValue)
-                           ? parseValue
-                           : TrustTypes.NotTrusted;
+				TrustTypes parseValue;
+				return Enum.TryParse(Utilities.SafeConvertString(ForumSettings[ForumSettingKeys.DefaultTrustValue], "0"), true, out parseValue)
+						   ? parseValue
+						   : TrustTypes.NotTrusted;
 			}
 		}
 
@@ -385,7 +390,7 @@ namespace DotNetNuke.Modules.ActiveForums
 			get { return Utilities.SafeConvertInt(ForumSettings[ForumSettingKeys.ActiveSocialSecurityOption], 1); }
 		}
 
-	    public bool AutoSubscribeEnabled
+		public bool AutoSubscribeEnabled
 		{
 			get { return Utilities.SafeConvertBool(ForumSettings[ForumSettingKeys.AutoSubscribeEnabled]); }
 		}
@@ -400,15 +405,15 @@ namespace DotNetNuke.Modules.ActiveForums
 			get { return Utilities.SafeConvertBool(ForumSettings[ForumSettingKeys.AutoSubscribeNewTopicsOnly]); }
 		}
 
-        public int CreatePostCount // Minimum posts required to create a topic in this forum if the user is not trusted
+		public int CreatePostCount // Minimum posts required to create a topic in this forum if the user is not trusted
 		{
 			get { return Utilities.SafeConvertInt(ForumSettings[ForumSettingKeys.CreatePostCount]); }
 		}
 
-        public int ReplyPostCount // Minimum posts required to reply to a topic in this forum if the user is not trusted
-        {
-            get { return Utilities.SafeConvertInt(ForumSettings[ForumSettingKeys.ReplyPostCount]); }
-        }
+		public int ReplyPostCount // Minimum posts required to reply to a topic in this forum if the user is not trusted
+		{
+			get { return Utilities.SafeConvertInt(ForumSettings[ForumSettingKeys.ReplyPostCount]); }
+		}
 
 	}
 }
