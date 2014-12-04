@@ -157,11 +157,6 @@ namespace DotNetNuke.Modules.ActiveForums
 			get { return Utilities.SafeConvertBool(ForumSettings[ForumSettingKeys.AllowEmoticons]); }
 		}
 
-        public bool AllowLikes
-        {
-            get { return Utilities.SafeConvertBool(ForumSettings[ForumSettingKeys.AllowLikes]); }
-        }
-
 		public bool AllowHTML
 		{
 			get { return Utilities.SafeConvertBool(ForumSettings[ForumSettingKeys.AllowHTML]); }

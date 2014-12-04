@@ -268,8 +268,6 @@ namespace DotNetNuke.Modules.ActiveForums
 		public const string ActiveSocialTopicsOnly = "AMASTO";
 		public const string ActiveSocialSecurityOption = "AMASSEC";
 
-        public const string AllowLikes = "ALLOWLIKES";
-
         /*
 		public const string MCEnabled = "MCENABLED";
 		public const string MCUrl = "MCURL";
