@@ -50,8 +50,7 @@ namespace DotNetNuke.Modules.ActiveForums.Handlers
 			DeletePost,
 			LoadTopic,
 			SaveTopic,
-			ForumList,
-            LikePost
+			ForumList
 		}
 		public override void ProcessRequest(HttpContext context)
 		{
@@ -121,30 +120,10 @@ namespace DotNetNuke.Modules.ActiveForums.Handlers
 				case Actions.ForumList:
 					sOut = ForumList();
 					break;
-                case Actions.LikePost:
-                    sOut = LikePost();
-                    break;
 			}
 			context.Response.ContentType = "text/plain";
 			context.Response.Write(sOut);
 		}
-
-        private string LikePost()
-        {
-            int userId = 0;
-            int contentId = 0;
-            if (Params.ContainsKey("userId") && SimulateIsNumeric.IsNumeric(Params["userId"]))
-            {
-                userId = int.Parse(Params["userId"].ToString());
-            }
-            if (Params.ContainsKey("contentId") && SimulateIsNumeric.IsNumeric(Params["contentId"]))
-            {
-                contentId = int.Parse(Params["contentId"].ToString());
-            }
-            var likeController = new LikesController();
-            likeController.Like(contentId, UserId);
-            return BuildOutput(userId + "|" + contentId, OutputCodes.Success, true);
-        }
 		private string ForumList()
 		{
 			ForumController fc = new ForumController();

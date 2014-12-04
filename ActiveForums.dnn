@@ -1,6 +1,6 @@
 ﻿<dotnetnuke type="Package" version="5.0">
     <packages>
-        <package name="Active Forums" type="Module" version="06.01.03">
+        <package name="Active Forums" type="Module" version="06.01.02">
             <friendlyName>Active Forums</friendlyName>
             <description>Active Forums - Forum module for DotNetNuke</description>
             <iconFile></iconFile>
@@ -279,18 +279,10 @@
                         <name>05.02.02.SqlDataProvider</name>
                         <version>05.02.02</version>
                       </script>
-                      <script type="Install">
-                        <name>06.00.02.SqlDataProvider</name>
-                        <version>06.00.02</version>
-                      </script>
-                      <script type="Install">
-                        <name>06.01.03.SqlDataProvider</name>
-                        <version>06.01.03</version>
-                      </script>
-                      <script type="UnInstall">
-                        <name>Uninstall.SqlDataProvider</name>
-                        <version>06.00.02</version>
-                      </script>
+                        <script type="UnInstall">                            
+                            <name>Uninstall.SqlDataProvider</name>
+                            <version>06.00.02</version>
+                        </script>
                     </scripts>
                 </component>
                 <component type="ResourceFile">

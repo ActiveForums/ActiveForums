@@ -263,24 +263,3 @@ function amaf_splitCancel() {
     splitposts = new Array();
     amaf_splitButtons(false);
 };
-
-function amaf_likePost(userId, contentId) {
-        var d = {};
-        d.action = 16;
-        d.userId = userId;
-        d.contentId = contentId;
-        amaf.callback(d, amaf_likePostComplete);
-};
-function amaf_likePostComplete(result) {
-    if (result[0].success == true) {
-        if (typeof (result[0].result) != 'undefined') {
-            var rid = result[0].result.split('|')[1];
-            if (rid > 0) {
-                afreload();
-            } else {
-                window.history.go(-1);
-            };
-        }
-
-    };
-};

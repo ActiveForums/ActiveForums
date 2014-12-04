@@ -80,12 +80,7 @@ namespace DotNetNuke.Modules.ActiveForums
 			get { return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.AllowHTML]); }
 		}
 
-        public bool AllowLikes
-        {
-            get { return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.AllowLikes]); }
-        }
-
-        public bool AllowPostIcon
+		public bool AllowPostIcon
 		{
 			get { return Utilities.SafeConvertBool(GroupSettings[ForumSettingKeys.AllowPostIcon]); }
 		}
