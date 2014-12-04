@@ -423,6 +423,7 @@ namespace DotNetNuke.Modules.ActiveForums
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ActiveSocialSecurityOption, parameters[60]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.CreatePostCount, parameters[61]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ReplyPostCount, parameters[62]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AllowLikes, parameters[63]);
         }
 
         private void LoadForum(int forumId)
@@ -540,6 +541,9 @@ namespace DotNetNuke.Modules.ActiveForums
 
             chkTopicsOnly.Checked = fi.AutoSubscribeNewTopicsOnly;
 
+            rdLikesOn.Checked = fi.AllowLikes;
+            rdLikesOff.Checked = !fi.AllowLikes;
+
             Utilities.SelectListItemByValue(drpPermittedRoles, (int)fi.EditorPermittedUsers);
 
             txtEditorHeight.Text = (fi.EditorHeight == string.Empty) ? "400" : fi.EditorHeight;
@@ -630,6 +634,9 @@ namespace DotNetNuke.Modules.ActiveForums
             rdHTMLOn.Checked = gi.AllowHTML;
             rdHTMLOff.Checked = !gi.AllowHTML;
 
+            rdLikesOn.Checked = gi.AllowLikes;
+            rdLikesOn.Checked = !gi.AllowLikes;
+
             if (gi.AllowHTML)
                 cfgHTML.Attributes.Remove("style");
             else
@@ -650,6 +657,9 @@ namespace DotNetNuke.Modules.ActiveForums
                 cfgAutoSub.Attributes.Remove("style");
             else
                 cfgAutoSub.Attributes.Add("style", "display:none;");
+
+            rdLikesOn.Checked = gi.AllowLikes;
+            rdLikesOff.Checked = !gi.AllowLikes;
 
             var x = gi.EditorType;
 
