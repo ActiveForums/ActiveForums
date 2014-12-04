@@ -396,33 +396,37 @@ namespace DotNetNuke.Modules.ActiveForums
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachMaxHeight, parameters[16]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachMaxWidth, parameters[17]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachAllowBrowseSite, parameters[18]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AllowHTML, parameters[19]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorType, parameters[20]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorHeight, parameters[21]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorWidth, parameters[22]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorToolbar, parameters[23]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorStyle, parameters[24]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorPermittedUsers, parameters[25]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.TopicFormId, parameters[26]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ReplyFormId, parameters[27]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.QuickReplyFormId, parameters[28]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ProfileTemplateId, parameters[29]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.IsModerated, parameters[30]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.DefaultTrustValue, parameters[31]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AutoTrustLevel, parameters[32]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ModApproveTemplateId, parameters[33]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ModRejectTemplateId, parameters[34]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ModMoveTemplateId, parameters[35]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ModDeleteTemplateId, parameters[36]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ModNotifyTemplateId, parameters[37]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AutoSubscribeEnabled, parameters[38]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AutoSubscribeRoles, parameters[39]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AutoSubscribeNewTopicsOnly, parameters[57]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ActiveSocialEnabled, parameters[58]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ActiveSocialTopicsOnly, parameters[59]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ActiveSocialSecurityOption, parameters[60]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.CreatePostCount, parameters[61]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ReplyPostCount, parameters[62]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachInsertAllowed, parameters[19]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.MaxAttachWidth, parameters[20]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.MaxAttachHeight, parameters[21]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ConvertingToJpegAllowed, parameters[22]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AllowHTML, parameters[23]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorType, parameters[24]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorHeight, parameters[25]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorWidth, parameters[26]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorToolbar, parameters[27]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorStyle, parameters[28]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorPermittedUsers, parameters[29]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.TopicFormId, parameters[30]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ReplyFormId, parameters[31]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.QuickReplyFormId, parameters[32]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ProfileTemplateId, parameters[33]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.IsModerated, parameters[34]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.DefaultTrustValue, parameters[35]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AutoTrustLevel, parameters[36]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ModApproveTemplateId, parameters[37]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ModRejectTemplateId, parameters[38]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ModMoveTemplateId, parameters[39]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ModDeleteTemplateId, parameters[40]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ModNotifyTemplateId, parameters[41]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AutoSubscribeEnabled, parameters[42]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AutoSubscribeRoles, parameters[43]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AutoSubscribeNewTopicsOnly, parameters[61]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ActiveSocialEnabled, parameters[62]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ActiveSocialTopicsOnly, parameters[63]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ActiveSocialSecurityOption, parameters[64]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.CreatePostCount, parameters[65]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ReplyPostCount, parameters[66]);
         }
 
         private void LoadForum(int forumId)
@@ -513,6 +517,10 @@ namespace DotNetNuke.Modules.ActiveForums
             txtMaxAttachSize.Text = fi.AttachMaxSize.ToString();
             txtAllowedTypes.Text = fi.AttachTypeAllowed;
             ckAllowBrowseSite.Checked = fi.AttachAllowBrowseSite;
+            txtMaxAttachWidth.Text = fi.MaxAttachWidth.ToString();
+            txtMaxAttachHeight.Text = fi.MaxAttachHeight.ToString();
+            ckAttachInsertAllowed.Checked = fi.AttachInsertAllowed;
+            ckConvertingToJpegAllowed.Checked = fi.ConvertingToJpegAllowed;
 
             rdHTMLOn.Checked = fi.AllowHTML;
             rdHTMLOff.Checked = !fi.AllowHTML;
@@ -626,6 +634,10 @@ namespace DotNetNuke.Modules.ActiveForums
             txtMaxAttachSize.Text = gi.AttachMaxSize.ToString();
             txtAllowedTypes.Text = gi.AttachTypeAllowed;
             ckAllowBrowseSite.Checked = gi.AttachAllowBrowseSite;
+            txtMaxAttachWidth.Text = gi.MaxAttachWidth.ToString();
+            txtMaxAttachHeight.Text = gi.MaxAttachHeight.ToString();
+            ckAttachInsertAllowed.Checked = gi.AttachInsertAllowed;
+            ckConvertingToJpegAllowed.Checked = gi.ConvertingToJpegAllowed;
 
             rdHTMLOn.Checked = gi.AllowHTML;
             rdHTMLOff.Checked = !gi.AllowHTML;
