@@ -50,7 +50,9 @@ namespace DotNetNuke.Modules.ActiveForums.Handlers
 			DeletePost,
 			LoadTopic,
 			SaveTopic,
-			ForumList
+			ForumList,
+            LikePost
+
 		}
 		public override void ProcessRequest(HttpContext context)
 		{
@@ -120,10 +122,31 @@ namespace DotNetNuke.Modules.ActiveForums.Handlers
 				case Actions.ForumList:
 					sOut = ForumList();
 					break;
+                case Actions.LikePost:
+                    sOut = LikePost();
+                    break;
 			}
 			context.Response.ContentType = "text/plain";
 			context.Response.Write(sOut);
 		}
+
+        private string LikePost()
+        {
+            int userId = 0;
+            int contentId = 0;
+            if (Params.ContainsKey("userId") && SimulateIsNumeric.IsNumeric(Params["userId"]))
+            {
+                userId = int.Parse(Params["userId"].ToString());
+            }
+            if (Params.ContainsKey("contentId") && SimulateIsNumeric.IsNumeric(Params["contentId"]))
+            {
+                contentId = int.Parse(Params["contentId"].ToString());
+            }
+            var likeController = new LikesController();
+            likeController.Like(contentId, UserId);
+            return BuildOutput(userId + "|" + contentId, OutputCodes.Success, true);
+        }
+
 		private string ForumList()
 		{
 			ForumController fc = new ForumController();
@@ -476,11 +499,11 @@ namespace DotNetNuke.Modules.ActiveForums.Handlers
 			ForumController fc = new ForumController();
 			Forum f = fc.Forums_Get(forumId, this.UserId, true);
 
-            // Need to get the list of attachments BEFORE we remove the post recods
-            var attachmentController = new Data.AttachController();
-		    var attachmentList = (MainSettings.DeleteBehavior == 0)
-		                             ? attachmentController.ListForPost(TopicId, replyId)
-		                             : null;
+			// Need to get the list of attachments BEFORE we remove the post recods
+			var attachmentController = new Data.AttachController();
+			var attachmentList = (MainSettings.DeleteBehavior == 0)
+									 ? attachmentController.ListForPost(TopicId, replyId)
+									 : null;
 
 
 			if (TopicId > 0 & replyId < 1)
@@ -491,8 +514,8 @@ namespace DotNetNuke.Modules.ActiveForums.Handlers
 				if (Permissions.HasAccess(f.Security.ModDelete, ForumUser.UserRoles) || (Permissions.HasAccess(f.Security.Delete, ForumUser.UserRoles) && ti.Content.AuthorId == UserId && ti.IsLocked == false))
 				{
 					DataProvider.Instance().Topics_Delete(forumId, TopicId, MainSettings.DeleteBehavior);
-                    string journalKey = string.Format("{0}:{1}", forumId.ToString(), TopicId.ToString());
-                    JournalController.Instance.DeleteJournalItemByKey(PortalId, journalKey);
+					string journalKey = string.Format("{0}:{1}", forumId.ToString(), TopicId.ToString());
+					JournalController.Instance.DeleteJournalItemByKey(PortalId, journalKey);
 				}
 				else
 				{
@@ -506,8 +529,8 @@ namespace DotNetNuke.Modules.ActiveForums.Handlers
 				if (Permissions.HasAccess(f.Security.ModDelete, ForumUser.UserRoles) || (Permissions.HasAccess(f.Security.Delete, ForumUser.UserRoles) && ri.Content.AuthorId == UserId))
 				{
 					DataProvider.Instance().Reply_Delete(forumId, TopicId, replyId, MainSettings.DeleteBehavior);
-                    string journalKey = string.Format("{0}:{1}:{2}", forumId.ToString(), TopicId.ToString(), replyId.ToString());
-                    JournalController.Instance.DeleteJournalItemByKey(PortalId, journalKey);
+					string journalKey = string.Format("{0}:{1}:{2}", forumId.ToString(), TopicId.ToString(), replyId.ToString());
+					JournalController.Instance.DeleteJournalItemByKey(PortalId, journalKey);
 
 				}
 				else
@@ -517,31 +540,31 @@ namespace DotNetNuke.Modules.ActiveForums.Handlers
 
 			}
 
-            // If it's a hard delete, delete associated attachments
-            // attachmentList will only be populated if the DeleteBehavior is 0
-            if (attachmentList != null)
-            {      
-                var fileManager = FileManager.Instance;
-                var folderManager = FolderManager.Instance;
-                var attachmentFolder = folderManager.GetFolder(PortalId, "activeforums_Attach");
+			// If it's a hard delete, delete associated attachments
+			// attachmentList will only be populated if the DeleteBehavior is 0
+			if (attachmentList != null)
+			{      
+				var fileManager = FileManager.Instance;
+				var folderManager = FolderManager.Instance;
+				var attachmentFolder = folderManager.GetFolder(PortalId, "activeforums_Attach");
 
-                foreach (var attachment in attachmentList)
-                {
-                    attachmentController.Delete(attachment.AttachmentId);
+				foreach (var attachment in attachmentList)
+				{
+					attachmentController.Delete(attachment.AttachmentId);
 
-                    var file = attachment.FileId.HasValue
-                                   ? fileManager.GetFile(attachment.FileId.Value)
-                                   : fileManager.GetFile(attachmentFolder, attachment.FileName);
+					var file = attachment.FileId.HasValue
+								   ? fileManager.GetFile(attachment.FileId.Value)
+								   : fileManager.GetFile(attachmentFolder, attachment.FileName);
 
-                    // Only delete the file if it exists in the attachment folder
-                    if (file != null && file.FolderId == attachmentFolder.FolderID)
-                        fileManager.DeleteFile(file);
-                }
-            }
+					// Only delete the file if it exists in the attachment folder
+					if (file != null && file.FolderId == attachmentFolder.FolderID)
+						fileManager.DeleteFile(file);
+				}
+			}
 
-            // Return the result
-		    string cachekey = string.Format("AF-FV-{0}-{1}", PortalId, ModuleId);
-            DataCache.CacheClearPrefix(cachekey);
+			// Return the result
+			string cachekey = string.Format("AF-FV-{0}-{1}", PortalId, ModuleId);
+			DataCache.CacheClearPrefix(cachekey);
 			return BuildOutput(TopicId + "|" + replyId, OutputCodes.Success, true);
 		}
 		private string LoadTopic()

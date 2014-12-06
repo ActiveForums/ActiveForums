@@ -718,36 +718,36 @@ GO
 /* Added this lines to delete Artifacts that still in database - added by Matthias Schlomann */
 IF EXISTS (SELECT * FROM {databaseOwner}{objectQualifier}CoreMessaging_NotificationTypeActions where APICall = 'DesktopModules/ActiveForums/API/ModerationService.ashx/ApprovePost')
 DELETE FROM {databaseOwner}[{objectQualifier}CoreMessaging_NotificationTypeActions]
-      WHERE 
+	  WHERE 
 	  APICall = 'DesktopModules/ActiveForums/API/ModerationService.ashx/ApprovePost' 
 GO
 IF EXISTS (SELECT * FROM {databaseOwner}{objectQualifier}CoreMessaging_NotificationTypeActions where APICall = 'DesktopModules/ActiveForums/API/ModerationService.ashx/RejectPost')
 DELETE FROM {databaseOwner}[{objectQualifier}CoreMessaging_NotificationTypeActions]
-      WHERE 
+	  WHERE 
 	  APICall = 'DesktopModules/ActiveForums/API/ModerationService.ashx/RejectPost' 
 GO
 IF EXISTS (SELECT * FROM {databaseOwner}{objectQualifier}CoreMessaging_NotificationTypeActions where APICall = 'DesktopModules/ActiveForums/API/ModerationService.ashx/DeletePost')
 DELETE FROM {databaseOwner}[{objectQualifier}CoreMessaging_NotificationTypeActions]
-      WHERE 
+	  WHERE 
 	 
 	  APICall = 'DesktopModules/ActiveForums/API/ModerationService.ashx/DeletePost'
 GO
 IF EXISTS (SELECT * FROM {databaseOwner}{objectQualifier}CoreMessaging_NotificationTypeActions where APICall = 'DesktopModules/ActiveForums/API/ModerationService.ashx/IgnorePost')
 DELETE FROM {databaseOwner}[{objectQualifier}CoreMessaging_NotificationTypeActions]
-      WHERE 
+	  WHERE 
 	  APICall = 'DesktopModules/ActiveForums/API/ModerationService.ashx/IgnorePost' 
 GO
 IF EXISTS (select * FROM {databaseOwner}{objectQualifier}CoreMessaging_NotificationTypes where Name = 'AF-ForumModeration' )
 
 DELETE FROM {databaseOwner}[{objectQualifier}CoreMessaging_NotificationTypes]
-      WHERE 
+	  WHERE 
 	  Name = 'AF-ForumModeration' 
 GO
 
 IF EXISTS (select * FROM {databaseOwner}[{objectQualifier}CoreMessaging_NotificationTypes] where Name = 'AF-ContentAlert' )
 
 DELETE FROM {databaseOwner}[{objectQualifier}CoreMessaging_NotificationTypes]
-      WHERE 
+	  WHERE 
 	  Name ='AF-ContentAlert'
 GO
 
@@ -809,4 +809,8 @@ GO
 
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_Replies_Split]') AND type in (N'P', N'PC'))
 DROP PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Replies_Split]
+GO
+
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_Likes]') AND type in (N'U'))
+	DROP TABLE {databaseOwner}[{objectQualifier}activeforums_Likes]
 GO

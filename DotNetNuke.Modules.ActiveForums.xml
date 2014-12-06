@@ -3384,6 +3384,33 @@
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.admin_manageforums_forumeditor.trAllowLikes">
+            <summary>
+            trAllowLikes control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.admin_manageforums_forumeditor.rdLikesOn">
+            <summary>
+            rdLikesOn control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.admin_manageforums_forumeditor.rdLikesOff">
+            <summary>
+            rdLikesOff control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
         <member name="F:DotNetNuke.Modules.ActiveForums.admin_manageforums_forumeditor.lblMaintWarn">
             <summary>
             lblMaintWarn control.
@@ -3693,6 +3720,42 @@
         <member name="F:DotNetNuke.Modules.ActiveForums.admin_manageforums_forumeditor.ckAllowBrowseSite">
             <summary>
             ckAllowBrowseSite control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.admin_manageforums_forumeditor.ckConvertingToJpegAllowed">
+            <summary>
+            ckConvertingToJpegAllowed control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.admin_manageforums_forumeditor.ckAttachInsertAllowed">
+            <summary>
+            ckAttachInsertAllowed control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.admin_manageforums_forumeditor.txtMaxAttachWidth">
+            <summary>
+            txtMaxAttachWidth control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.admin_manageforums_forumeditor.txtMaxAttachHeight">
+            <summary>
+            txtMaxAttachHeight control.
             </summary>
             <remarks>
             Auto-generated field.

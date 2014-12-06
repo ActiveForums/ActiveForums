@@ -427,6 +427,7 @@ namespace DotNetNuke.Modules.ActiveForums
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ActiveSocialSecurityOption, parameters[64]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.CreatePostCount, parameters[65]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ReplyPostCount, parameters[66]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AllowLikes, parameters[67]);
         }
 
         private void LoadForum(int forumId)
@@ -546,6 +547,9 @@ namespace DotNetNuke.Modules.ActiveForums
             else
                 cfgAutoSub.Attributes.Add("style", "display:none;");
 
+            rdLikesOn.Checked = fi.AllowLikes;
+            rdLikesOff.Checked = !fi.AllowLikes;
+
             chkTopicsOnly.Checked = fi.AutoSubscribeNewTopicsOnly;
 
             Utilities.SelectListItemByValue(drpPermittedRoles, (int)fi.EditorPermittedUsers);
@@ -657,6 +661,9 @@ namespace DotNetNuke.Modules.ActiveForums
 
             rdAutoSubOn.Checked = gi.AutoSubscribeEnabled;
             rdAutoSubOff.Checked = !gi.AutoSubscribeEnabled;
+
+            rdLikesOn.Checked = gi.AllowLikes;
+            rdLikesOff.Checked = !gi.AllowLikes;
 
             if (gi.AutoSubscribeEnabled)
                 cfgAutoSub.Attributes.Remove("style");
