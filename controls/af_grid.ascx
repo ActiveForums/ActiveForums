@@ -43,7 +43,7 @@
 												<td rowspan="2" class="afsubject">
 												
 												<span class="afhiddenstats"><%# Eval("ReplyCount") %> replies and <%# Eval("ViewCount") %> views</span>
-												<span class="aftopictitle"><a class="af-thread-link" href='<%# GetThreadUrl() %>'><%# Eval("Subject") %></a> <a href='<%# GetLastRead() %>'><img border="0" class="afminiarrow" src="~\DesktopModules\ActiveForums\themes\_default\images\miniarrow_down.png" style="vertical-align: middle;" /></a>  </span> 
+												<span class="aftopictitle"><a class="af-thread-link" href='<%# GetThreadUrl() %>'><%# Eval("Subject") %></a> <a href='<%# GetLastRead() %>'><img border="0" class="afminiarrow" src='<%# GetArrowPath() %>' style="vertical-align: middle;" /></a>  </span> 
 												<span class="aftopicsubtitle"><%= GetSharedResource("Started") %> <%# GetPostTime() %> <%= GetSharedResource("By") %> <%# GetAuthor() %></span>
 												
 											</tr>

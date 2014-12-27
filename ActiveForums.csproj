@@ -729,7 +729,6 @@
       <SubType>ASPXCodeBehind</SubType>
     </Content>
     <Compile Include="class\Attachment.cs" />
-    <Compile Include="class\ForumsTrackingController.cs" />
     <Compile Include="class\HashtableExtensions.cs" />
     <Compile Include="class\DataRowExtensions.cs" />
     <Compile Include="class\DataRecordExtensions.cs" />
@@ -737,8 +736,6 @@
     <Compile Include="class\LikesController.cs" />
     <Compile Include="class\ParamBuilder.cs" />
     <Compile Include="class\StringExtensions.cs" />
-    <Compile Include="class\TopicsTracking.cs" />
-    <Compile Include="class\TopicsTrackingController.cs" />
     <Compile Include="class\WhatsNewModuleSettings.cs" />
     <Compile Include="Constants\SEOConstants.cs" />
     <Compile Include="controls\af_topicscripts.ascx.cs">
@@ -755,7 +752,6 @@
     <Compile Include="controls\af_searchadvanced.ascx.designer.cs">
       <DependentUpon>af_searchadvanced.ascx</DependentUpon>
     </Compile>
-    <Compile Include="class\ForumsTracking.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="SimulateDateDiff.cs" />
     <Compile Include="SimulateIsNumeric.cs" />
