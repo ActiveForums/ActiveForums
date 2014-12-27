@@ -43,7 +43,7 @@
 												<td rowspan="2" class="afsubject">
 												
 												<span class="afhiddenstats"><%# Eval("ReplyCount") %> replies and <%# Eval("ViewCount") %> views</span>
-												<span class="aftopictitle"><a class="af-thread-link" href='<%# GetThreadUrl() %>'><%# Eval("Subject") %></a></span> 
+												<span class="aftopictitle"><a class="af-thread-link" href='<%# GetThreadUrl() %>'><%# Eval("Subject") %></a> <a href='<%# GetLastRead() %>'><img border="0" class="afminiarrow" src="~\DesktopModules\ActiveForums\themes\_default\images\miniarrow_down.png" style="vertical-align: middle;" /></a>  </span> 
 												<span class="aftopicsubtitle"><%= GetSharedResource("Started") %> <%# GetPostTime() %> <%= GetSharedResource("By") %> <%# GetAuthor() %></span>
 												
 											</tr>
@@ -54,11 +54,11 @@
 									<td class="aftopicrow af-lastpost"><div class="af_lastpost" style="white-space:nowrap;">In: <a class="af-forum-url" href='<%# GetForumUrl() %>'><%# Eval("ForumName") %></a> <br /><%= GetSharedResource("SearchBy") %> <%# GetLastPostAuthor() %><br /><%# GetLastPostTime() %></div></td>
 								</tr>
 							</table>	
-									</td>
-								</tr>
-							</table>
 						</td>
 					</tr>
+				</table>
+			</td>
+		</tr>
 				
         </ItemTemplate>
         <FooterTemplate></table></FooterTemplate>

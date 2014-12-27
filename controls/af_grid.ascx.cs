@@ -43,7 +43,7 @@ namespace DotNetNuke.Modules.ActiveForums
         protected override void OnLoad(EventArgs e)
 		{
 			base.OnLoad(e);
-
+            
             drpTimeFrame.SelectedIndexChanged += DrpTimeFrameSelectedIndexChanged;
             btnMarkRead.ServerClick += BtnMarkReadClick;
 
@@ -298,6 +298,18 @@ namespace DotNetNuke.Modules.ActiveForums
 
             var @params = new[] { ParamKeys.ForumId + "=" + forumId, ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.TopicId + "=" + topicId };
 
+            return NavigateUrl(TabId, string.Empty, @params);
+        }
+
+        public string GetLastRead()
+        {
+            if (_currentRow == null) return null;
+
+            var forumId = _currentRow["ForumID"].ToString();
+            var topicId = _currentRow["TopicId"].ToString();
+            var userLastRead = _currentRow["UserLastTopicRead"].ToString();
+
+            var @params = new [] {ParamKeys.ForumId + "=" + forumId, ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.TopicId + "=" + topicId, ParamKeys.FirstNewPost + "=" + userLastRead };
             return NavigateUrl(TabId, string.Empty, @params);
         }
 
