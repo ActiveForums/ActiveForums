@@ -318,7 +318,7 @@ namespace DotNetNuke.Modules.ActiveForums
 
         public string GetArrowPath()
         {
-            string theme = "~/DesktopModules/ActiveForums/themes/" + _currentTheme  + "images/miniarrow_down.png";
+            string theme = Page.ResolveUrl("~/DesktopModules/ActiveForums/themes/" + _currentTheme  + "/images/miniarrow_down.png");
             return theme;
         }
 
