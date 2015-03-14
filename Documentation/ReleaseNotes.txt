@@ -10,6 +10,16 @@ Active Forums is an award winning, DotNetNuke module that allows you to easily b
 	</div>
     <h3>Release Notes</h3>
 
+<b>Version 06.01.04</b>
+
+<ul>
+ <li>Pull #203 added the "go to last unread post" on the Not read-page, unanswered, my topics and and active topics</li>
+ <li>Pull #203 corrected the ½ hour time zone change for .5 time zones</li>
+ <li>Pull #203 fixed split button function when topic is locked</li>
+ <li>Pull #230 fixed SqlDataProvider 06.01.03 line 105 missing {objectQualifier}</li>
+</ul>
+
+
 <b>Version 06.01.03</b>
 
 <ul>
