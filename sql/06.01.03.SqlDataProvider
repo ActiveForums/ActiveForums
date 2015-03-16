@@ -74,7 +74,7 @@ SELECT
 							WHERE      (SettingName = 'ALLOWTAGS') AND (GroupKey = v.ForumSettingsKey)),0) AS AllowTags,
 							 FT.TopicId,
 						  (SELECT     ISNULL(AVG(Rating), 0) AS Expr1
-							FROM          {databaseOwner}activeforums_Topics_Ratings
+							FROM          {databaseOwner}{objectQualifier}activeforums_Topics_Ratings
 							WHERE      (TopicId = @TopicId)) AS TopicRating,
 ISNULL
 						  ((SELECT     Id
@@ -91,7 +91,7 @@ ISNULL
 						CASE WHEN FT.LastReplyId is NULL THEN IsNull(T.LastName,'') ELSE IsNull(R.LastName,'') END AS LastPostLastName, 
 						CASE WHEN FT.LastReplyId is NULL THEN IsNull(T.DisplayName,'') ELSE IsNull(R.DisplayName,'') END AS LastPostDisplayName, T.Subject, T.Summary, T.Body, T.AuthorId, T.AuthorName, T.Username, T.FirstName, T.LastName, 
 					  T.DisplayName, T.DateCreated, T.DateUpdated, T.ViewCount, @ReplyCount as ReplyCount, T.IsPinned, T.IsLocked, T.StatusId, T.TopicIcon, T.TopicType, @Tags as Tags,ISNULL(t.TopicData,'') as TopicData,
-					  {databaseOwner}activeforums_Poll.PollID,
+					  {databaseOwner}{objectQualifier}activeforums_Poll.PollID,
 					aft.NextTopic, 
 					aft.PrevTopic,
 					t.URL,
