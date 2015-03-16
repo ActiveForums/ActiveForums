@@ -1202,8 +1202,9 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             DotNetNuke.Entities.Users.UserController uc = new DotNetNuke.Entities.Users.UserController();
             DotNetNuke.Entities.Users.UserInfo author = uc.GetUser(DotNetNuke.Entities.Portals.PortalController.GetCurrentPortalSettings().PortalId, authorId);
 
-            // Populate the user object with the post author info.  
-            var up = new User
+            // Populate the user object with the post author info if the author still exists.  
+            var up = new User();
+            up = new User
             {
                 UserId = authorId,
                 UserName = username,
@@ -1229,6 +1230,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                         SignatureDisabled = signatureDisabled
                     }
             };
+            if (author != null) up.Email = author.Email;
 
             //Perform Profile Related replacements
             sOutput = TemplateUtils.ParseProfileTemplate(sOutput, up, PortalId, ModuleId, ImagePath, CurrentUserType, true, UserPrefHideAvatars, UserPrefHideSigs, ipAddress, UserId, TimeZoneOffset);
