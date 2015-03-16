@@ -1211,7 +1211,6 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 FirstName = firstName.Replace("&amp;#", "&#"),
                 LastName = lastName.Replace("&amp;#", "&#"),
                 DisplayName = displayName.Replace("&amp;#", "&#"),
-                Email = author.Email,
                 Profile =
                     {
                         UserCaption = userCaption,
