@@ -24,10 +24,10 @@ BEGIN
     
 		UPDATE {databaseOwner}{objectQualifier}activeforums_Content
 		SET DateCreated = @DateUpdated, DateUpdated = @DateUpdated
-		WHERE ContentId in (SELECT ContentId FROM activeforums_Replies WHERE TopicId = @OldTopicId AND ReplyId in (SELECT id FROM @ReplyIds))
+		WHERE ContentId in (SELECT ContentId FROM {databaseOwner}{objectQualifier}activeforums_Replies WHERE TopicId = @OldTopicId AND ReplyId in (SELECT id FROM @ReplyIds))
     
 		INSERT INTO {databaseOwner}{objectQualifier}activeforums_Replies(TopicID,ReplyToId,ContentId,IsApproved,IsRejected,StatusId,IsDeleted) 
-		(SELECT @NewTopicId,0,ContentId,IsApproved,IsRejected,StatusId,IsDeleted FROM activeforums_Replies WHERE ReplyId in (SELECT id FROM @ReplyIds))
+		(SELECT @NewTopicId,0,ContentId,IsApproved,IsRejected,StatusId,IsDeleted FROM {databaseOwner}{objectQualifier}activeforums_Replies WHERE ReplyId in (SELECT id FROM @ReplyIds))
 
 		DELETE FROM {databaseOwner}{objectQualifier}activeforums_Replies
 		WHERE TopicId = @OldTopicId AND ReplyId in (SELECT id FROM @ReplyIds)

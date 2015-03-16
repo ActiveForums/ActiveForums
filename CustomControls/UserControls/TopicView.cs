@@ -1210,7 +1210,6 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 FirstName = firstName.Replace("&amp;#", "&#"),
                 LastName = lastName.Replace("&amp;#", "&#"),
                 DisplayName = displayName.Replace("&amp;#", "&#"),
-                Email = author.Email,
                 Profile =
                     {
                         UserCaption = userCaption,
@@ -1229,6 +1228,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                         SignatureDisabled = signatureDisabled
                     }
             };
+            if (author != null) up.Email = author.Email;
 
             //Perform Profile Related replacements
             sOutput = TemplateUtils.ParseProfileTemplate(sOutput, up, PortalId, ModuleId, ImagePath, CurrentUserType, true, UserPrefHideAvatars, UserPrefHideSigs, ipAddress, UserId, TimeZoneOffset);
