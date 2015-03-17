@@ -1,6 +1,6 @@
 ﻿<dotnetnuke type="Package" version="5.0">
     <packages>
-        <package name="Active Forums" type="Module" version="06.01.04">
+        <package name="Active Forums" type="Module" version="06.01.05">
             <friendlyName>Active Forums</friendlyName>
             <description>Active Forums - Forum module for DotNetNuke</description>
             <iconFile></iconFile>
@@ -326,7 +326,7 @@
                 </component>
             </components>
         </package>
-      <package name="Active Forums What's New" type="Module" version="06.01.02">
+      <package name="Active Forums What's New" type="Module" version="06.01.05">
         <friendlyName>Active Forums What's New</friendlyName>
         <foldername>ActiveForumsWhatsNew</foldername>
         <description>Display the most recent topics or replies from selected forums on any page within your site.</description>

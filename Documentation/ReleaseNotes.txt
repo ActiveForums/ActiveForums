@@ -10,6 +10,13 @@ Active Forums is an award winning, DotNetNuke module that allows you to easily b
 	</div>
     <h3>Release Notes</h3>
 
+	<b>Version 06.01.05</b>
+
+<ul>
+ <li>Pull #241 Cleaned up missing {objectQualifier} from SQL providers and worked on error when null-User present on topic</li>
+ </ul>
+
+
 <b>Version 06.01.04</b>
 
 <ul>
