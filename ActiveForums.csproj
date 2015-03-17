@@ -288,12 +288,8 @@
     <EmbeddedResource Include="CustomControls\Resources\Validation.js" />
     <EmbeddedResource Include="CustomControls\Resources\spacer.gif" />
     <EmbeddedResource Include="sql\FullTextInstallPart2.sql" />
-    <Content Include="Documentation\License.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Documentation\ReleaseNotes.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Documentation\License.txt" />
+    <Content Include="Documentation\ReleaseNotes.txt" />
     <Content Include="ForumEditor.ascx" />
     <Content Include="handlers\adminhelper.ashx" />
     <Content Include="images\add-circle.png" />
