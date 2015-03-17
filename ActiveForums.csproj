@@ -288,8 +288,12 @@
     <EmbeddedResource Include="CustomControls\Resources\Validation.js" />
     <EmbeddedResource Include="CustomControls\Resources\spacer.gif" />
     <EmbeddedResource Include="sql\FullTextInstallPart2.sql" />
-    <Content Include="Documentation\License.txt" />
-    <Content Include="Documentation\ReleaseNotes.txt" />
+    <Content Include="Documentation\License.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Documentation\ReleaseNotes.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="ForumEditor.ascx" />
     <Content Include="handlers\adminhelper.ashx" />
     <Content Include="images\add-circle.png" />
@@ -1339,6 +1343,7 @@
     <EmbeddedResource Include="sql\FullTextInstallPart1.sql" />
     <None Include="ActiveForums.dnn">
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="config\templates\BlogsView.txt" />
     <None Include="sql\05.00.01.SqlDataProvider" />
