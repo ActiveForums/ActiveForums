@@ -688,6 +688,33 @@ namespace DotNetNuke.Modules.ActiveForums {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl cfgAutoSub;
         
         /// <summary>
+        /// trAllowLikes control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow trAllowLikes;
+        
+        /// <summary>
+        /// rdLikesOn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButton rdLikesOn;
+        
+        /// <summary>
+        /// rdLikesOff control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButton rdLikesOff;
+        
+        /// <summary>
         /// lblMaintWarn control.
         /// </summary>
         /// <remarks>
@@ -1001,6 +1028,42 @@ namespace DotNetNuke.Modules.ActiveForums {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox ckAllowBrowseSite;
+        
+        /// <summary>
+        /// ckConvertingToJpegAllowed control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox ckConvertingToJpegAllowed;
+        
+        /// <summary>
+        /// ckAttachInsertAllowed control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox ckAttachInsertAllowed;
+        
+        /// <summary>
+        /// txtMaxAttachWidth control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtMaxAttachWidth;
+        
+        /// <summary>
+        /// txtMaxAttachHeight control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtMaxAttachHeight;
         
         /// <summary>
         /// chkTopicsOnly control.

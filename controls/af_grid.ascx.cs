@@ -35,6 +35,7 @@ namespace DotNetNuke.Modules.ActiveForums
         private int _pageSize = 20;
         private int _rowIndex;
         private DataRow _currentRow;
+        private string _currentTheme = "_default";
         
         #endregion
 
@@ -43,6 +44,8 @@ namespace DotNetNuke.Modules.ActiveForums
         protected override void OnLoad(EventArgs e)
 		{
 			base.OnLoad(e);
+
+            _currentTheme = MainSettings.Theme;
 
             drpTimeFrame.SelectedIndexChanged += DrpTimeFrameSelectedIndexChanged;
             btnMarkRead.ServerClick += BtnMarkReadClick;
@@ -299,6 +302,24 @@ namespace DotNetNuke.Modules.ActiveForums
             var @params = new[] { ParamKeys.ForumId + "=" + forumId, ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.TopicId + "=" + topicId };
 
             return NavigateUrl(TabId, string.Empty, @params);
+        }
+
+        public string GetLastRead()
+        {
+            if (_currentRow == null) return null;
+
+            var forumId = _currentRow["ForumID"].ToString();
+            var topicId = _currentRow["TopicId"].ToString();
+            var userLastRead = _currentRow["UserLastTopicRead"].ToString();
+
+            var @params = new [] {ParamKeys.ForumId + "=" + forumId, ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.TopicId + "=" + topicId, ParamKeys.FirstNewPost + "=" + userLastRead };
+            return NavigateUrl(TabId, string.Empty, @params);
+        }
+
+        public string GetArrowPath()
+        {
+            string theme = Page.ResolveUrl("~/DesktopModules/ActiveForums/themes/" + _currentTheme  + "/images/miniarrow_down.png");
+            return theme;
         }
 
         // Todo: Localize today and yesterday

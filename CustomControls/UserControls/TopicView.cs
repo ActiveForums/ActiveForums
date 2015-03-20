@@ -18,18 +18,19 @@
 // DEALINGS IN THE SOFTWARE.
 //
 
+using DotNetNuke.Modules.ActiveForums.Constants;
+using DotNetNuke.Modules.ActiveForums.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.ComponentModel;
+using System.Data;
+using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Text.RegularExpressions;
 using System.Xml;
-using DotNetNuke.Modules.ActiveForums.Constants;
-using DotNetNuke.Modules.ActiveForums.Extensions;
 
 namespace DotNetNuke.Modules.ActiveForums.Controls
 {
@@ -84,6 +85,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
         private bool _isTrusted;
         private int _topicRating;
         private bool _allowHTML;
+        private bool _allowLikes;
         private bool _allowScript;
         private bool _allowSubscribe;
         private int _nextTopic;
@@ -362,6 +364,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             _topicAuthorDisplayName = _drForum["TopicAuthor"].ToString();
             _topicRating = Utilities.SafeConvertInt(_drForum["TopicRating"]);
             _allowHTML = Utilities.SafeConvertBool(_drForum["AllowHTML"]);
+            _allowLikes = Utilities.SafeConvertBool(_drForum["AllowLikes"]);
             _allowScript = Utilities.SafeConvertBool(_drForum["AllowScript"]);
             _rowCount = Utilities.SafeConvertInt(_drForum["ReplyCount"]) + 1;
             _nextTopic = Utilities.SafeConvertInt(_drForum["NextTopic"]);
@@ -905,18 +908,19 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 }
 				
 				//TODO: Check for owner
-                if (_bModSplit && (_replyCount>0))
-                {
-                    /*var @params = new List<string> { ParamKeys.ViewType + "=post", ParamKeys.TopicId + "=" + TopicId, ParamKeys.ForumId + "=" + ForumId };*/
-                    sbOutput.Replace("[SPLITBUTTONS]", "<div id=\"splitbuttons\"><div><a href=\"javascript:void(0);\" onclick=\"amaf_splitCreate(this," + TopicId + ");\" title=\"[RESX:SplitCreate]\" class=\"dnnPrimaryAction\">[RESX:SplitCreate]</a></div><div><span class=\"NormalBold\">[RESX:SplitHeader]</span> <a href=\"javascript:void(0);\" title=\"[RESX:SplitSave]\" class=\"dnnPrimaryAction af-button-split\" data-id='" + TopicId + "'>[RESX:SplitSave]</a>  <a href=\"javascript:void(0);\" onclick=\"amaf_splitCancel();\" title=\"[RESX:SplitCancel]\" class=\"dnnPrimaryAction\">[RESX:SplitCancel]</a></div></div><script type=\"text/javascript\">var splitposts=new Array();var current_topicid = " + TopicId + ";</script>");
+            }
 
-                    //sbOutput.Replace("[QUICKREPLY]", "<asp:placeholder id=\"plhQuickReply\" runat=\"server\" />");
-                }
-                else
-                {
-                    //sbOutput.Replace("[SPLIT]", "<span class=\"afnormal\">[RESX:NotAuthorizedSplit]</span>");
-                    sbOutput.Replace("[SPLITBUTTONS]", string.Empty);
-                }
+            if (_bModSplit && (_replyCount > 0))
+            {
+                /*var @params = new List<string> { ParamKeys.ViewType + "=post", ParamKeys.TopicId + "=" + TopicId, ParamKeys.ForumId + "=" + ForumId };*/
+                sbOutput.Replace("[SPLITBUTTONS]", "<div id=\"splitbuttons\"><div><a href=\"javascript:void(0);\" onclick=\"amaf_splitCreate(this," + TopicId + ");\" title=\"[RESX:SplitCreate]\" class=\"dnnPrimaryAction\">[RESX:SplitCreate]</a></div><div><span class=\"NormalBold\">[RESX:SplitHeader]</span> <a href=\"javascript:void(0);\" title=\"[RESX:SplitSave]\" class=\"dnnPrimaryAction af-button-split\" data-id='" + TopicId + "'>[RESX:SplitSave]</a>  <a href=\"javascript:void(0);\" onclick=\"amaf_splitCancel();\" title=\"[RESX:SplitCancel]\" class=\"dnnPrimaryAction\">[RESX:SplitCancel]</a></div></div><script type=\"text/javascript\">var splitposts=new Array();var current_topicid = " + TopicId + ";</script>");
+
+                //sbOutput.Replace("[QUICKREPLY]", "<asp:placeholder id=\"plhQuickReply\" runat=\"server\" />");
+            }
+            else
+            {
+                //sbOutput.Replace("[SPLIT]", "<span class=\"afnormal\">[RESX:NotAuthorizedSplit]</span>");
+                sbOutput.Replace("[SPLITBUTTONS]", string.Empty);
             }
 
             // Parent Forum Link
@@ -1206,7 +1210,6 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 FirstName = firstName.Replace("&amp;#", "&#"),
                 LastName = lastName.Replace("&amp;#", "&#"),
                 DisplayName = displayName.Replace("&amp;#", "&#"),
-                Email = author.Email,
                 Profile =
                     {
                         UserCaption = userCaption,
@@ -1225,6 +1228,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                         SignatureDisabled = signatureDisabled
                     }
             };
+            if (author != null) up.Email = author.Email;
 
             //Perform Profile Related replacements
             sOutput = TemplateUtils.ParseProfileTemplate(sOutput, up, PortalId, ModuleId, ImagePath, CurrentUserType, true, UserPrefHideAvatars, UserPrefHideSigs, ipAddress, UserId, TimeZoneOffset);
@@ -1406,6 +1410,43 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             else
             {
                 sbOutput.Replace("[MODEDITDATE]", string.Empty);
+            }
+
+            if (_allowLikes)
+            {
+                Image likeImage = new Image();
+                var likesController = new LikesController();
+                var likes = likesController.GetForPost(contentId);
+
+                bool youLike = likes.Where(o => o.UserId == UserId)
+                    .Select(o => o.Checked)
+                    .FirstOrDefault();
+                string image = string.Empty;
+                if (youLike)
+                    image = "fa-thumbs-o-up";
+                else
+                    image = "fa-thumbs-up";
+
+                likeImage.ImageUrl = image;
+                if (CanReply)
+                {
+                    sbOutput = sbOutput.Replace("[LIKES]", "<i class=\"fa " + image + "\" onclick=\"amaf_likePost(" + UserId + "," + contentId + ")\" > " + likes.Count.ToString() + "</i>");
+                    sbOutput = sbOutput.Replace("[LIKESx2]", "<i class=\"fa " + image + " fa-2x\" onclick=\"amaf_likePost(" + UserId + "," + contentId + ")\" > " + likes.Count.ToString() + "</i>");
+                    sbOutput = sbOutput.Replace("[LIKESx3]", "<i class=\"fa " + image + " fa-3x\" onclick=\"amaf_likePost(" + UserId + "," + contentId + ")\" > " + likes.Count.ToString() + "</i>");
+                }
+                else
+                {
+                    sbOutput = sbOutput.Replace("[LIKES]", "<i class=\"fa " + image + "\" /> " + likes.Count.ToString());
+                    sbOutput = sbOutput.Replace("[LIKESx2]", "<i class=\"fa " + image + " fa-2x\" /> " + likes.Count.ToString());
+                    sbOutput = sbOutput.Replace("[LIKESx3]", "<i class=\"fa " + image + " fa-3x\" /> " + likes.Count.ToString());
+                    //sbOutput = sbOutput.Replace("[LIKES]", "<img src=\"" + image + "\" onclick=\"amaf_likePost(" + UserId + "," + contentId + ")\" /> " + likes.Count.ToString());
+                }
+            }
+            else
+            {
+                sbOutput = sbOutput.Replace("[LIKES]", string.Empty);
+                sbOutput = sbOutput.Replace("[LIKESx2]", string.Empty);
+                sbOutput = sbOutput.Replace("[LIKESx3]", string.Empty);
             }
 
             // Poll Results

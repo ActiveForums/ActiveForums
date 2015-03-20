@@ -583,7 +583,9 @@
     <Content Include="controls\admin_manageforums.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
-    <Content Include="controls\admin_manageforums_forumeditor.ascx" />
+    <Content Include="controls\admin_manageforums_forumeditor.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <Content Include="controls\af_confirmaction.ascx">
       <SubType>Form</SubType>
     </Content>
@@ -645,6 +647,7 @@
     <None Include="sql\05.02.00.SqlDataProvider" />
     <None Include="sql\05.02.01.SqlDataProvider" />
     <None Include="sql\06.00.02.SqlDataProvider" />
+    <None Include="sql\06.01.03.SqlDataProvider" />
     <None Include="sql\Enterprise.sql" />
     <Content Include="config\templates\ModAlert_text.txt" />
     <Content Include="config\templates\ModEmail_text.txt" />
@@ -729,6 +732,8 @@
     <Compile Include="class\HashtableExtensions.cs" />
     <Compile Include="class\DataRowExtensions.cs" />
     <Compile Include="class\DataRecordExtensions.cs" />
+    <Compile Include="class\Likes.cs" />
+    <Compile Include="class\LikesController.cs" />
     <Compile Include="class\ParamBuilder.cs" />
     <Compile Include="class\StringExtensions.cs" />
     <Compile Include="class\WhatsNewModuleSettings.cs" />
@@ -1334,6 +1339,7 @@
     <EmbeddedResource Include="sql\FullTextInstallPart1.sql" />
     <None Include="ActiveForums.dnn">
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="config\templates\BlogsView.txt" />
     <None Include="sql\05.00.01.SqlDataProvider" />

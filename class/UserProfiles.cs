@@ -36,7 +36,9 @@ namespace DotNetNuke.Modules.ActiveForums
                 return string.Empty;
 
             //GIF files when reduced using DNN class losses its animation, so for gifs send them as is
-            string imgUrl = new Entities.Users.UserController().GetUser(portalSettings.PortalId, userID).Profile.PhotoURL;
+            var user = new Entities.Users.UserController().GetUser(portalSettings.PortalId, userID);
+            string imgUrl = string.Empty;
+            if (user != null) imgUrl = user.Profile.PhotoURL;
             if (!string.IsNullOrWhiteSpace(imgUrl) && imgUrl.ToLower().EndsWith("gif"))
             {
                 return "<img class='af-avatar' src='" + imgUrl + "' height='" + avatarHeight + "px' width='" + avatarWidth + "px' />";

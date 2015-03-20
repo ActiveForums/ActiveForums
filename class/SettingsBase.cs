@@ -395,15 +395,13 @@ namespace DotNetNuke.Modules.ActiveForums
                         if (UserInfo.Profile.PreferredTimeZone != null)
                         {
                             /* get the portal timezone offset so we can calculate differences for users */
-                            int portalTimeZone = Convert.ToInt32(PortalController.GetCurrentPortalSettings().TimeZone.BaseUtcOffset.TotalHours);
-                            int userTimeZone = Convert.ToInt32(UserInfo.Profile.PreferredTimeZone.BaseUtcOffset.TotalHours);
+                            int portalTimeZone = Convert.ToInt32(PortalController.GetCurrentPortalSettings().TimeZone.BaseUtcOffset.TotalMinutes);
+                            int userTimeZone = Convert.ToInt32(UserInfo.Profile.PreferredTimeZone.BaseUtcOffset.TotalMinutes);
                             if (userTimeZone != portalTimeZone)
                             {
                                 timeOffset = Math.Abs(portalTimeZone - userTimeZone);
                                 if (portalTimeZone > userTimeZone)
-                                    timeOffset = -timeOffset;
-                                /* convert to minutes */
-                                timeOffset = timeOffset * 60;
+                                    timeOffset = -timeOffset; 
                             }
                         }
                     }

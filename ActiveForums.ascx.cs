@@ -52,8 +52,7 @@ namespace DotNetNuke.Modules.ActiveForums
         {
             base.OnLoad(e);
 
-            // If the forum instance is on the user profile page, load the users prefs control
-            if (PortalSettings.UserTabId == PortalSettings.ActiveTab.ParentId)
+            if (Request.QueryString["afgt"] == "afprofile" || PortalSettings.UserTabId == PortalSettings.ActiveTab.ParentId)
             {
                 int userId;
 

@@ -1,0 +1,164 @@
+﻿SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_Likes]') AND type in (N'U'))
+	DROP TABLE {databaseOwner}[{objectQualifier}activeforums_Likes]
+
+CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Likes](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[PostId] [int] NOT NULL,
+	[UserId] [int] NOT NULL,
+	[Checked] [bit] NOT NULL,
+ CONSTRAINT [PK_activeforums_Likes] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER PROCEDURE {databaseOwner}{objectQualifier}activeforums_UI_TopicView
+@PortalId int,
+@ModuleId int,
+@ForumId int,
+@TopicId int,
+@UserId int,
+@RowIndex int, 
+@MaxRows int,
+@IsSuperUser bit = 0,
+@Sort varchar(10) = 'ASC'
+AS
+--Forum/Group/Topic Info
+DECLARE @LastPostId int
+DECLARE @ReplyCount int
+SET @ReplyCount = (Select Count(ReplyId) from {databaseOwner}{objectQualifier}activeforums_Replies WHERE TopicId = @TopicId AND IsDeleted = 0 AND IsApproved = 1)
+DECLARE @Tags nvarchar(1000)
+SET @Tags= RTRIM(IsNull({databaseOwner}{objectQualifier}activeforums_Topics_GetTags(@TopicId),''))
+BEGIN
+SELECT     
+	v.ForumGroupId, 
+	v.ModuleId, 
+	v.GroupName, 
+	v.GroupActive, 
+	v.GroupHidden, 
+	v.ForumId, 
+	v.ParentForumId, 
+	v.ForumName, 
+	v.ForumDesc, 
+	v.ForumActive, 
+	v.ForumHidden, 
+	v.TotalTopics, 
+	ISNULL(v.TotalReplies, 0) AS TotalReplies,
+	v.LastPostId,
+	v.GroupSettingsKey,
+	v.ForumSettingsKey,
+	TopicTemplateId = IsNull((SELECT SettingValue FROM {databaseOwner}{objectQualifier}activeforums_Settings WHERE SettingName = 'TOPICTEMPLATEID' and GroupKey = v.ForumSettingsKey),0),
+	
+						  IsNull((SELECT     SettingValue
+							FROM          {databaseOwner}{objectQualifier}activeforums_Settings AS {objectQualifier}activeforums_Settings_1
+							WHERE      (SettingName = 'ALLOWRSS') AND (GroupKey = v.ForumSettingsKey)),0) AS AllowRSS,
+						  IsNull((SELECT     SettingValue
+							FROM          {databaseOwner}{objectQualifier}activeforums_Settings AS {objectQualifier}activeforums_Settings_3
+							WHERE      (SettingName = 'ALLOWHTML') AND (GroupKey = v.ForumSettingsKey)),0) AS AllowHTML,
+						  IsNull((SELECT     SettingValue
+							FROM          {databaseOwner}{objectQualifier}activeforums_Settings AS activeforums_Settings_3
+							WHERE      (SettingName = 'ALLOWLIKES') AND (GroupKey = v.ForumSettingsKey)),0) AS AllowLikes,
+						  IsNull((SELECT     SettingValue
+							FROM          {databaseOwner}{objectQualifier}activeforums_Settings AS {objectQualifier}activeforums_Settings_2
+							WHERE      (SettingName = 'ALLOWSCRIPT') AND (GroupKey = v.ForumSettingsKey)),0) AS AllowScript,
+							IsNull((SELECT     SettingValue
+							FROM          {databaseOwner}{objectQualifier}activeforums_Settings
+							WHERE      (SettingName = 'ALLOWTAGS') AND (GroupKey = v.ForumSettingsKey)),0) AS AllowTags,
+							 FT.TopicId,
+						  (SELECT     ISNULL(AVG(Rating), 0) AS Expr1
+							FROM          {databaseOwner}{objectQualifier}activeforums_Topics_Ratings
+							WHERE      (TopicId = @TopicId)) AS TopicRating,
+ISNULL
+						  ((SELECT     Id
+							  FROM         {databaseOwner}{objectQualifier}activeforums_Subscriptions
+							  WHERE     (ForumId = @ForumId) AND (TopicId = @TopicId) AND (UserId = @UserId)), 0) AS IsSubscribedTopic, ISNULL
+						  ((SELECT     Id
+							  FROM         {databaseOwner}{objectQualifier}activeforums_Subscriptions AS activeforums_Subscriptions_1
+							  WHERE     (ForumId = @ForumId) AND (TopicId = 0) AND (UserId = @UserId)), 0) AS IsSubscribedForum,
+						CASE WHEN FT.LastReplyId is NULL THEN IsNull(T.DateCreated,'') ELSE IsNull(R.DateCreated,'') END AS LastPostDate, 
+						CASE WHEN FT.LastReplyId is NULL THEN IsNull(T.AuthorId,'') ELSE IsNull(R.AuthorId,'') END AS LastPostAuthorId, 
+						CASE WHEN FT.LastReplyId is NULL THEN IsNull(T.AuthorName,'') ELSE IsNull(R.AuthorName,'') END AS LastPostAuthorName,
+						CASE WHEN FT.LastReplyId is NULL THEN IsNull(T.UserName,'') ELSE IsNull(R.Username,'') END AS LastPostUserName,
+						CASE WHEN FT.LastReplyId is NULL THEN IsNull(T.FirstName,'') ELSE IsNull(R.FirstName,'') END AS LastPostFirstName, 
+						CASE WHEN FT.LastReplyId is NULL THEN IsNull(T.LastName,'') ELSE IsNull(R.LastName,'') END AS LastPostLastName, 
+						CASE WHEN FT.LastReplyId is NULL THEN IsNull(T.DisplayName,'') ELSE IsNull(R.DisplayName,'') END AS LastPostDisplayName, T.Subject, T.Summary, T.Body, T.AuthorId, T.AuthorName, T.Username, T.FirstName, T.LastName, 
+					  T.DisplayName, T.DateCreated, T.DateUpdated, T.ViewCount, @ReplyCount as ReplyCount, T.IsPinned, T.IsLocked, T.StatusId, T.TopicIcon, T.TopicType, @Tags as Tags,ISNULL(t.TopicData,'') as TopicData,
+					  {databaseOwner}{objectQualifier}activeforums_Poll.PollID,
+					aft.NextTopic, 
+					aft.PrevTopic,
+					t.URL,
+					T.AuthorName as TopicAuthor
+FROM
+	{databaseOwner}{objectQualifier}activeforums_Topics aft INNER JOIN          
+	{databaseOwner}{objectQualifier}activeforums_ForumTopics AS FT ON aft.TopicId = FT.TopicId INNER JOIN
+					  {databaseOwner}{objectQualifier}vw_activeforums_GroupForum AS v ON FT.ForumId = v.ForumId INNER JOIN
+					  {databaseOwner}{objectQualifier}vw_activeforums_ForumTopics AS T ON FT.TopicId = T.TopicId LEFT OUTER JOIN
+					  {databaseOwner}{objectQualifier}vw_activeforums_ForumReplies AS R ON FT.LastReplyId = R.ReplyId AND FT.LastReplyId IS NOT NULL LEFT OUTER JOIN
+					  {databaseOwner}{objectQualifier}activeforums_Poll ON T.TopicId = {databaseOwner}{objectQualifier}activeforums_Poll.TopicId
+WHERE     (v.ForumActive = 1) AND (v.ModuleId = @ModuleId) AND (v.ForumId = @ForumId) AND (FT.TopicId = @TopicId)
+END
+--Forum Security
+BEGIN
+	Select p.* from {databaseOwner}{objectQualifier}activeforums_Permissions as p INNER JOIN {databaseOwner}{objectQualifier}activeforums_Forums as f ON f.PermissionsId = p.PermissionsId WHERE f.ForumId = @ForumId
+	
+END
+--Get Topic and Replies
+	SELECT	ForumId, TopicId, ReplyId, [Subject], Summary, AuthorId, StatusId, AuthorName, UserName, FirstName, LastName,
+			DisplayName, DateCreated, DateUpdated, Body, TopicCount, ReplyCount, ViewCount, AnswerCount,
+			RewardPoints, UserDateCreated, DateLastActivity, UserCaption, [Signature], SignatureDisabled,
+			UserPostCount, UserTotalPoints,IPAddress,Avatar,AvatarType,AvatarDisabled,Yahoo,MSN,ICQ,AOL,Occupation,Location,Interests,WebSite,MemberSince,
+			ContentId,IsUserOnline,ReplyToId,	UserRoles = {databaseOwner}{objectQualifier}activeforums_UserProfiles_GetUserRoles(AuthorId, @PortalID, GetDate(),0),
+			@Tags as Tags
+			
+	FROM
+			(
+			SELECT	T.ForumId, T.TopicId, T.ReplyId, T.Subject, T.Summary, T.AuthorId, T.StatusId, IsNull(T.AuthorName,'anon') as AuthorName, IsNull(T.Username,IsNull(T.AuthorName,'anon')) as Username,
+			IsNull(T.FirstName,'') as FirstName, IsNull(T.LastName,'') as LastName,IsNull(T.DisplayName,T.AuthorName) as DisplayName,
+			T.DateCreated, T.DateUpdated, C.Body, IsNull(P.TopicCount,0) as TopicCount, IsNull(P.ReplyCount,0) as ReplyCount,
+			IsNull(P.ViewCount,0) as ViewCount, IsNull(P.AnswerCount,0) as AnswerCount, IsNull(P.RewardPoints,0) as RewardPoints,
+			IsNull(P.DateCreated,'') AS UserDateCreated, IsNull(P.DateLastActivity,'') as DateLastActivity, 
+			IsNull(P.UserCaption,'') as UserCaption, IsNull(P.Signature,'') as [Signature], IsNull(P.SignatureDisabled,0) as SignatureDisabled, 
+			UserPostCount = (IsNull(P.TopicCount,0) + IsNull(P.ReplyCount,0)), 
+			UserTotalPoints = (IsNull(P.TopicCount,0) + IsNull(P.ReplyCount,0) + IsNull(P.AnswerCount,0) + IsNull(P.RewardPoints,0)),
+			C.IPAddress, IsNull(P.Avatar,'') as Avatar, IsNull(P.AvatarType,0) as AvatarType, IsNull(P.AvatarDisabled,0) as AvatarDisabled,
+			IsNull(P.Yahoo,'') as Yahoo, IsNull(P.MSN,'') as MSN, IsNull(P.ICQ,'') as ICQ, IsNull(P.AOL,'') as AOL, IsNull(P.Occupation,'') as Occupation, 
+			IsNull(P.Location,'') as Location, IsNull(P.Interests,'') as Interests, IsNull(P.WebSite,'') as WebSite, IsNull(P.DateCreated,'') as MemberSince,
+			C.ContentId, IsUserOnline = (CASE WHEN DATEDIFF(mi,p.DateLastActivity,GetDate()) <=1 THEN 1 ELSE 0 END),T.ReplyToId,
+			ROW_NUMBER() OVER (Order By 
+								CASE
+									WHEN @Sort = 'DESC' THEN T.DateCreated END DESC,
+								CASE 
+									WHEN @Sort = 'ASC' THEN T.DateCreated END ASC
+								) as RowRank
+			FROM	{databaseOwner}{objectQualifier}vw_activeforums_TopicView AS T INNER JOIN
+					{databaseOwner}{objectQualifier}activeforums_Content AS C ON T.ContentId = C.ContentId LEFT OUTER JOIN
+					{databaseOwner}{objectQualifier}activeforums_UserProfiles AS P ON C.AuthorId = P.UserId AND P.PortalId = @PortalId AND P.ModuleId = -1
+			WHERE     (T.TopicId = @TopicId)
+			)
+		AS TopicWithRowNumbers
+		WHERE RowRank > @RowIndex AND RowRank <= (@RowIndex + @MaxRows)
+
+--Get Attachments
+SELECT     A.AttachId, A.ContentId, A.UserID, A.[FileName], A.ContentType, A.FileSize, A.FileID
+FROM        {databaseOwner}{objectQualifier}activeforums_Attachments AS A inner join
+			{databaseOwner}{objectQualifier}vw_activeforums_TopicView AS T ON A.ContentId = T.ContentId
+WHERE     (T.TopicId = @TopicId AND (A.AllowDownload = 1 OR A.AllowDownload IS NULL))
+
+--Update View Count
+UPDATE {databaseOwner}{objectQualifier}activeforums_Topics SET ViewCount = (ViewCount+1) WHERE TopicId = @TopicId
+If @UserId > 0
+BEGIN
+SELECT @LastPostId = IsNull(LastReplyId,0) FROM {databaseOwner}{objectQualifier}activeforums_ForumTopics WHERE ForumId = @ForumId AND TopicId = @TopicId
+exec {databaseOwner}{objectQualifier}activeforums_Forums_Tracking_UpdateUser @ModuleId, @UserId, @ForumId	
+SET @LastPostId = IsNull(@LastPostId,0)
+exec {databaseOwner}{objectQualifier}activeforums_Topics_Tracking_UpdateUser @ForumId, @TopicId, @LastPostId, @UserId
+exec {databaseOwner}{objectQualifier}activeforums_UserProfiles_UpdateActivity @PortalId, @ModuleId, @UserId
+END

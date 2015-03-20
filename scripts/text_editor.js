@@ -1,4 +1,6 @@
-﻿function amaf_insertHTML(html) {
+﻿window.isTextEditor = true;
+
+function amaf_insertHTML(html) {
     if (document.getElementById(afeditor).createTextRange) {
         document.getElementById(afeditor).focus(document.getElementById(afeditor).caretPos);
         document.getElementById(afeditor).caretPos = document.selection.createRange().duplicate();

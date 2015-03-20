@@ -30,7 +30,7 @@ namespace DotNetNuke.Modules.ActiveForums
 {
     [ValidateAntiForgeryToken]
     [SupportedModules("Active Forums")]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     public class AdminServiceController : DnnApiController
     {
         // DTO for ToggleUrlHandler

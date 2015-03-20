@@ -78,7 +78,7 @@
 							</tr>
 							[/AF:CONTROL:TAGS]
 							<tr>
-								<td colspan="2" class="afposteditdate" align="right">[MODEDITDATE]</td>
+								<td colspan="2" class="afposteditdate" align="right">[MODEDITDATE][LIKESx2]</td>
 							</tr>
 						</table>				
 					</td>
@@ -103,7 +103,7 @@
 								<td colspan="2" class="afpostattach">[ATTACHMENTS]</td>
 							</tr>
 							<tr>
-								<td colspan="2" class="afposteditdate" align="right">[MODEDITDATE]</td>
+								<td colspan="2" class="afposteditdate" align="right">[MODEDITDATE][LIKESx2]</td>
 							</tr>
 						</table>				
 					</td>
