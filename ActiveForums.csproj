@@ -568,7 +568,9 @@
     <Content Include="controls\af_members.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
-    <Content Include="controls\af_modreport.ascx" />
+    <Content Include="controls\af_modreport.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <Content Include="controls\af_polledit.ascx" />
     <Content Include="controls\af_search.ascx">
       <SubType>ASPXCodeBehind</SubType>

@@ -288,6 +288,17 @@ namespace DotNetNuke.Modules.ActiveForums
             return NavigateUrl(tabId, controlKey, string.Empty, -1, additionalParameters);
         }
 
+        public static string NavigateUrl(int tabId, string controlKey, List<string> additionalParameters)
+        {
+            
+            string[] parameters = new string[additionalParameters.Count];
+            for (int i = 0; i < additionalParameters.Count; i++ )
+            {
+                parameters[i] = additionalParameters[i];
+            }
+            return NavigateUrl(tabId, controlKey, parameters);
+        }
+
         public static string NavigateUrl(int tabId, string controlKey, string pageName, int portalId, params string[] additionalParameters)
         {
             var currParams = additionalParameters.ToList();

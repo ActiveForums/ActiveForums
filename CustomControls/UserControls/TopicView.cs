@@ -1341,7 +1341,9 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 if (replyId == 0)
                     sAction = "te";
 
-                var editParams = new[] { ParamKeys.ViewType + "=post", "action=" + sAction, ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + topicId, "postid=" + postId };
+                //var editParams = new[] { ParamKeys.ViewType + "=post", "action=" + sAction, ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + topicId, "postid=" + postId };
+                var editParams = new List<string>() { ParamKeys.ViewType + "=post", "action=" + sAction, ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + topicId, "postid=" + postId };
+                if (SocialGroupId > 0) editParams.Add(ParamKeys.GroupIdName + "=" + SocialGroupId);
                 if (_useListActions)
                     sbOutput.Replace("[ACTIONS:EDIT]", "<li class=\"af-edit\" onclick=\"window.location.href='" + Utilities.NavigateUrl(TabId, "", editParams) + "';\" title=\"[RESX:Edit]\"><em></em>[RESX:Edit]</li>");
                 else
@@ -1355,8 +1357,13 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             // Reply and Quote Actions
             if (!_bLocked && CanReply)
             {
-                var quoteParams = new[] { ParamKeys.ViewType + "=post", ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + topicId, ParamKeys.QuoteId + "=" + postId };
-                var replyParams = new[] { ParamKeys.ViewType + "=post", ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + topicId, ParamKeys.ReplyId + "=" + postId };
+                var quoteParams = new List<string> { ParamKeys.ViewType + "=post", ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + topicId, ParamKeys.QuoteId + "=" + postId };
+                var replyParams = new List<string> { ParamKeys.ViewType + "=post", ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + topicId, ParamKeys.ReplyId + "=" + postId };
+                if (SocialGroupId > 0)
+                {
+                    quoteParams.Add(ParamKeys.GroupIdName + "=" + SocialGroupId);
+                    replyParams.Add(ParamKeys.GroupIdName + "=" + SocialGroupId);
+                }
                 if (_useListActions)
                 {
                     sbOutput.Replace("[ACTIONS:QUOTE]", "<li class=\"af-quote\" onclick=\"window.location.href='" + Utilities.NavigateUrl(TabId, "", quoteParams) + "';\" title=\"[RESX:Quote]\"><em></em>[RESX:Quote]</li>");
@@ -1480,7 +1487,9 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             }
 
             // Mod Alert
-            var alertParams = new[] { ParamKeys.ViewType + "=modreport", ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + topicId, ParamKeys.ReplyId + "=" + postId };
+            //var alertParams = new[] { ParamKeys.ViewType + "=modreport", ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + topicId, ParamKeys.ReplyId + "=" + postId };
+            var alertParams = new List<string> { ParamKeys.ViewType + "=modreport", ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + topicId, ParamKeys.ReplyId + "=" + postId };
+            if (SocialGroupId > 0) alertParams.Add(String.Format("{0}={1}", ParamKeys.GroupIdName, SocialGroupId));
             if (Request.IsAuthenticated)
             {
                 if (_useListActions)

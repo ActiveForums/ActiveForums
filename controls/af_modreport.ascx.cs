@@ -138,7 +138,9 @@ namespace DotNetNuke.Modules.ActiveForums
                 int templateId = 0;
                 TemplateController tc = new TemplateController();
                 TemplateInfo ti = tc.Template_Get("ModAlert", PortalId, ModuleId);
-                string sUrl = NavigateUrl(Convert.ToInt32(Request.QueryString["TabId"]), "", new string[] { ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + TopicId, ParamKeys.ViewType + "=confirmaction", ParamKeys.ConfirmActionId + "=" + ConfirmActions.AlertSent });
+                string sUrl;
+                if (SocialGroupId > 0) sUrl = NavigateUrl(Convert.ToInt32(Request.QueryString["TabId"]), "", new string[] { ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + TopicId, ParamKeys.ViewType + "=confirmaction", ParamKeys.ConfirmActionId + "=" + ConfirmActions.AlertSent + "&" + ParamKeys.GroupIdName + "=" + SocialGroupId });
+                else sUrl = NavigateUrl(Convert.ToInt32(Request.QueryString["TabId"]), "", new string[] { ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + TopicId, ParamKeys.ViewType + "=confirmaction", ParamKeys.ConfirmActionId + "=" + ConfirmActions.AlertSent });
 
                 NotificationType notificationType = NotificationsController.Instance.GetNotificationType("AF-ContentAlert");
                 TopicsController topicController = new TopicsController();
