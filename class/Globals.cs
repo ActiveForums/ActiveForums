@@ -299,6 +299,7 @@ namespace DotNetNuke.Modules.ActiveForums
 	{
 		public const string ForumId = "aff";
 		public const string GroupId = "afg";
+        public const string GroupIdName = "GroupId";
 		public const string TopicId = "aft";
 		public const string ReplyId = "afr";
 		public const string ViewType = "afv";

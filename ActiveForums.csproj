@@ -553,7 +553,9 @@
     <Content Include="controls\admin_home.ascx" />
     <Content Include="controls\admin_manageforums_home.ascx" />
     <Content Include="controls\admin_ranks.ascx" />
-    <Content Include="controls\admin_tags.ascx" />
+    <Content Include="controls\admin_tags.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <Content Include="controls\admin_templates.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>

@@ -1039,10 +1039,18 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 sbOutput.Replace("[NEXTTOPIC]", string.Empty);
             else
             {
+                string nextTopic;
                 if (MainSettings.UseShortUrls)
-                    sbOutput.Replace("[NEXTTOPIC]", "<a href=\"" + Utilities.NavigateUrl(TabId, "", ParamKeys.TopicId + "=" + _nextTopic) + "\" rel=\"nofollow\"><span>[RESX:NextTopic]</span><img src=\"~/DesktopModules/ActiveForums/themes/" + _myTheme + "/images/arrow_right_blue.gif\" runat=server style=\"vertical-align:middle;\" border=\"0\" alt=\"[RESX:NextTopic]\" /></a>");
+                {
+                    if (SocialGroupId > 0) nextTopic = Utilities.NavigateUrl(TabId, "", ParamKeys.TopicId + "=" + _nextTopic + "&" + ParamKeys.GroupIdName + "=" + SocialGroupId);
+                    else nextTopic = Utilities.NavigateUrl(TabId, "", ParamKeys.TopicId + "=" + _nextTopic);
+                }
                 else
-                    sbOutput.Replace("[NEXTTOPIC]", "<a href=\"" + Utilities.NavigateUrl(TabId, "", ParamKeys.ForumId + "=" + ForumId + "&" + ParamKeys.TopicId + "=" + _nextTopic + "&" + ParamKeys.ViewType + "=" + Views.Topic) + "\" rel=\"nofollow\"><span>[RESX:NextTopic]</span><img src=\"~/DesktopModules/ActiveForums/themes/" + _myTheme + "/images/arrow_right_blue.gif\" runat=server style=\"vertical-align:middle;\" border=\"0\" alt=\"[RESX:NextTopic]\" /></a>");
+                {
+                    if (SocialGroupId > 0) nextTopic = Utilities.NavigateUrl(TabId, "", ParamKeys.ForumId + "=" + ForumId + "&" + ParamKeys.TopicId + "=" + _nextTopic + "&" + ParamKeys.ViewType + "=" + Views.Topic + "&" + ParamKeys.GroupId + SocialGroupId);
+                    else nextTopic = Utilities.NavigateUrl(TabId, "", ParamKeys.ForumId + "=" + ForumId + "&" + ParamKeys.TopicId + "=" + _nextTopic + "&" + ParamKeys.ViewType + "=" + Views.Topic);
+                }
+                sbOutput.Replace("[NEXTTOPIC]", "<a href=\"" + nextTopic + "\" rel=\"nofollow\"><span>[RESX:NextTopic]</span><img src=\"~/DesktopModules/ActiveForums/themes/" + _myTheme + "/images/arrow_right_blue.gif\" runat=server style=\"vertical-align:middle;\" border=\"0\" alt=\"[RESX:NextTopic]\" /></a>");
             }
 
             // Previous Topic
@@ -1050,10 +1058,18 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 sbOutput.Replace("[PREVTOPIC]", string.Empty);
             else
             {
+                string prevTopic;
                 if (MainSettings.UseShortUrls)
-                    sbOutput.Replace("[PREVTOPIC]", "<a href=\"" + Utilities.NavigateUrl(TabId, "", ParamKeys.TopicId + "=" + _prevTopic) + "\" rel=\"nofollow\"><img src=\"~/DesktopModules/ActiveForums/themes/" + _myTheme + "/images/arrow_left_blue.gif\" runat=server style=\"vertical-align:middle;\" border=\"0\" alt=\"[RESX:PrevTopic]\" /><span>[RESX:PrevTopic]</span></a>");
+                {
+                    if (SocialGroupId > 0) prevTopic = Utilities.NavigateUrl(TabId, "", ParamKeys.TopicId + "=" + _prevTopic + "&" + ParamKeys.GroupIdName + "=" + SocialGroupId);
+                    else prevTopic = Utilities.NavigateUrl(TabId, "", ParamKeys.TopicId + "=" + _prevTopic);
+                }
                 else
-                    sbOutput.Replace("[PREVTOPIC]", "<a href=\"" + Utilities.NavigateUrl(TabId, "", ParamKeys.ForumId + "=" + ForumId + "&" + ParamKeys.TopicId + "=" + _prevTopic + "&" + ParamKeys.ViewType + "=" + Views.Topic) + "\" rel=\"nofollow\"><img src=\"~/DesktopModules/ActiveForums/themes/" + _myTheme + "/images/arrow_left_blue.gif\" runat=server style=\"vertical-align:middle;\" border=\"0\" alt=\"[RESX:PrevTopic]\" /><span>[RESX:PrevTopic]</span></a>");
+                {
+                    if (SocialGroupId > 0) prevTopic = Utilities.NavigateUrl(TabId, "", ParamKeys.ForumId + "=" + ForumId + "&" + ParamKeys.TopicId + "=" + _prevTopic + "&" + ParamKeys.ViewType + "=" + Views.Topic + "&" + ParamKeys.GroupIdName + "=" + SocialGroupId);
+                    else prevTopic = Utilities.NavigateUrl(TabId, "", ParamKeys.ForumId + "=" + ForumId + "&" + ParamKeys.TopicId + "=" + _prevTopic + "&" + ParamKeys.ViewType + "=" + Views.Topic);
+                }
+                sbOutput.Replace("[PREVTOPIC]", "<a href=\"" + prevTopic + "\" rel=\"nofollow\"><img src=\"~/DesktopModules/ActiveForums/themes/" + _myTheme + "/images/arrow_left_blue.gif\" runat=server style=\"vertical-align:middle;\" border=\"0\" alt=\"[RESX:PrevTopic]\" /><span>[RESX:PrevTopic]</span></a>");
             }
 
             // Topic Status
