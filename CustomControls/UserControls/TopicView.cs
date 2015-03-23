@@ -62,6 +62,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
         private bool _bModSplit;
         private bool _bModDelete;
         private bool _bModEdit;
+        private bool _bModMove;
         private bool _bAllowRSS;
         private int _rowIndex;
         private int _pageSize = 20;
@@ -344,6 +345,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             _bModApprove = Permissions.HasPerm(_drSecurity["CanModApprove"].ToString(), ForumUser.UserRoles);
             _bTrust = Permissions.HasPerm(_drSecurity["CanTrust"].ToString(), ForumUser.UserRoles);
             _bModEdit = Permissions.HasPerm(_drSecurity["CanModEdit"].ToString(), ForumUser.UserRoles);
+            _bModMove = Permissions.HasPerm(_drSecurity["CanModMove"].ToString(), ForumUser.UserRoles);
 
             _isTrusted = Utilities.IsTrusted((int)ForumInfo.DefaultTrustValue, ForumUser.TrustLevel, Permissions.HasPerm(ForumInfo.Security.Trust, ForumUser.UserRoles));
 
@@ -850,6 +852,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 sbOutput.Replace("[ACTIONS:REPLY]", string.Empty);
                 sbOutput.Replace("[ACTIONS:ANSWER]", string.Empty);
                 sbOutput.Replace("[ACTIONS:ALERT]", string.Empty);
+                sbOutput.Replace("[ACTIONS:MOVE]", string.Empty);
                 sbOutput.Replace("[RESX:SortPosts]:", string.Empty);
                 sbOutput.Append("<img src=\"~/desktopmodules/activeforums/images/spacer.gif\" width=\"800\" height=\"1\" runat=\"server\" alt=\"---\" />");
             }
@@ -1380,6 +1383,17 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 sbOutput.Replace("[ACTIONS:QUOTE]", string.Empty);
                 sbOutput.Replace("[ACTIONS:REPLY]", string.Empty);
             }
+
+            if (_bModMove)
+            {
+                sbOutput = sbOutput.Replace("[ACTIONS:MOVE]", "<img onclick=\"javascript:amaf_openMove([TOPICID]);\" src=\"" + ImagePath + "/images/topic_move.gif\" border=\"0\" alt=\"[RESX:MoveTopic]\" style=\"cursor:pointer;vertical-align:middle;\" />");
+            }
+            else
+            {
+                sbOutput = sbOutput.Replace("[ACTIONS:MOVE]", string.Empty);
+            }
+
+            sbOutput = sbOutput.Replace("[TOPICID]", TopicId.ToString());
 
             // Status
             if (_statusId <= 0 || (_statusId == 3 && replyStatusId == 0))
