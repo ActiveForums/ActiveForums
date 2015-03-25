@@ -7,6 +7,10 @@ GO
 IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_Likes]') AND type in (N'U'))
 	DROP TABLE {databaseOwner}[{objectQualifier}activeforums_Likes]
 
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_SettingsTable]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+DROP FUNCTION {databaseOwner}[{objectQualifier}activeforums_SettingsTable]
+GO
+
 CREATE TABLE {databaseOwner}[{objectQualifier}activeforums_Likes](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[PostId] [int] NOT NULL,
@@ -163,8 +167,6 @@ exec {databaseOwner}{objectQualifier}activeforums_Topics_Tracking_UpdateUser @Fo
 exec {databaseOwner}{objectQualifier}activeforums_UserProfiles_UpdateActivity @PortalId, @ModuleId, @UserId
 END
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_SettingsTable]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
-DROP FUNCTION {databaseOwner}[{objectQualifier}activeforums_SettingsTable]
 GO
 
 CREATE FUNCTION {databaseOwner}[{objectQualifier}activeforums_SettingsTable](	

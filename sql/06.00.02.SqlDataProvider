@@ -9,6 +9,9 @@ IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwn
 DROP PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Reply_Save]
 GO
 
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_Replies_Split]') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Replies_Split]
+GO
 
 CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Reply_Save]
 @PortalId int,
