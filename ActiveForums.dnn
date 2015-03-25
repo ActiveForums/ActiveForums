@@ -276,10 +276,6 @@
                         <version>05.02.01</version>
                       </script>
                       <script type="Install">
-                        <name>05.02.02.SqlDataProvider</name>
-                        <version>05.02.02</version>
-                      </script>
-                      <script type="Install">
                         <name>05.02.04.SqlDataProvider</name>
                         <version>05.02.04</version>
                       </script>

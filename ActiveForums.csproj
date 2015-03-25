@@ -1347,7 +1347,6 @@
     <None Include="config\templates\BlogsView.txt" />
     <None Include="sql\05.00.01.SqlDataProvider" />
     <None Include="sql\05.01.00.SqlDataProvider" />
-    <None Include="sql\05.02.02.SqlDataProvider" />
     <None Include="WhatsNewResources.zip" />
   </ItemGroup>
   <ItemGroup>
