@@ -176,6 +176,7 @@ namespace DotNetNuke.Modules.ActiveForums
             {
                 template = template.Replace("[AF:TB:NotRead]", string.Format("<a href=\"{0}\">[RESX:NotRead]</a>", ctlUtils.BuildUrl(tabId, moduleId, string.Empty, string.Empty, -1, -1, -1, -1, "notread", 1, -1, -1)));
                 template = template.Replace("[AF:TB:MyTopics]", string.Format("<a href=\"{0}\">[RESX:MyTopics]</a>", ctlUtils.BuildUrl(tabId, moduleId, string.Empty, string.Empty, -1, -1, -1, -1, "mytopics", 1, -1, -1)));
+                template = template.Replace("[AF:TB:MyResolved]", string.Format("<a href=\"{0}\">[RESX:MyResolved]</a>", ctlUtils.BuildUrl(tabId, moduleId, string.Empty, string.Empty, -1, -1, -1, -1, "myresolved", 1, -1, -1)));
                 template = template.Replace("[AF:TB:MySettings]", string.Format("<a href=\"{0}\">[RESX:MySettings]</a>", ctlUtils.BuildUrl(tabId, moduleId, string.Empty, string.Empty, -1, -1, -1, -1, "afprofile", 1, -1, -1)));
              
                 if (currentUserType == CurrentUserTypes.Admin || currentUserType == CurrentUserTypes.SuperUser)
@@ -192,11 +193,13 @@ namespace DotNetNuke.Modules.ActiveForums
             {
                 template = template.Replace("[AF:TB:NotRead]", string.Empty);
                 template = template.Replace("[AF:TB:MyTopics]", string.Empty);
+                template = template.Replace("[AF:TB:MyResolved]", string.Empty);
                 template = template.Replace("[AF:TB:ModList]", string.Empty);
                 template = template.Replace("[AF:TB:ControlPanel]", string.Empty);
             }
 
             template = template.Replace("[AF:TB:Unanswered]", string.Format("<a href=\"{0}\">[RESX:Unanswered]</a>", ctlUtils.BuildUrl(tabId, moduleId, string.Empty, string.Empty, -1, -1, -1, -1, "unanswered", 1, -1, -1)));
+            template = template.Replace("[AF:TB:Unresolved]", string.Format("<a href=\"{0}\">[RESX:Unresolved]</a>", ctlUtils.BuildUrl(tabId, moduleId, string.Empty, string.Empty, -1, -1, -1, -1, "unresolved", 1, -1, -1)));
             template = template.Replace("[AF:TB:ActiveTopics]", string.Format("<a href=\"{0}\">[RESX:ActiveTopics]</a>", ctlUtils.BuildUrl(tabId, moduleId, string.Empty, string.Empty, -1, -1, -1, -1, "activetopics", 1, -1, -1)));
             template = template.Replace("[AF:TB:Forums]", string.Format("<a href=\"{0}\">[RESX:FORUMS]</a>", NavigateUrl(tabId)));
 
