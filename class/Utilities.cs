@@ -122,7 +122,7 @@ namespace DotNetNuke.Modules.ActiveForums
 
             var sKey = string.Empty;
             var sReplace = string.Empty;
-            
+
             var regExp = new Regex(pattern);
             var matches = regExp.Matches(template);
             foreach (Match match in matches)
@@ -174,17 +174,17 @@ namespace DotNetNuke.Modules.ActiveForums
 
             if (HttpContext.Current.Request.IsAuthenticated)
             {
-                template = template.Replace("[AF:TB:NotRead]", string.Format("<a href=\"{0}\">[RESX:NotRead]</a>", ctlUtils.BuildUrl(tabId, moduleId, string.Empty, string.Empty, -1, -1, -1, -1, "notread", 1, -1, -1)));
-                template = template.Replace("[AF:TB:MyTopics]", string.Format("<a href=\"{0}\">[RESX:MyTopics]</a>", ctlUtils.BuildUrl(tabId, moduleId, string.Empty, string.Empty, -1, -1, -1, -1, "mytopics", 1, -1, -1)));
-                template = template.Replace("[AF:TB:MySettings]", string.Format("<a href=\"{0}\">[RESX:MySettings]</a>", ctlUtils.BuildUrl(tabId, moduleId, string.Empty, string.Empty, -1, -1, -1, -1, "afprofile", 1, -1, -1)));
-             
+                template = template.Replace("[AF:TB:NotRead]", string.Format("<a href=\"{0}\"><i class=\"fa fa-file fa-fw fa-grey\"></i>&nbsp;[RESX:NotRead]</a>", ctlUtils.BuildUrl(tabId, moduleId, string.Empty, string.Empty, -1, -1, -1, -1, "notread", 1, -1, -1)));
+                template = template.Replace("[AF:TB:MyTopics]", string.Format("<a href=\"{0}\"><i class=\"fa fa-files-o fa-fw fa-grey\"></i>&nbsp;[RESX:MyTopics]</a>", ctlUtils.BuildUrl(tabId, moduleId, string.Empty, string.Empty, -1, -1, -1, -1, "mytopics", 1, -1, -1)));
+                template = template.Replace("[AF:TB:MySettings]", string.Format("<a href=\"{0}\"><i class=\"fa fa-cog fa-fw fa-blue\"></i>&nbsp;[RESX:MySettings]</a>", ctlUtils.BuildUrl(tabId, moduleId, string.Empty, string.Empty, -1, -1, -1, -1, "afprofile", 1, -1, -1)));
+
                 if (currentUserType == CurrentUserTypes.Admin || currentUserType == CurrentUserTypes.SuperUser)
-                    template = template.Replace("[AF:TB:ControlPanel]", string.Format("<a href=\"{0}\">[RESX:ControlPanel]</a>", NavigateUrl(tabId, "EDIT", "mid=" + moduleId)));
+                    template = template.Replace("[AF:TB:ControlPanel]", string.Format("<a href=\"{0}\"><i class=\"fa fa-bars fa-fw fa-blue\"></i>&nbsp;[RESX:ControlPanel]</a>", NavigateUrl(tabId, "EDIT", "mid=" + moduleId)));
                 else
                     template = template.Replace("[AF:TB:ControlPanel]", string.Empty);
 
                 if (currentUserType == CurrentUserTypes.ForumMod || currentUserType == CurrentUserTypes.SuperUser || currentUserType == CurrentUserTypes.Admin)
-                    template = template.Replace("[AF:TB:ModList]", string.Format("<a href=\"{0}\">[RESX:Moderate]</a>", NavigateUrl(tabId, "", ParamKeys.ViewType + "=modtopics")));
+                    template = template.Replace("[AF:TB:ModList]", string.Format("<a href=\"{0}\"><i class=\"fa fa-wrench fa-fw fa-blue\"></i>&nbsp;[RESX:Moderate]</a>", NavigateUrl(tabId, "", ParamKeys.ViewType + "=modtopics")));
                 else
                     template = template.Replace("[AF:TB:ModList]", string.Empty);
             }
@@ -196,17 +196,17 @@ namespace DotNetNuke.Modules.ActiveForums
                 template = template.Replace("[AF:TB:ControlPanel]", string.Empty);
             }
 
-            template = template.Replace("[AF:TB:Unanswered]", string.Format("<a href=\"{0}\">[RESX:Unanswered]</a>", ctlUtils.BuildUrl(tabId, moduleId, string.Empty, string.Empty, -1, -1, -1, -1, "unanswered", 1, -1, -1)));
-            template = template.Replace("[AF:TB:ActiveTopics]", string.Format("<a href=\"{0}\">[RESX:ActiveTopics]</a>", ctlUtils.BuildUrl(tabId, moduleId, string.Empty, string.Empty, -1, -1, -1, -1, "activetopics", 1, -1, -1)));
-            template = template.Replace("[AF:TB:Forums]", string.Format("<a href=\"{0}\">[RESX:FORUMS]</a>", NavigateUrl(tabId)));
+            template = template.Replace("[AF:TB:Unanswered]", string.Format("<a href=\"{0}\"><i class=\"fa fa-file fa-fw fa-blue\"></i>&nbsp;[RESX:Unanswered]</a>", ctlUtils.BuildUrl(tabId, moduleId, string.Empty, string.Empty, -1, -1, -1, -1, "unanswered", 1, -1, -1)));
+            template = template.Replace("[AF:TB:ActiveTopics]", string.Format("<a href=\"{0}\"><i class=\"fa fa-fire fa-fw fa-grey\"></i>&nbsp;[RESX:ActiveTopics]</a>", ctlUtils.BuildUrl(tabId, moduleId, string.Empty, string.Empty, -1, -1, -1, -1, "activetopics", 1, -1, -1)));
+            template = template.Replace("[AF:TB:Forums]", string.Format("<a href=\"{0}\"><i class=\"fa fa-comment fa-fw fa-blue\"></i>&nbsp;[RESX:FORUMS]</a>", NavigateUrl(tabId)));
 
 
             // Search popup
-            var searchUrl = NavigateUrl(tabId, string.Empty, new[] {ParamKeys.ViewType + "=search", "f=" + forumId});
-            var advancedSearchUrl = NavigateUrl(tabId, string.Empty, new[] {ParamKeys.ViewType + "=searchadvanced", "f=" + forumId});
+            var searchUrl = NavigateUrl(tabId, string.Empty, new[] { ParamKeys.ViewType + "=search", "f=" + forumId });
+            var advancedSearchUrl = NavigateUrl(tabId, string.Empty, new[] { ParamKeys.ViewType + "=searchadvanced", "f=" + forumId });
             var searchText = forumId > 0 ? "[RESX:SearchSingleForum]" : "[RESX:SearchAllForums]";
 
-            template = template.Replace("[AF:TB:Search]", string.Format(@"<span class='aftb-search' data-searchUrl='{0}'><span class='aftb-search-link'><span>{2}</span><span class='ui-icon ui-icon-triangle-1-s'></span></span><span class='aftb-search-popup'><input type='text' placeholder='Search for...' maxlength='50'><button>[RESX:Search]</button><br /><a href='{1}'>[RESX:SearchAdvanced]</a><input type='radio' name='afsrt' value='0' checked='checked' />[RESX:SearchByTopics]<input type='radio' name='afsrt' value='1' />[RESX:SearchByPosts]</span></span>", HttpUtility.HtmlEncode(searchUrl), HttpUtility.HtmlEncode(advancedSearchUrl), searchText));
+            template = template.Replace("[AF:TB:Search]", string.Format(@"<span class='aftb-search' data-searchUrl='{0}'><span class='aftb-search-link'><span><i class='fa fa-search fa-fw fa-blue'></i>&nbsp;{2}</span><span class='ui-icon ui-icon-triangle-1-s'></span></span><span class='aftb-search-popup'><input type='text' placeholder='Search for...' maxlength='50'><button>[RESX:Search]</button><br /><a href='{1}'>[RESX:SearchAdvanced]</a><input type='radio' name='afsrt' value='0' checked='checked' />[RESX:SearchByTopics]<input type='radio' name='afsrt' value='1' />[RESX:SearchByPosts]</span></span>", HttpUtility.HtmlEncode(searchUrl), HttpUtility.HtmlEncode(advancedSearchUrl), searchText));
 
 
             // These are no longer used in 5.0
@@ -234,7 +234,7 @@ namespace DotNetNuke.Modules.ActiveForums
             // Never trust users with trust level -1 (This overrides everything)
             if (userTrustLevel == -1)
                 return false;
-            
+
             // Always trust users with trust level 1 or in a trusted role or the forum trusts by default
             if (userTrustLevel == 1 || isTrustedRole || forumTrustLevel > 0)
                 return true;
@@ -331,9 +331,9 @@ namespace DotNetNuke.Modules.ActiveForums
 
             for (var i = 0; i < values.Length; i++)
             {
-                if (i == excludeIndex) 
+                if (i == excludeIndex)
                     continue;
-                
+
                 var key = Convert.ToInt32(Enum.Parse(enumType, values.GetValue(i).ToString()));
                 var text = Convert.ToString(Enum.Parse(enumType, values.GetValue(i).ToString()));
                 if (localize)
@@ -368,7 +368,7 @@ namespace DotNetNuke.Modules.ActiveForums
                 text = text.Replace("<br />", System.Environment.NewLine);
                 text = text.Replace("<BR>", System.Environment.NewLine);
                 text = RemoveFilterWords(portalId, moduleId, themePath, text);
-                
+
                 return text;
             }
 
@@ -1083,7 +1083,7 @@ namespace DotNetNuke.Modules.ActiveForums
         {
             var resourceLocation = sqlFile;
             var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceLocation);
-            
+
             if (stream == null)
                 return null;
 
@@ -1204,16 +1204,16 @@ namespace DotNetNuke.Modules.ActiveForums
                 var sKey = pItem.Name.ToLower();
                 foreach (string k in ht.Keys)
                 {
-                    if (k.ToLowerInvariant() != sKey.ToLowerInvariant()) 
+                    if (k.ToLowerInvariant() != sKey.ToLowerInvariant())
                         continue;
 
                     sValue = ht[k].ToString();
                     break;
                 }
 
-                if (string.IsNullOrEmpty(sValue)) 
+                if (string.IsNullOrEmpty(sValue))
                     continue;
-                
+
                 object obj = null;
                 switch (pItem.PropertyType.ToString())
                 {
@@ -1264,7 +1264,7 @@ namespace DotNetNuke.Modules.ActiveForums
             string contents = null;
             using (var s = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
             {
-                if(s != null)
+                if (s != null)
                 {
                     using (var sr = new StreamReader(s))
                     {
@@ -1293,7 +1293,7 @@ namespace DotNetNuke.Modules.ActiveForums
 
             foreach (var r in modRoles)
             {
-                if (string.IsNullOrEmpty(r)) 
+                if (string.IsNullOrEmpty(r))
                     continue;
 
                 var rid = Convert.ToInt32(r);
@@ -1318,7 +1318,7 @@ namespace DotNetNuke.Modules.ActiveForums
                 return defaultValue;
 
             if (value is bool)
-                return (bool) value;
+                return (bool)value;
 
             var s = value as string;
             if (s != null)
@@ -1332,7 +1332,7 @@ namespace DotNetNuke.Modules.ActiveForums
                     default:
                         bool parsedValue;
                         return bool.TryParse(s, out parsedValue) ? parsedValue : defaultValue;
-                }  
+                }
             }
 
             try
@@ -1357,7 +1357,7 @@ namespace DotNetNuke.Modules.ActiveForums
             if (s != null)
             {
                 int parsedValue;
-                return int.TryParse(s, out parsedValue) ? parsedValue : defaultValue;  
+                return int.TryParse(s, out parsedValue) ? parsedValue : defaultValue;
             }
 
             try

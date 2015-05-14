@@ -1,4 +1,51 @@
 ﻿/* TEMP until all image icons are taken out for responsive optimizations!*/
+
+.fa-grey {
+    color:#555555;
+}
+
+.fa-red {
+    color:#ce424b;
+}
+
+.fa-blue {
+    color:#7da8cc;
+}
+
+.af-user-status {
+    margin-left:2px;
+}
+
+.dnnPrimaryAction {
+    box-shadow:none !important;
+    -moz-user-select: none;
+    box-sizing: border-box;
+    display: inline-block;
+    font-weight: 500;
+    outline: 0px none;
+    padding: 3px 7px 4px;
+    text-align: center;
+    text-decoration: none;
+    text-shadow: none;
+    cursor: pointer;
+    border: 0px none;
+    background: none repeat scroll 0% 0% #68AAC7;
+    color: #FFF;
+    line-height: 1.5;
+}
+
+.afpostinfo_responsive {
+    position:absolute;
+    width:120px;
+}
+
+.afpostcontent_responsive {
+    width:100%;
+    padding-left:120px;
+    min-height:345px !important;
+}
+
+
 ._hide,
 td.af-lastpost img,
 .afsearchgo {
@@ -12,8 +59,8 @@ td.af-lastpost img,
 	outline-width: 0;
 	-moz-outline-width: 0;
 }
-
-* {
+/*.afgrid *, .aftopicjumper */
+#contentWrapper *  {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
@@ -101,6 +148,9 @@ letter-spacing: 0.05px;
 text-transform: uppercase;
 }
 
+.afgrouprow-f .afcontrolheader {
+margin-left: 5px;
+}
 .afgroupsection {
     font-size: 14px;
     margin-bottom: 10px;
@@ -187,6 +237,51 @@ span.rate3{background-position:0px -24px;}
 span.rate4{background-position:0px -32px;}
 span.rate5{background-position:0px -40px;}
 
+
+ul.fa-rater {
+    height:20px;
+    padding:0px;
+    margin:0px;
+    width:90px;
+    font-size:large;
+}
+
+span.fa-rater {
+    display:inline-block;
+    height:10px;
+    padding:0px;
+    margin:0px;
+    width:80px;
+    font-size:smaller;
+}
+
+ul.fa-rater li {
+    float:left;
+    list-style-type:none;
+    cursor:pointer;
+}
+
+.fa-star1:after, .fa-star2:after, .fa-star3:after, .fa-star4:after, .fa-star5:after {
+    content: "\f006";
+}
+
+.fa-rate1 .fa-star1:after, .fa-rate2 .fa-star1:after, .fa-rate3 .fa-star1:after, .fa-rate4 .fa-star1:after, .fa-rate5 .fa-star1:after, .fa-rate2 .fa-star2:after, .fa-rate3 .fa-star2:after, .fa-rate4 .fa-star2:after, .fa-rate5 .fa-star2:after, .fa-rate3 .fa-star3:after, .fa-rate4 .fa-star3:after, .fa-rate5 .fa-star3:after, .fa-rate4 .fa-star4:after, .fa-rate5 .fa-star4:after, .fa-rate5 .fa-star5:after {
+    content: "\f005" !important;
+}
+
+.fa-status0:after {
+    content: "\f05a";
+}
+
+.fa-status1:after {
+    content: "\f059";
+}
+
+.fa-status3:after {
+    content: "\f058";
+}
+
+
 .amModal{background-color:#fff;border:solid 8px #ccc;padding:0px; border-collapse:collapse;z-index:1002;-moz-border-radius: 4px; -webkit-border-radius: 4px;}
 .amModalHeader{font-family:Tahoma;font-size:11px; font-weight:bold;background-color:#666;color:#fff; height:22px;width:100%;}
 .amModalHeaderText{padding-left:10px;padding-top:5px;font-family:Tahoma;font-size:11px; font-weight:bold;background-color:#666;color:#fff;text-align:left;float:left}
@@ -253,8 +348,8 @@ td.af-title{width:100%;padding-left:25px;}
 td.af-groupname{padding-left:10px;width:100%;}
 td.af-groupcollapse{text-align:right;padding-right:10px;}
 td.af-right{text-align:right;}
-td.af-posticon{width:20px;}
-td.af-content{width:60%;}
+td.af-posticon{width:30px;}
+/*td.af-content{width:60%;}*/
 td.af-content td.afsubject{vertical-align:top;width:100%;padding-right: 10px;}
 td.af-content td.afsubject > a {
 	color: #333; font-weight: 700;font-size: 13px;
@@ -267,7 +362,7 @@ td.af-content td.afsubject > a {
 .aftopicrownewalt .aftopictitle a, 
 .aftopicrownewalt .aftopictitle a:link {
 	font-size: 19px;
-	display: block;
+	/*display: block;*/
 	font-weight: 700;
 	color: #333!important;
 	letter-spacing: -0.5px;
@@ -275,7 +370,7 @@ td.af-content td.afsubject > a {
 }
 
 
-td.af-content td.afsubject .aftopicstarted *,
+td.af-content td.afsubject .aftopicstarted a,
 .aftopicrownew .aftopicstarted a, 
 .aftopicrownew .aftopicstarted a:link {
 color: #333;
@@ -292,28 +387,46 @@ color: #888;
 font-size: 14px;
 }
 
-.aftopicsubtitle,
 .aftopicsubtitle .clearboth,
 .aftruncateellipsis {
 	display: inline-block;
 }
+
 .aftopicsubtitle {
 font-size: 15px;
 font-weight: 400;
-display: inline-block;
+display: block;
 color: #888;
 word-break: break-word;
 overflow: hidden;
 }
+.aftopictools {
+display:block;
+float:left;
+height:21px;
+}
 .aftopictools * {
 cursor: pointer;
 }
+
 td.af-content td.afsubject .aftruncatemorelink {
 font-size: 15px;
 color: #285a8f;
 font-weight: 400;
 display: inline;
 margin-left: 3px;
+}
+
+.af-icons {
+    width: 40px;
+}
+
+.af-status {
+
+}
+
+.af-postcontent {
+    margin-left: 10px;
 }
 
 .afhiddenstats,
@@ -563,7 +676,30 @@ only screen and (max-device-width: 768px) {
 	display: none;
 }
 
-.afhiddenstats,
+
+.afpostinfo_responsive {
+    position:static;
+    width:100%;
+}
+
+.afpostcontent_responsive {
+    padding-left:0px;
+    min-height:100px !important;
+}
+
+.afpostinfo_responsive .aftopprofile {
+    /*float:right;*/
+    padding-left: 120px;
+    position:absolute;
+}
+.afpostinfo_responsive .afbottomprofile {
+    /*float:right;*/
+    
+}
+
+ul.af-right{float:left;}
+
+/*.afhiddenstats,*/
 .afhiddentime {
 	display: inline-block;
 }
