@@ -77,8 +77,8 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
         #region Event Handlers
 
         protected override void OnInit(EventArgs e)
-		{
-			base.OnInit(e);
+        {
+            base.OnInit(e);
 
             AppRelativeVirtualPath = "~/";
 
@@ -141,8 +141,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                                     var plh = (PlaceHolder)(tmpCtl.FindControl("plhQuickJump"));
                                     if (plh != null)
                                     {
-                                        ctlForumJump = new af_quickjump
-                                                           {MOID = ModuleId, dtForums = ForumTable, ModuleId = ModuleId};
+                                        ctlForumJump = new af_quickjump { MOID = ModuleId, dtForums = ForumTable, ModuleId = ModuleId };
                                         plh.Controls.Add(ctlForumJump);
                                     }
                                     plh = (PlaceHolder)(tmpCtl.FindControl("plhUsersOnline"));
@@ -249,7 +248,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                         if (tmpDR != null)
                         {
                             sGroupName = tmpDR["GroupName"].ToString();
-                            sCrumb = "<div class=\"afcrumb\"><a href=\"" + Utilities.NavigateUrl(TabId) + "\">[RESX:ForumMain]</a>[RESX:BreadCrumbSep]" + tmpDR["GroupName"] + "</div>";
+                            sCrumb = "<div class=\"afcrumb\"><i class=\"fa fa-comments-o fa-grey\"></i>  <a href=\"" + Utilities.NavigateUrl(TabId) + "\">[RESX:ForumMain]</a>  <i class=\"fa fa-long-arrow-right fa-grey\"></i>  " + tmpDR["GroupName"] + "</div>";
                         }
 
 
@@ -401,10 +400,10 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 }
 
                 fi.ForumGroup = new ForumGroupInfo
-                                    {
-                                        ForumGroupId = int.Parse(dr["ForumGroupId"].ToString()),
-                                        PrefixURL = dr["GroupPrefixURL"].ToString()
-                                    };
+                {
+                    ForumGroupId = int.Parse(dr["ForumGroupId"].ToString()),
+                    PrefixURL = dr["GroupPrefixURL"].ToString()
+                };
                 fi.ForumGroupId = int.Parse(dr["ForumGroupId"].ToString());
                 fi.TopicUrl = dr["TopicURL"].ToString();
 
@@ -505,30 +504,32 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             bool canRead = Permissions.HasPerm(fi.Security.Read, ForumUser.UserRoles);
             string sIcon = TemplateUtils.ShowIcon(canView, fi.ForumID, CurrentUserId, fi.LastPostDateTime, fi.LastRead, fi.LastPostID);
             string sIconImage = "<img alt=\"" + fi.ForumName + "\" src=\"" + ThemePath + "images/" + sIcon + "\" />";
+
             if (Template.Contains("[FORUMICON]"))
             {
                 Template = Template.Replace("[FORUMICON]", sIconImage);
             }
             else if (Template.Contains("[FORUMICONCSS]"))
             {
-                string sFolderCSS = "affolder";
+                string sFolderCSS = "fa-folder fa-blue";
                 switch (sIcon.ToLower())
                 {
                     case "folder.png":
-                        sFolderCSS = "affolder";
+                        sFolderCSS = "fa-folder fa-blue";
                         break;
                     case "folder_new.png":
-                        sFolderCSS = "affoldernew";
+                        sFolderCSS = "fa-folder fa-red";
                         break;
                     case "folder_forbidden.png":
-                        sFolderCSS = "affolderblock";
+                        sFolderCSS = "fa-folder fa-grey";
                         break;
                     case "folder_closed.png":
-                        sFolderCSS = "affolderclosed";
+                        sFolderCSS = "fa-folder-o fa-grey";
                         break;
                 }
-                Template = Template.Replace("[FORUMICONCSS]", "<div class=\"" + sFolderCSS + "\"></div>");
+                Template = Template.Replace("[FORUMICONCSS]", "<div style=\"height:30px;margin-right:10px;\"><i class=\"fa " + sFolderCSS + " fa-2x\"></i></div>");
             }
+
             var ctlUtils = new ControlUtils();
             ForumURL = ctlUtils.BuildUrl(ForumTabId, ForumModuleId, fi.ForumGroup.PrefixURL, fi.PrefixURL, fi.ForumGroupId, fi.ForumID, -1, string.Empty, -1, -1, string.Empty, 1, -1, SocialGroupId);
 
@@ -583,7 +584,16 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             {
                 Template = TemplateUtils.ParseSpecial(Template, SpecialTokenTypes.AddThis, ForumURL, fi.ForumName, canRead, MainSettings.AddThisAccount);
             }
-            Template = Template.Replace("[FORUMDESCRIPTION]", fi.ForumDesc);
+
+            if (fi.ForumDesc != "")
+            {
+                Template = Template.Replace("[FORUMDESCRIPTION]", "<i class=\"fa fa-file-o fa-grey\"></i>&nbsp;" + fi.ForumDesc);
+            }
+            else
+            {
+                Template = Template.Replace("[FORUMDESCRIPTION]", "");
+            }
+
             Template = Template.Replace("[TOTALTOPICS]", fi.TotalTopics.ToString());
             Template = Template.Replace("[TOTALREPLIES]", fi.TotalReplies.ToString());
             //Last Post Section
@@ -611,14 +621,14 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     if (fi.LastPostUserID <= 0)
                     {
                         //Template = Template.Replace("[RESX:BY]", String.Empty)
-                        Template = Template.Replace("[DISPLAYNAME]", fi.LastPostDisplayName);
+                        Template = Template.Replace("[DISPLAYNAME]", "<i class=\"fa fa-user fa-fw fa-blue\"></i>&nbsp;" + fi.LastPostDisplayName);
                         //Template = TemplateUtils.ParseUserDetails(PortalId, -1, Template, "FG")
                     }
                     else
                     {
                         bool isMod = CurrentUserType == CurrentUserTypes.Admin || CurrentUserType == CurrentUserTypes.ForumMod || CurrentUserType == CurrentUserTypes.SuperUser;
                         bool isAdmin = CurrentUserType == CurrentUserTypes.Admin || CurrentUserType == CurrentUserTypes.SuperUser;
-                        Template = Template.Replace("[DISPLAYNAME]", UserProfiles.GetDisplayName(ModuleId, true, isMod, isAdmin, fi.LastPostUserID, fi.LastPostUserName, fi.LastPostFirstName, fi.LastPostLastName, fi.LastPostDisplayName));
+                        Template = Template.Replace("[DISPLAYNAME]", "<i class=\"fa fa-user fa-fw fa-blue\"></i>&nbsp;" + UserProfiles.GetDisplayName(ModuleId, true, isMod, isAdmin, fi.LastPostUserID, fi.LastPostUserName, fi.LastPostFirstName, fi.LastPostLastName, fi.LastPostDisplayName));
                         //Template = TemplateUtils.ParseUserDetails(PortalId, .LastPostUserID, Template, "FG")
                     }
                     DateTime dtLastPostDate = fi.LastPostDateTime;
@@ -845,8 +855,29 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     if (canView || (!fi.Hidden) | UserInfo.IsSuperUser)
                     {
                         string sIcon = TemplateUtils.ShowIcon(canView, fi.ForumID, CurrentUserId, fi.LastPostDateTime, fi.LastRead, fi.LastPostID);
-                        string sIconImage = "<img alt=\"" + fi.ForumName + "\" src=\"" + ThemePath + "images/" + sIcon + "\" />";
-                        tmpSubs = tmpSubs.Replace("[FORUMICONSM]", sIconImage.Replace("folder", "folder16"));
+                        //string sIconImage = "<img alt=\"" + fi.ForumName + "\" src=\"" + ThemePath + "images/" + sIcon + "\" />";
+                        //tmpSubs = tmpSubs.Replace("[FORUMICONSM]", sIconImage.Replace("folder", "folder16"));
+
+
+                        string sFolderCSS = "fa-folder fa-blue";
+                        switch (sIcon.ToLower())
+                        {
+                            case "folder.png":
+                                sFolderCSS = "fa-folder fa-blue";
+                                break;
+                            case "folder_new.png":
+                                sFolderCSS = "fa-folder fa-red";
+                                break;
+                            case "folder_forbidden.png":
+                                sFolderCSS = "fa-folder fa-grey";
+                                break;
+                            case "folder_closed.png":
+                                sFolderCSS = "fa-folder-o fa-grey";
+                                break;
+                        }
+                        tmpSubs = tmpSubs.Replace("[FORUMICONSM]", "<i class=\"fa " + sFolderCSS + " fa-fw\"></i>&nbsp;&nbsp;");
+
+                        //tmpSubs = tmpSubs.Replace("[FORUMICONSM]", "<i class=\"fa fa-folder fa-fw fa-blue\"></i>&nbsp;&nbsp;");
                         tmpSubs = ParseForumRow(tmpSubs, fi, i, ThemePath, ForumTable.DefaultView.ToTable().Rows.Count);
                     }
                     else

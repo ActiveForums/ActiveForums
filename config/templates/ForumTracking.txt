@@ -14,7 +14,7 @@
 					</tr>
 					[FORUMS]
 					<tr>
-						<td class="[CSS:afforumrowtop:afforumrowmid:afforumrowbottom]">[FORUMICON]</td>
+						<td class="[CSS:afforumrowtop:afforumrowmid:afforumrowbottom]">[FORUMICONCSS]</td>
 						<td class="[CSS:afforumrowtop:afforumrowmid:afforumrowbottom]" width="100%" colspan="2">[FORUMNAME]<br />[FORUMDESCRIPTION]</td>
 						<td class="[CSS:afforumrowtop:afforumrowmid:afforumrowbottom]" width="175" style="width:175px;white-space:nowrap;text-align:center;">
 							[AF:CONTROL:TOGGLESUBSCRIBE]

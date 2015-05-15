@@ -1,7 +1,7 @@
 <%@ Register TagPrefix="am" Namespace="DotNetNuke.Modules.ActiveForums.Controls" Assembly="DotNetNuke.Modules.ActiveForums" %>
 <%@ Register TagPrefix="am" TagName="MarkForumRead" Src="~/DesktopModules/ActiveForums/controls/af_markallread.ascx"%>
 <%@ Register TagPrefix="am" TagName="MiniSearch" Src="~/DesktopModules/ActiveForums/controls/af_searchquick.ascx"%>
-<div class="afcrumb">[FORUMMAINLINK] > [FORUMGROUPLINK]</div>
+<div class="afcrumb"><i class="fa fa-comments-o fa-grey"></i>  [FORUMMAINLINK]  <i class="fa fa-long-arrow-right fa-grey"></i>  [FORUMGROUPLINK]</div>
 <div class="aftitlelg">[FORUMLINK]</div>
 <div class="afgrid">
 	<div class="afgridinner">
@@ -14,13 +14,13 @@
 							<div class="afcontrolheader">[RESX:FORUMHEADER]</div>
 						</td>
 						<td class="afgrouprow afgrouprow-m">
-							<div class="afcontrolheader">[RESX:TOPICSHEADER]</div>
+							<div class="afcontrolheader"><i class="fa fa-files-o fa-fw fa-grey"></i>&nbsp;[RESX:TOPICSHEADER]</div>
 						</td>
 						<td class="afgrouprow afgrouprow-m">
-							<div class="afcontrolheader">[RESX:REPLIESHEADER]</div>
+							<div class="afcontrolheader"><i class="fa fa-reply fa-fw fa-grey"></i>&nbsp;[RESX:REPLIESHEADER]</div>
 						</td>
 						<td class="afgrouprow afgrouprow-l">
-							<div class="afcontrolheader">[RESX:LASTPOSTHEADER]</div>
+							<div class="afcontrolheader"><i class="fa fa-file-o fa-fw fa-grey"></i>&nbsp;[RESX:LASTPOSTHEADER]</div>
 						</td>
 					</tr>
 					[FORUMS]
@@ -28,7 +28,7 @@
 						<td colspan="0">
 							 <table class="afgrid" cellspacing="0" cellpadding="0" width="100%">
 								<tr>
-									<td class="aftopicrow _hide" width="20">[FORUMICON]</td>
+									<td class="aftopicrow af-icons">[FORUMICONCSS]</td>
 									<td class="aftopicrow af-content">
 										<table>
 											<tr>
@@ -85,9 +85,9 @@
 									
 									
 									<span class="afhiddenstats">[REPLIES] [RESX:REPLIESHEADER] and [VIEWS] [RESX:Views]</span>
-									<span class="aftopictitle">[SUBJECTLINK][AF:ICONLINK:LASTREAD]</span> 
-									<span class="aftopicstarted">Started by [STARTEDBY][AF:UI:MINIPAGER]</span>
-									<span class="aftopicsubtitle">[BODYTITLE]</span>
+									<span class="aftopictitle"><i class="fa fa-file-o fa-fw fa-grey"></i>&nbsp;[SUBJECTLINK][AF:ICONLINK:LASTREAD]</span> 
+									<span class="aftopicstarted">Started by <i class="fa fa-user fa-fw fa-blue"></i>&nbsp;[STARTEDBY][AF:UI:MINIPAGER]</span>
+									
 									
 									<span class="aftopictools">
 											[ACTIONS:DELETE]
@@ -96,15 +96,18 @@
 											[ACTIONS:LOCK]
 											[ACTIONS:PIN]
 									</span>
+
+									<span class="aftopicsubtitle">[BODYTITLE]</span>
+
 																		
 									<td style="text-align:right;">[POSTRATINGDISPLAY]</td>
-									<td rowspan="2" class="_hide">[STATUS]</td>
+									<td rowspan="2" class="af-status">[STATUS]</td>
 								</tr>
 							</table>
 						</td>
 						<td class="[ROWCSS] af-colstats af-colstats-replies">[REPLIES]</td>
 						<td class="[ROWCSS] af-colstats af-colstats-views">[VIEWS]</td>
-						<td class="[ROWCSS] af-lastpost"><div class="af_lastpost" style="white-space:nowrap;">[LASTPOST][RESX:BY] [LASTPOSTDISPLAYNAME][AF:ICONLINK:LASTREPLY]<br />[LASTPOSTDATE][/LASTPOST]</div></td>
+						<td class="[ROWCSS] af-lastpost"><div class="af_lastpost" style="white-space:nowrap;">[LASTPOST][RESX:BY] <i class="fa fa-user fa-fw fa-blue"></i>&nbsp;[LASTPOSTDISPLAYNAME][AF:ICONLINK:LASTREPLY]<br />[LASTPOSTDATE][/LASTPOST]</div></td>
 					</tr>
 					[/ANNOUNCEMENT]
 				</table>	
@@ -133,28 +136,28 @@
 								<div class="afcontrolheader">[RESX:TOPICSHEADER]</div>
 							</td>
 							<td class="afgrouprow afgrouprow-m">
-								<div class="afcontrolheader">[RESX:REPLIESHEADER]</div>
+								<div class="afcontrolheader"><i class="fa fa-reply fa-fw fa-grey"></i>&nbsp;[RESX:REPLIESHEADER]</div>
 							</td>
 							<td class="afgrouprow afgrouprow-m">
-								<div class="afcontrolheader">[RESX:Views]</div>
+								<div class="afcontrolheader"><i class="fa fa-eye fa-fw fa-grey"></i>&nbsp;[RESX:Views]</div>
 							</td>
 							<td class="afgrouprow afgrouprow-l">
-								<div class="afcontrolheader">[RESX:LastPost]</div>
+								<div class="afcontrolheader"><i class="fa fa-file-o fa-fw fa-grey"></i>&nbsp;[RESX:LastPost]</div>
 							</td>
 						</tr>
 						[TOPICS]
 						
 						<tr>
-							<td class="[ROWCSS] af-posticon _hide">[POSTICON]</td>
-							<td class="[ROWCSS] af-content">
-								<table>
+							<td class="[ROWCSS] af-posticon">[POSTICON]</td>
+							<td class="[ROWCSS] af-content af-postcontent">
+								<table width="100%">
 									<tr>
 										<td rowspan="2" class="afsubject" title="[BODYTITLE]">
 										
 										<span class="afhiddenstats">[REPLIES] [RESX:REPLIESHEADER] and [VIEWS] [RESX:Views]</span>
-										<span class="aftopictitle">[SUBJECTLINK][AF:ICONLINK:LASTREAD]</span> 
-										<span class="aftopicstarted">Started by [STARTEDBY][AF:UI:MINIPAGER]</span>
-										<span class="aftopicsubtitle">[BODYTITLE]</span>
+										<span class="aftopictitle">[SUBJECTLINK][AF:ICONLINK:LASTREAD][ICONPIN][ICONLOCK]</span> 
+										<span class="aftopicstarted">Started by <i class="fa fa-user fa-fw fa-blue"></i>&nbsp;[STARTEDBY][AF:UI:MINIPAGER]</span>
+										
 										
 										<span class="aftopictools">
 											[AF:QUICKEDITLINK]
@@ -165,6 +168,8 @@
 											[ACTIONS:PIN]
 										</span>
 										
+										<span class="aftopicsubtitle">[BODYTITLE]</span>
+										
 										[AF:PROPERTIES]
 										[AF:PROPERTY:LABEL]:[AF:PROPERTY:VALUE]
 										[/AF:PROPERTIES]
@@ -172,13 +177,13 @@
 										</td>
 										
 										<td class="af-right">[POSTRATINGDISPLAY]</td>
-										<td rowspan="2" class="_hide">[STATUS]</td>
+										<td rowspan="2" class="af-status">[STATUS]</td>
 									</tr>
 								</table>
 							</td>
 							<td class="[ROWCSS] af-colstats af-colstats-replies">[REPLIES]</td>
 							<td class="[ROWCSS] af-colstats af-colstats-views">[VIEWS]</td>
-							<td class="[ROWCSS] af-lastpost"><div>[LASTPOST][RESX:BY] [LASTPOSTDISPLAYNAME][AF:ICONLINK:LASTREPLY]<br />[LASTPOSTDATE][/LASTPOST]</div></td>
+							<td class="[ROWCSS] af-lastpost"><div>[LASTPOST][RESX:BY] <i class="fa fa-user fa-fw fa-blue"></i>&nbsp;[LASTPOSTDISPLAYNAME][AF:ICONLINK:LASTREPLY]<br />[LASTPOSTDATE][/LASTPOST]</div></td>
 						</tr>
 						[/TOPICS]
 				</table>
@@ -187,7 +192,7 @@
 		</tr>
 		<tr>
 			<td class="afnormal" valign="top"><div class="afbuttonarea">[ADDTOPIC] [MARKFORUMREAD]</div>
-			<div class="afcrumb">[FORUMMAINLINK] > [FORUMGROUPLINK] > [FORUMLINK]</div>
+			<div class="afcrumb"><i class="fa fa-comments fa-grey"></i> [FORUMMAINLINK] <i class="fa fa-long-arrow-right fa-grey"></i> [FORUMGROUPLINK] <i class="fa fa-long-arrow-right fa-grey"></i> [FORUMLINK]</div>
 			</td>
 			<td class="af-right">[PAGER2]<br />[JUMPTO]<br />[RSSLINK]</td>
 		</tr>
