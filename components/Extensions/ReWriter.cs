@@ -397,6 +397,10 @@ namespace DotNetNuke.Modules.ActiveForums
 						case 4:
 							v = "activetopics";
 							break;
+                        case 5:
+                            v = "afprofile";
+                            break;
+                        
 					}
 					sendTo = ResolveUrl(app.Context.Request.ApplicationPath, "~/default.aspx?tabid=" + _tabId + "&afv=grid&afgt=" + v + sPage + qs);
 				}

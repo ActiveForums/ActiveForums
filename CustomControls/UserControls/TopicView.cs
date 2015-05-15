@@ -62,6 +62,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
         private bool _bModSplit;
         private bool _bModDelete;
         private bool _bModEdit;
+        private bool _bModMove;
         private bool _bAllowRSS;
         private int _rowIndex;
         private int _pageSize = 20;
@@ -344,6 +345,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             _bModApprove = Permissions.HasPerm(_drSecurity["CanModApprove"].ToString(), ForumUser.UserRoles);
             _bTrust = Permissions.HasPerm(_drSecurity["CanTrust"].ToString(), ForumUser.UserRoles);
             _bModEdit = Permissions.HasPerm(_drSecurity["CanModEdit"].ToString(), ForumUser.UserRoles);
+            _bModMove = Permissions.HasPerm(_drSecurity["CanModMove"].ToString(), ForumUser.UserRoles);
 
             _isTrusted = Utilities.IsTrusted((int)ForumInfo.DefaultTrustValue, ForumUser.TrustLevel, Permissions.HasPerm(ForumInfo.Security.Trust, ForumUser.UserRoles));
 
@@ -850,6 +852,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 sbOutput.Replace("[ACTIONS:REPLY]", string.Empty);
                 sbOutput.Replace("[ACTIONS:ANSWER]", string.Empty);
                 sbOutput.Replace("[ACTIONS:ALERT]", string.Empty);
+                sbOutput.Replace("[ACTIONS:MOVE]", string.Empty);
                 sbOutput.Replace("[RESX:SortPosts]:", string.Empty);
                 sbOutput.Append("<img src=\"~/desktopmodules/activeforums/images/spacer.gif\" width=\"800\" height=\"1\" runat=\"server\" alt=\"---\" />");
             }
@@ -1041,10 +1044,18 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 sbOutput.Replace("[NEXTTOPIC]", string.Empty);
             else
             {
+                string nextTopic;
                 if (MainSettings.UseShortUrls)
-                    sbOutput.Replace("[NEXTTOPIC]", "<a href=\"" + Utilities.NavigateUrl(TabId, "", ParamKeys.TopicId + "=" + _nextTopic) + "\" rel=\"nofollow\"><span>[RESX:NextTopic]</span><img src=\"~/DesktopModules/ActiveForums/themes/" + _myTheme + "/images/arrow_right_blue.gif\" runat=server style=\"vertical-align:middle;\" border=\"0\" alt=\"[RESX:NextTopic]\" /></a>");
+                {
+                    if (SocialGroupId > 0) nextTopic = Utilities.NavigateUrl(TabId, "", ParamKeys.TopicId + "=" + _nextTopic + "&" + ParamKeys.GroupIdName + "=" + SocialGroupId);
+                    else nextTopic = Utilities.NavigateUrl(TabId, "", ParamKeys.TopicId + "=" + _nextTopic);
+                }
                 else
-                    sbOutput.Replace("[NEXTTOPIC]", "<a href=\"" + Utilities.NavigateUrl(TabId, "", ParamKeys.ForumId + "=" + ForumId + "&" + ParamKeys.TopicId + "=" + _nextTopic + "&" + ParamKeys.ViewType + "=" + Views.Topic) + "\" rel=\"nofollow\"><span>[RESX:NextTopic]</span><img src=\"~/DesktopModules/ActiveForums/themes/" + _myTheme + "/images/arrow_right_blue.gif\" runat=server style=\"vertical-align:middle;\" border=\"0\" alt=\"[RESX:NextTopic]\" /></a>");
+                {
+                    if (SocialGroupId > 0) nextTopic = Utilities.NavigateUrl(TabId, "", ParamKeys.ForumId + "=" + ForumId + "&" + ParamKeys.TopicId + "=" + _nextTopic + "&" + ParamKeys.ViewType + "=" + Views.Topic + "&" + ParamKeys.GroupId + SocialGroupId);
+                    else nextTopic = Utilities.NavigateUrl(TabId, "", ParamKeys.ForumId + "=" + ForumId + "&" + ParamKeys.TopicId + "=" + _nextTopic + "&" + ParamKeys.ViewType + "=" + Views.Topic);
+                }
+                sbOutput.Replace("[NEXTTOPIC]", "<a href=\"" + nextTopic + "\" rel=\"nofollow\"><span>[RESX:NextTopic]</span><img src=\"~/DesktopModules/ActiveForums/themes/" + _myTheme + "/images/arrow_right_blue.gif\" runat=server style=\"vertical-align:middle;\" border=\"0\" alt=\"[RESX:NextTopic]\" /></a>");
             }
 
             // Previous Topic
@@ -1052,10 +1063,18 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 sbOutput.Replace("[PREVTOPIC]", string.Empty);
             else
             {
+                string prevTopic;
                 if (MainSettings.UseShortUrls)
-                    sbOutput.Replace("[PREVTOPIC]", "<a href=\"" + Utilities.NavigateUrl(TabId, "", ParamKeys.TopicId + "=" + _prevTopic) + "\" rel=\"nofollow\"><img src=\"~/DesktopModules/ActiveForums/themes/" + _myTheme + "/images/arrow_left_blue.gif\" runat=server style=\"vertical-align:middle;\" border=\"0\" alt=\"[RESX:PrevTopic]\" /><span>[RESX:PrevTopic]</span></a>");
+                {
+                    if (SocialGroupId > 0) prevTopic = Utilities.NavigateUrl(TabId, "", ParamKeys.TopicId + "=" + _prevTopic + "&" + ParamKeys.GroupIdName + "=" + SocialGroupId);
+                    else prevTopic = Utilities.NavigateUrl(TabId, "", ParamKeys.TopicId + "=" + _prevTopic);
+                }
                 else
-                    sbOutput.Replace("[PREVTOPIC]", "<a href=\"" + Utilities.NavigateUrl(TabId, "", ParamKeys.ForumId + "=" + ForumId + "&" + ParamKeys.TopicId + "=" + _prevTopic + "&" + ParamKeys.ViewType + "=" + Views.Topic) + "\" rel=\"nofollow\"><img src=\"~/DesktopModules/ActiveForums/themes/" + _myTheme + "/images/arrow_left_blue.gif\" runat=server style=\"vertical-align:middle;\" border=\"0\" alt=\"[RESX:PrevTopic]\" /><span>[RESX:PrevTopic]</span></a>");
+                {
+                    if (SocialGroupId > 0) prevTopic = Utilities.NavigateUrl(TabId, "", ParamKeys.ForumId + "=" + ForumId + "&" + ParamKeys.TopicId + "=" + _prevTopic + "&" + ParamKeys.ViewType + "=" + Views.Topic + "&" + ParamKeys.GroupIdName + "=" + SocialGroupId);
+                    else prevTopic = Utilities.NavigateUrl(TabId, "", ParamKeys.ForumId + "=" + ForumId + "&" + ParamKeys.TopicId + "=" + _prevTopic + "&" + ParamKeys.ViewType + "=" + Views.Topic);
+                }
+                sbOutput.Replace("[PREVTOPIC]", "<a href=\"" + prevTopic + "\" rel=\"nofollow\"><img src=\"~/DesktopModules/ActiveForums/themes/" + _myTheme + "/images/arrow_left_blue.gif\" runat=server style=\"vertical-align:middle;\" border=\"0\" alt=\"[RESX:PrevTopic]\" /><span>[RESX:PrevTopic]</span></a>");
             }
 
             // Topic Status
@@ -1329,7 +1348,9 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 if (replyId == 0)
                     sAction = "te";
 
-                var editParams = new[] { ParamKeys.ViewType + "=post", "action=" + sAction, ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + topicId, "postid=" + postId };
+                //var editParams = new[] { ParamKeys.ViewType + "=post", "action=" + sAction, ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + topicId, "postid=" + postId };
+                var editParams = new List<string>() { ParamKeys.ViewType + "=post", "action=" + sAction, ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + topicId, "postid=" + postId };
+                if (SocialGroupId > 0) editParams.Add(ParamKeys.GroupIdName + "=" + SocialGroupId);
                 if (_useListActions)
                     sbOutput.Replace("[ACTIONS:EDIT]", "<li onclick=\"window.location.href='" + Utilities.NavigateUrl(TabId, "", editParams) + "';\" title=\"[RESX:Edit]\"><i class=\"fa fa-pencil fa-fw fa-blue\"></i>&nbsp;[RESX:Edit]</li>");
                 else
@@ -1343,8 +1364,13 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             // Reply and Quote Actions
             if (!_bLocked && CanReply)
             {
-                var quoteParams = new[] { ParamKeys.ViewType + "=post", ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + topicId, ParamKeys.QuoteId + "=" + postId };
-                var replyParams = new[] { ParamKeys.ViewType + "=post", ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + topicId, ParamKeys.ReplyId + "=" + postId };
+                var quoteParams = new List<string> { ParamKeys.ViewType + "=post", ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + topicId, ParamKeys.QuoteId + "=" + postId };
+                var replyParams = new List<string> { ParamKeys.ViewType + "=post", ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + topicId, ParamKeys.ReplyId + "=" + postId };
+                if (SocialGroupId > 0)
+                {
+                    quoteParams.Add(ParamKeys.GroupIdName + "=" + SocialGroupId);
+                    replyParams.Add(ParamKeys.GroupIdName + "=" + SocialGroupId);
+                }
                 if (_useListActions)
                 {
                     sbOutput.Replace("[ACTIONS:QUOTE]", "<li onclick=\"window.location.href='" + Utilities.NavigateUrl(TabId, "", quoteParams) + "';\" title=\"[RESX:Quote]\"><i class=\"fa fa-quote-left fa-fw fa-blue\"></i>&nbsp;[RESX:Quote]</li>");
@@ -1361,6 +1387,17 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 sbOutput.Replace("[ACTIONS:QUOTE]", string.Empty);
                 sbOutput.Replace("[ACTIONS:REPLY]", string.Empty);
             }
+
+            if (_bModMove)
+            {
+                sbOutput = sbOutput.Replace("[ACTIONS:MOVE]", "<span onclick=\"javascript:amaf_openMove([TOPICID]);\"><img src=\"" + ImagePath + "/images/topic_move.gif\" border=\"0\" alt=\"[RESX:MoveTopic]\" style=\"cursor:pointer;vertical-align:middle;\" />Move</span>");
+            }
+            else
+            {
+                sbOutput = sbOutput.Replace("[ACTIONS:MOVE]", string.Empty);
+            }
+
+            sbOutput = sbOutput.Replace("[TOPICID]", TopicId.ToString());
 
             // Status
             if (_statusId <= 0 || (_statusId == 3 && replyStatusId == 0))
@@ -1468,7 +1505,9 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             }
 
             // Mod Alert
-            var alertParams = new[] { ParamKeys.ViewType + "=modreport", ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + topicId, ParamKeys.ReplyId + "=" + postId };
+            //var alertParams = new[] { ParamKeys.ViewType + "=modreport", ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + topicId, ParamKeys.ReplyId + "=" + postId };
+            var alertParams = new List<string> { ParamKeys.ViewType + "=modreport", ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=" + topicId, ParamKeys.ReplyId + "=" + postId };
+            if (SocialGroupId > 0) alertParams.Add(String.Format("{0}={1}", ParamKeys.GroupIdName, SocialGroupId));
             if (Request.IsAuthenticated)
             {
                 if (_useListActions)
