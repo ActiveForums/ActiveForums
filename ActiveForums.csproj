@@ -1344,6 +1344,7 @@
     <EmbeddedResource Include="sql\FullTextInstallPart1.sql" />
     <None Include="ActiveForums.dnn">
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="config\templates\BlogsView.txt" />
     <None Include="sql\05.00.01.SqlDataProvider" />

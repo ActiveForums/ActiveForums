@@ -1,7 +1,7 @@
 //
-// Active Forums - http://www.dnnsoftware.com
-// Copyright (c) 2013
-// by DNN Corp.
+// Active Forums - http://activeforums.org
+// Copyright (c) 2015
+// by Active Forums Community
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
@@ -33,9 +33,9 @@ using System.Security;
 [assembly: AllowPartiallyTrustedCallers()]
 [assembly: AssemblyTitle("Active Forums")]
 [assembly: AssemblyDescription("Discussion Forum Module for DotNetNuke")]
-[assembly: AssemblyCompany("DNN Corp")]
+[assembly: AssemblyCompany("activeforums.org")]
 [assembly: AssemblyProduct("Active Forums")]
-[assembly: AssemblyCopyright("Copyright © 2004-2014 DNN Corporation.")]
+[assembly: AssemblyCopyright("Copyright © 2004-2015 activeforums.org")]
 [assembly: AssemblyTrademark("")]
 
 
@@ -52,9 +52,9 @@ using System.Security;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("06.01.05")]
+[assembly: AssemblyVersion("06.02.00")]
 
-[assembly: AssemblyFileVersionAttribute("06.01.05")]
+[assembly: AssemblyFileVersionAttribute("06.02.00")]
 [assembly: WebResource("DotNetNuke.Modules.ActiveForums.CustomControls.Resources.cb.js", "text/javascript")]
 [assembly: WebResource("DotNetNuke.Modules.ActiveForums.scripts.afadmin.properties.js", "text/javascript")]
 

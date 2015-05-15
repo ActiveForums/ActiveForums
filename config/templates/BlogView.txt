@@ -3,7 +3,7 @@
 <div style="padding:5px;float:right;clear:all;text-align:right;"><span class="afactionicon">[RSSLINK]</span><span class="afactionicon">[AF:CONTROL:ADDTHIS:willmorg]</span><span class="afactionicon">[AF:CONTROL:PRINTER]</span><span class="afactionicon">[AF:CONTROL:EMAIL]</span>
 [POSTRATINGBUTTON]<br />[PREVTOPIC]&nbsp;[NEXTTOPIC]
 </div>
-<div class="afcrumb">[FORUMMAINLINK] > [FORUMGROUPLINK] > [FORUMLINK]</div>
+<div class="afcrumb"><i class="fa fa-comments-o fa-grey"></i> [FORUMMAINLINK] <i class="fa fa-long-arrow-right fa-grey"></i>  [FORUMGROUPLINK]  <i class="fa fa-long-arrow-right fa-grey"></i>  [FORUMLINK]</div>
 
 [AF:CONTROL:CALLBACK]
 <div id="afgrid" style="position:relative;">

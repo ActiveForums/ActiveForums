@@ -27,10 +27,10 @@ using DotNetNuke.Entities.Users;
 
 namespace DotNetNuke.Modules.ActiveForums
 {
-	public class UserProfiles
-	{
-		public static string GetAvatar(int userID, int avatarWidth, int avatarHeight)
-		{
+    public class UserProfiles
+    {
+        public static string GetAvatar(int userID, int avatarWidth, int avatarHeight)
+        {
             var portalSettings = HttpContext.Current.Items["PortalSettings"] as PortalSettings;
             if (portalSettings == null)
                 return string.Empty;
@@ -49,26 +49,26 @@ namespace DotNetNuke.Modules.ActiveForums
             }
         }
 
-	    public static string GetDisplayName(int moduleId, int userID, string username, string firstName = "", string lastName = "", string displayName = "", string profileNameClass = "af-profile-name")
-		{
-			return GetDisplayName(moduleId, false, false, false, userID, username, firstName, lastName, displayName, null, profileNameClass);
-		}
+        public static string GetDisplayName(int moduleId, int userID, string username, string firstName = "", string lastName = "", string displayName = "", string profileNameClass = "af-profile-name")
+        {
+            return GetDisplayName(moduleId, false, false, false, userID, username, firstName, lastName, displayName, null, profileNameClass);
+        }
 
-	    public static string GetDisplayName(int moduleId, bool linkProfile, bool isMod, bool isAdmin, int userId, string username, string firstName = "", string lastName = "", string displayName = "", string profileLinkClass = "af-profile-link", string profileNameClass = "af-profile-name")
-		{
+        public static string GetDisplayName(int moduleId, bool linkProfile, bool isMod, bool isAdmin, int userId, string username, string firstName = "", string lastName = "", string displayName = "", string profileLinkClass = "af-profile-link", string profileNameClass = "af-profile-name")
+        {
             var portalSettings = HttpContext.Current.Items["PortalSettings"] as PortalSettings;
             if (portalSettings == null)
                 return null;
 
-			var mainSettings = DataCache.MainSettings(moduleId);
+            var mainSettings = DataCache.MainSettings(moduleId);
 
-		    var outputTemplate = string.IsNullOrWhiteSpace(profileLinkClass) ? "{0}" : "<span class='" + profileNameClass + "'>{0}</span>";
+            var outputTemplate = string.IsNullOrWhiteSpace(profileLinkClass) ? "{0}" : "<span class='" + profileNameClass + "'>{0}</span>";
 
-            if(linkProfile && userId > 0)
+            if (linkProfile && userId > 0)
             {
                 var profileVisibility = mainSettings.ProfileVisibility;
 
-                switch(profileVisibility)
+                switch (profileVisibility)
                 {
                     case ProfileVisibilities.Disabled:
                         linkProfile = false;
@@ -90,20 +90,20 @@ namespace DotNetNuke.Modules.ActiveForums
                         break;
                 }
 
-                if(linkProfile)
-                    outputTemplate = "<a href='" + Common.Globals.NavigateURL(portalSettings.UserTabId, string.Empty, new [] { "userid=" + userId }) + "' class='" + profileLinkClass + "'>{0}</a>";
+                if (linkProfile)
+                    outputTemplate = "<a href='" + Common.Globals.NavigateURL(portalSettings.UserTabId, string.Empty, new[] { "userid=" + userId }) + "' class='" + profileLinkClass + "'>{0}</a>";
             }
 
             var displayMode = mainSettings.UserNameDisplay + string.Empty;
 
-	        string outputName = null;
-	        UserInfo user;
+            string outputName = null;
+            UserInfo user;
 
             switch (displayMode.ToUpperInvariant())
             {
                 case "DISPLAYNAME":
 
-                    if(string.IsNullOrWhiteSpace(username) && userId > 0)
+                    if (string.IsNullOrWhiteSpace(username) && userId > 0)
                     {
                         user = new Entities.Users.UserController().GetUser(portalSettings.PortalId, userId);
                         displayName = (user != null) ? user.DisplayName : null;
@@ -158,55 +158,57 @@ namespace DotNetNuke.Modules.ActiveForums
             }
 
 
-	        outputName = Utilities.SafeTrim(outputName);
+            outputName = Utilities.SafeTrim(outputName);
 
             if (string.IsNullOrWhiteSpace(outputName))
                 outputName = userId > 0 ? "Deleted User" : "Anonymous";
 
-	        outputName = HttpUtility.HtmlEncode(outputName);
+            outputName = HttpUtility.HtmlEncode(outputName);
 
-	        return string.Format(outputTemplate, outputName);
-		}
+            return string.Format(outputTemplate, outputName);
+        }
 
-		public static string UserStatus(string themePath, bool isUserOnline, int userID, int moduleID, string altOnlineText = "User is Online", string altOfflineText = "User is Offline")
-		{
-		    if (isUserOnline)
-			{
-				return "<img class='af-user-status af-user-status-online' src='" + themePath + "/images/online.png' alt='" + altOnlineText + "' style='vertical-align:middle;' vspace='2' hspace='2' />";
-			}
-            return "<img class='af-user-status af-user-status-offline' src='" + themePath + "/images/offline.png' alt='" + altOfflineText + "' style='vertical-align:middle;' vspace='2' hspace='2' />";
-		}
+        public static string UserStatus(string themePath, bool isUserOnline, int userID, int moduleID, string altOnlineText = "User is Online", string altOfflineText = "User is Offline")
+        {
+            if (isUserOnline)
+            {
+                //return "<img class='af-user-status af-user-status-online' src='" + themePath + "/images/online.png' alt='" + altOnlineText + "' style='vertical-align:middle;' vspace='2' hspace='2' />";
+                return "<span class=\"af-user-status\"><i class=\"fa fa-circle fa-blue\"></i></span>";
+            }
+            //return "<img class='af-user-status af-user-status-offline' src='" + themePath + "/images/offline.png' alt='" + altOfflineText + "' style='vertical-align:middle;' vspace='2' hspace='2' />";
+            return "<span class=\"af-user-status\"><i class=\"fa fa-circle fa-red\"></i></span>";
+        }
 
-	    /// <summary>
-		/// Returns the Rank for the user
-		/// </summary>
-		/// <returns>ReturnType 0 Returns RankDisplay ReturnType 1 Returns RankName</returns>
-		public static string GetUserRank(int portalId, int moduleID, int userID, int posts, int returnType)
-		{
-			//ReturnType 0 for RankDisplay
-			//ReturnType 1 for RankName
-			try
-			{
-				var strHost = Common.Globals.AddHTTP(Common.Globals.GetDomainName(HttpContext.Current.Request)) + "/";
-				var rc = new RewardController();
-				var i = 0;
-				var sRank = string.Empty;
-				foreach (var ri in rc.Reward_List(portalId, moduleID, true).Where(ri => ri.MinPosts <= posts && ri.MaxPosts > posts))
-				{
-				    if (returnType == 0)
-				    {
-				        sRank = "<img src='" + strHost + ri.Display.Replace("activeforums/Ranks", "activeforums/images/Ranks") + "' border='0' alt='" + ri.RankName + "' />";
-				        break;
-				    }
-				    sRank = ri.RankName;
-				    break;
-				}
-				return sRank;
-			}
-			catch (Exception ex)
-			{
-				return string.Empty;
-			}
-		}
-	}
+        /// <summary>
+        /// Returns the Rank for the user
+        /// </summary>
+        /// <returns>ReturnType 0 Returns RankDisplay ReturnType 1 Returns RankName</returns>
+        public static string GetUserRank(int portalId, int moduleID, int userID, int posts, int returnType)
+        {
+            //ReturnType 0 for RankDisplay
+            //ReturnType 1 for RankName
+            try
+            {
+                var strHost = Common.Globals.AddHTTP(Common.Globals.GetDomainName(HttpContext.Current.Request)) + "/";
+                var rc = new RewardController();
+                var i = 0;
+                var sRank = string.Empty;
+                foreach (var ri in rc.Reward_List(portalId, moduleID, true).Where(ri => ri.MinPosts <= posts && ri.MaxPosts > posts))
+                {
+                    if (returnType == 0)
+                    {
+                        sRank = "<img src='" + strHost + ri.Display.Replace("activeforums/Ranks", "activeforums/images/Ranks") + "' border='0' alt='" + ri.RankName + "' />";
+                        break;
+                    }
+                    sRank = ri.RankName;
+                    break;
+                }
+                return sRank;
+            }
+            catch (Exception ex)
+            {
+                return string.Empty;
+            }
+        }
+    }
 }
