@@ -1390,7 +1390,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 
             if (_bModMove)
             {
-                sbOutput = sbOutput.Replace("[ACTIONS:MOVE]", "<span onclick=\"javascript:amaf_openMove([TOPICID]);\"><img src=\"" + ImagePath + "/images/topic_move.gif\" border=\"0\" alt=\"[RESX:MoveTopic]\" style=\"cursor:pointer;vertical-align:middle;\" />Move</span>");
+                sbOutput.Replace("[ACTIONS:MOVE]", "<li onclick=\"javascript:amaf_openMove([TOPICID])\"';\" title=\"[RESX:Move]\"><i class=\"fa fa-exchange fa-rotate-90 fa-blue\"></i>&nbsp;[RESX:Move]</li>");
             }
             else
             {
