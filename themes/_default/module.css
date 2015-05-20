@@ -1032,6 +1032,10 @@ font-weight: 700;
 	word-break: break-word;
 }
 
+.afpostbody img {
+    width:100%;
+}
+
 .afborder {
 	border-left: solid 0px #cdcdcd;
 	border-right: solid 0px #cdcdcd;

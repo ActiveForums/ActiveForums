@@ -402,7 +402,7 @@ overflow: hidden;
 }
 .aftopictools {
 display:block;
-float:left;
+/*float:left;*/
 height:21px;
 }
 .aftopictools * {
