@@ -811,7 +811,15 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     sTopicsTemplate = sTopicsTemplate.Replace("[FORUMID]", ForumId.ToString());
                     sTopicsTemplate = sTopicsTemplate.Replace("[USERID]", UserId.ToString());
                     //sTopicsTemplate = sTopicsTemplate.Replace("[POSTICON]", GetIcon(UserLastTopicRead, UserLastReplyRead, TopicId, LastReplyId, drTopic["TopicIcon"].ToString(), isPinned, isLocked));
-                    sTopicsTemplate = sTopicsTemplate.Replace("[POSTICON]", "<div><i class=\"fa fa-file-o fa-2x fa-grey\"></i></div>");
+
+                    if (UserLastTopicRead == 0 || (UserLastTopicRead > 0 & UserLastReplyRead < ReplyId))
+                    {
+                        sTopicsTemplate = sTopicsTemplate.Replace("[POSTICON]", "<div><i class=\"fa fa-file-o fa-2x fa-red\"></i></div>");
+                    }
+                    else
+                    {
+                        sTopicsTemplate = sTopicsTemplate.Replace("[POSTICON]", "<div><i class=\"fa fa-file-o fa-2x fa-grey\"></i></div>");
+                    }
 
                     if (!(string.IsNullOrEmpty(Summary)))
                     {
