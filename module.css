@@ -688,13 +688,10 @@ only screen and (max-device-width: 768px) {
 }
 
 .afpostinfo_responsive .aftopprofile {
-    /*float:right;*/
-    padding-left: 120px;
+    margin-left: 120px;
     position:absolute;
 }
 .afpostinfo_responsive .afbottomprofile {
-    /*float:right;*/
-    
 }
 
 ul.af-right{float:left;}
