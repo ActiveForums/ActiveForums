@@ -1034,6 +1034,7 @@ font-weight: 700;
 
 .afpostbody img {
    /* width:100%;*/
+   max-width:100%;
 }
 
 .afborder {
