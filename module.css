@@ -687,11 +687,26 @@ only screen and (max-device-width: 768px) {
     min-height:100px !important;
 }
 
+.afpostinfo_responsive .afavatarprofile {
+    width:120px;
+	position:absolute;
+}
+
 .afpostinfo_responsive .aftopprofile {
-    margin-left: 120px;
+	margin-left: 130px;
+	width:120px;
     position:absolute;
 }
 .afpostinfo_responsive .afbottomprofile {
+	margin-left: 250px;
+	width:120px;
+    position:absolute;
+}
+
+/*.afpostinfo_responsive .afavatarprofile *, */
+.afpostinfo_responsive .aftopprofile  *,
+.afpostinfo_responsive .afbottomprofile *{
+    display:block;
 }
 
 ul.af-right{float:left;}
