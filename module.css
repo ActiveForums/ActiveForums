@@ -59,8 +59,8 @@ td.af-lastpost img,
 	outline-width: 0;
 	-moz-outline-width: 0;
 }
-/*.afgrid *, .aftopicjumper */
-#contentWrapper *  {
+
+.activeForums *  {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
@@ -402,7 +402,7 @@ overflow: hidden;
 }
 .aftopictools {
 display:block;
-float:left;
+/*float:left;*/
 height:21px;
 }
 .aftopictools * {
@@ -687,14 +687,26 @@ only screen and (max-device-width: 768px) {
     min-height:100px !important;
 }
 
+.afpostinfo_responsive .afavatarprofile {
+    width:120px;
+	position:absolute;
+}
+
 .afpostinfo_responsive .aftopprofile {
-    /*float:right;*/
-    padding-left: 120px;
+	margin-left: 130px;
+	width:120px;
     position:absolute;
 }
 .afpostinfo_responsive .afbottomprofile {
-    /*float:right;*/
-    
+	margin-left: 250px;
+	width:120px;
+    position:absolute;
+}
+
+/*.afpostinfo_responsive .afavatarprofile *, */
+.afpostinfo_responsive .aftopprofile  *,
+.afpostinfo_responsive .afbottomprofile *{
+    display:block;
 }
 
 ul.af-right{float:left;}

@@ -617,7 +617,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             sOutput = sOutput.Replace("[GROUPNAME]", GroupName);
             if (bModDelete)
             {
-                sOutput = sOutput.Replace("[ACTIONS:DELETE]", "<a href=\"javascript:void(0)\" onclick=\"amaf_modDel([TOPICID]);\" style=\"vertical-align:middle;\" alt=\"[RESX:DeleteTopic]\" /><i class=\"fa fa-trash-o fa-fw fa-blue\"></i></a>");
+                sOutput = sOutput.Replace("[ACTIONS:DELETE]", "<a href=\"javascript:void(0)\" onclick=\"amaf_modDel([TOPICID]);\" style=\"vertical-align:middle;\" title=\"[RESX:DeleteTopic]\" /><i class=\"fa fa-trash-o fa-fw fa-blue\"></i></a>");
             }
             else
             {
@@ -626,7 +626,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             if (bModEdit)
             {
                 string[] EditParams = { ParamKeys.ViewType + "=post", "action=te", ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=0-0" };
-                sOutput = sOutput.Replace("[ACTIONS:EDIT]", "<a href=\"" + NavigateUrl(TabId, "", EditParams) + "\"><i class=\"fa fa-pencil-square-o fa-fw fa-blue\"></i></a>");
+                sOutput = sOutput.Replace("[ACTIONS:EDIT]", "<a title=\"[RESX:EditTopic]\" href=\"" + NavigateUrl(TabId, "", EditParams) + "\"><i class=\"fa fa-pencil-square-o fa-fw fa-blue\"></i></a>");
                 sOutput = sOutput.Replace("0-0", "[TOPICID]");
                 sOutput = sOutput.Replace("[AF:QUICKEDITLINK]", "<a href=\"javascript:void(0)\" onclick=\"amaf_quickEdit([TOPICID]);\"><i class=\"fa fa-cog fa-fw fa-blue\"></i></a>");
             }
@@ -637,7 +637,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             }
             if (bModMove)
             {
-                sOutput = sOutput.Replace("[ACTIONS:MOVE]", "<a href=\"javascript:void(0)\" onclick=\"javascript:amaf_openMove([TOPICID]);\" alt=\"[RESX:MoveTopic]\" style=\"vertical-align:middle;\" /><i class=\"fa fa-exchange fa-rotate-90 fa-blue\"></i></a>");
+                sOutput = sOutput.Replace("[ACTIONS:MOVE]", "<a href=\"javascript:void(0)\" onclick=\"javascript:amaf_openMove([TOPICID]);\" title=\"[RESX:MoveTopic]\" style=\"vertical-align:middle;\" /><i class=\"fa fa-exchange fa-rotate-90 fa-blue\"></i></a>");
             }
             else
             {
@@ -645,7 +645,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             }
             if (bModLock)
             {
-                sOutput = sOutput.Replace("[ACTIONS:LOCK]", "<a href=\"javascript:void(0)\" onclick=\"javascript:if(confirm('[RESX:Confirm:Lock]')){amaf_modLock([TOPICID]);};\" alt=\"[RESX:LockTopic]\" style=\"vertical-align:middle;\"><i class=\"fa fa-lock fa-fw fa-blue\"></i></a>");
+                sOutput = sOutput.Replace("[ACTIONS:LOCK]", "<a href=\"javascript:void(0)\" onclick=\"javascript:if(confirm('[RESX:Confirm:Lock]')){amaf_modLock([TOPICID]);};\" title=\"[RESX:LockTopic]\" style=\"vertical-align:middle;\"><i class=\"fa fa-lock fa-fw fa-blue\"></i></a>");
             }
             else
             {
@@ -653,7 +653,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             }
             if (bModPin)
             {
-                sOutput = sOutput.Replace("[ACTIONS:PIN]", "<a href=\"javascript:void(0)\" onclick=\"javascript:if(confirm('[RESX:Confirm:Pin]')){amaf_modPin([TOPICID]);};\" alt=\"[RESX:Pin]\" style=\"vertical-align:middle;\"><i class=\"fa fa-thumb-tack fa-fw fa-blue\"></i></a>");
+                sOutput = sOutput.Replace("[ACTIONS:PIN]", "<a href=\"javascript:void(0)\" onclick=\"javascript:if(confirm('[RESX:Confirm:Pin]')){amaf_modPin([TOPICID]);};\" title=\"[RESX:Pin]\" style=\"vertical-align:middle;\"><i class=\"fa fa-thumb-tack fa-fw fa-blue\"></i></a>");
             }
             else
             {
@@ -811,7 +811,15 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     sTopicsTemplate = sTopicsTemplate.Replace("[FORUMID]", ForumId.ToString());
                     sTopicsTemplate = sTopicsTemplate.Replace("[USERID]", UserId.ToString());
                     //sTopicsTemplate = sTopicsTemplate.Replace("[POSTICON]", GetIcon(UserLastTopicRead, UserLastReplyRead, TopicId, LastReplyId, drTopic["TopicIcon"].ToString(), isPinned, isLocked));
-                    sTopicsTemplate = sTopicsTemplate.Replace("[POSTICON]", "<div><i class=\"fa fa-file-o fa-2x fa-grey\"></i></div>");
+
+                    if (UserLastTopicRead == 0 || (UserLastTopicRead > 0 & UserLastReplyRead < ReplyId))
+                    {
+                        sTopicsTemplate = sTopicsTemplate.Replace("[POSTICON]", "<div><i class=\"fa fa-file-o fa-2x fa-red\"></i></div>");
+                    }
+                    else
+                    {
+                        sTopicsTemplate = sTopicsTemplate.Replace("[POSTICON]", "<div><i class=\"fa fa-file-o fa-2x fa-grey\"></i></div>");
+                    }
 
                     if (!(string.IsNullOrEmpty(Summary)))
                     {
