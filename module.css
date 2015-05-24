@@ -36,13 +36,15 @@
 
 .afpostinfo_responsive {
     position:absolute;
-    width:120px;
+    width:130px;
+    word-wrap: break-word;
+    clear:both;
 }
 
 .afpostcontent_responsive {
     width:100%;
-    padding-left:120px;
-    min-height:345px !important;
+    padding-left:130px;
+    min-height:440px !important;
 }
 
 
@@ -688,25 +690,31 @@ only screen and (max-device-width: 768px) {
 }
 
 .afpostinfo_responsive .afavatarprofile {
-    width:120px;
-	position:absolute;
+    float:left;
+    width:125px;
+    min-height: 100px;
+	padding-right:5px;
 }
 
 .afpostinfo_responsive .aftopprofile {
-	margin-left: 130px;
-	width:120px;
-    position:absolute;
+	float:left;
+	margin-left: 10px;
+	padding-right:5px;
+	width:125px;
+	min-height: 100px;
 }
 .afpostinfo_responsive .afbottomprofile {
-	margin-left: 250px;
-	width:120px;
-    position:absolute;
+    float:left;
+	margin-left: 10px;
+	width:125px;
+    min-height: 100px;
+	padding-right:5px;
 }
 
 /*.afpostinfo_responsive .afavatarprofile *, */
 .afpostinfo_responsive .aftopprofile  *,
 .afpostinfo_responsive .afbottomprofile *{
-    display:block;
+    /*display:block;*/
 }
 
 ul.af-right{float:left;}
@@ -714,6 +722,15 @@ ul.af-right{float:left;}
 /*.afhiddenstats,*/
 .afhiddentime {
 	display: inline-block;
+}
+
+}
+
+@media only screen and (max-width: 490px), 
+only screen and (max-device-width: 490px) {
+.afpostinfo_responsive .afbottomprofile {
+    clear:both;
+	margin-left: 0px;
 }
 
 }
