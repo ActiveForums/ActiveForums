@@ -10,6 +10,12 @@ Active Forums is an award winning, DotNetNuke module that allows you to easily b
 	</div>
     <h3>Release Notes</h3>
 
+<b>Version 06.02.03</b>
+
+<ul>
+ <li>Pull #277 More corrections for skins</li>
+</ul>
+
 <b>Version 06.02.02</b>
 
 <ul>
