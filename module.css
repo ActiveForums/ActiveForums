@@ -35,18 +35,31 @@
 }
 
 .afpostinfo_responsive {
-    position:absolute;
-    width:130px;
-    word-wrap: break-word;
-    clear:both;
+    /*position:absolute;*/
+    position:relative;
+    width:120px;
+    margin-right: -120px;
+	word-wrap: break-word;
+    float:left;
+    /*clear:both;*/
+	z-index:10;
 }
 
 .afpostcontent_responsive {
-    width:100%;
-    padding-left:130px;
-    min-height:440px !important;
+    width:100% !important;
+    /*margin-right: -120px;*/
+    padding-left: 120px;
+    position:relative;
+    /*min-height:440px !important;*/
+    float:left;
+	z-index:9;
 }
 
+.afpostcontent_responsive img {
+    width: 100%;
+    max-width: 100%;
+    height:auto;
+}
 
 ._hide,
 td.af-lastpost img,
@@ -678,37 +691,46 @@ only screen and (max-device-width: 768px) {
 	display: none;
 }
 
-
 .afpostinfo_responsive {
     position:static;
     width:100%;
+	margin-right: 0px;
+	clear:both;
 }
 
 .afpostcontent_responsive {
+	position:static;
     padding-left:0px;
-    min-height:100px !important;
+	width:100%;
+    /*min-height:100px !important;*/
+	clear:both;
 }
 
 .afpostinfo_responsive .afavatarprofile {
     float:left;
     width:125px;
+	/*position:absolute;*/
     min-height: 100px;
 	padding-right:5px;
 }
 
 .afpostinfo_responsive .aftopprofile {
 	float:left;
+	/*padding-left: 130px;*/
 	margin-left: 10px;
 	padding-right:5px;
 	width:125px;
 	min-height: 100px;
+	/*position:absolute;*/
 }
 .afpostinfo_responsive .afbottomprofile {
     float:left;
+    /*padding-left: 250px;*/
 	margin-left: 10px;
 	width:125px;
     min-height: 100px;
 	padding-right:5px;
+    /*position:absolute;*/
 }
 
 /*.afpostinfo_responsive .afavatarprofile *, */
