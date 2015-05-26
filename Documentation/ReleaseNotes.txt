@@ -14,6 +14,7 @@ Active Forums is an award winning, DotNetNuke module that allows you to easily b
 
 <ul>
  <li>Attempt repair of module branding icon</li>
+ <li>Pull #280 quick jump-to drop down breaks responsive with long forum names - fixed</li>
 </ul>
 
 <b>Version 06.02.03</b>
