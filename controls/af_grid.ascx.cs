@@ -176,7 +176,7 @@ namespace DotNetNuke.Modules.ActiveForums
                         if (UserId != -1)
                         {
                             lblHeader.Text = GetSharedResource("[RESX:MyResolved]");
-                            _dtResults = db.UI_MyResolved(PortalId, ModuleId, UserId, _rowIndex, _pageSize, sort, forumIds).Tables[0];
+                            _dtResults = db.UI_MyResolvedView(PortalId, ModuleId, UserId, _rowIndex, _pageSize, sort, forumIds).Tables[0];
                             if (_dtResults.Rows.Count > 0)
                                 _rowCount = _dtResults.Rows[0].GetInt("RecordCount");
                         }

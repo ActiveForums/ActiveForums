@@ -113,10 +113,11 @@ namespace DotNetNuke.Modules.ActiveForums.Data
 			return SqlHelper.ExecuteDataset(_connectionString, dbPrefix + "UI_NotRead", portalId, moduleId, userId, rowIndex, maxRows, sort, forumIds);
 		}
 
-        public DataSet UI_UnansweredView(int portalId, int moduleId, int userId, int rowIndex, int maxRows, string sort, string forumIds)
-        {
-            return SqlHelper.ExecuteDataset(_connectionString, dbPrefix + "UI_UnansweredView", portalId, moduleId, userId, rowIndex, maxRows, sort, forumIds);
-        }
+		public DataSet UI_UnansweredView(int portalId, int moduleId, int userId, int rowIndex, int maxRows, string sort, string forumIds)
+		{
+			return SqlHelper.ExecuteDataset(_connectionString, dbPrefix + "UI_UnansweredView", portalId, moduleId, userId, rowIndex, maxRows, sort, forumIds);
+		}
+
         public DataSet UI_UnresolvedView(int portalId, int moduleId, int userId, int rowIndex, int maxRows, string sort, string forumIds)
         {
             return SqlHelper.ExecuteDataset(_connectionString, dbPrefix + "UI_UnresolvedView", portalId, moduleId, userId, rowIndex, maxRows, sort, forumIds);
@@ -131,9 +132,10 @@ namespace DotNetNuke.Modules.ActiveForums.Data
         {
             return SqlHelper.ExecuteDataset(_connectionString, dbPrefix + "UI_MyTopicsView", portalId, moduleId, userId, rowIndex, maxRows, sort, forumIds);
         }
-        public DataSet UI_MyResolved(int portalId, int moduleId, int userId, int rowIndex, int maxRows, string sort, string forumIds)
+
+        public DataSet UI_MyResolvedView(int portalId, int moduleId, int userId, int rowIndex, int maxRows, string sort, string forumIds)
         {
-            return SqlHelper.ExecuteDataset(_connectionString, dbPrefix + "UI_MyResolved", portalId, moduleId, userId, rowIndex, maxRows, sort, forumIds);
+            return SqlHelper.ExecuteDataset(_connectionString, dbPrefix + "UI_MyResolvedView", portalId, moduleId, userId, rowIndex, maxRows, sort, forumIds);
         }
 
 

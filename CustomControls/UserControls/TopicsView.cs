@@ -145,16 +145,16 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
         #endregion
 
         protected override void OnInit(EventArgs e)
-		{
-			base.OnInit(e);
+        {
+            base.OnInit(e);
 
             //ctlModal.Callback += ctlModal_Callback;
 
         }
 
         protected override void OnLoad(EventArgs e)
-		{
-			base.OnLoad(e);
+        {
+            base.OnLoad(e);
 
             try
             {
@@ -284,7 +284,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                             {
                                 bAllowRSS = false;
                             }
-                            
+
                             if (bRead == false)
                             {
                                 bAllowRSS = false;
@@ -617,7 +617,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             sOutput = sOutput.Replace("[GROUPNAME]", GroupName);
             if (bModDelete)
             {
-                sOutput = sOutput.Replace("[ACTIONS:DELETE]", "<img onclick=\"amaf_modDel([TOPICID]);\" src=\"" + ImagePath + "/images/topic_delete.gif\" border=\"0\" style=\"vertical-align:middle;\" alt=\"[RESX:DeleteTopic]\" style=\"cursor:pointer;\" />");
+                sOutput = sOutput.Replace("[ACTIONS:DELETE]", "<a href=\"javascript:void(0)\" onclick=\"amaf_modDel([TOPICID]);\" style=\"vertical-align:middle;\" title=\"[RESX:DeleteTopic]\" /><i class=\"fa fa-trash-o fa-fw fa-blue\"></i></a>");
             }
             else
             {
@@ -626,9 +626,9 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             if (bModEdit)
             {
                 string[] EditParams = { ParamKeys.ViewType + "=post", "action=te", ParamKeys.ForumId + "=" + ForumId, ParamKeys.TopicId + "=0-0" };
-                sOutput = sOutput.Replace("[ACTIONS:EDIT]", "<a href=\"" + NavigateUrl(TabId, "", EditParams) + "\"><img src=\"" + ImagePath + "/images/topic_edit.gif\" border=\"0\" style=\"vertical-align:middle;\" alt=\"[RESX:EditTopic]\" /></a>");
+                sOutput = sOutput.Replace("[ACTIONS:EDIT]", "<a title=\"[RESX:EditTopic]\" href=\"" + NavigateUrl(TabId, "", EditParams) + "\"><i class=\"fa fa-pencil-square-o fa-fw fa-blue\"></i></a>");
                 sOutput = sOutput.Replace("0-0", "[TOPICID]");
-                sOutput = sOutput.Replace("[AF:QUICKEDITLINK]", "<span class=\"af-icon16 af-icon16-gear\" onclick=\"amaf_quickEdit([TOPICID]);\"></span>");
+                sOutput = sOutput.Replace("[AF:QUICKEDITLINK]", "<a href=\"javascript:void(0)\" title=\"[RESX:TopicQuickEdit]\" onclick=\"amaf_quickEdit([TOPICID]);\"><i class=\"fa fa-cog fa-fw fa-blue\"></i></a>");
             }
             else
             {
@@ -637,7 +637,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             }
             if (bModMove)
             {
-                sOutput = sOutput.Replace("[ACTIONS:MOVE]", "<img onclick=\"javascript:amaf_openMove([TOPICID]);\" src=\"" + ImagePath + "/images/topic_move.gif\" border=\"0\" alt=\"[RESX:MoveTopic]\" style=\"cursor:pointer;vertical-align:middle;\" />");
+                sOutput = sOutput.Replace("[ACTIONS:MOVE]", "<a href=\"javascript:void(0)\" onclick=\"javascript:amaf_openMove([TOPICID]);\" title=\"[RESX:MoveTopic]\" style=\"vertical-align:middle;\" /><i class=\"fa fa-exchange fa-rotate-90 fa-blue\"></i></a>");
             }
             else
             {
@@ -645,7 +645,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             }
             if (bModLock)
             {
-                sOutput = sOutput.Replace("[ACTIONS:LOCK]", "<img onclick=\"javascript:if(confirm('[RESX:Confirm:Lock]')){amaf_modLock([TOPICID]);};\" src=\"" + ImagePath + "/images/topic_lock.gif\" border=\"0\" alt=\"[RESX:LockTopic]\" style=\"cursor:pointer;vertical-align:middle;\" />");
+                sOutput = sOutput.Replace("[ACTIONS:LOCK]", "<a href=\"javascript:void(0)\" onclick=\"javascript:if(confirm('[RESX:Confirm:Lock]')){amaf_modLock([TOPICID]);};\" title=\"[RESX:LockTopic]\" style=\"vertical-align:middle;\"><i class=\"fa fa-lock fa-fw fa-blue\"></i></a>");
             }
             else
             {
@@ -653,7 +653,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             }
             if (bModPin)
             {
-                sOutput = sOutput.Replace("[ACTIONS:PIN]", "<img onclick=\"javascript:if(confirm('[RESX:Confirm:Pin]')){amaf_modPin([TOPICID]);};\" src=\"" + ImagePath + "/images/topic_pin.gif\" border=\"0\"  alt=\"[RESX:Pin]\" style=\"cursor:pointer;vertical-align:middle;\" />");
+                sOutput = sOutput.Replace("[ACTIONS:PIN]", "<a href=\"javascript:void(0)\" onclick=\"javascript:if(confirm('[RESX:Confirm:Pin]')){amaf_modPin([TOPICID]);};\" title=\"[RESX:Pin]\" style=\"vertical-align:middle;\"><i class=\"fa fa-thumb-tack fa-fw fa-blue\"></i></a>");
             }
             else
             {
@@ -743,13 +743,22 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     {
                         sTopicsTemplate = sTopicsTemplate.Replace("[RESX:LockTopic]", "[RESX:UnLockTopic]");
                         sTopicsTemplate = sTopicsTemplate.Replace("[RESX:Confirm:Lock]", "[RESX:Confirm:UnLock]");
-
+                        sTopicsTemplate = sTopicsTemplate.Replace("[ICONLOCK]", "&nbsp;&nbsp;<i class=\"fa fa-lock fa-fw fa-red\"></i>");
                     }
+                    else
+                    {
+                        sTopicsTemplate = sTopicsTemplate.Replace("[ICONLOCK]", "");
+                    }
+
                     if (isPinned)
                     {
-                        sTopicsTemplate = sTopicsTemplate.Replace("[RESX:PinTopic]", "[RESX:UnPinTopic]");
+                        //sTopicsTemplate = sTopicsTemplate.Replace("[RESX:PinTopic]", "[RESX:UnPinTopic]");
                         sTopicsTemplate = sTopicsTemplate.Replace("[RESX:Confirm:Pin]", "[RESX:Confirm:UnPin]");
-
+                        sTopicsTemplate = sTopicsTemplate.Replace("[ICONPIN]", "&nbsp;&nbsp;<i class=\"fa fa-thumb-tack fa-fw fa-red\"></i>");
+                    }
+                    else
+                    {
+                        sTopicsTemplate = sTopicsTemplate.Replace("[ICONPIN]", "");
                     }
 
                     if (string.IsNullOrEmpty(topicData))
@@ -801,7 +810,17 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     sTopicsTemplate = sTopicsTemplate.Replace("[AUTHORID]", AuthorId.ToString());
                     sTopicsTemplate = sTopicsTemplate.Replace("[FORUMID]", ForumId.ToString());
                     sTopicsTemplate = sTopicsTemplate.Replace("[USERID]", UserId.ToString());
-                    sTopicsTemplate = sTopicsTemplate.Replace("[POSTICON]", GetIcon(UserLastTopicRead, UserLastReplyRead, TopicId, LastReplyId, drTopic["TopicIcon"].ToString(), isPinned, isLocked));
+                    //sTopicsTemplate = sTopicsTemplate.Replace("[POSTICON]", GetIcon(UserLastTopicRead, UserLastReplyRead, TopicId, LastReplyId, drTopic["TopicIcon"].ToString(), isPinned, isLocked));
+
+                    if (UserLastTopicRead == 0 || (UserLastTopicRead > 0 & UserLastReplyRead < ReplyId))
+                    {
+                        sTopicsTemplate = sTopicsTemplate.Replace("[POSTICON]", "<div><i class=\"fa fa-file-o fa-2x fa-red\"></i></div>");
+                    }
+                    else
+                    {
+                        sTopicsTemplate = sTopicsTemplate.Replace("[POSTICON]", "<div><i class=\"fa fa-file-o fa-2x fa-grey\"></i></div>");
+                    }
+
                     if (!(string.IsNullOrEmpty(Summary)))
                     {
                         if (!(Utilities.HasHTML(Summary)))
@@ -855,7 +874,9 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     string sPollImage = "";
                     if (Convert.ToInt32(drTopic["TopicType"]) == 1)
                     {
-                        sPollImage = "<img src=\"" + MyThemePath + "/images/poll.png\" style=\"vertical-align:middle;\" alt=\"[RESX:Poll]\" />";
+                        //sPollImage = "<img src=\"" + MyThemePath + "/images/poll.png\" style=\"vertical-align:middle;\" alt=\"[RESX:Poll]\" />";
+
+                        sPollImage = "&nbsp;<i class=\"fa fa-signal fa-fw fa-red\"></i>";
                     }
                     string sTopicURL = string.Empty;
                     ControlUtils ctlUtils = new ControlUtils();
@@ -941,9 +962,9 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     Subject = Utilities.StripHTMLTag(Subject);
                     Subject = Subject.Replace("&#91;", "[");
                     Subject = Subject.Replace("&#93;", "]");
-                    sTopicsTemplate = sTopicsTemplate.Replace("[SUBJECT]", sPollImage + Subject);
+                    sTopicsTemplate = sTopicsTemplate.Replace("[SUBJECT]", Subject + sPollImage);
                     //sTopicsTemplate = sTopicsTemplate.Replace("[SUBJECTLINK]", sPollImage & GetTopic(ModuleId, TabId, ForumId, TopicId, Subject, sBodyTitle, UserId, AuthorId, ReplyCount, -1, sUserJumpUrl))
-                    sTopicsTemplate = sTopicsTemplate.Replace("[SUBJECTLINK]", sPollImage + GetTopic(ModuleId, TabId, ForumId, TopicId, Subject, sBodyTitle, UserId, AuthorId, ReplyCount, -1, sTopicURL));
+                    sTopicsTemplate = sTopicsTemplate.Replace("[SUBJECTLINK]", GetTopic(ModuleId, TabId, ForumId, TopicId, Subject, sBodyTitle, UserId, AuthorId, ReplyCount, -1, sTopicURL) + sPollImage);
 
 
                     sTopicsTemplate = sTopicsTemplate.Replace("[STARTEDBY]", UserProfiles.GetDisplayName(ModuleId, true, bModApprove, ForumUser.IsAdmin || ForumUser.IsSuperUser, AuthorId, AuthorUserName, AuthorFirstName, AuthorLastName, AuthorDisplayName).ToString().Replace("&amp;#", "&#"));
@@ -960,7 +981,9 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     {
                         string sRatingImage = null;
                         //sRatingImage = "<img src=""" & MyThemePath & "/yellow_star_0" & drTopic("TopicRating").ToString & ".gif"" alt=""" & drTopic("TopicRating").ToString & """ />"
-                        sRatingImage = "<span class=\"af-rater rate" + drTopic["TopicRating"].ToString() + "\">&nbsp;</span>";
+                        //sRatingImage = "<span class=\"af-rater rate" + drTopic["TopicRating"].ToString() + "\">&nbsp;</span>";
+
+                        sRatingImage = "<span class=\"fa-rater fa-rate" + drTopic["TopicRating"].ToString() + "\"><i class=\"fa fa-star1\"></i><i class=\"fa fa-star2\"></i><i class=\"fa fa-star3\"></i><i class=\"fa fa-star4\"></i><i class=\"fa fa-star5\"></i></span>";
                         sTopicsTemplate = sTopicsTemplate.Replace("[POSTRATINGDISPLAY]", sRatingImage);
                     }
 
@@ -973,7 +996,9 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                         }
                         else
                         {
-                            sImg = "<img alt=\"[RESX:PostStatus" + StatusId.ToString() + "]\" src=\"" + MyThemePath + "/images/status" + StatusId.ToString() + ".png\" />";
+                            //sImg = "<img alt=\"[RESX:PostStatus" + StatusId.ToString() + "]\" src=\"" + MyThemePath + "/images/status" + StatusId.ToString() + ".png\" />";
+
+                            sImg = "<div><i class=\"fa fa-status" + StatusId.ToString() + " fa-red fa-2x\"></i></div>";
                         }
                         sTopicsTemplate = sTopicsTemplate.Replace("[STATUS]", sImg);
                     }
@@ -1106,7 +1131,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             {
                 return "<img src=\"" + MyThemePath + "/emoticons/" + Icon + "\" alt=\"" + Icon + "\" />";
             }
-            
+
             if (Pinned && Locked)
             {
                 return "<img src=\"" + MyThemePath + "/images/topic_pinlocked.png\" alt=\"[RESX:PinnedLocked]\" />";
@@ -1402,7 +1427,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             }
         }
          */
-        
+
         private static string CheckControls(string template)
         {
             const string tagRegistration = "<%@ Register TagPrefix=\"ac\" Namespace=\"DotNetNuke.Modules.ActiveForums.Controls\" Assembly=\"DotNetNuke.Modules.ActiveForums\" %>";

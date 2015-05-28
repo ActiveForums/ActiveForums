@@ -10,6 +10,40 @@ Active Forums is an award winning, DotNetNuke module that allows you to easily b
 	</div>
     <h3>Release Notes</h3>
 
+<b>Version 06.02.04</b>
+
+<ul>
+ <li>Attempt repair of module branding icon</li>
+ <li>Pull #280 quick jump-to drop down breaks responsive with long forum names - fixed</li>
+</ul>
+
+<b>Version 06.02.03</b>
+
+<ul>
+ <li>Pull #277 More corrections for skins</li>
+</ul>
+
+<b>Version 06.02.02</b>
+
+<ul>
+ <li>Pull #274 Fixed content width, tooltips, and other UI related items</li>
+</ul>
+
+<b>Version 06.02.01</b>
+
+<ul>
+ <li>Pull #271 fixed move-icon inside a topic to match the new icons</li>
+</ul>
+
+<b>Version 06.02.00</b>
+
+<ul>
+ <li>Pull #268 finished UI changes introduced in version 6 - implemented fontawesome and tweaked responsive layout all around</li>
+ <li>Pull #247 fixed where filters couldn't be deleted, worked on SocialGroupID and configured move to work on locked post</li>
+ <li>Added module icon for branding
+</ul>
+
+
 <b>Version 06.01.05</b>
 
 <ul>

@@ -194,7 +194,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             sForum = sForum.Replace("[FORUMDESCRIPTION]", fNode.Attributes["desc"].Value);
             sForum = sForum.Replace("[TOTALTOPICS]", fNode.Attributes["totaltopics"].Value);
             sForum = sForum.Replace("[TOTALREPLIES]", fNode.Attributes["totalreplies"].Value);
-            sForum = sForum.Replace("[DISPLAYNAME]", fNode.Attributes["lastpostauthorname"].Value);
+            sForum = sForum.Replace("[DISPLAYNAME]", "<i class=\"fa fa-user fa-fw fa-blue\"></i>&nbsp;" + fNode.Attributes["lastpostauthorname"].Value);
             sForum = sForum.Replace("[LASTPOST]", "<asp:placeholder id=\"plhLastPost" + fid + "\" runat=\"server\">");
             sForum = sForum.Replace("[/LASTPOST]", "</asp:placeholder>");
 
@@ -228,10 +228,12 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             //TODO: Properly check "canview"
             string sIcon = TemplateUtils.ShowIcon(true, fid, UserId, DateTime.Parse(lastpostdate), lastReadDate, lastreplyid);
             string sIconImage = "<img alt=\"" + forumname + "\" src=\"" + ThemePath + "images/" + sIcon + "\" />";
-            sForum = sForum.Replace("[FORUMICON]", sIconImage);
+            //sForum = sForum.Replace("[FORUMICON]", sIconImage);
+            sForum = sForum.Replace("[FORUMICON]", "<div style=\"height:30px;margin=right:10px;\"><i class=\"fa fa-folder fa-2x fa-blue\"></i></div>");
             sForum = sForum.Replace("[CSS:FORUMICON]", "affoldernorm");
             sForum = sForum.Replace("[CSS:FORUMICONSM]", "affoldersmnorm");
-            sForum = sForum.Replace("[FORUMICONSM]", sIconImage.Replace("folder", "folder16"));
+            //sForum = sForum.Replace("[FORUMICONSM]", sIconImage.Replace("folder", "folder16"));
+            sForum = sForum.Replace("[FORUMICONSM]", "");
             var xNodeList = ForumData.SelectNodes("//forums/forum[@active='true' and @parentforumid='" + fid + "']");
             string sSubs = string.Empty;
             if (xNodeList.Count > 0)

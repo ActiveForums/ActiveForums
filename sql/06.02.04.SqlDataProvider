@@ -4,8 +4,8 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_UI_MyResolved]') AND type in (N'P', N'PC'))
-DROP PROCEDURE {databaseOwner}[{objectQualifier}activeforums_UI_MyResolved]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_UI_MyResolvedView]') AND type in (N'P', N'PC'))
+DROP PROCEDURE {databaseOwner}[{objectQualifier}activeforums_UI_MyResolvedView]
 GO
 
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}activeforums_UI_UnresolvedView]') AND type in (N'P', N'PC'))
@@ -13,8 +13,8 @@ DROP PROCEDURE {databaseOwner}[{objectQualifier}activeforums_UI_UnresolvedView]
 GO
 
 
-/****** Object:  StoredProcedure {databaseOwner}[{objectQualifier}activeforums_UI_MyResolved]    Script Date: 04/24/2015 12:08:09 ******/
-CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_UI_MyResolved]
+/****** Object:  StoredProcedure {databaseOwner}[{objectQualifier}activeforums_UI_MyResolvedView]    Script Date: 04/24/2015 12:08:09 ******/
+CREATE PROCEDURE {databaseOwner}[{objectQualifier}activeforums_UI_MyResolvedView]
 	@PortalId int,
 	@ModuleId int,
 	@UserId int,

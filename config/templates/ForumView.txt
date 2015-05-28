@@ -18,14 +18,15 @@
 							<div class="afcontrolheader">[RESX:FORUMHEADER]</div>
 						</td>
 						<td class="afgrouprow afgrouprow-m">
-							<div class="afcontrolheader">[RESX:TOPICSHEADER]</div>
+							<div class="afcontrolheader"><i class="fa fa-files-o fa-fw fa-grey"></i>&nbsp;[RESX:TOPICSHEADER]</div>
 						</td>
 						<td class="afgrouprow afgrouprow-m">
-							<div class="afcontrolheader">[RESX:REPLIESHEADER]</div>
+							<div class="afcontrolheader"><i class="fa fa-reply fa-fw fa-grey"></i>&nbsp;[RESX:REPLIESHEADER]</div>
 						</td>
 						<td class="afgrouprow afgrouprow-l">
-							<div class="afcontrolheader">[RESX:LASTPOSTHEADER]</div>
+							<div class="afcontrolheader"><i class="fa fa-file-o fa-fw fa-grey"></i>&nbsp;[RESX:LASTPOSTHEADER]</div>
 						</td>
+
 					</tr>
 					
 						
@@ -34,7 +35,7 @@
 						<td colspan="0">
 							 <table class="afgrid" cellspacing="0" cellpadding="0" width="100%">
 								<tr>
-									<td class="aftopicrow _hide" width="20">[FORUMICON]</td>
+									<td class="aftopicrow af-icons">[FORUMICONCSS]</td>
 									<td class="aftopicrow af-content">
 										<table>
 											<tr>
@@ -62,14 +63,14 @@
 						<td colspan="0">
 							 <table class="afgrid" cellspacing="0" cellpadding="0" width="100%">
 								<tr>
-									<td class="aftopicrow _hide" width="20">[FORUMICONSM]</td>
+									<td class="aftopicrow af-icons"></td>
 									<td class="aftopicrow af-content">
 										<table>
 											<tr>
 												<td rowspan="2" class="afsubject">
 												
 												<span class="afhiddenstats">[TOTALTOPICS] Topics and [TOTALREPLIES] Replies</span>
-												<span class="aftopictitle">[FORUMNAME]</span> 
+												<span class="aftopictitle">[FORUMICONSM][FORUMNAME]</span> 
 												<span class="aftopicsubtitle">[FORUMDESCRIPTION]</span>
 												
 											</tr>

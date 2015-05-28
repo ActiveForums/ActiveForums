@@ -53,7 +53,7 @@ namespace DotNetNuke.Modules.ActiveForums
 				sb.Append(Convert.ToString(dr["OptionName"]) + "</b> (" + Convert.ToString(dr["ResultCount"]) + ")");
 				sb.Append("</td></tr><tr><td class=\"afnormal\">");
 				sb.Append("<span class=\"afpollbar\">");
-                sb.Append("<img src=\"" + ImagePath + "/spacer.gif\" style=\"height:10px !important;max-height:10px !important;\" height=\"10\" width=\"" + Convert.ToInt32((BarWidth * dblPercent)) + "\" />");
+				sb.Append("<img src=\"" + ImagePath + "/spacer.gif\" style=\"height:10px !important;max-height:10px !important;\" height=\"10\" width=\"" + Convert.ToInt32((BarWidth * dblPercent)) + "\" />");
 				sb.Append("</span>&nbsp;" + Convert.ToInt32(dblPercent * 100).ToString() + "%");
 				sb.Append("</td></tr>");
 			}

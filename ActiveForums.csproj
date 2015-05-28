@@ -553,7 +553,9 @@
     <Content Include="controls\admin_home.ascx" />
     <Content Include="controls\admin_manageforums_home.ascx" />
     <Content Include="controls\admin_ranks.ascx" />
-    <Content Include="controls\admin_tags.ascx" />
+    <Content Include="controls\admin_tags.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <Content Include="controls\admin_templates.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
@@ -566,7 +568,9 @@
     <Content Include="controls\af_members.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
-    <Content Include="controls\af_modreport.ascx" />
+    <Content Include="controls\af_modreport.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <Content Include="controls\af_polledit.ascx" />
     <Content Include="controls\af_search.ascx">
       <SubType>ASPXCodeBehind</SubType>
@@ -647,7 +651,8 @@
     <None Include="sql\05.02.00.SqlDataProvider" />
     <None Include="sql\05.02.01.SqlDataProvider" />
     <None Include="sql\06.00.02.SqlDataProvider" />
-    <None Include="sql\06.01.05.SqlDataProvider" />
+    <None Include="sql\06.02.04.SqlDataProvider" />
+    <None Include="sql\06.01.06.SqlDataProvider" />
     <None Include="sql\06.01.03.SqlDataProvider" />
     <None Include="sql\Enterprise.sql" />
     <Content Include="config\templates\ModAlert_text.txt" />
@@ -1345,7 +1350,6 @@
     <None Include="config\templates\BlogsView.txt" />
     <None Include="sql\05.00.01.SqlDataProvider" />
     <None Include="sql\05.01.00.SqlDataProvider" />
-    <None Include="sql\05.02.02.SqlDataProvider" />
     <None Include="WhatsNewResources.zip" />
   </ItemGroup>
   <ItemGroup>
