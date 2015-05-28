@@ -86,11 +86,13 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             string tb = DisplayTemplate; //Utilities.ParseToolBar(DisplayTemplate, PageId, InstanceId, UserId, CurrentUserTypes.Admin)
             //tb = tb.Replace
             tb = tb.Replace("[AF:TB:Unanswered]", "<af:link id=\"lnkUnanswered\" NavigateUrl=\"" + Utilities.NavigateUrl(PageId, "", new string[] { ParamKeys.ViewType + "=grid", "afgt=unanswered" }) + "\" text=\"[RESX:Unanswered]\" runat=\"server\" />");
+            tb = tb.Replace("[AF:TB:Unresolved]", "<af:link id=\"lnkUnresolved\" NavigateUrl=\"" + Utilities.NavigateUrl(PageId, "", new string[] { ParamKeys.ViewType + "=grid", "afgt=unresolved" }) + "\" text=\"[RESX:Unresolved]\" runat=\"server\" />");
             tb = tb.Replace("[AF:TB:ActiveTopics]", "<af:link id=\"lnkActive\" NavigateURL=\"" + Utilities.NavigateUrl(PageId, "", new string[] { ParamKeys.ViewType + "=grid", "afgt=activetopics" }) + "\" text=\"[RESX:ActiveTopics]\" runat=\"server\" />");
             tb = tb.Replace("[AF:TB:Search]", "<af:link id=\"lnkSearch\" NavigateUrl=\"" + Utilities.NavigateUrl(PageId, "", ParamKeys.ViewType + "=search") + "\" text=\"[RESX:Search]\" runat=\"server\" />");
             tb = tb.Replace("[AF:TB:Forums]", "<af:link id=\"lnkForums\" navigateUrl=\"" + Utilities.NavigateUrl(PageId) + "\" text=\"[RESX:FORUMS]\" runat=\"server\" />");
             tb = tb.Replace("[AF:TB:NotRead]", "<af:link id=\"lnkNotRead\" NavigateUrl=\"" + Utilities.NavigateUrl(PageId, "", new string[] { ParamKeys.ViewType + "=grid", "afgt=notread" }) + "\" text=\"[RESX:NotRead]\" AuthRequired=\"True\" runat=\"server\" />");
             tb = tb.Replace("[AF:TB:MyTopics]", "<af:link id=\"lnkMyTopics\" NavigateUrl=\"" + Utilities.NavigateUrl(PageId, "", new string[] { ParamKeys.ViewType + "=grid", "afgt=mytopics" }) + "\" text=\"[RESX:MyTopics]\" AuthRequired=\"True\" runat=\"server\" />");
+            tb = tb.Replace("[AF:TB:MyResolved]", "<af:link id=\"lnkMyResolved\" NavigateUrl=\"" + Utilities.NavigateUrl(PageId, "", new string[] { ParamKeys.ViewType + "=grid", "afgt=myresolved" }) + "\" text=\"[RESX:MyResolved]\" AuthRequired=\"True\" runat=\"server\" />");
             tb = tb.Replace("[AF:TB:MyProfile]", string.Empty);
             tb = tb.Replace("[AF:TB:MemberList]", string.Empty);
             tb = tb.Replace("[AF:TB:MySettings]", string.Empty);
