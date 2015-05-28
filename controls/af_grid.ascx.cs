@@ -135,6 +135,15 @@ namespace DotNetNuke.Modules.ActiveForums
 
                         break;
 
+                    case "unresolved":
+
+                        lblHeader.Text = GetSharedResource("[RESX:Unresolved]");
+                        _dtResults = db.UI_UnresolvedView(PortalId, ModuleId, UserId, _rowIndex, _pageSize, sort, forumIds).Tables[0];
+                        if (_dtResults.Rows.Count > 0)
+                            _rowCount = _dtResults.Rows[0].GetInt("RecordCount");
+
+                        break;
+
                     case "tags":
 
                         var tagId = -1;
@@ -154,6 +163,20 @@ namespace DotNetNuke.Modules.ActiveForums
                         {
                             lblHeader.Text = GetSharedResource("[RESX:MyTopics]");
                             _dtResults = db.UI_MyTopicsView(PortalId, ModuleId, UserId, _rowIndex, _pageSize, sort, forumIds).Tables[0];
+                            if (_dtResults.Rows.Count > 0)
+                                _rowCount = _dtResults.Rows[0].GetInt("RecordCount");
+                        }
+                        else
+                            Response.Redirect(NavigateUrl(TabId), true);
+
+                        break;
+
+                    case "myresolved":
+
+                        if (UserId != -1)
+                        {
+                            lblHeader.Text = GetSharedResource("[RESX:MyResolved]");
+                            _dtResults = db.UI_MyResolvedView(PortalId, ModuleId, UserId, _rowIndex, _pageSize, sort, forumIds).Tables[0];
                             if (_dtResults.Rows.Count > 0)
                                 _rowCount = _dtResults.Rows[0].GetInt("RecordCount");
                         }

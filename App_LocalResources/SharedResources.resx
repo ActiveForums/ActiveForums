@@ -1591,4 +1591,10 @@ From,
   <data name="[RESX:SplitHeader].Text" xml:space="preserve">
     <value>Split mode:</value>
   </data>
+  <data name="[RESX:MyResolved].Text" xml:space="preserve">
+    <value>My Resolved</value>
+  </data>
+  <data name="[RESX:Unresolved].Text" xml:space="preserve">
+    <value>Unresolved</value>
+  </data>
 </root>
