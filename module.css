@@ -56,7 +56,7 @@
 }
 
 .afpostcontent_responsive img {
-    width: 100%;
+   /* width: 100%;*/
     max-width: 100%;
     height:auto;
 }
@@ -682,6 +682,12 @@ a.dnnTertiaryAction, a.dnnTertiaryAction:link, a.dnnTertiaryAction:visited {
 .dnnForm .dnnFormItem .afavatarform input{width:55px;min-width:inherit; float:none;padding:1px}
 .afavatarform li{display:inline;margin-right:8px; list-style-type:none;}
 
+.af-colstats_responsive,
+.af_lastpost_responsive {
+	display: none;
+}
+
+
 @media only screen and (max-width: 768px), 
 only screen and (max-device-width: 768px) {
 .af-lastpost,
@@ -689,6 +695,14 @@ only screen and (max-device-width: 768px) {
 .afgrouprow-m,
 .afgrouprow-l {
 	display: none;
+}
+
+.af-colstats_responsive {
+	display: inline;
+}
+
+.af_lastpost_responsive {
+	display: block;
 }
 
 .afpostinfo_responsive {
