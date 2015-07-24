@@ -61,6 +61,15 @@
     height:auto;
 }
 
+/*Override 'border-box' for Text Editor*/
+
+.reToolbar {
+    box-sizing: content-box;
+}
+
+
+/**/
+
 ._hide,
 td.af-lastpost img,
 .afsearchgo {
@@ -341,9 +350,10 @@ color: #333;}
 td.af-lastpost{width: 20%;
 white-space: nowrap;
 text-align: center;
-font-size: 14px;
+font-size: 12px;
 font-weight: 400;
 color: #888;}
+
 td.af-colstats.af-colstats-replies {
 	font-weight: 700;
 }
@@ -355,7 +365,7 @@ white-space: normal !important;
 }
 td.af-lastpost div a:link,td.af-lastpost div a:visited{
 text-decoration:none;
-font-size: 14px;
+font-size: 12px;
 font-weight: 700;
 color: #333;
 word-break: break-word;}
@@ -363,7 +373,10 @@ td.af-title{width:100%;padding-left:25px;}
 td.af-groupname{padding-left:10px;width:100%;}
 td.af-groupcollapse{text-align:right;padding-right:10px;}
 td.af-right{text-align:right;}
-td.af-posticon{width:30px;}
+td.af-posticon{
+    width:30px;
+    vertical-align:top;
+}
 /*td.af-content{width:60%;}*/
 td.af-content td.afsubject{vertical-align:top;width:100%;padding-right: 10px;}
 td.af-content td.afsubject > a {
@@ -434,6 +447,11 @@ margin-left: 3px;
 
 .af-icons {
     width: 40px;
+    vertical-align:top;
+}
+
+td.af-content {
+    vertical-align:top;
 }
 
 .af-status {
@@ -685,6 +703,7 @@ a.dnnTertiaryAction, a.dnnTertiaryAction:link, a.dnnTertiaryAction:visited {
 .af-colstats_responsive,
 .af_lastpost_responsive {
 	display: none;
+    white-space:nowrap;
 }
 
 
