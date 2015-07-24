@@ -10,6 +10,15 @@ Active Forums is an award winning, DotNetNuke module that allows you to easily b
 	</div>
     <h3>Release Notes</h3>
 
+<b>Version 06.02.06</b>
+
+<ul>
+ <li>Pull #301 - additional corrections to responsive layout</li>
+ <li>Pull #308 - change to text_editor.js to help with IE compatability</li>
+ <li>Fix for module requiring repair install at upgrade to refresh dll - sorry this isn't very well documented</li>
+ <li>Fix for split feature not working properly - sorry this isn't very well documented</li>
+</ul>
+
 <b>Version 06.02.05</b>
 
 <ul>
