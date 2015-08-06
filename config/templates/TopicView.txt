@@ -56,10 +56,10 @@
 		<table class="afgrid" cellpadding="4">
 			[TOPIC]
 				<tr>
-					<td>
-					<div class="[POSTINFOCSS] afpostinfo_responsive">[POSTINFO]<br />[SPACER:1:10]</div>
+					<td class="[POSTTOPICCSS]">
+					<div class="afpostinfo_responsive">[POSTINFO]<br />[SPACER:1:10]</div>
 
-					<div class="[POSTREPLYCSS] afpostcontent_responsive">
+					<div class="afpostcontent_responsive">
 						<table class="afgrid" cellpadding="4">
 							<tr>
 								<td class="afsubrow afsubrowdate"><a name="[POSTID]"></a>[POSTDATE]</td>
@@ -89,9 +89,9 @@
 				[/TOPIC]
 				[REPLIES]
 				<tr>
-					<td>
-						<div class="[POSTINFOCSS] afpostinfo_responsive">[SPLITCHECKBOX][POSTINFO]<br />[SPACER:1:10]</div>
-						<div class="[POSTREPLYCSS] afpostcontent_responsive">
+					<td class="[POSTREPLYCSS]">
+						<div class="afpostinfo_responsive">[SPLITCHECKBOX][POSTINFO]<br />[SPACER:1:10]</div>
+						<div class="afpostcontent_responsive">
 							<table class="afgrid" cellpadding="4">
 								<tr>
 									<td class="afsubrow"><a name="[POSTID]"></a>[POSTDATE]</td>

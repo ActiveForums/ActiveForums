@@ -1,9 +1,9 @@
 ﻿<dotnetnuke type="Package" version="5.0">
     <packages>
-        <package name="Active Forums" type="Module" version="06.02.00">
+        <package name="Active Forums" type="Module" version="06.02.06">
             <friendlyName>Active Forums</friendlyName>
             <description>Active Forums - Forum module for DotNetNuke</description>
-            <iconFile>images/af6_icon.jpg</iconFile>
+            <iconFile>DesktopModules/ActiveForums/images/af6_icon.jpg</iconFile>
             <owner>
                 <name>DotNetNuke Active Forums Module</name>
                 <organization>Active Forums</organization>
@@ -73,7 +73,7 @@
                         <assembly>
                             <name>DotNetNuke.Modules.ActiveForums.dll</name>
                             <sourceFileName>DotNetNuke.Modules.ActiveForums.dll</sourceFileName>
-                            <version>05.02.03</version>
+                            <version>06.02.06</version>
                         </assembly>
                     </assemblies>
                 </component>
@@ -287,6 +287,10 @@
                         <name>06.01.06.SqlDataProvider</name>
                         <version>06.01.06</version>
                       </script>
+                      <script type="Install">
+                        <name>06.02.06.SqlDataProvider</name>
+                        <version>06.02.06</version>
+                      </script>
                       <script type="UnInstall">                            
                             <name>Uninstall.SqlDataProvider</name>
                             <version>06.01.03</version>
@@ -322,7 +326,7 @@
                 </component>
             </components>
         </package>
-      <package name="Active Forums What's New" type="Module" version="06.02.00">
+      <package name="Active Forums What's New" type="Module" version="06.02.06">
         <friendlyName>Active Forums What's New</friendlyName>
         <foldername>ActiveForumsWhatsNew</foldername>
         <description>Display the most recent topics or replies from selected forums on any page within your site.</description>

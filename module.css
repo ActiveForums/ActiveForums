@@ -35,16 +35,40 @@
 }
 
 .afpostinfo_responsive {
-    position:absolute;
+    /*position:absolute;*/
+    position:relative;
     width:120px;
+    margin-right: -120px;
+	word-wrap: break-word;
+    float:left;
+    /*clear:both;*/
+	z-index:10;
 }
 
 .afpostcontent_responsive {
-    width:100%;
-    padding-left:120px;
-    min-height:345px !important;
+    width:100% !important;
+    /*margin-right: -120px;*/
+    padding-left: 120px;
+    position:relative;
+    /*min-height:440px !important;*/
+    float:left;
+	z-index:9;
 }
 
+.afpostcontent_responsive img {
+   /* width: 100%;*/
+    max-width: 100%;
+    height:auto;
+}
+
+/*Override 'border-box' for Text Editor*/
+
+.reToolbar {
+    box-sizing: content-box;
+}
+
+
+/**/
 
 ._hide,
 td.af-lastpost img,
@@ -59,8 +83,8 @@ td.af-lastpost img,
 	outline-width: 0;
 	-moz-outline-width: 0;
 }
-/*.afgrid *, .aftopicjumper */
-#contentWrapper *  {
+
+.activeForums *  {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
@@ -326,9 +350,10 @@ color: #333;}
 td.af-lastpost{width: 20%;
 white-space: nowrap;
 text-align: center;
-font-size: 14px;
+font-size: 12px;
 font-weight: 400;
 color: #888;}
+
 td.af-colstats.af-colstats-replies {
 	font-weight: 700;
 }
@@ -340,7 +365,7 @@ white-space: normal !important;
 }
 td.af-lastpost div a:link,td.af-lastpost div a:visited{
 text-decoration:none;
-font-size: 14px;
+font-size: 12px;
 font-weight: 700;
 color: #333;
 word-break: break-word;}
@@ -348,7 +373,10 @@ td.af-title{width:100%;padding-left:25px;}
 td.af-groupname{padding-left:10px;width:100%;}
 td.af-groupcollapse{text-align:right;padding-right:10px;}
 td.af-right{text-align:right;}
-td.af-posticon{width:30px;}
+td.af-posticon{
+    width:30px;
+    vertical-align:top;
+}
 /*td.af-content{width:60%;}*/
 td.af-content td.afsubject{vertical-align:top;width:100%;padding-right: 10px;}
 td.af-content td.afsubject > a {
@@ -402,7 +430,7 @@ overflow: hidden;
 }
 .aftopictools {
 display:block;
-float:left;
+/*float:left;*/
 height:21px;
 }
 .aftopictools * {
@@ -419,6 +447,11 @@ margin-left: 3px;
 
 .af-icons {
     width: 40px;
+    vertical-align:top;
+}
+
+td.af-content {
+    vertical-align:top;
 }
 
 .af-status {
@@ -667,6 +700,13 @@ a.dnnTertiaryAction, a.dnnTertiaryAction:link, a.dnnTertiaryAction:visited {
 .dnnForm .dnnFormItem .afavatarform input{width:55px;min-width:inherit; float:none;padding:1px}
 .afavatarform li{display:inline;margin-right:8px; list-style-type:none;}
 
+.af-colstats_responsive,
+.af_lastpost_responsive {
+	display: none;
+    white-space:nowrap;
+}
+
+
 @media only screen and (max-width: 768px), 
 only screen and (max-device-width: 768px) {
 .af-lastpost,
@@ -676,25 +716,60 @@ only screen and (max-device-width: 768px) {
 	display: none;
 }
 
+.af-colstats_responsive {
+	display: inline;
+}
+
+.af_lastpost_responsive {
+	display: block;
+}
 
 .afpostinfo_responsive {
     position:static;
     width:100%;
+	margin-right: 0px;
+	clear:both;
 }
 
 .afpostcontent_responsive {
+	position:static;
     padding-left:0px;
-    min-height:100px !important;
+	width:100%;
+    /*min-height:100px !important;*/
+	clear:both;
+}
+
+.afpostinfo_responsive .afavatarprofile {
+    float:left;
+    width:125px;
+	/*position:absolute;*/
+    min-height: 100px;
+	padding-right:5px;
 }
 
 .afpostinfo_responsive .aftopprofile {
-    /*float:right;*/
-    padding-left: 120px;
-    position:absolute;
+	float:left;
+	/*padding-left: 130px;*/
+	margin-left: 10px;
+	padding-right:5px;
+	width:125px;
+	min-height: 100px;
+	/*position:absolute;*/
 }
 .afpostinfo_responsive .afbottomprofile {
-    /*float:right;*/
-    
+    float:left;
+    /*padding-left: 250px;*/
+	margin-left: 10px;
+	width:125px;
+    min-height: 100px;
+	padding-right:5px;
+    /*position:absolute;*/
+}
+
+/*.afpostinfo_responsive .afavatarprofile *, */
+.afpostinfo_responsive .aftopprofile  *,
+.afpostinfo_responsive .afbottomprofile *{
+    /*display:block;*/
 }
 
 ul.af-right{float:left;}
@@ -702,6 +777,15 @@ ul.af-right{float:left;}
 /*.afhiddenstats,*/
 .afhiddentime {
 	display: inline-block;
+}
+
+}
+
+@media only screen and (max-width: 490px), 
+only screen and (max-device-width: 490px) {
+.afpostinfo_responsive .afbottomprofile {
+    clear:both;
+	margin-left: 0px;
 }
 
 }

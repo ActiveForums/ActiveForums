@@ -43,9 +43,10 @@
 												<td rowspan="2" class="afsubject">
 												
 												<span class="afhiddenstats"><%# Eval("ReplyCount") %> replies and <%# Eval("ViewCount") %> views</span>
-												<span class="aftopictitle"><a class="af-thread-link" href='<%# GetThreadUrl() %>'><%# Eval("Subject") %></a> <a href='<%# GetLastRead() %>'><img border="0" class="afminiarrow" src='<%# GetArrowPath() %>' style="vertical-align: middle;" /></a>  </span> 
+												<span class="aftopictitle"><a class="af-thread-link" href='<%# GetThreadUrl() %>'><%# Eval("Subject") %></a> <a href='<%# GetLastRead() %>'><img border="0" class="afminiarrow" src='<%# GetArrowPath() %>' style="vertical-align: middle;" /></a>  </span>
+                                                <span class="af-colstats_responsive"><i class="fa fa-reply fa-fw fa-grey"></i>&nbsp;<%# Eval("ReplyCount") %> <i class="fa fa-eye fa-fw fa-grey"></i>&nbsp;<%# Eval("ViewCount") %></span>
 												<span class="aftopicsubtitle"><%= GetSharedResource("Started") %> <%# GetPostTime() %> <%= GetSharedResource("By") %> <%# GetAuthor() %></span>
-												
+												<div class="af_lastpost_responsive" style="white-space:nowrap;">In: <a class="af-forum-url" href='<%# GetForumUrl() %>'><%# Eval("ForumName") %></a> <br /><%= GetSharedResource("SearchBy") %> <%# GetLastPostAuthor() %><br /><%# GetLastPostTime() %></div>
 											</tr>
 										</table>
 									</td>

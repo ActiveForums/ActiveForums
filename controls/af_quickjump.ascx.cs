@@ -84,7 +84,7 @@ namespace DotNetNuke.Modules.ActiveForums
                 int GroupId = Convert.ToInt32(dr["ForumGroupId"]);
                 string GroupKey = GroupName + GroupId.ToString();
                 string ForumName = Convert.ToString(dr["ForumName"]);
-                if (ForumName.Length > 40) ForumName = ForumName.Substring(0, 40) + "...";
+                if (ForumName.Length > 30) ForumName = ForumName.Substring(0, 30) + "...";
                 int ForumId = Convert.ToInt32(dr["ForumId"]);
                 string ForumKey = ForumName + ForumId.ToString();
                 int ParentForumId = Convert.ToInt32(dr["ParentForumId"]);
@@ -135,7 +135,7 @@ namespace DotNetNuke.Modules.ActiveForums
                     {
                         string ForumName = dr["ForumName"].ToString();
 
-                        if (ForumName.Length > 40) ForumName = ForumName.Substring(0, 40) + "...";
+                        if (ForumName.Length > 30) ForumName = ForumName.Substring(0, 30) + "...";
 
                         drpForums.Items.Insert(ItemCount, new ListItem("----" + ForumName, "FORUMJUMP:" + dr["ForumID"].ToString()));
                         ItemCount += 1;

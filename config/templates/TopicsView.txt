@@ -35,8 +35,9 @@
 												<td rowspan="2" class="afsubject">
 												
 												<span class="afhiddenstats">[TOTALTOPICS] [RESX:TOPICSHEADER] and [TOTALREPLIES] [RESX:REPLIESHEADER]</span>
-												<span class="aftopictitle">[FORUMNAME]</span> 
-												<span class="aftopicsubtitle">[FORUMDESCRIPTION]</span>
+												<span class="aftopictitle">[FORUMNAME]</span>
+												<span class="af-colstats_responsive"><i class="fa fa-files-o fa-fw fa-grey"></i>&nbsp;[TOTALTOPICS] <i class="fa fa-reply fa-fw fa-grey"></i>&nbsp;[TOTALREPLIES]</span>
+												<span class="aftopicsubtitle">[FORUMDESCRIPTION]</span><div class="af_lastpost_responsive" style="white-space:nowrap;">[LASTPOSTSUBJECT:25]<br />[RESX:BY] [DISPLAYNAME]<br />[LASTPOSTDATE]</div>
 												
 											</tr>
 										</table>
@@ -155,7 +156,7 @@
 										<td rowspan="2" class="afsubject" title="[BODYTITLE]">
 										
 										<span class="afhiddenstats">[REPLIES] [RESX:REPLIESHEADER] and [VIEWS] [RESX:Views]</span>
-										<span class="aftopictitle">[SUBJECTLINK][AF:ICONLINK:LASTREAD][ICONPIN][ICONLOCK]</span> 
+										<span class="aftopictitle">[SUBJECTLINK][AF:ICONLINK:LASTREAD][ICONPIN][ICONLOCK]</span> <span class="af-colstats_responsive"><i class="fa fa-eye fa-fw fa-grey"></i>&nbsp;[VIEWS] <i class="fa fa-reply fa-fw fa-grey"></i>&nbsp;[REPLIES]</span>
 										<span class="aftopicstarted">Started by <i class="fa fa-user fa-fw fa-blue"></i>&nbsp;[STARTEDBY][AF:UI:MINIPAGER]</span>
 										
 										
