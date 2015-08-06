@@ -39,6 +39,7 @@ using System.Web.Script.Serialization;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using DotNetNuke.Modules.ActiveForums.DAL2;
 
 namespace DotNetNuke.Modules.ActiveForums
 {
@@ -439,8 +440,12 @@ namespace DotNetNuke.Modules.ActiveForums
                     if (dto.NewTopicId < 1)
                     {
                         var subject = Utilities.CleanString(portalSettings.PortalId, dto.Subject, false, EditorTypes.TEXTBOX, false, false, ActiveModule.ModuleID, string.Empty, false);
-
-                        topicId = tc.Topic_QuickCreate(portalSettings.PortalId, ActiveModule.ModuleID, dto.NewForumId, subject, string.Empty, userInfo.UserID, userInfo.DisplayName, true, Request.GetIPAddress());
+                        var replies = dto.Replies.Split('|');
+                        var rc = new DotNetNuke.Modules.ActiveForums.DAL2.ReplyController();
+                        var firstReply = rc.Get(Convert.ToInt32(replies[0]));
+                        var cc = new ContentController();
+                        var firstContent = cc.Get(firstReply.ContentId);
+                        topicId = tc.Topic_QuickCreate(portalSettings.PortalId, ActiveModule.ModuleID, dto.NewForumId, subject, string.Empty, firstContent.AuthorId, firstContent.AuthorName, true, Request.GetIPAddress());
                         tc.Replies_Split(dto.OldTopicId, topicId, dto.Replies, true);
                     }
                     else
