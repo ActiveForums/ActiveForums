@@ -247,6 +247,11 @@ namespace DotNetNuke.Modules.ActiveForums
 			get { return Utilities.SafeConvertInt(ForumSettings[ForumSettingKeys.EditorStyle], 1); }
 		}
 
+        public int EditorMobile
+        {
+            get { return Utilities.SafeConvertInt(ForumSettings[ForumSettingKeys.EditorMobile], 0); }
+        }
+
 		public string EditorToolBar
 		{
 			get { return Utilities.SafeConvertString(ForumSettings[ForumSettingKeys.EditorToolbar], "bold,italic,underline"); }

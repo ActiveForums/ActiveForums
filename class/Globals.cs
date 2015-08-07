@@ -230,6 +230,7 @@ namespace DotNetNuke.Modules.ActiveForums
 		public const string EditorToolbar = "EDITORTOOLBAR";
 		public const string EditorStyle = "EDITORSTYLE";
 		public const string EditorPermittedUsers = "EDITORPERMITTEDUSERS";
+        public const string EditorMobile = "EDITORMOBILE";
 		public const string AttachCount = "ATTACHCOUNT";
 		public const string AttachMaxSize = "ATTACHMAXSIZE";
 		public const string AttachTypeAllowed = "ATTACHTYPEALLOWED";

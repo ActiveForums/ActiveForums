@@ -216,6 +216,20 @@ namespace DotNetNuke.Modules.ActiveForums
 			get { return Utilities.SafeConvertString(GroupSettings[ForumSettingKeys.EditorWidth], "100%"); }
 		}
 
+        public EditorTypes EditorMobile
+        {
+            get
+            {
+                EditorTypes parseValue;
+                var val = Enum.TryParse(Utilities.SafeConvertString(GroupSettings[ForumSettingKeys.EditorMobile], "0"), true, out parseValue)
+                           ? parseValue
+                           : EditorTypes.TEXTBOX;
+
+                return val;
+
+            }
+        }
+
 		public string EmailAddress
 		{
 			get { return Utilities.SafeConvertString(GroupSettings[ForumSettingKeys.EmailAddress], string.Empty); }

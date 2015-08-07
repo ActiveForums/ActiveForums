@@ -548,7 +548,9 @@
       <SubType>ASPXCodeBehind</SubType>
     </Content>
     <Content Include="ControlPanel.css" />
-    <Content Include="controls\admin_categories.ascx" />
+    <Content Include="controls\admin_categories.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <Content Include="controls\admin_filters.ascx" />
     <Content Include="controls\admin_home.ascx" />
     <Content Include="controls\admin_manageforums_home.ascx" />
@@ -757,6 +759,10 @@
     <Compile Include="controls\af_searchadvanced.ascx.designer.cs">
       <DependentUpon>af_searchadvanced.ascx</DependentUpon>
     </Compile>
+    <Compile Include="DAL2\Content\Content.cs" />
+    <Compile Include="DAL2\Content\ContentController.cs" />
+    <Compile Include="DAL2\Reply\Reply.cs" />
+    <Compile Include="DAL2\Reply\ReplyController.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="SimulateDateDiff.cs" />
     <Compile Include="SimulateIsNumeric.cs" />

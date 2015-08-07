@@ -151,16 +151,12 @@ namespace DotNetNuke.Modules.ActiveForums
             ctlForm.AllowHTML = _allowHTML;
             if (_allowHTML)
             {
-                _editorType = _fi.EditorType;
+                if (Request.Browser.IsMobileDevice) _editorType = (EditorTypes)_fi.EditorMobile;
+                else _editorType = _fi.EditorType;
             }
             else
             {
                 _editorType = EditorTypes.TEXTBOX;
-            }
-            if (Request.Browser.IsMobileDevice)
-            {
-                _editorType = EditorTypes.TEXTBOX;
-                _allowHTML = false;
             }
             ctlForm.EditorType = _editorType;
             ctlForm.ForumInfo = _fi;
