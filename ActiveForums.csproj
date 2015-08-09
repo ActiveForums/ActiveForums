@@ -548,7 +548,9 @@
       <SubType>ASPXCodeBehind</SubType>
     </Content>
     <Content Include="ControlPanel.css" />
-    <Content Include="controls\admin_categories.ascx" />
+    <Content Include="controls\admin_categories.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <Content Include="controls\admin_filters.ascx" />
     <Content Include="controls\admin_home.ascx" />
     <Content Include="controls\admin_manageforums_home.ascx" />
