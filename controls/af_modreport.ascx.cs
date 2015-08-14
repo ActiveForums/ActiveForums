@@ -171,6 +171,7 @@ namespace DotNetNuke.Modules.ActiveForums
                 string subject = Utilities.GetSharedResource("AlertSubject");
                 subject = subject.Replace("[DisplayName]", authorName);
                 subject = subject.Replace("[Subject]", sSubject);
+                subject = subject.Replace("[FlaggedBy]", UserInfo.DisplayName);
                 string body = Utilities.GetSharedResource("AlertBody");
                 body = body.Replace("[Post]", sBody);
                 body = body.Replace("[Comment]", Comments);

@@ -3627,6 +3627,15 @@
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
+        <member name="F:DotNetNuke.Modules.ActiveForums.admin_manageforums_forumeditor.drpEditorMobile">
+            <summary>
+            drpEditorMobile control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
         <member name="F:DotNetNuke.Modules.ActiveForums.admin_manageforums_forumeditor.drpDefaultTrust">
             <summary>
             drpDefaultTrust control.

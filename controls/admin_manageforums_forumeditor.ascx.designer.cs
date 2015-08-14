@@ -931,6 +931,15 @@ namespace DotNetNuke.Modules.ActiveForums {
         protected global::System.Web.UI.WebControls.TextBox txtEditorWidth;
         
         /// <summary>
+        /// drpEditorMobile control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList drpEditorMobile;
+        
+        /// <summary>
         /// drpDefaultTrust control.
         /// </summary>
         /// <remarks>
