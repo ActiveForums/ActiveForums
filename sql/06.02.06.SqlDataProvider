@@ -38,8 +38,8 @@ SET @ApprovedStatus = @IsApproved
 -- This part is a work around for Quick Reply feature not working for Tapatalk STARTS
 
 DECLARE @TopicSubject NVARCHAR(255) =	(
-											SELECT top 1 afc.Subject FROM activeforums_Topics aft
-												JOIN activeforums_Content afc ON aft.ContentId = afc.ContentId
+											SELECT top 1 afc.Subject FROM {databaseOwner}[{objectQualifier}activeforums_Topics] aft
+												JOIN {databaseOwner}[{objectQualifier}activeforums_Content] afc ON aft.ContentId = afc.ContentId
 											WHERE TopicId = @TopicId
 										)	
 										
