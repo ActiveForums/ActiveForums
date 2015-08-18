@@ -652,7 +652,9 @@
     <None Include="sql\05.01.03.SqlDataProvider" />
     <None Include="sql\05.02.00.SqlDataProvider" />
     <None Include="sql\05.02.01.SqlDataProvider" />
+    <None Include="sql\05.02.04.SqlDataProvider" />
     <None Include="sql\06.00.02.SqlDataProvider" />
+    <None Include="sql\06.02.06.SqlDataProvider" />
     <None Include="sql\06.02.07.SqlDataProvider" />
     <None Include="sql\06.01.06.SqlDataProvider" />
     <None Include="sql\06.01.03.SqlDataProvider" />
