@@ -349,8 +349,13 @@ asDatePicker.prototype.Toggle = function(e) {
         this.calendar.style.display = 'block';
         var pos = getPositionPicker(this.image);
         if (!e) { e = window.event; };
-        this.calendar.style.top = (pos.y + this.textbox.offsetHeight) + 'px';
+        
         this.calendar.style.left = pos.x - this.Width + 16 + 'px';
+        
+        var textBoxPosition = this.textbox.getBoundingClientRect();
+        this.calendar.style.top = textBoxPosition.top;
+        this.calendar.style.zIndex = 1000;
+
         this.Show();
     };
 };
