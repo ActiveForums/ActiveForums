@@ -149,10 +149,10 @@
 						[TOPICS]
 						
 						<tr>
-							<td class="[ROWCSS] af-posticon">[POSTICON]</td>
 							<td class="[ROWCSS] af-content af-postcontent">
 								<table width="100%">
 									<tr>
+									<td  rowspan="2" style="padding-top:5px; padding-right:7px;" class="[ROWCSS] af-posticon">[POSTICON]</td>
 										<td rowspan="2" class="afsubject" title="[BODYTITLE]">
 										
 										<span class="afhiddenstats">[REPLIES] [RESX:REPLIESHEADER] and [VIEWS] [RESX:Views]</span>
