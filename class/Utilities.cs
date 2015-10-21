@@ -941,6 +941,7 @@ namespace DotNetNuke.Modules.ActiveForums
         public static string ManageImagePath(string sHTML)
         {
             var strHost = Common.Globals.AddHTTP(HttpContext.Current.Request.Url.Host);
+            if (HttpContext.Current.Request.Url.Port != 80) strHost += string.Format(":{0}", HttpContext.Current.Request.Url.Port);
             return ManageImagePath(sHTML, strHost);
         }
 
