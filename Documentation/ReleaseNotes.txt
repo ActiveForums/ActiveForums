@@ -10,6 +10,22 @@ Active Forums is an award winning, DotNetNuke module that allows you to easily b
 	</div>
     <h3>Release Notes</h3>
 
+<b>Version 06.02.08</b>
+
+<ul>
+ <li>Pull #313 - Corrections to sql to include {databaseOwner} and {objectQualifier}</li>
+</ul>
+
+<b>Version 06.02.07</b>
+
+<ul>
+ <li>Pull #310 - Added name of person reporting a post</li>
+ <li>Pull #310 - Fix sorting problem after removing a forum</li>
+ <li>Pull #310 - Fix for missing settings for what editor to use</li>
+ <li>Pull #310 - Missing {databaseOwner} and {objectQualifier} in various places</li>
+ <li>Pull #310 - Quick fix for splitting process where split reply took on wrong author</li>
+</ul>
+
 <b>Version 06.02.06</b>
 
 <ul>
