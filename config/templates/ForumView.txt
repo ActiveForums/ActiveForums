@@ -32,7 +32,7 @@
 						
 					[FORUMS]
 					<tr>
-						<td colspan="0">
+						<td colspan="4">
 							 <table class="afgrid" cellspacing="0" cellpadding="0" width="100%">
 								<tr>
 									<td class="aftopicrow af-icons">[FORUMICONCSS]</td>
