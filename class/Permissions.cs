@@ -535,15 +535,21 @@ namespace DotNetNuke.Modules.ActiveForums
 				{
 					if (! (string.IsNullOrEmpty(role)))
 					{
-						foreach (string AuthRole in UserRoles)
+						if (role == "-1") // allUsers
 						{
-							if (! (string.IsNullOrEmpty(AuthRole)))
+							bolAuth = true;
+						}
+						else 
+						{	foreach (string AuthRole in UserRoles)
 							{
-                                //TODO: verify that this logic is correct
-								if (role == AuthRole && role != "" && AuthRole != "")
+								if (! (string.IsNullOrEmpty(AuthRole)))
 								{
-									bolAuth = true;
-									break;
+	                                //TODO: verify that this logic is correct
+									if (role == AuthRole && role != "" && AuthRole != "")
+									{
+										bolAuth = true;
+										break;
+									}
 								}
 							}
 						}
