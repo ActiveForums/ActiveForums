@@ -563,27 +563,12 @@ namespace DotNetNuke.Modules.ActiveForums
 			}
 		    return false;
 		}
+		
 		public static bool HasAccess(string AuthorizedRoles, string UserRoles)
 		{
-			bool bolAuth = false;
 			if (UserRoles != null)
 			{
-				foreach (string role in AuthorizedRoles.Split(new[] {';'}))
-				{
-					foreach (string AuthRole in UserRoles.Split(new[] {';'}))
-					{
-						if (role == AuthRole && role != "" && AuthRole != "")
-						{
-							bolAuth = true;
-							break;
-						}
-					}
-					if (bolAuth)
-					{
-						break;
-					}
-				}
-				return bolAuth;
+				return HasRequiredPerm(AuthorizedRoles.Split(new[] {';'}), UserRoles.Split(new[] {';'}));
 			}
 		    return false;
 		}
