@@ -19,8 +19,15 @@
 									</asp:DropDownList>
 	</div>
 	<div class="dnnFormItem">
-		<dnn:label controlname="nsPrefPageSize" resourcekey="[RESX:PrefPageSize]" Text="Page Size"  Suffix=":" runat="server" />
-		 <dnn:DnnNumericTextBox id="nsPrefPageSize" MinValue="5" MaxValue="200" Width="50" Type="0" ShowSpinButtons="True" runat="server" />
+		<dnn:label controlname="drpPrefPageSize" resourcekey="[RESX:PrefPageSize]" Text="Page Size"  Suffix=":" runat="server" />
+        <asp:DropDownList ID="drpPrefPageSize" runat="server">
+              <asp:ListItem>5</asp:ListItem>
+                <asp:ListItem>10</asp:ListItem>
+                <asp:ListItem>25</asp:ListItem>
+                <asp:ListItem>50</asp:ListItem>
+                <asp:ListItem>100</asp:ListItem>
+                <asp:ListItem>200</asp:ListItem>
+        </asp:DropDownList>
 
 	</div>
 	<div class="dnnFormItem">
