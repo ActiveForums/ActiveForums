@@ -535,21 +535,15 @@ namespace DotNetNuke.Modules.ActiveForums
 				{
 					if (! (string.IsNullOrEmpty(role)))
 					{
-						if (role == "-1") // allUsers
+						foreach (string AuthRole in UserRoles)
 						{
-							bolAuth = true;
-						}
-						else 
-						{	foreach (string AuthRole in UserRoles)
+							if (! (string.IsNullOrEmpty(AuthRole)))
 							{
-								if (! (string.IsNullOrEmpty(AuthRole)))
+                                //TODO: verify that this logic is correct
+								if (role == AuthRole && role != "" && AuthRole != "")
 								{
-	                                //TODO: verify that this logic is correct
-									if (role == AuthRole && role != "" && AuthRole != "")
-									{
-										bolAuth = true;
-										break;
-									}
+									bolAuth = true;
+									break;
 								}
 							}
 						}
@@ -563,12 +557,27 @@ namespace DotNetNuke.Modules.ActiveForums
 			}
 		    return false;
 		}
-		
 		public static bool HasAccess(string AuthorizedRoles, string UserRoles)
 		{
+			bool bolAuth = false;
 			if (UserRoles != null)
 			{
-				return HasRequiredPerm(AuthorizedRoles.Split(new[] {';'}), UserRoles.Split(new[] {';'}));
+				foreach (string role in AuthorizedRoles.Split(new[] {';'}))
+				{
+					foreach (string AuthRole in UserRoles.Split(new[] {';'}))
+					{
+						if (role == AuthRole && role != "" && AuthRole != "")
+						{
+							bolAuth = true;
+							break;
+						}
+					}
+					if (bolAuth)
+					{
+						break;
+					}
+				}
+				return bolAuth;
 			}
 		    return false;
 		}

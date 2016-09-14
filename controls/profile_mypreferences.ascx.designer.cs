@@ -7,88 +7,81 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-
-namespace DotNetNuke.Modules.ActiveForums
-{
-
-	public partial class profile_mypreferences
-	{
-
-		///<summary>
-		///drpPrefDefaultSort control.
-		///</summary>
-		///<remarks>
-		///Auto-generated field.
-		///To modify move field declaration from designer file to code-behind file.
-		///</remarks>
-		protected global::System.Web.UI.WebControls.DropDownList drpPrefDefaultSort;
-
-		///<summary>
-		///nsPrefPageSize control.
-		///</summary>
-		///<remarks>
-		///Auto-generated field.
-		///To modify move field declaration from designer file to code-behind file.
-		///</remarks>
-		protected global::DotNetNuke.Web.UI.WebControls.DnnNumericTextBox nsPrefPageSize;
-
-		///<summary>
-		///chkPrefJumpToLastPost control.
-		///</summary>
-		///<remarks>
-		///Auto-generated field.
-		///To modify move field declaration from designer file to code-behind file.
-		///</remarks>
-		protected global::System.Web.UI.WebControls.CheckBox chkPrefJumpToLastPost;
-
-		///<summary>
-		///chkPrefTopicSubscribe control.
-		///</summary>
-		///<remarks>
-		///Auto-generated field.
-		///To modify move field declaration from designer file to code-behind file.
-		///</remarks>
-		protected global::System.Web.UI.WebControls.CheckBox chkPrefTopicSubscribe;
-
-		///<summary>
-		///chkPrefBlockAvatars control.
-		///</summary>
-		///<remarks>
-		///Auto-generated field.
-		///To modify move field declaration from designer file to code-behind file.
-		///</remarks>
-		protected global::System.Web.UI.WebControls.CheckBox chkPrefBlockAvatars;
-
-		///<summary>
-		///chkPrefBlockSignatures control.
-		///</summary>
-		///<remarks>
-		///Auto-generated field.
-		///To modify move field declaration from designer file to code-behind file.
-		///</remarks>
-		protected global::System.Web.UI.WebControls.CheckBox chkPrefBlockSignatures;
-
-		///<summary>
-		///txtSignature control.
-		///</summary>
-		///<remarks>
-		///Auto-generated field.
-		///To modify move field declaration from designer file to code-behind file.
-		///</remarks>
-		protected global::System.Web.UI.WebControls.TextBox txtSignature;
-
-		///<summary>
-		///btnSave control.
-		///</summary>
-		///<remarks>
-		///Auto-generated field.
-		///To modify move field declaration from designer file to code-behind file.
-		///</remarks>
-		protected global::System.Web.UI.WebControls.LinkButton btnSave;
-	}
+namespace DotNetNuke.Modules.ActiveForums {
+    
+    
+    public partial class profile_mypreferences {
+        
+        /// <summary>
+        /// drpPrefDefaultSort control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList drpPrefDefaultSort;
+        
+        /// <summary>
+        /// drpPrefPageSize control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList drpPrefPageSize;
+        
+        /// <summary>
+        /// chkPrefJumpToLastPost control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkPrefJumpToLastPost;
+        
+        /// <summary>
+        /// chkPrefTopicSubscribe control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkPrefTopicSubscribe;
+        
+        /// <summary>
+        /// chkPrefBlockAvatars control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkPrefBlockAvatars;
+        
+        /// <summary>
+        /// chkPrefBlockSignatures control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkPrefBlockSignatures;
+        
+        /// <summary>
+        /// txtSignature control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtSignature;
+        
+        /// <summary>
+        /// btnSave control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton btnSave;
+    }
 }

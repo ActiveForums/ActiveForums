@@ -60,22 +60,15 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 
             ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
 
-			txtPageSize.Style.Add("float", "none");
-			txtPageSize.EmptyMessageStyle.CssClass += "dnnformHint";
-			txtPageSize.NumberFormat.DecimalDigits = 0;
-			txtPageSize.IncrementSettings.Step = 5;
+			drpPageSize.Style.Add("float", "none");
 
 
-			txtFloodInterval.Style.Add("float", "none");
-			txtFloodInterval.EmptyMessageStyle.CssClass += "dnnformHint";
-			txtFloodInterval.NumberFormat.DecimalDigits = 0;
-			txtFloodInterval.IncrementSettings.Step = 30;
+
+			drpFloodInterval.Style.Add("float", "none");
 
 
-			txtEditInterval.Style.Add("float", "none");
-			txtEditInterval.EmptyMessageStyle.CssClass += "dnnformHint";
-			txtEditInterval.NumberFormat.DecimalDigits = 0;
-			txtEditInterval.IncrementSettings.Step = 1;
+			drpEditInterval.Style.Add("float", "none");
+
 
 
 			if (!(Utilities.IsRewriteLoaded()) || PortalSettings.PortalAlias.HTTPAlias.Contains("/"))
@@ -143,19 +136,15 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 					BindForumGroups();
 					BindForumSecurity();
 
-					txtPageSize.Value = 20;
-					txtPageSize.Text = "20";
-					txtFloodInterval.Value = 0;
-					txtFloodInterval.Text = "0";
-					txtEditInterval.Value = 0;
-					txtEditInterval.Text = "0";
+                    Utilities.SelectListItemByValue(drpPageSize, 20);
+                    Utilities.SelectListItemByValue(drpFloodInterval, 0);
+                    Utilities.SelectListItemByValue(drpEditInterval, 0);
+
 
                     Utilities.SelectListItemByValue(drpMode, Mode);
                     Utilities.SelectListItemByValue(drpThemes, Theme);
                     Utilities.SelectListItemByValue(drpTemplates, TemplateId);
-					txtPageSize.Text = PageSize.ToString();
-					txtFloodInterval.Text = FloodInterval.ToString();
-					txtEditInterval.Text = EditInterval.ToString();
+
 					Utilities.SelectListItemByValue(rdAutoLinks, AutoLink);
                     Utilities.SelectListItemByValue(drpDeleteBehavior, DeleteBehavior);
 					txtAddThis.Text = AddThis;
@@ -213,9 +202,9 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 				Theme = drpThemes.SelectedValue;
 				Mode = drpMode.SelectedValue;
 				TemplateId = Utilities.SafeConvertInt(drpTemplates.SelectedValue);
-				PageSize = Utilities.SafeConvertInt(txtPageSize.Text, 10);
-                FloodInterval = Utilities.SafeConvertInt(txtFloodInterval.Text);
-                EditInterval = Utilities.SafeConvertInt(txtEditInterval.Text);
+				PageSize = Utilities.SafeConvertInt(drpPageSize.SelectedValue, 10);
+                FloodInterval = Utilities.SafeConvertInt(drpFloodInterval.SelectedValue,0);
+                EditInterval = Utilities.SafeConvertInt(drpEditInterval.SelectedValue,0);
                 AutoLink = Utilities.SafeConvertBool(rdAutoLinks.SelectedValue);
                 DeleteBehavior = Utilities.SafeConvertInt(drpDeleteBehavior.SelectedValue);
 				AddThis = txtAddThis.Text;
