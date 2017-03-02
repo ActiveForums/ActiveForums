@@ -11,3 +11,4 @@ WHERE ForumId = @ForumId
 DELETE FROM {databaseOwner}[{objectQualifier}activeforums_ForumTopics] WHERE ForumId = @ForumId
 DELETE FROM {databaseOwner}[{objectQualifier}activeforums_Forums] WHERE ForumId = @ForumId
 EXEC {databaseOwner}[{objectQualifier}activeforums_Forums_RepairSort] @ForumGroupId, @ParentForumId
+GO

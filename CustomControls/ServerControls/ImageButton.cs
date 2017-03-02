@@ -22,7 +22,7 @@ using System.ComponentModel;
 using System.Web.UI;
 namespace DotNetNuke.Modules.ActiveForums.Controls
 {
-	[CLSCompliant(true), DefaultProperty("Text"), ToolboxData("<{0}:ImageButton runat=server></{0}:ImageButton>")]
+	[CLSCompliant(false), DefaultProperty("Text"), ToolboxData("<{0}:ImageButton runat=server></{0}:ImageButton>")]
 	public class ImageButton : System.Web.UI.WebControls.WebControl, IPostBackEventHandler
 	{
 
