@@ -193,11 +193,6 @@
       <Name>System.XML</Name>
     </Reference>
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="Telerik.Web.UI, Version=2012.3.1205.40, Culture=neutral, PublicKeyToken=121fae78165ba3d4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\References\DNN 7.0.0\Telerik.Web.UI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="WebMatrix.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.AspNet.WebPages.Data.2.0.20505.0\lib\net40\WebMatrix.Data.dll</HintPath>
       <Private>True</Private>
@@ -227,6 +222,7 @@
     <Content Include="active\am-ui.css" />
     <Content Include="active\amlib.js" />
     <Content Include="active\close.gif" />
+    <Content Include="BuildScripts\MSBuild.Community.Tasks.dll" />
     <Content Include="Classic.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
@@ -673,7 +669,6 @@
     <None Include="sql\05.01.03.SqlDataProvider" />
     <None Include="sql\05.02.00.SqlDataProvider" />
     <None Include="sql\05.02.01.SqlDataProvider" />
-    <None Include="sql\05.02.04.SqlDataProvider" />
     <None Include="sql\06.00.02.SqlDataProvider" />
     <None Include="sql\06.02.06.SqlDataProvider" />
     <None Include="sql\06.02.07.SqlDataProvider" />
@@ -1403,7 +1398,7 @@
     <Extension>zip</Extension>
     <DNNFileName>ActiveForums</DNNFileName>
     <PackageName>ActiveForums</PackageName>
-    <MSBuildCommunityTasksPath>$(MSBuildProjectDirectory)\..\..\..\Build\BuildScripts\</MSBuildCommunityTasksPath>
+    <MSBuildCommunityTasksPath>$(MSBuildProjectDirectory)\Build\BuildScripts\</MSBuildCommunityTasksPath>
   </PropertyGroup>
   <Import Project="BuildScripts\ModulePackage.Targets" />
   <Target Name="AfterBuild" DependsOnTargets="PackageModule">

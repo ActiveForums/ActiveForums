@@ -85,3 +85,4 @@ SELECT TabId, ModuleID, ForumGroupId, ForumId, TopicId, Url,Archived,OtherId,Url
 		INNER JOIN {databaseOwner}[{objectQualifier}activeforums_Tags] as t ON t.ModuleId = pu.ModuleId AND t.IsCategory = 0
 	) as urls
 	WHERE LOWER(urls.URL) = @URL
+GO
