@@ -36,10 +36,7 @@ namespace DotNetNuke.Modules.ActiveForums
 
             btnSave.Click += new System.EventHandler(btnSave_Click);
 
-            nsPrefPageSize.Style.Add("float", "none");
-            nsPrefPageSize.EmptyMessageStyle.CssClass += "dnnformHint";
-            nsPrefPageSize.NumberFormat.DecimalDigits = 0;
-            nsPrefPageSize.IncrementSettings.Step = 5;
+
             if (Request.QueryString["UserId"] == null)
             {
                 UID = UserInfo.UserID;
@@ -61,7 +58,8 @@ namespace DotNetNuke.Modules.ActiveForums
             {
 
                 drpPrefDefaultSort.SelectedIndex = drpPrefDefaultSort.Items.IndexOf(drpPrefDefaultSort.Items.FindByValue(ui.PrefDefaultSort.Trim()));
-                nsPrefPageSize.Value = ui.PrefPageSize;
+                drpPrefPageSize.SelectedIndex = drpPrefPageSize.Items.IndexOf(drpPrefPageSize.Items.FindByValue(ui.PrefPageSize.ToString()));
+
                 chkPrefJumpToLastPost.Checked = ui.PrefJumpLastPost;
                 chkPrefTopicSubscribe.Checked = ui.PrefTopicSubscribe;
                 //chkPrefUseAjax.Checked = .PrefUseAjax
@@ -86,7 +84,7 @@ namespace DotNetNuke.Modules.ActiveForums
                 if (upi != null)
                 {
                     upi.PrefDefaultSort = Utilities.XSSFilter(drpPrefDefaultSort.SelectedItem.Value, true);
-                    upi.PrefPageSize = Convert.ToInt32(((Convert.ToInt32(nsPrefPageSize.Text) < 5) ? 5 : Convert.ToInt32(nsPrefPageSize.Text)));
+                    upi.PrefPageSize = Convert.ToInt32(((Convert.ToInt32(drpPrefPageSize.SelectedValue) < 5) ? 5 : Convert.ToInt32(drpPrefPageSize.SelectedValue)));
                     upi.PrefDefaultShowReplies = false;
                     upi.PrefJumpLastPost = chkPrefJumpToLastPost.Checked;
                     upi.PrefTopicSubscribe = chkPrefTopicSubscribe.Checked;

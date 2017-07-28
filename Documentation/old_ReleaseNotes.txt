@@ -1,3 +1,78 @@
+<b>Version 06.01.05</b>
+
+<ul>
+ <li>Pull #241 Cleaned up missing {objectQualifier} from SQL providers and worked on error when null-User present on topic</li>
+</ul>
+
+
+<b>Version 06.01.04</b>
+
+<ul>
+ <li>Pull #203 added the "go to last unread post" on the Not read-page, unanswered, my topics and and active topics</li>
+ <li>Pull #203 corrected the ½ hour time zone change for .5 time zones</li>
+ <li>Pull #203 fixed split button function when topic is locked</li>
+ <li>Pull #230 fixed SqlDataProvider 06.01.03 line 105 missing {objectQualifier}</li>
+</ul>
+
+
+<b>Version 06.01.03</b>
+
+<ul>
+ <li>Added fixes for split feature</li>
+ <li>Added fixes for attachment token</li>
+ <li>Introduction of "like" system and ability to like a post</li>
+ <li>Added back Moderationlink to the toolbar template</li>
+</ul>
+
+
+<b>Version 06.01.02</b>
+
+<ul>
+ <li>Pull #172 Visible link for users to open my forum settings without leaving forum</li>
+ <li>Pull #186 fixing attachments and case sensitive extension</li>
+ <li>Pull #192 corrected topic split feature released in 6.1.0 not working properly</li>
+ <li>Pull #195 letting the module editor be able to edit user profile via edit profile token link</li>
+</ul>
+
+
+<b>Version 06.01.00</b>
+
+<ul>
+ <li>Correct issue with tapatalk stripping topic subject when using quick reply</li>
+ <li>Fix avatar display to allow animated GIF</li>
+ <li>Added token [AF:PROFILE:EMAIL] to show users email address in templates</li>
+ <li>Fix to reload page after delete even when URL contains # character in reference to anchor</li>
+ <li>Fix to correct blockquote when using simple editor</li>
+ <li>Introduction of new code for later use of mail connector module</li>
+ <li>Addition of code to allow for topic/reply split feature - controlled via security mod split</li>
+ <li>Fix from @artfuld to correct Token FORUMMAINLINK points to forum root</li>
+</ul>
+
+
+<b>Version 06.00.02</b>
+
+<ul>
+ <li>Issue #148 - More overflow fixes for TopicView</li>
+</ul>
+
+<b>Version 06.00.01</b>
+
+<ul>
+ <li>Issue #143 - Overall UX/UI overhaul modification with responsive design</li>
+ <li>Issue #132 - Fixing issue #132 default attachment type allowed</li>
+ <li>Side note - cleaned up release notes from previous releases. Moved to documentation\old_ReleaseNotes.txt</li>
+</ul>
+
+<b>Version 05.02.04</b>
+
+<ul>
+ <li>Issue #108 - (Issues #96 group permissions issues and partial #97 group permissions fix</li>
+ <li>Issue #109 - Console module links disappearing</li>
+ <li>Issue #110 - Fixes https links not being recognized</li>
+ <li>Issue #113 - No toolbar support for topic view</li>
+</ul>
+
+
 <b>Version 05.02.02
 	<p>
 		<ul>

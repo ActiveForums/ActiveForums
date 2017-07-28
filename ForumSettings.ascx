@@ -37,7 +37,14 @@
 	   </div>
 		<div class="dnnFormItem">
 			<dnn:label ID="lblDefaultPageSize" runat="server" resourcekey="DefaultPageSize" Suffix=":" />
-			<dnn:DnnNumericTextBox id="txtPageSize" MinValue="5" MaxValue="200" Width="50" Type="0" ShowSpinButtons="True" runat="server" />
+            <asp:DropDownList ID="drpPageSize" runat="server">
+                <asp:ListItem>5</asp:ListItem>
+                <asp:ListItem>10</asp:ListItem>
+                <asp:ListItem>25</asp:ListItem>
+                <asp:ListItem>50</asp:ListItem>
+                <asp:ListItem>100</asp:ListItem>
+                <asp:ListItem>200</asp:ListItem>
+            </asp:DropDownList>
 		</div>
         <div class="dnnFormItem">
 			<dnn:label ID="lblUseSkinBreadCrumb" runat="server" resourcekey="UseSkinBreadCrumb" Suffix=":" />
@@ -59,11 +66,20 @@
 	<fieldset>
 		<div class="dnnFormItem">
 			<dnn:label ID="lblFloodInterval" runat="server" resourcekey="FloodInterval" Suffix=":" />
-			<dnn:DnnNumericTextBox id="txtFloodInterval" MinValue="0" MaxValue="300" Width="50" Type="0" ShowSpinButtons="True" runat="server" />
-		</div>
+            <asp:DropDownList ID="drpFloodInterval" runat="server">
+                <asp:ListItem>0</asp:ListItem>
+                <asp:ListItem>100</asp:ListItem>
+                <asp:ListItem>200</asp:ListItem>
+                <asp:ListItem>300</asp:ListItem>
+            </asp:DropDownList>
+	    </div>
 		<div class="dnnFormItem">
 			<dnn:label ID="lblEditInterval" runat="server" resourcekey="EditInterval" Suffix=":" />
-			<dnn:DnnNumericTextBox id="txtEditInterval" MinValue="0" MaxValue="60" Width="50" Type="0" ShowSpinButtons="True" runat="server" />
+            <asp:DropDownList ID="drpEditInterval" runat="server">
+                <asp:ListItem>0</asp:ListItem>
+                <asp:ListItem>30</asp:ListItem>
+                <asp:ListItem>60</asp:ListItem>
+            </asp:DropDownList>
 		</div>
 		<div class="dnnFormItem">
 			<dnn:label ID="lblAutoLinks" runat="server" resourcekey="AutoLink" Suffix=":" />

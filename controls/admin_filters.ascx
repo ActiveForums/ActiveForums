@@ -35,21 +35,22 @@ function amaf_deleteFilter(row){
 
 
  };
- function deleteFilter(id) {
-	if (typeof(id) == 'undefined'){
-		if (filter.FilterId == -1) {
-			return;
-		}else{
-			id = filter.FilterId;
-		}
-	}
-  if (confirm('[RESX:Actions:DeleteConfirm]')){
-   am.UI.CloseDiv('afFilterEdit');
-	<%=agFilters.ClientID%>.Params = 'delete:' + id;
-		<%=agFilters.ClientID%>.Callback();
-
-		}
- }
+function deleteFilter(id) {
+    if (typeof(id) == 'undefined'){
+        if (filter.FilterId == -1) {
+            return;
+        }else{
+            id = filter.FilterId;
+        }
+    }
+    if (confirm('[RESX:Actions:DeleteConfirm]')){
+        var data = {};
+        data.action = 13;
+        data.FilterId = id;
+        afadmin_callback(JSON.stringify(data));
+        renderDG();
+    }
+};
  function amaf_loadDefaults(){
 	if (confirm('[RESX:Actions:RestoreConfirm]')){
 		<%=agFilters.ClientID%>.Params = 'defaults:0';

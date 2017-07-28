@@ -1,0 +1,14 @@
+﻿ALTER PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Forums_Delete]
+@PortalId int,
+@ModuleId int,
+@ForumId int
+AS
+declare @ParentForumId int,
+@ForumGroupId int
+SELECT @ParentForumId = ParentForumId, @ForumGroupId = ForumGroupId
+FROM {databaseOwner}[{objectQualifier}activeforums_Forums]
+WHERE ForumId = @ForumId
+DELETE FROM {databaseOwner}[{objectQualifier}activeforums_ForumTopics] WHERE ForumId = @ForumId
+DELETE FROM {databaseOwner}[{objectQualifier}activeforums_Forums] WHERE ForumId = @ForumId
+EXEC {databaseOwner}[{objectQualifier}activeforums_Forums_RepairSort] @ForumGroupId, @ParentForumId
+GO

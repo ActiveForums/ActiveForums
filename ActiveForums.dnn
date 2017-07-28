@@ -1,9 +1,9 @@
 ﻿<dotnetnuke type="Package" version="5.0">
     <packages>
-        <package name="Active Forums" type="Module" version="06.01.05">
+        <package name="Active Forums" type="Module" version="06.03.02">
             <friendlyName>Active Forums</friendlyName>
             <description>Active Forums - Forum module for DotNetNuke</description>
-            <iconFile></iconFile>
+            <iconFile>DesktopModules/ActiveForums/images/af6_icon.jpg</iconFile>
             <owner>
                 <name>DotNetNuke Active Forums Module</name>
                 <organization>Active Forums</organization>
@@ -14,7 +14,7 @@
             <releaseNotes src="ReleaseNotes.txt"></releaseNotes>
             <azureCompatible>true</azureCompatible>
             <dependencies>
-                <dependency type="CoreVersion">07.00.00</dependency>
+                <dependency type="CoreVersion">08.00.00</dependency>
             </dependencies>
             <components>
                 <component type="Module">
@@ -73,7 +73,7 @@
                         <assembly>
                             <name>DotNetNuke.Modules.ActiveForums.dll</name>
                             <sourceFileName>DotNetNuke.Modules.ActiveForums.dll</sourceFileName>
-                            <version>05.02.03</version>
+                            <version>06.02.08</version>
                         </assembly>
                     </assemblies>
                 </component>
@@ -276,14 +276,6 @@
                         <version>05.02.01</version>
                       </script>
                       <script type="Install">
-                        <name>05.02.02.SqlDataProvider</name>
-                        <version>05.02.02</version>
-                      </script>
-                      <script type="Install">
-                        <name>05.02.04.SqlDataProvider</name>
-                        <version>05.02.04</version>
-                      </script>
-                      <script type="Install">
                         <name>06.00.02.SqlDataProvider</name>
                         <version>06.00.02</version>
                       </script>
@@ -291,9 +283,21 @@
                         <name>06.01.03.SqlDataProvider</name>
                         <version>06.01.03</version>
                       </script>
+                      <script type="Install">
+                        <name>06.01.06.SqlDataProvider</name>
+                        <version>06.01.06</version>
+                      </script>
+                      <script type="Install">
+                        <name>06.02.06.SqlDataProvider</name>
+                        <version>06.02.06</version>
+                      </script>
+                      <script type="Install">
+                        <name>06.02.07.SqlDataProvider</name>
+                        <version>06.02.07</version>
+                      </script>
                       <script type="UnInstall">                            
                             <name>Uninstall.SqlDataProvider</name>
-                            <version>06.01.03</version>
+                            <version>06.02.07</version>
                         </script>
                     </scripts>
                 </component>
@@ -326,7 +330,7 @@
                 </component>
             </components>
         </package>
-      <package name="Active Forums What's New" type="Module" version="06.01.05">
+      <package name="Active Forums What's New" type="Module" version="06.03.02">
         <friendlyName>Active Forums What's New</friendlyName>
         <foldername>ActiveForumsWhatsNew</foldername>
         <description>Display the most recent topics or replies from selected forums on any page within your site.</description>
@@ -341,7 +345,7 @@
         <releaseNotes src="ReleaseNotes.txt"></releaseNotes>
         <azureCompatible>true</azureCompatible>
         <dependencies>
-          <dependency type="CoreVersion">07.00.00</dependency>
+          <dependency type="CoreVersion">08.00.00</dependency>
         </dependencies>
         <components>
           <component type="Module">

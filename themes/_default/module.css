@@ -159,7 +159,6 @@ margin-top: 10px;
 .aftopicreplies {
 font-size: 18px;
 color: #888;
-text-transform: lowercase;
 }
 
 .afloader {
@@ -476,7 +475,7 @@ td.af-forumdetail a:link,td.af-forumdetail a:visited,td.af-subforumdetail a:link
 }
 
 .afbuttonarea a:link, .afbuttonarea a:visited, .afbuttonarea a:active, .afbuttonarea a:hover {
-	text-decoration: none;
+	/*text-decoration: none;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	border-radius: 2px;
@@ -501,6 +500,33 @@ td.af-forumdetail a:link,td.af-forumdetail a:visited,td.af-subforumdetail a:link
 	border: 1px solid #75a6d4;
 	background: #dfeffa;
 	color: #2770bd;
+	line-height: 1.5*/
+    text-decoration: none;
+	/*-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;*/
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	-o-box-sizing: border-box;
+	box-sizing: border-box;
+	display: inline-block;
+	font-weight: 500;
+	outline: 0;
+	padding: 3px 7px 4px 7px;
+	text-align: center;
+	text-decoration: none;
+	text-shadow: none;
+	cursor: pointer;
+	/*box-shadow: 0 1px 2px rgba(0,0,0,0.15);*/
+	/*border: 1px solid #75a6d4;*/
+    border: 0;
+	background: #68AAC7;
+	color: #ffffff;
 	line-height: 1.5
 }
 
@@ -958,9 +984,27 @@ font-weight: 700;
 	color: rgba(0,0,0,0.8);
 }
 
+
+.aftopicauthor {
+    width:120px;
+    padding-left:5px;
+    text-align:left;
+}
+
+.aftopicmessage {
+    padding-left:15px;
+    text-align:left;
+}
+
+.aftopicstatus {
+    width:24px;
+    text-align:center;
+}
+
 .afpostinfo1, .afpostinfo2 {
 	min-height: 100px;
 	vertical-align: top;
+    padding-top: 5px;
 }
 
 .afpostinfo2, .afpostreply2 {
@@ -973,6 +1017,7 @@ font-weight: 700;
 	min-height: 100px;
 	width: 100%;
 	vertical-align: top;
+    padding-top: 5px;
 }
 
 .afposttopic .afpostbody, 
@@ -984,6 +1029,11 @@ font-weight: 700;
 	padding: 0 10px;
 	word-wrap: normal;
 	word-break: break-word;
+}
+
+.afpostbody img {
+   /* width:100%;*/
+   max-width:100%;
 }
 
 .afborder {
@@ -999,6 +1049,15 @@ font-weight: 700;
 
 .afsmalltext {
 	font-size: 11px;
+    padding:0;
+    margin:0;
+    margin-top:5px;
+}
+
+.afdropdown {
+	font-size: 11px;
+    padding:0;
+    margin:0;
 }
 
 .emot {
@@ -1738,7 +1797,7 @@ div.af-pager table td {
 }
 
 .af-adv-search-box {
-	/* border: solid 1px rgba(0, 0, 0, 0.15); */
+	border: solid 1px rgba(0, 0, 0, 0.15);
 	border-top: none;
 	padding: 0px;
 	margin: 0px;
@@ -1746,12 +1805,12 @@ div.af-pager table td {
 }
 
 .af-adv-search-box:first-child {
-	/* border-top: solid 1px rgba(0, 0, 0, 0.2); */
+	border-top: solid 1px rgba(0, 0, 0, 0.2);
 }
 
 .af-adv-search-header {
 	background-color: #FFF;
-	padding: 4px 0;
+	padding: 4px;
 	color: rgba(0, 0, 0, 0.8);
 	font-weight: 700;
 }
@@ -1760,7 +1819,7 @@ div.af-pager table td {
 	text-align: left;
 	padding-left: 0;
 	border-top: 1px solid rgba(0, 0, 0, 0.05);
-	padding-right: 0;
+	padding-right: 10px;
 	padding-top: 0;
 	margin-top: 15px;
 	color: rgba(0, 0, 0, 0.44);
@@ -1795,7 +1854,7 @@ div.af-pager table td {
 .af-search-header .ui-button,
 .af-adv-search-footer .ui-button,
 .aftb-search .aftb-search-popup .ui-button {
-	text-decoration: none;
+	/*text-decoration: none;
 	-webkit-border-radius: 2px !important;
 	-moz-border-radius: 2px !important;
 	border-radius: 2px !important;
@@ -1820,12 +1879,29 @@ div.af-pager table td {
 	
 	border: 1px solid #75a6d4 !important;
 	background: #dfeffa !important;
-	color: #2770bd !important;
+	color: #2770bd !important;*/
 
 	/* line-height: 1.5; */
-	margin-top: 20px;
+	/*margin-top: 20px;
 	font-size: 14px;
-	margin-bottom: 15px;
+	margin-bottom: 15px;*/
+
+
+    -moz-user-select: none;
+    box-sizing: border-box;
+    display: inline-block;
+    font-weight: 500 !important;
+    outline: 0px none;
+    padding: 3px 7px 4px !important;
+    text-align: center;
+    text-decoration: none;
+    text-shadow: none;
+    cursor: pointer;
+    border: 0px none !important;
+    background: #68AAC7 !important;
+    color: #FFF !important;
+    font-size: 1em !important;
+    /*line-height: 1.5;*/
 }
 .aftb-search .aftb-search-popup .ui-button {
 	margin-top: 18px;
@@ -1860,10 +1936,14 @@ div.af-pager table td {
 }
 
 .af-adv-search-row {
-vertical-align: middle;
+/*vertical-align: middle;
 border-bottom: 0 none;
 padding: 5px 0px;
-margin: 0px;
+margin: 0px;*/
+vertical-align: middle;
+border-bottom: 0 none;
+padding: 10px 0px;
+margin: 0px 15px;
 }
 
 .af-adv-search-row label {
@@ -1899,10 +1979,11 @@ height: auto!important;
 
 .af-adv-search-footer {
 	text-align: right;
+    padding:10px;
 }
 
 .af-adv-search-footer .ui-button {
-	padding: 3px 7px 4px 7px;
+	/*padding: 3px 7px 4px 7px;*/
 }
 
 .af-adv-search-footer .ui-button-text {

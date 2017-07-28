@@ -10,76 +10,73 @@ Active Forums is an award winning, DotNetNuke module that allows you to easily b
 	</div>
     <h3>Release Notes</h3>
 
-<b>Version 06.01.05</b>
+<b>Version 06.03.00</b>
 
 <ul>
- <li>Pull #241 Cleaned up missing {objectQualifier} from SQL providers and worked on error when null-User present on topic</li>
+  <li>DNN Minimum Version: Changed to 8.0.0 or later</li>
+  <li>Build process changed to allow stand-alone compilation</p>
 </ul>
 
-
-<b>Version 06.01.04</b>
+<b>Version 06.02.08</b>
 
 <ul>
- <li>Pull #203 added the "go to last unread post" on the Not read-page, unanswered, my topics and and active topics</li>
- <li>Pull #203 corrected the ½ hour time zone change for .5 time zones</li>
- <li>Pull #203 fixed split button function when topic is locked</li>
- <li>Pull #230 fixed SqlDataProvider 06.01.03 line 105 missing {objectQualifier}</li>
+ <li>Pull #313 - Corrections to sql to include {databaseOwner} and {objectQualifier}</li>
 </ul>
 
-
-<b>Version 06.01.03</b>
+<b>Version 06.02.07</b>
 
 <ul>
- <li>Added fixes for split feature</li>
- <li>Added fixes for attachment token</li>
- <li>Introduction of "like" system and ability to like a post</li>
- <li>Added back Moderationlink to the toolbar template</li>
+ <li>Pull #310 - Added name of person reporting a post</li>
+ <li>Pull #310 - Fix sorting problem after removing a forum</li>
+ <li>Pull #310 - Fix for missing settings for what editor to use</li>
+ <li>Pull #310 - Missing {databaseOwner} and {objectQualifier} in various places</li>
+ <li>Pull #310 - Quick fix for splitting process where split reply took on wrong author</li>
 </ul>
 
-
-<b>Version 06.01.02</b>
+<b>Version 06.02.06</b>
 
 <ul>
- <li>Pull #172 Visible link for users to open my forum settings without leaving forum</li>
- <li>Pull #186 fixing attachments and case sensitive extension</li>
- <li>Pull #192 corrected topic split feature released in 6.1.0 not working properly</li>
- <li>Pull #195 letting the module editor be able to edit user profile via edit profile token link</li>
+ <li>Pull #301 - additional corrections to responsive layout</li>
+ <li>Pull #308 - change to text_editor.js to help with IE compatability</li>
+ <li>Fix for module requiring repair install at upgrade to refresh dll - sorry this isn't very well documented</li>
+ <li>Fix for split feature not working properly - sorry this isn't very well documented</li>
 </ul>
 
-
-<b>Version 06.01.00</b>
+<b>Version 06.02.05</b>
 
 <ul>
- <li>Correct issue with tapatalk stripping topic subject when using quick reply</li>
- <li>Fix avatar display to allow animated GIF</li>
- <li>Added token [AF:PROFILE:EMAIL] to show users email address in templates</li>
- <li>Fix to reload page after delete even when URL contains # character in reference to anchor</li>
- <li>Fix to correct blockquote when using simple editor</li>
- <li>Introduction of new code for later use of mail connector module</li>
- <li>Addition of code to allow for topic/reply split feature - controlled via security mod split</li>
- <li>Fix from @artfuld to correct Token FORUMMAINLINK points to forum root</li>
+ <li>Pull #296 - added last reply column back to tablet and mobile view</li>
 </ul>
 
-
-<b>Version 06.00.02</b>
+<b>Version 06.02.04</b>
 
 <ul>
- <li>Issue #148 - More overflow fixes for TopicView</li>
+ <li>Attempt repair of module branding icon</li>
+ <li>Pull #280 quick jump-to drop down breaks responsive with long forum names - fixed</li>
 </ul>
 
-<b>Version 06.00.01</b>
+<b>Version 06.02.03</b>
 
 <ul>
- <li>Issue #143 - Overall UX/UI overhaul modification with responsive design</li>
- <li>Issue #132 - Fixing issue #132 default attachment type allowed</li>
- <li>Side note - cleaned up release notes from previous releases. Moved to documentation\old_ReleaseNotes.txt</li>
+ <li>Pull #277 More corrections for skins</li>
 </ul>
 
-<b>Version 05.02.04</b>
+<b>Version 06.02.02</b>
 
 <ul>
- <li>Issue #108 - (Issues #96 group permissions issues and partial #97 group permissions fix</li>
- <li>Issue #109 - Console module links disappearing</li>
- <li>Issue #110 - Fixes https links not being recognized</li>
- <li>Issue #113 - No toolbar support for topic view</li>
+ <li>Pull #274 Fixed content width, tooltips, and other UI related items</li>
+</ul>
+
+<b>Version 06.02.01</b>
+
+<ul>
+ <li>Pull #271 fixed move-icon inside a topic to match the new icons</li>
+</ul>
+
+<b>Version 06.02.00</b>
+
+<ul>
+ <li>Pull #268 finished UI changes introduced in version 6 - implemented fontawesome and tweaked responsive layout all around</li>
+ <li>Pull #247 fixed where filters couldn't be deleted, worked on SocialGroupID and configured move to work on locked post</li>
+ <li>Added module icon for branding
 </ul>

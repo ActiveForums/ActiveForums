@@ -173,7 +173,9 @@ function saveSettings(gs){
 		var ed4 = ''; // old toolbar
 		var ed5 = 0; // old editor style
 		var ed6 = document.getElementById("<%=drpPermittedRoles.ClientID%>");
-		if (ed6.selectedIndex >= 0){ed6 = ed6.options[ed6.selectedIndex].value;}else{ed6 = 0;};
+	    if (ed6.selectedIndex >= 0){ed6 = ed6.options[ed6.selectedIndex].value;}else{ed6 = 0;};
+	    var edm = document.getElementById("<%=drpEditorMobile.ClientID%>");
+	    if (edm.selectedIndex >= 0){edm = edm.options[edm.selectedIndex].value;}else{edm = 0;};
 		
 		var md = document.getElementById("<%=rdModOn.ClientID%>").checked;
 	var md1 = document.getElementById("<%=drpDefaultTrust.ClientID%>");
@@ -213,7 +215,7 @@ function saveSettings(gs){
 
 	var as2 = null;
 	if (as2 != null){as2 = as2.checked;}else{as2 = false;};
-	<%=cbEditorAction.ClientID%>.Callback(settingsAction,forumid,tt1,tt2,em,ef,pi,ei,sp,ix,rs,at,at1,at2,at3,at4,at5,at6,at7,at10,at8,at9,at11,ed,ed1,ed2,ed3,ed4,ed5,ed6,tt3,tt4,tt5,tt6,md,md1,md2,md3,md4,md5,md6,md7,as,as1,tg,mc,mc1,mc2,mc3,mc4,mc5,mc6,mc7,mc8,mc9,mc10,mc11,mc12,mc13,mc14,mc15,as2,socialOn,socialTopics,socialSec,cpc,rpc,likes);
+	<%=cbEditorAction.ClientID%>.Callback(settingsAction,forumid,tt1,tt2,em,ef,pi,ei,sp,ix,rs,at,at1,at2,at3,at4,at5,at6,at7,at10,at8,at9,at11,ed,ed1,ed2,ed3,ed4,ed5,ed6,tt3,tt4,tt5,tt6,md,md1,md2,md3,md4,md5,md6,md7,as,as1,tg,mc,mc1,mc2,mc3,mc4,mc5,mc6,mc7,mc8,mc9,mc10,mc11,mc12,mc13,mc14,mc15,as2,socialOn,socialTopics,socialSec,cpc,rpc,likes,edm);
 
 
 };
@@ -1265,6 +1267,17 @@ function afadmin_getProperties() {
 				<td class="amcpbold">[RESX:EditorWidth]:</td>
 				<td width="100%">
 					<asp:TextBox ID="txtEditorWidth" runat="server" CssClass="amcptxtbx" Text="99%" /></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td class="amcpbold">[RESX:EditorMobile]:</td>
+				<td width="100%">
+					<asp:DropDownList ID="drpEditorMobile" runat="server" CssClass="amcptxtbx">
+						<asp:ListItem Value="0">TextBox</asp:ListItem>
+						<asp:ListItem Value="2">Default DNN Editor</asp:ListItem>
+					</asp:DropDownList>
+				</td>
 				<td></td>
 			</tr>
 		</table>

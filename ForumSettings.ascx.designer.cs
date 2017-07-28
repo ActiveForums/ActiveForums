@@ -94,13 +94,13 @@ namespace DotNetNuke.Modules.ActiveForums.Controls {
         protected global::System.Web.UI.UserControl lblDefaultPageSize;
         
         /// <summary>
-        /// txtPageSize control.
+        /// drpPageSize control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::DotNetNuke.Web.UI.WebControls.DnnNumericTextBox txtPageSize;
+        protected global::System.Web.UI.WebControls.DropDownList drpPageSize;
         
         /// <summary>
         /// lblUseSkinBreadCrumb control.
@@ -166,13 +166,13 @@ namespace DotNetNuke.Modules.ActiveForums.Controls {
         protected global::System.Web.UI.UserControl lblFloodInterval;
         
         /// <summary>
-        /// txtFloodInterval control.
+        /// drpFloodInterval control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::DotNetNuke.Web.UI.WebControls.DnnNumericTextBox txtFloodInterval;
+        protected global::System.Web.UI.WebControls.DropDownList drpFloodInterval;
         
         /// <summary>
         /// lblEditInterval control.
@@ -184,13 +184,13 @@ namespace DotNetNuke.Modules.ActiveForums.Controls {
         protected global::System.Web.UI.UserControl lblEditInterval;
         
         /// <summary>
-        /// txtEditInterval control.
+        /// drpEditInterval control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::DotNetNuke.Web.UI.WebControls.DnnNumericTextBox txtEditInterval;
+        protected global::System.Web.UI.WebControls.DropDownList drpEditInterval;
         
         /// <summary>
         /// lblAutoLinks control.

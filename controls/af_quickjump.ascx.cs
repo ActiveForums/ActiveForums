@@ -43,8 +43,8 @@ namespace DotNetNuke.Modules.ActiveForums
             }
         }
         protected override void OnLoad(EventArgs e)
-		{
-			base.OnLoad(e);
+        {
+            base.OnLoad(e);
 
             drpForums.SelectedIndexChanged += new System.EventHandler(drpForums_SelectedIndexChanged);
 
@@ -84,6 +84,7 @@ namespace DotNetNuke.Modules.ActiveForums
                 int GroupId = Convert.ToInt32(dr["ForumGroupId"]);
                 string GroupKey = GroupName + GroupId.ToString();
                 string ForumName = Convert.ToString(dr["ForumName"]);
+                if (ForumName.Length > 30) ForumName = ForumName.Substring(0, 30) + "...";
                 int ForumId = Convert.ToInt32(dr["ForumId"]);
                 string ForumKey = ForumName + ForumId.ToString();
                 int ParentForumId = Convert.ToInt32(dr["ParentForumId"]);
@@ -99,7 +100,7 @@ namespace DotNetNuke.Modules.ActiveForums
                 {
                     if (ParentForumId == 0)
                     {
-                        drpForums.Items.Insert(n, new ListItem("--" + dr["ForumName"].ToString(), "FORUMJUMP:" + dr["ForumID"].ToString()));
+                        drpForums.Items.Insert(n, new ListItem("--" + ForumName, "FORUMJUMP:" + dr["ForumID"].ToString()));
                         n += 1;
                         n = GetSubForums(n, Convert.ToInt32(dr["ForumId"]));
                     }
@@ -132,7 +133,11 @@ namespace DotNetNuke.Modules.ActiveForums
                 {
                     if (Permissions.HasPerm(dr["CanView"].ToString(), ForumUser.UserRoles))
                     {
-                        drpForums.Items.Insert(ItemCount, new ListItem("----" + dr["ForumName"].ToString(), "FORUMJUMP:" + dr["ForumID"].ToString()));
+                        string ForumName = dr["ForumName"].ToString();
+
+                        if (ForumName.Length > 30) ForumName = ForumName.Substring(0, 30) + "...";
+
+                        drpForums.Items.Insert(ItemCount, new ListItem("----" + ForumName, "FORUMJUMP:" + dr["ForumID"].ToString()));
                         ItemCount += 1;
                     }
 

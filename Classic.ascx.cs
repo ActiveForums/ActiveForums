@@ -428,7 +428,7 @@ namespace DotNetNuke.Modules.ActiveForums
                 }
 
             }
-            if (ForumId > 0 & TopicId < 1 && UserIsMod)
+            if (ForumId > 0 && UserIsMod)
             {
                 Controls.HtmlControlLoader ctl = new Controls.HtmlControlLoader();
                 ctl.ControlId = "aftopicedit";

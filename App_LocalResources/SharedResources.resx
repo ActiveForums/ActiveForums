@@ -1469,7 +1469,7 @@ From,
     <value>&lt;b&gt;Reason:&lt;/b&gt; [Reason]&lt;br /&gt;&lt;b&gt;Comments:&lt;/b&gt; [Comment]&lt;hr noshade /&gt;[Post] &lt;br /&gt;&lt;br /&gt;&lt;a href="[URL]" target="_blank"&gt;[URL]&lt;/a&gt;&lt;br /&gt;&lt;br /&gt;</value>
   </data>
   <data name="AlertSubject.Text" xml:space="preserve">
-    <value>A post by [DisplayName] has been flagged for review</value>
+    <value>A post by [DisplayName] has been flagged for review by [FlaggedBy]</value>
   </data>
   <data name="NotificationBodyReply.Text" xml:space="preserve">
     <value>[Post]</value>
