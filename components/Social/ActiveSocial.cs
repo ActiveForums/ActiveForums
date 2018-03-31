@@ -42,7 +42,7 @@ namespace DotNetNuke.Modules.ActiveForums
                 Entities.Tabs.TabInfo ti;
                 foreach (Entities.Modules.ModuleInfo mi in mc.GetModules(PortalId))
                 {
-                    if (mi.ModuleName.Contains("Active Social") && mi.IsDeleted == false)
+                    if (mi.DesktopModule.ModuleName.Contains("Active Social") && mi.IsDeleted == false)
                     {
                         ti = tc.GetTab(mi.TabID, PortalId, false);
                         if (ti != null)

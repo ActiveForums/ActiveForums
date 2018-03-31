@@ -236,7 +236,7 @@ namespace DotNetNuke.Modules.ActiveForums.Handlers
 					string DomainName = null;
 					DotNetNuke.Entities.Portals.PortalAliasInfo objPortalAliasInfo = null;
 					string sUrl = HttpContext.Current.Request.RawUrl.Replace("http://", string.Empty).Replace("https://", string.Empty);
-					objPortalAliasInfo = DotNetNuke.Entities.Portals.PortalSettings.GetPortalAliasInfo(HttpContext.Current.Request.Url.Host);
+					objPortalAliasInfo = DotNetNuke.Entities.Portals.PortalAliasController.Instance.GetPortalAlias(HttpContext.Current.Request.Url.Host);
 					_pid = objPortalAliasInfo.PortalID;
 					_ps = DotNetNuke.Entities.Portals.PortalController.GetCurrentPortalSettings();
 
@@ -258,7 +258,7 @@ namespace DotNetNuke.Modules.ActiveForums.Handlers
 					//_isValid = DotNetNuke.Security.PortalSecurity.IsInRole(_ps.AdministratorRoleName)
 					DotNetNuke.Entities.Modules.ModuleController objMC = new DotNetNuke.Entities.Modules.ModuleController();
 					DotNetNuke.Entities.Modules.ModuleInfo objM = objMC.GetModule(ModuleId, TabId);
-					string roleIds = Permissions.GetRoleIds(objM.AuthorizedEditRoles.Split(';'), PortalId);
+					string roleIds = Permissions.GetRoleIds(objM.ModulePermissions.ToString("EDIT").Split(';'), PortalId);
 					_isValid = Modules.ActiveForums.Permissions.HasAccess(roleIds, ForumUser.UserRoles);
 				}
 				else if (AdminRequired & ! context.Request.IsAuthenticated)

@@ -229,7 +229,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             var pc = new PortalController();
             var ps = PortalController.GetCurrentPortalSettings();
 
-            var offSet = ps.TimeZoneOffset;
+            var offSet = Convert.ToInt32(PortalSettings.Current.TimeZone.BaseUtcOffset.TotalMinutes);
 
             sb.Append(WriteElement("channel", indent));
             sb.Append(WriteElement("title", ps.PortalName, indent));
