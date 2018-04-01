@@ -117,7 +117,7 @@ namespace DotNetNuke.Modules.ActiveForums
             DataSet ds = DataProvider.Instance().UI_TopicsView(PortalId, ModuleId, ForumID, ou.UserID, 0, 20, ou.IsSuperUser, SortColumns.ReplyCreated);
             if (ds.Tables.Count > 0)
             {
-                offSet = ps.TimeZoneOffset;
+                offSet = Convert.ToInt32(ps.TimeZone.BaseUtcOffset.TotalMinutes);
                 if (ds.Tables[0].Rows.Count == 0)
                 {
                     return string.Empty;
@@ -178,7 +178,7 @@ namespace DotNetNuke.Modules.ActiveForums
                         }
                         foreach (DataRow dr in dtTopics.Rows)
                         {
-                            if (DotNetNuke.Security.PortalSecurity.IsInRoles(PortalSettings.ActiveTab.AuthorizedRoles))
+                            if (DotNetNuke.Security.PortalSecurity.IsInRoles(PortalSettings.ActiveTab.TabPermissions.ToString("VIEW")))
                             {
                                 //objModule = objModules.GetModule(ModuleId, TabId)
                                 //If DotNetNuke.Security.PortalSecurity.IsInRoles(objModule.AuthorizedViewRoles) = True Then

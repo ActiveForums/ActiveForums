@@ -17,6 +17,7 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 //
+using DotNetNuke.Entities.Portals;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -74,7 +75,7 @@ namespace DotNetNuke.Modules.ActiveForums
 			int PortalId = -1;
 			DotNetNuke.Entities.Portals.PortalAliasInfo objPortalAliasInfo = null;
 			string sUrl = HttpContext.Current.Request.RawUrl.Replace("http://", string.Empty).Replace("https://", string.Empty);
-			objPortalAliasInfo = DotNetNuke.Entities.Portals.PortalSettings.GetPortalAliasInfo(HttpContext.Current.Request.Url.Host);
+			objPortalAliasInfo = PortalAliasController.Instance.GetPortalAlias(HttpContext.Current.Request.Url.Host);
 			if (Request.RawUrl.ToLowerInvariant().Contains("404.aspx"))
 			{
 				string sEx = ".jpg,.gif,.png,.swf,.js,.css,.html,.htm,desktopmodules,portals,.ashx,.ico,.txt,.doc,.docx,.pdf,.xml,.xls,.xlsx,.ppt,.pptx,.csv,.zip,.asmx,.aspx";

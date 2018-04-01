@@ -20,6 +20,7 @@
 
 using DotNetNuke.Modules.ActiveForums.Constants;
 using DotNetNuke.Modules.ActiveForums.Extensions;
+using DotNetNuke.UI.Skins;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -964,7 +965,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
             sbOutput.Replace("[GROUPNAME]", _groupName);
 
             // Printer Friendly Link
-            var sURL = "<a rel=\"nofollow\" href=\"" + Utilities.NavigateUrl(TabId, "", ParamKeys.ForumId + "=" + ForumId, ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.TopicId + "=" + TopicId, "mid=" + ModuleId, "dnnprintmode=true") + "?skinsrc=" + HttpUtility.UrlEncode("[G]" + UI.Skins.SkinInfo.RootSkin + "/" + Common.Globals.glbHostSkinFolder + "/" + "No Skin") + "&amp;containersrc=" + HttpUtility.UrlEncode("[G]" + UI.Skins.SkinInfo.RootContainer + "/" + Common.Globals.glbHostSkinFolder + "/" + "No Container") + "\" target=\"_blank\">";
+            var sURL = "<a rel=\"nofollow\" href=\"" + Utilities.NavigateUrl(TabId, "", ParamKeys.ForumId + "=" + ForumId, ParamKeys.ViewType + "=" + Views.Topic, ParamKeys.TopicId + "=" + TopicId, "mid=" + ModuleId, "dnnprintmode=true") + "?skinsrc=" + HttpUtility.UrlEncode("[G]" + SkinController.RootSkin + "/" + Common.Globals.glbHostSkinFolder + "/" + "No Skin") + "&amp;containersrc=" + HttpUtility.UrlEncode("[G]" + SkinController.RootContainer + "/" + Common.Globals.glbHostSkinFolder + "/" + "No Container") + "\" target=\"_blank\">";
             //sURL += "<img src=\"" + _myThemePath + "/images/print16.png\" border=\"0\" alt=\"[RESX:PrinterFriendly]\" /></a>";
             sURL += "<i class=\"fa fa-print fa-fw fa-blue\"></i></a>";
             sbOutput.Replace("[AF:CONTROL:PRINTER]", sURL);

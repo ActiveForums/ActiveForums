@@ -166,7 +166,7 @@ namespace DotNetNuke.Modules.ActiveForums
 
         private void LoadForm()
         {
-            var moduleSettings = Entities.Portals.PortalSettings.GetModuleSettings(ModuleId);
+            var moduleSettings = new ModuleController().GetModuleSettings(ModuleId) ;
             var settings = WhatsNewModuleSettings.CreateFromModuleSettings(moduleSettings);
 
             txtNumItems.Text = settings.Rows.ToString();

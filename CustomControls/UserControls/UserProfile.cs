@@ -386,7 +386,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
         {
             if (CanEditMode())
             {
-                DotNetNuke.Entities.Users.UserInfo objuser = DotNetNuke.Entities.Users.UserController.GetUser(PortalId, UID, true);
+                DotNetNuke.Entities.Users.UserInfo objuser = DotNetNuke.Entities.Users.UserController.GetUserById(PortalId, UID);
                 UserProfileController upc = new UserProfileController();
                 UserController uc = new UserController();
                 UserProfileInfo upi = uc.GetUser(PortalId, ModuleId, UID).Profile;

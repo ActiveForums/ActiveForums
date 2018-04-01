@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Xml;
+using DotNetNuke.Security.Permissions;
 using DotNetNuke.Services.Localization;
 
 namespace DotNetNuke.Modules.ActiveForums
@@ -561,7 +562,7 @@ namespace DotNetNuke.Modules.ActiveForums
             if (permittedMode == HTMLPermittedUsers.Moderators && userIsModerator)
                 return true;
 
-            if (permittedMode == HTMLPermittedUsers.Administrators && HasModulePermission("EDIT"))
+            if (permittedMode == HTMLPermittedUsers.Administrators && ModulePermissionController.HasModulePermission(ModuleConfiguration.ModulePermissions, "EDIT"))
                 return true;
 
             return false;

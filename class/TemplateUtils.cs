@@ -744,7 +744,7 @@ namespace DotNetNuke.Modules.ActiveForums
 
         public static string ParseProfile(int portalId, int userId, string template, CurrentUserTypes currentUserType, int currentUserId)
         {
-            var objuser = Entities.Users.UserController.GetUser(portalId, userId, true);
+            var objuser = Entities.Users.UserController.GetUserById(portalId, userId);
 
             var s = template ?? string.Empty;
 

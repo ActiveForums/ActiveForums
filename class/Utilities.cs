@@ -31,6 +31,7 @@ using System.Reflection;
 using System.Web.UI.WebControls;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Tabs;
+using DotNetNuke.Security.Roles;
 
 namespace DotNetNuke.Modules.ActiveForums
 {
@@ -1291,6 +1292,7 @@ namespace DotNetNuke.Modules.ActiveForums
         public static List<Entities.Users.UserInfo> GetListOfModerators(int portalId, int forumId)
         {
             var rc = new Security.Roles.RoleController();
+            var rp = RoleProvider.Instance();
             var uc = new Entities.Users.UserController();
             var fc = new ForumController();
             var fi = fc.Forums_Get(forumId, -1, false, true);
@@ -1309,7 +1311,7 @@ namespace DotNetNuke.Modules.ActiveForums
 
                 var rid = Convert.ToInt32(r);
                 var rName = rc.GetRole(rid, portalId).RoleName;
-                foreach (Entities.Users.UserRoleInfo usr in rc.GetUserRolesByRoleName(portalId, rName))
+                foreach (Entities.Users.UserRoleInfo usr in rp.GetUserRoles(portalId, null, rName))
                 {
                     var ui = uc.GetUser(portalId, usr.UserID);
 

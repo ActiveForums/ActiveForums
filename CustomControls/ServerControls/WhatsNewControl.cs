@@ -144,14 +144,20 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
         {
             base.OnLoad(e);
 
-            var timeOffset = PortalSettings.TimeZoneOffset;
+            int timeOffset = Convert.ToInt32(PortalSettings.TimeZone.BaseUtcOffset.TotalMinutes);
             if (UserId > 0)
             {
                 var uc = new Entities.Users.UserController();
+                
                 var dnnUser = uc.GetUser(PortalId, UserId);
-                timeOffset = dnnUser.Profile.TimeZone;
+                string propValue = UserInfo.Profile.GetPropertyValue(Entities.Users.UserProfile.USERPROFILE_TimeZone);
+                if (!string.IsNullOrEmpty(propValue))
+                {
+                    timeOffset = int.Parse(propValue);
+                }
+
                 if (timeOffset == 0)
-                    timeOffset = PortalSettings.TimeZoneOffset;
+                    timeOffset = Convert.ToInt32(PortalSettings.TimeZone.BaseUtcOffset.TotalMinutes);
             }
 
             var sHeaderTemplate = "<div style=\"padding:10px;padding-top:5px;\">";
