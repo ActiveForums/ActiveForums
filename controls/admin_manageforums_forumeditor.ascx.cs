@@ -482,8 +482,8 @@ namespace DotNetNuke.Modules.ActiveForums
             Utilities.SelectListItemByValue(drpModDeleteTemplateId, fi.ModDeleteTemplateId);
             Utilities.SelectListItemByValue(drpModMoveTemplateId, fi.ModMoveTemplateId);
             Utilities.SelectListItemByValue(drpModNotifyTemplateId, fi.ModNotifyTemplateId);
-            Utilities.SelectListItemByValue(drpDefaultTrust, fi.DefaultTrustValue);
-            Utilities.SelectListItemByValue(drpEditorTypes, fi.EditorType);
+            Utilities.SelectListItemByValue(drpDefaultTrust, (int)fi.DefaultTrustValue);
+            Utilities.SelectListItemByValue(drpEditorTypes, (int)fi.EditorType);
             Utilities.SelectListItemByValue(drpEditorMobile, fi.EditorMobile);
             Utilities.SelectListItemByValue(drpPermittedRoles, (int)fi.EditorPermittedUsers);
 
@@ -554,7 +554,7 @@ namespace DotNetNuke.Modules.ActiveForums
             rdLikesOn.Checked = fi.AllowLikes;
             rdLikesOff.Checked = !fi.AllowLikes;
 
-            chkTopicsOnly.Checked = fi.AutoSubscribeNewTopicsOnly;
+            chkAutoSubscribeNewTopicsOnly.Checked = fi.AutoSubscribeNewTopicsOnly;
 
             txtEditorHeight.Text = (fi.EditorHeight == string.Empty) ? "400" : fi.EditorHeight;
             txtEditorWidth.Text = (fi.EditorWidth == string.Empty) ? "99%" : fi.EditorWidth;
@@ -603,10 +603,10 @@ namespace DotNetNuke.Modules.ActiveForums
             Utilities.SelectListItemByValue(drpModDeleteTemplateId, gi.ModDeleteTemplateId);
             Utilities.SelectListItemByValue(drpModMoveTemplateId, gi.ModMoveTemplateId);
             Utilities.SelectListItemByValue(drpModNotifyTemplateId, gi.ModNotifyTemplateId);
-            Utilities.SelectListItemByValue(drpDefaultTrust, gi.DefaultTrustValue);
+            Utilities.SelectListItemByValue(drpDefaultTrust, (int)gi.DefaultTrustValue);
             Utilities.SelectListItemByValue(drpEditorTypes, (int)gi.EditorType);
             Utilities.SelectListItemByValue(drpEditorMobile, (int)gi.EditorMobile);
-            Utilities.SelectListItemByValue(drpPermittedRoles, gi.EditorPermittedUsers);
+            Utilities.SelectListItemByValue(drpPermittedRoles, (int)gi.EditorPermittedUsers);
             
             txtAutoTrustLevel.Text = gi.AutoTrustLevel.ToString();
             txtEmailAddress.Text = gi.EmailAddress;
@@ -679,7 +679,7 @@ namespace DotNetNuke.Modules.ActiveForums
 
             txtEditorHeight.Text = (gi.EditorHeight == string.Empty) ? "400" : gi.EditorHeight;
             txtEditorWidth.Text = (gi.EditorWidth == string.Empty) ? "99%" : gi.EditorWidth;
-            chkTopicsOnly.Checked = gi.AutoSubscribeNewTopicsOnly;
+            chkAutoSubscribeNewTopicsOnly.Checked = gi.AutoSubscribeNewTopicsOnly;
             hidRoles.Value = gi.AutoSubscribeRoles;
             BindAutoSubRoles(gi.AutoSubscribeRoles);
         }

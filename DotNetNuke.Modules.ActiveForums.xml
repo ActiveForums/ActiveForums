@@ -3735,9 +3735,9 @@
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:DotNetNuke.Modules.ActiveForums.admin_manageforums_forumeditor.chkTopicsOnly">
+        <member name="F:DotNetNuke.Modules.ActiveForums.admin_manageforums_forumeditor.chkAutoSubscribeNewTopicsOnly">
             <summary>
-            chkTopicsOnly control.
+            chkAutoSubscribeNewTopicsOnly control.
             </summary>
             <remarks>
             Auto-generated field.
