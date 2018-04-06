@@ -1075,13 +1075,13 @@ namespace DotNetNuke.Modules.ActiveForums {
         protected global::System.Web.UI.WebControls.TextBox txtMaxAttachHeight;
         
         /// <summary>
-        /// chkTopicsOnly control.
+        /// chkAutoSubscribeNewTopicsOnly control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkTopicsOnly;
+        protected global::System.Web.UI.WebControls.CheckBox chkAutoSubscribeNewTopicsOnly;
         
         /// <summary>
         /// drpRoles control.

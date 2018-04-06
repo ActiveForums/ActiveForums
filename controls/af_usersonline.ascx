@@ -18,7 +18,7 @@
 				
 				<asp:Literal ID="litGuestsOnline" runat="server" /><br />
 				<div id="af-usersonline">
-				<asp:literal id="litUsersOnline" runat="server">There are [USERCOUNT] of [TOTALMEMBERCOUNT] member(s) online:</asp:literal>&nbsp;
+				<asp:literal id="litUsersOnline" runat="server"></asp:literal>&nbsp;
 				</div>
 	
 				<br />
