@@ -232,7 +232,7 @@ namespace DotNetNuke.Modules.ActiveForums
 						Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.QuickReplyFormId, "0");
 						Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ProfileTemplateId, "0");
 						Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.IsModerated, "false");
-						Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.DefaultTrustValue, "0");
+						Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.DefaultTrustLevel, "0");
 						Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AutoTrustLevel, "0");
 						Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ModApproveTemplateId, "0");
 						Settings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ModRejectTemplateId, "0");
