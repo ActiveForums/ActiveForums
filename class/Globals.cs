@@ -249,7 +249,7 @@ namespace DotNetNuke.Modules.ActiveForums
 		public const string TopicTemplateId = "TOPICTEMPLATEID";
 		public const string IsModerated = "ISMODERATED";
 		public const string AutoTrustLevel = "AUTOTRUSTLEVEL";
-		public const string DefaultTrustValue = "DEFAULTTRUSTLEVEL";
+		public const string DefaultTrustLevel = "DEFAULTTRUSTLEVEL";
 		public const string ModApproveTemplateId = "MODAPPROVETEMPLATEID";
 		public const string ModRejectTemplateId = "MODREJECTTEMPLATEID";
 		public const string ModMoveTemplateId = "MODMOVETEMPLATEID";
