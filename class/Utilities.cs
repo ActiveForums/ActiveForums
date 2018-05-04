@@ -387,6 +387,38 @@ namespace DotNetNuke.Modules.ActiveForums
             return text;
         }
 
+        private static string ReplaceLink(Match match, string currentSite, string text)
+        { 
+            const int maxLengthAutoLinkLabel = 47;
+            const string outSite = "<a href=\"{0}\" target=\"_blank\" rel=\"nofollow\">{1}</a>";
+            const string inSite = "<a href=\"{0}\">{1}</a>";
+            var url = match.Value;
+            if (url.ToLowerInvariant().Contains("jpg") || url.ToLowerInvariant().Contains("gif") || url.ToLowerInvariant().Contains("png") || url.ToLowerInvariant().Contains("jpeg"))
+                return url;
+
+            //
+            // Ignore it when there is a preceeding a or img.
+            //
+            var xStart = 0;
+            if ((match.Index - 10) > 0)
+                xStart = match.Index - 10;
+            
+            if (text.Substring(xStart, 10).ToLowerInvariant().Contains("href"))
+                return url;
+
+            if (text.Substring(xStart, 10).ToLowerInvariant().Contains("src"))
+                return url;
+
+            if (text.Substring(xStart, 10).ToLowerInvariant().Contains("="))
+                return url;
+        
+            var urlText = match.Value;
+            if (urlText.Length > maxLengthAutoLinkLabel)
+                urlText = match.Value.Substring(0, maxLengthAutoLinkLabel - 22) + "..." + match.Value.Substring(match.Value.Length - 20);
+
+            return url.ToLowerInvariant().Contains(currentSite.ToLowerInvariant()) ? string.Format(inSite, url, urlText) : string.Format(outSite, url, urlText);
+        }
+
         public static string AutoLinks(string text, string currentSite)
         {
             var original = text;
@@ -402,35 +434,11 @@ namespace DotNetNuke.Modules.ActiveForums
                     text = text.Replace(m.Value, m.Groups["http"].Value.Contains("...") ? m.Groups["url"].Value : m.Groups["http"].Value);
 
                 if (string.IsNullOrEmpty(text))
-                    return original;
-
-                const string outSite = "<a href=\"{0}\" target=\"_blank\" rel=\"nofollow\">{1}</a>";
-                const string inSite = "<a href=\"{0}\">{1}</a>";
-                foreach (Match m in Regex.Matches(text, @"(http|https)://([\w+?\.\w+])+([a-zA-Z0-9\~\!\@\\#\$\%\^\&amp;\*\(\)_\-\=\+\\\/\?\.\:\;\'\,]*)?", RegexOptions.IgnoreCase))
                 {
-                    var url = m.Value;
-                    if (url.ToLowerInvariant().Contains("jpg") || url.ToLowerInvariant().Contains("gif") || url.ToLowerInvariant().Contains("png") || url.ToLowerInvariant().Contains("jpeg"))
-                        break;
-
-                    var xStart = 0;
-                    if ((m.Index - 10) > 0)
-                        xStart = m.Index - 10;
-
-                    if (text.Substring(xStart, 10).ToLowerInvariant().Contains("href"))
-                        break;
-
-                    if (text.Substring(xStart, 10).ToLowerInvariant().Contains("src"))
-                        break;
-
-                    if (text.Substring(xStart, 10).ToLowerInvariant().Contains("="))
-                        break;
-
-                    var urlText = m.Value;
-                    if (urlText.Length > 47)
-                        urlText = m.Value.Substring(0, 35) + "..." + m.Value.Substring(m.Value.Length - 10);
-
-                    text = text.Replace(m.Value, url.ToLowerInvariant().Contains(currentSite.ToLowerInvariant()) ? string.Format(inSite, url, urlText) : string.Format(outSite, url, urlText));
+                    return original;
                 }
+
+                text = Regex.Replace(text, @"http://([\w+?\.\w+])+([a-zA-Z0-9\~\!\@\\#\$\%\^\&amp;\*\(\)_\-\=\+\\\/\?\.\:\;\'\,]*)?", m => ReplaceLink(m, currentSite, text), RegexOptions.IgnoreCase);
                 if (string.IsNullOrEmpty(text))
                 {
                     return original;
