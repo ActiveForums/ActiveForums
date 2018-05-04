@@ -966,8 +966,12 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                     //sTopicsTemplate = sTopicsTemplate.Replace("[SUBJECTLINK]", sPollImage & GetTopic(ModuleId, TabId, ForumId, TopicId, Subject, sBodyTitle, UserId, AuthorId, ReplyCount, -1, sUserJumpUrl))
                     sTopicsTemplate = sTopicsTemplate.Replace("[SUBJECTLINK]", GetTopic(ModuleId, TabId, ForumId, TopicId, Subject, sBodyTitle, UserId, AuthorId, ReplyCount, -1, sTopicURL) + sPollImage);
 
-
-                    sTopicsTemplate = sTopicsTemplate.Replace("[STARTEDBY]", UserProfiles.GetDisplayName(ModuleId, true, bModApprove, ForumUser.IsAdmin || ForumUser.IsSuperUser, AuthorId, AuthorUserName, AuthorFirstName, AuthorLastName, AuthorDisplayName).ToString().Replace("&amp;#", "&#"));
+                    var displayName = UserProfiles.GetDisplayName(ModuleId, true, bModApprove, ForumUser.IsAdmin || ForumUser.IsSuperUser, AuthorId, AuthorUserName, AuthorFirstName, AuthorLastName, AuthorDisplayName).ToString().Replace("&amp;#", "&#");
+                    if (displayName == "Anonymous")
+                    {
+                        displayName = AuthorDisplayName;
+                    }
+                    sTopicsTemplate = sTopicsTemplate.Replace("[STARTEDBY]", displayName);
                     sTopicsTemplate = sTopicsTemplate.Replace("[DATECREATED]", GetDate(DateCreated));
                     sTopicsTemplate = sTopicsTemplate.Replace("[REPLIES]", ReplyCount.ToString());
                     sTopicsTemplate = sTopicsTemplate.Replace("[VIEWS]", ViewCount.ToString());

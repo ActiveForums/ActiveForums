@@ -51,10 +51,8 @@ namespace DotNetNuke.Modules.ActiveForums
 			foreach (Match myMatch in Matches)
 			{
 				codeSnip = myMatch.Result("$2");
-				codeSnip = codeSnip.Replace("&quot;", "\"");
-				codeSnip = HttpUtility.HtmlEncode(codeSnip);
-				tmp = "<pre>" + codeSnip + "</pre>";
-				if ((myMatch.Result("$1").IndexOf("vb", 0) + 1) > 0)
+                tmp = "<pre><code>" + codeSnip + "</code></pre>";
+                if ((myMatch.Result("$1").IndexOf("vb", 0) + 1) > 0)
 				{
 					//Dim objCode As New Manoli.Utils.CSharpFormat.VisualBasicFormat
 					//objCode.Alternate = False
