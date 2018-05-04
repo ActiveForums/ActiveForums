@@ -30,6 +30,7 @@ using DotNetNuke.Web.Client.ClientResourceManagement;
 using System.Text;
 using DotNetNuke.Security.Roles;
 using DotNetNuke.Security.Permissions;
+using DotNetNuke.UI.Utilities;
 
 //using DotNetNuke.Framework.JavaScriptLibraries;
 
@@ -341,6 +342,7 @@ namespace DotNetNuke.Modules.ActiveForums
 
             //Framework.jQuery.RequestRegistration();
             //Framework.jQuery.RequestUIRegistration();
+            ClientAPI.RegisterClientReference(this.Page, ClientAPI.ClientNamespaceReferences.dnn);
             Framework.jQuery.RequestDnnPluginsRegistration();
 
             ClientResourceManager.RegisterScript(this.Page, "~/desktopmodules/activeforums/scripts/jquery-searchPopup.js");
