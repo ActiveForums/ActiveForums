@@ -21,7 +21,7 @@ Active Forums is an award winning, DotNetNuke module that allows you to easily b
 	<li>#102 Not correctly handling single quotes. Semantic web</li>
 	<li>#417 JS error in DNN9.2</li>
 <ul>
-Thanks to Monty for #102 and #103 and VincentParrett for #417
+Thanks to Monty for #102 and #103 and VincentParrett for #417<br /> <br/>
 
 
 <b>Version 06.03.00</b>
