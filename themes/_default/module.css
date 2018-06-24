@@ -266,12 +266,13 @@ color: #888;
 }
 
 .afsectionhd {
-	background-color: #cdcdcd;
-	margin: 0px;
-	padding-left: 5px;
-	padding-right: 5px;
-	background-image: url(images/amwhiteback.png);
-	height: 30px;
+    background-color: #cdcdcd;
+    margin: 0px;
+    padding-left: 5px;
+    padding-right: 5px;
+    background-image: url(images/amwhiteback.png);
+    height: 30px;
+    cursor: pointer;
 }
 
 .afsectiondsp {
