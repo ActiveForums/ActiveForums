@@ -45,7 +45,7 @@
 
 .afsearchbox{border:solid 1px #666;height:22px !important;font-size:16px !important;}
 .afsection{width:100%; margin:0px;padding:0px; border-bottom:solid 0px #b3b3b3;}
-.afsectionhd{background-color:#cdcdcd;margin:0px;padding-left:5px;padding-right:5px;background-image: url(amwhiteback.png);height:30px;}
+.afsectionhd {background-color: #cdcdcd;margin: 0px;padding-left: 5px;padding-right: 5px;background-image: url(amwhiteback.png);height: 30px;cursor:pointer;}
 .afsectiondsp{padding:5px; border-bottom:solid 1px #b3b3b3;border-left:solid 1px #b3b3b3;border-right:solid 1px #b3b3b3;}
 
 .afactionicon{padding-left:5px;padding-right:0px;}
