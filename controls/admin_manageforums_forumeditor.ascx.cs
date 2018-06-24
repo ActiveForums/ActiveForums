@@ -392,9 +392,9 @@ namespace DotNetNuke.Modules.ActiveForums
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachCount, parameters[12]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachMaxSize, parameters[13]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachTypeAllowed, parameters[14]);
-            //AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachStore, parameters[15]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachMaxHeight, parameters[16]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachMaxWidth, parameters[17]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorMobile, parameters[15]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AllowLikes, parameters[16]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ReplyPostCount, parameters[17]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachAllowBrowseSite, parameters[18]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AttachInsertAllowed, parameters[19]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.MaxAttachWidth, parameters[20]);
@@ -404,15 +404,15 @@ namespace DotNetNuke.Modules.ActiveForums
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorType, parameters[24]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorHeight, parameters[25]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorWidth, parameters[26]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorToolbar, parameters[27]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorStyle, parameters[28]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.CreatePostCount, parameters[27]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AutoSubscribeNewTopicsOnly, parameters[28]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorPermittedUsers, parameters[29]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.TopicFormId, parameters[30]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ReplyFormId, parameters[31]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.QuickReplyFormId, parameters[32]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AutoSubscribeRoles, parameters[32]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ProfileTemplateId, parameters[33]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.IsModerated, parameters[34]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.DefaultTrustValue, parameters[35]);
+            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.DefaultTrustLevel, parameters[35]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AutoTrustLevel, parameters[36]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ModApproveTemplateId, parameters[37]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ModRejectTemplateId, parameters[38]);
@@ -420,15 +420,6 @@ namespace DotNetNuke.Modules.ActiveForums
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ModDeleteTemplateId, parameters[40]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ModNotifyTemplateId, parameters[41]);
             AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AutoSubscribeEnabled, parameters[42]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AutoSubscribeRoles, parameters[43]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AutoSubscribeNewTopicsOnly, parameters[61]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ActiveSocialEnabled, parameters[62]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ActiveSocialTopicsOnly, parameters[63]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ActiveSocialSecurityOption, parameters[64]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.CreatePostCount, parameters[65]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.ReplyPostCount, parameters[66]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.AllowLikes, parameters[67]);
-            AFSettings.SaveSetting(ModuleId, sKey, ForumSettingKeys.EditorMobile, parameters[68]);
         }
 
         private void LoadForum(int forumId)
@@ -482,8 +473,8 @@ namespace DotNetNuke.Modules.ActiveForums
             Utilities.SelectListItemByValue(drpModDeleteTemplateId, fi.ModDeleteTemplateId);
             Utilities.SelectListItemByValue(drpModMoveTemplateId, fi.ModMoveTemplateId);
             Utilities.SelectListItemByValue(drpModNotifyTemplateId, fi.ModNotifyTemplateId);
-            Utilities.SelectListItemByValue(drpDefaultTrust, fi.DefaultTrustValue);
-            Utilities.SelectListItemByValue(drpEditorTypes, fi.EditorType);
+            Utilities.SelectListItemByValue(drpDefaultTrust, (int)fi.DefaultTrustValue);
+            Utilities.SelectListItemByValue(drpEditorTypes, (int)fi.EditorType);
             Utilities.SelectListItemByValue(drpEditorMobile, fi.EditorMobile);
             Utilities.SelectListItemByValue(drpPermittedRoles, (int)fi.EditorPermittedUsers);
 
@@ -554,7 +545,7 @@ namespace DotNetNuke.Modules.ActiveForums
             rdLikesOn.Checked = fi.AllowLikes;
             rdLikesOff.Checked = !fi.AllowLikes;
 
-            chkTopicsOnly.Checked = fi.AutoSubscribeNewTopicsOnly;
+            chkAutoSubscribeNewTopicsOnly.Checked = fi.AutoSubscribeNewTopicsOnly;
 
             txtEditorHeight.Text = (fi.EditorHeight == string.Empty) ? "400" : fi.EditorHeight;
             txtEditorWidth.Text = (fi.EditorWidth == string.Empty) ? "99%" : fi.EditorWidth;
@@ -603,10 +594,10 @@ namespace DotNetNuke.Modules.ActiveForums
             Utilities.SelectListItemByValue(drpModDeleteTemplateId, gi.ModDeleteTemplateId);
             Utilities.SelectListItemByValue(drpModMoveTemplateId, gi.ModMoveTemplateId);
             Utilities.SelectListItemByValue(drpModNotifyTemplateId, gi.ModNotifyTemplateId);
-            Utilities.SelectListItemByValue(drpDefaultTrust, gi.DefaultTrustValue);
+            Utilities.SelectListItemByValue(drpDefaultTrust, (int)gi.DefaultTrustValue);
             Utilities.SelectListItemByValue(drpEditorTypes, (int)gi.EditorType);
             Utilities.SelectListItemByValue(drpEditorMobile, (int)gi.EditorMobile);
-            Utilities.SelectListItemByValue(drpPermittedRoles, gi.EditorPermittedUsers);
+            Utilities.SelectListItemByValue(drpPermittedRoles, (int)gi.EditorPermittedUsers);
             
             txtAutoTrustLevel.Text = gi.AutoTrustLevel.ToString();
             txtEmailAddress.Text = gi.EmailAddress;
@@ -679,7 +670,7 @@ namespace DotNetNuke.Modules.ActiveForums
 
             txtEditorHeight.Text = (gi.EditorHeight == string.Empty) ? "400" : gi.EditorHeight;
             txtEditorWidth.Text = (gi.EditorWidth == string.Empty) ? "99%" : gi.EditorWidth;
-            chkTopicsOnly.Checked = gi.AutoSubscribeNewTopicsOnly;
+            chkAutoSubscribeNewTopicsOnly.Checked = gi.AutoSubscribeNewTopicsOnly;
             hidRoles.Value = gi.AutoSubscribeRoles;
             BindAutoSubRoles(gi.AutoSubscribeRoles);
         }
@@ -772,12 +763,13 @@ namespace DotNetNuke.Modules.ActiveForums
             BindTemplateDropDown(drpTopicForm, Templates.TemplateTypes.TopicForm, "[RESX:Default]", "0");
             BindTemplateDropDown(drpReplyForm, Templates.TemplateTypes.ReplyForm, "[RESX:Default]", "0");
             //BindTemplateDropDown(drpQuickReplyForm, Templates.TemplateTypes.QuickReplyForm, "[RESX:Default]", "0")
+            
             BindTemplateDropDown(drpProfileDisplay, Templates.TemplateTypes.PostInfo, "[RESX:Default]", "0");
-            BindTemplateDropDown(drpModApprovedTemplateId, Templates.TemplateTypes.ModEmail, "[RESX:DropDownDisabled]", "-1");
-            BindTemplateDropDown(drpModDeleteTemplateId, Templates.TemplateTypes.ModEmail, "[RESX:DropDownDisabled]", "-1");
-            BindTemplateDropDown(drpModMoveTemplateId, Templates.TemplateTypes.ModEmail, "[RESX:DropDownDisabled]", "-1");
-            BindTemplateDropDown(drpModRejectTemplateId, Templates.TemplateTypes.ModEmail, "[RESX:DropDownDisabled]", "-1");
-            BindTemplateDropDown(drpModNotifyTemplateId, Templates.TemplateTypes.ModEmail, "[RESX:DropDownDisabled]", "-1");
+            BindTemplateDropDown(drpModApprovedTemplateId, Templates.TemplateTypes.ModEmail, "[RESX:DropDownDisabled]", "0");
+            BindTemplateDropDown(drpModDeleteTemplateId, Templates.TemplateTypes.ModEmail, "[RESX:DropDownDisabled]", "0");
+            BindTemplateDropDown(drpModMoveTemplateId, Templates.TemplateTypes.ModEmail, "[RESX:DropDownDisabled]", "0");
+            BindTemplateDropDown(drpModRejectTemplateId, Templates.TemplateTypes.ModEmail, "[RESX:DropDownDisabled]", "0");
+            BindTemplateDropDown(drpModNotifyTemplateId, Templates.TemplateTypes.ModEmail, "[RESX:DropDownDisabled]", "0");
         }
 
         #endregion

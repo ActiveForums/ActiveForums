@@ -26,6 +26,7 @@ using System.Data;
 //ORIGINAL LINE: Imports System.Web.HttpContext
 
 using System.Web;
+using DotNetNuke.Entities.Controllers;
 using DotNetNuke.Entities.Host;
 
 namespace DotNetNuke.Modules.ActiveForums
@@ -151,9 +152,9 @@ namespace DotNetNuke.Modules.ActiveForums
 			TemplateInfo ti;
 			ti = TemplateId > 0 ? tc.Template_Get(TemplateId) : tc.Template_Get("SubscribedEmail", PortalId, ModuleId);
 			TemplateUtils.lstSubscriptionInfo = subs;
-			Subject = TemplateUtils.ParseEmailTemplate(ti.Subject, string.Empty, PortalId, ModuleId, TabId, fi.ForumID, TopicId, ReplyId, string.Empty, AuthorId, _portalSettings.TimeZoneOffset);
-			BodyText = TemplateUtils.ParseEmailTemplate(ti.TemplateText, string.Empty, PortalId, ModuleId, TabId, fi.ForumID, TopicId, ReplyId, string.Empty, AuthorId, _portalSettings.TimeZoneOffset);
-			BodyHTML = TemplateUtils.ParseEmailTemplate(ti.TemplateHTML, string.Empty, PortalId, ModuleId, TabId, fi.ForumID, TopicId, ReplyId, string.Empty, AuthorId, _portalSettings.TimeZoneOffset);
+			Subject = TemplateUtils.ParseEmailTemplate(ti.Subject, string.Empty, PortalId, ModuleId, TabId, fi.ForumID, TopicId, ReplyId, string.Empty, AuthorId, Convert.ToInt32(_portalSettings.TimeZone.BaseUtcOffset.TotalMinutes));
+			BodyText = TemplateUtils.ParseEmailTemplate(ti.TemplateText, string.Empty, PortalId, ModuleId, TabId, fi.ForumID, TopicId, ReplyId, string.Empty, AuthorId, Convert.ToInt32(_portalSettings.TimeZone.BaseUtcOffset.TotalMinutes));
+			BodyHTML = TemplateUtils.ParseEmailTemplate(ti.TemplateHTML, string.Empty, PortalId, ModuleId, TabId, fi.ForumID, TopicId, ReplyId, string.Empty, AuthorId, Convert.ToInt32(_portalSettings.TimeZone.BaseUtcOffset.TotalMinutes));
 			string sFrom;
 			sFrom = fi.EmailAddress != string.Empty ? fi.EmailAddress : _portalSettings.Email;
 			var oEmail = new Email
@@ -179,7 +180,6 @@ namespace DotNetNuke.Modules.ActiveForums
 				sysTemplateName = "WeeklyDigest";
 			}
 			var objRecipients = new ArrayList();
-			Hashtable objHost = Entities.Portals.PortalSettings.GetHostSettings();
 			IDataReader dr = DataProvider.Instance().Subscriptions_GetDigest(Convert.ToString(SubscriptionType), StartDate);
 			string tmpEmail = string.Empty;
 			string tmpFG = string.Empty;

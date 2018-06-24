@@ -27,6 +27,8 @@ using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using DotNetNuke.Entities.Portals;
+
 namespace DotNetNuke.Modules.ActiveForums.Controls
 {
 	[DefaultProperty("Text"), ToolboxData("<{0}:UserStats runat=server></{0}:UserStats>")]
@@ -113,7 +115,7 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
 						}
 					}
 				}
-				output = TemplateUtils.ParseProfileTemplate(tmp, UserId, portalId, ModuleId, cu.UserID, ps.TimeZoneOffset);
+				output = TemplateUtils.ParseProfileTemplate(tmp, UserId, portalId, ModuleId, cu.UserID, Convert.ToInt32(PortalSettings.Current.TimeZone.BaseUtcOffset.TotalMinutes));
 				output = Utilities.LocalizeControl(output);
 				writer.Write(output);
 			}

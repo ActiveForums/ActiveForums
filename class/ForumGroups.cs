@@ -305,7 +305,7 @@ namespace DotNetNuke.Modules.ActiveForums
 			get
 			{
 				TrustTypes parseValue;
-				return Enum.TryParse(Utilities.SafeConvertString(GroupSettings[ForumSettingKeys.DefaultTrustValue], "0"), true, out parseValue)
+				return Enum.TryParse(Utilities.SafeConvertString(GroupSettings[ForumSettingKeys.DefaultTrustLevel], "0"), true, out parseValue)
 						   ? parseValue
 						   : TrustTypes.NotTrusted;
 			}

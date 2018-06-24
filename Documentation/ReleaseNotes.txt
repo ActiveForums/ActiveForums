@@ -9,6 +9,20 @@ Active Forums is an award winning, DotNetNuke module that allows you to easily b
     <hr />
 	</div>
     <h3>Release Notes</h3>
+<b>Version 06.03.03</b>
+<ul>
+	<li>Changed deprecated APIs.</li>
+	<li>#405 Sometimes settings got lost when saved</li>
+	<li>#405 Not all settings was being saved</li>
+	<li>#408 Height and width of image in polls being set with CSS</li>
+	<li>#307 Bug in attachments in the Moderator queue</li>
+	<li>#62 Anonymous users issue</li>
+	<li>#103 Autolinks generates incorrect HTML when same hyperlink occurs twice</li>
+	<li>#102 Not correctly handling single quotes. Semantic web</li>
+	<li>#417 JS error in DNN9.2</li>
+<ul>
+Thanks to Monty for #102 and #103 and VincentParrett for #417<br /> <br/>
+
 
 <b>Version 06.03.00</b>
 

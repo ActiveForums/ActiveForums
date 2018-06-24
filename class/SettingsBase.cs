@@ -23,6 +23,7 @@ using System.Web;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Modules.ActiveForums.Data;
+using DotNetNuke.Security.Permissions;
 
 namespace DotNetNuke.Modules.ActiveForums
 {
@@ -212,7 +213,7 @@ namespace DotNetNuke.Modules.ActiveForums
                     {
                         return CurrentUserTypes.SuperUser;
                     }
-                    if (HasModulePermission("EDIT"))
+                    if (ModulePermissionController.HasModulePermission(ModuleConfiguration.ModulePermissions, "EDIT"))
                     {
                         return CurrentUserTypes.Admin;
                     }
@@ -430,11 +431,8 @@ namespace DotNetNuke.Modules.ActiveForums
         {
             //Dim newDate As Date 
             string dateString;
-            var ps = (PortalSettings)(HttpContext.Current.Items["PortalSettings"]);
             try
             {
-                int mServerOffSet = 0;
-                mServerOffSet = ps.TimeZoneOffset;
                 dateString = DisplayDate.ToString(MainSettings.DateFormatString + " " + MainSettings.TimeFormatString);
                 return dateString;
             }

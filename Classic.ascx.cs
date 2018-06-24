@@ -29,6 +29,8 @@ using System.Web.UI.WebControls;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using System.Text;
 using DotNetNuke.Security.Roles;
+using DotNetNuke.Security.Permissions;
+using DotNetNuke.UI.Utilities;
 
 //using DotNetNuke.Framework.JavaScriptLibraries;
 
@@ -265,8 +267,9 @@ namespace DotNetNuke.Modules.ActiveForums
                 cc.PageId = TabId;
                 cc.InstanceId = ModuleId;
                 cc.User = ForumUser;
-                cc.DefaultViewRoles = Permissions.GetRoleIds(this.ModuleConfiguration.AuthorizedViewRoles.Split(';'), PortalId);
-                cc.AdminRoles = Permissions.GetRoleIds(this.ModuleConfiguration.AuthorizedEditRoles.Split(';'), PortalId);
+                string authorizedViewRoles = ModuleConfiguration.InheritViewPermissions ? TabPermissionController.GetTabPermissions(TabId, PortalId).ToString("VIEW") : ModuleConfiguration.ModulePermissions.ToString("VIEW");
+                cc.DefaultViewRoles = Permissions.GetRoleIds(authorizedViewRoles.Split(';'), PortalId);
+                cc.AdminRoles = Permissions.GetRoleIds(this.ModuleConfiguration.ModulePermissions.ToString("EDIT").Split(';'), PortalId);
                 cc.ProfileLink = ""; //GetProfileLink()
                 cc.MembersLink = ""; // GetMembersLink()
                 this.ControlConfig = cc;
@@ -339,6 +342,7 @@ namespace DotNetNuke.Modules.ActiveForums
 
             //Framework.jQuery.RequestRegistration();
             //Framework.jQuery.RequestUIRegistration();
+            ClientAPI.RegisterClientReference(this.Page, ClientAPI.ClientNamespaceReferences.dnn);
             Framework.jQuery.RequestDnnPluginsRegistration();
 
             ClientResourceManager.RegisterScript(this.Page, "~/desktopmodules/activeforums/scripts/jquery-searchPopup.js");

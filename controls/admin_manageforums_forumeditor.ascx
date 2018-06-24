@@ -132,90 +132,136 @@ function saveSettings(gs){
 	if (ig == false){
 
 		var tt1 = document.getElementById("<%=drpTopicsTemplate.ClientID%>");
-		if (tt1.selectedIndex > 0){tt1 = tt1.options[tt1.selectedIndex].value;}else{tt1 = 0;};
+        if (tt1.selectedIndex > 0) {
+            var TopicsTemplateId = tt1.options[tt1.selectedIndex].value;
+        } else {
+            var TopicsTemplateId = 0;
+        };
 		var tt2 = document.getElementById("<%=drpTopicTemplate.ClientID%>");
-		if (tt2.selectedIndex > 0){tt2 = tt2.options[tt2.selectedIndex].value;}else{tt2 = 0;};
+        if (tt2.selectedIndex > 0) {
+            var TopicTemplateId = tt2.options[tt2.selectedIndex].value;
+        } else {
+            var TopicTemplateId = 0;
+        };
 		var tt3 = document.getElementById("<%=drpTopicForm.ClientID%>");
-	if (tt3.selectedIndex > 0){tt3 = tt3.options[tt3.selectedIndex].value;}else{tt3 = 0;};
-	var tt4 = document.getElementById("<%=drpReplyForm.ClientID%>");
-	if (tt4.selectedIndex > 0){tt4 = tt4.options[tt4.selectedIndex].value;}else{tt4 = 0;};
-	var tt5 = 0;
-	var tt6 = document.getElementById("<%=drpProfileDisplay.ClientID%>");
-	if (tt6.selectedIndex > 0){tt6 = tt6.options[tt6.selectedIndex].value;}else{tt6 = 0;};
-	var em = document.getElementById("<%=txtEmailAddress.ClientID%>").value;
-	var cpc = document.getElementById("<%=txtCreatePostCount.ClientID%>").value;
-	var rpc = document.getElementById("<%=txtReplyPostCount.ClientID%>").value;
-	var ef = document.getElementById("<%=rdFilterOn.ClientID%>").checked;
-		var pi = document.getElementById("<%=rdPostIconOn.ClientID%>").checked;
-		var ei = document.getElementById("<%=rdEmotOn.ClientID%>").checked;
-		var sp = document.getElementById("<%=rdScriptsOn.ClientID%>").checked;
-		var ix = document.getElementById("<%=rdIndexOn.ClientID%>").checked;
-		var rs = document.getElementById("<%=rdRSSOn.ClientID%>").checked;
-		var at = document.getElementById("<%=rdAttachOn.ClientID%>").checked;
+        if (tt3.selectedIndex > 0) {
+            var TopicFormId = tt3.options[tt3.selectedIndex].value;
+        } else {
+            var TopicFormId = 0;
+        };
+	    var tt4 = document.getElementById("<%=drpReplyForm.ClientID%>");
+        if (tt4.selectedIndex > 0) {
+            var ReplyFormId = tt4.options[tt4.selectedIndex].value;
+        } else {
+            var ReplyFormId = 0;
+        };
+	    var tt6 = document.getElementById("<%=drpProfileDisplay.ClientID%>");
+        if (tt6.selectedIndex > 0) {
+            var ProfileTemplateId = tt6.options[tt6.selectedIndex].value;
+        } else {
+            var ProfileTemplateId = 0;
+        };
+	    var EmailAddress = document.getElementById("<%=txtEmailAddress.ClientID%>").value;
+	    var CreatePostCount = document.getElementById("<%=txtCreatePostCount.ClientID%>").value;
+	    var ReplyPostCount = document.getElementById("<%=txtReplyPostCount.ClientID%>").value;
+	    var UseFilter = document.getElementById("<%=rdFilterOn.ClientID%>").checked;
+		var AllowPostIcon = document.getElementById("<%=rdPostIconOn.ClientID%>").checked;
+		var AllowEmoticons = document.getElementById("<%=rdEmotOn.ClientID%>").checked;
+		var AllowScripts = document.getElementById("<%=rdScriptsOn.ClientID%>").checked;
+		var IndexContent = document.getElementById("<%=rdIndexOn.ClientID%>").checked;
+		var AllowRSS = document.getElementById("<%=rdRSSOn.ClientID%>").checked;
+		var AllowAttach = document.getElementById("<%=rdAttachOn.ClientID%>").checked;
 		
-		var at1 = document.getElementById("<%=txtMaxAttach.ClientID%>").value;
-		var at2 = document.getElementById("<%=txtMaxAttachSize.ClientID%>").value;
-		var at3 = document.getElementById("<%=txtAllowedTypes.ClientID%>").value; 
-		var at4 = 0; // Not USed
-		var at5 = 400; // Not USed
-		var at6 = 400;
-		var at7 = document.getElementById("<%=ckAllowBrowseSite.ClientID%>").checked;
-		var at8 = document.getElementById("<%=txtMaxAttachWidth.ClientID%>").value;
-		var at9 = document.getElementById("<%=txtMaxAttachHeight.ClientID%>").value;
-		var at10 = document.getElementById("<%=ckAttachInsertAllowed.ClientID%>").checked;
-		var at11 = document.getElementById("<%=ckConvertingToJpegAllowed.ClientID%>").checked;
+		var AttachCount = document.getElementById("<%=txtMaxAttach.ClientID%>").value;
+		var AttachMaxSize = document.getElementById("<%=txtMaxAttachSize.ClientID%>").value;
+		var AttachTypeAllowed = document.getElementById("<%=txtAllowedTypes.ClientID%>").value; 
+		var AttachAllowBrowseSite = document.getElementById("<%=ckAllowBrowseSite.ClientID%>").checked;
+		var MaxAttachWidth = document.getElementById("<%=txtMaxAttachWidth.ClientID%>").value;
+		var MaxAttachHeight = document.getElementById("<%=txtMaxAttachHeight.ClientID%>").value;
+		var AttachInsertAllowed = document.getElementById("<%=ckAttachInsertAllowed.ClientID%>").checked;
+		var AttachConvertToJGPAllowed = document.getElementById("<%=ckConvertingToJpegAllowed.ClientID%>").checked;
 
-		var ed = document.getElementById("<%=rdHTMLOn.ClientID%>").checked;
+		var AllowHtml = document.getElementById("<%=rdHTMLOn.ClientID%>").checked;
 		var ed1 = document.getElementById("<%=drpEditorTypes.ClientID%>");
-		if (ed1.selectedIndex >= 0){ed1 = ed1.options[ed1.selectedIndex].value;}else{ed1 = 0;};
-		var ed2 = document.getElementById("<%=txtEditorHeight.ClientID%>").value;
-		var ed3 = document.getElementById("<%=txtEditorWidth.ClientID%>").value;
-		var ed4 = ''; // old toolbar
-		var ed5 = 0; // old editor style
+        if (ed1.selectedIndex >= 0) {
+            var EditorType = ed1.options[ed1.selectedIndex].value;
+        } else {
+            var EditorType = 0;
+        };
+		var EditorHeight = document.getElementById("<%=txtEditorHeight.ClientID%>").value;
+		var EditorWidth = document.getElementById("<%=txtEditorWidth.ClientID%>").value;
 		var ed6 = document.getElementById("<%=drpPermittedRoles.ClientID%>");
-	    if (ed6.selectedIndex >= 0){ed6 = ed6.options[ed6.selectedIndex].value;}else{ed6 = 0;};
+        if (ed6.selectedIndex >= 0) {
+            var EditorPermittedRoles = ed6.options[ed6.selectedIndex].value;
+        } else {
+            var EditorPermittedRoles = 0;
+        };
 	    var edm = document.getElementById("<%=drpEditorMobile.ClientID%>");
-	    if (edm.selectedIndex >= 0){edm = edm.options[edm.selectedIndex].value;}else{edm = 0;};
+        if (edm.selectedIndex >= 0) {
+            var EditorMobile = edm.options[edm.selectedIndex].value;
+        } else {
+            var EditorMobile = 0;
+        };
 		
-		var md = document.getElementById("<%=rdModOn.ClientID%>").checked;
-	var md1 = document.getElementById("<%=drpDefaultTrust.ClientID%>");
-		if (md1.selectedIndex > 0){md1 = md1.options[md1.selectedIndex].value;}else{md1 = 0;};
-		var md2 = document.getElementById("<%=txtAutoTrustLevel.ClientID%>").value;
+		var IsModerated = document.getElementById("<%=rdModOn.ClientID%>").checked;
+	    var md1 = document.getElementById("<%=drpDefaultTrust.ClientID%>");
+        if (md1.selectedIndex > 0) {
+            var DefaultTrustLevel = md1.options[md1.selectedIndex].value;
+        } else {
+            var DefaultTrustLevel = 0;
+        };
+		var AutoTrustLevel = document.getElementById("<%=txtAutoTrustLevel.ClientID%>").value;
 		var md3 = document.getElementById("<%=drpModApprovedTemplateId.ClientID%>");
-		if (md3.selectedIndex > 0){md3 = md3.options[md3.selectedIndex].value;}else{md3 = 0;};
+        if (md3.selectedIndex > 0) {
+            var ModApproveTemplateId = md3.options[md3.selectedIndex].value;
+        } else {
+            var ModApproveTemplateId = 0;
+        };
 		var md4 = document.getElementById("<%=drpModRejectTemplateId.ClientID%>");
-		if (md4.selectedIndex > 0){md4 = md4.options[md4.selectedIndex].value;}else{md4 = 0;};
+        if (md4.selectedIndex > 0) {
+            var ModRejectTemplateId = md4.options[md4.selectedIndex].value;
+        } else {
+            var ModRejectTemplateId = 0;
+        };
 		var md5 = document.getElementById("<%=drpModMoveTemplateId.ClientID%>");
-	if (md5.selectedIndex > 0){md5 = md5.options[md5.selectedIndex].value;}else{md5 = 0;};
-	var md6 = document.getElementById("<%=drpModDeleteTemplateId.ClientID%>");
-	if (md6.selectedIndex > 0){md6 = md6.options[md6.selectedIndex].value;}else{md6 = 0;};
-	var md7 = document.getElementById("<%=drpModNotifyTemplateId.ClientID%>");
-	if (md7.selectedIndex > 0){md7 = md7.options[md7.selectedIndex].value;}else{md7 = 0;};
-	
-	var as = document.getElementById("<%=rdAutoSubOn.ClientID%>");
-	var as1 = document.getElementById('<%=hidRoles.ClientID%>');
+        if (md5.selectedIndex > 0) {
+            var ModMoveTemplateId = md5.options[md5.selectedIndex].value;
+        } else {
+            var ModMoveTemplateId = 0;
+        };
+	    var md6 = document.getElementById("<%=drpModDeleteTemplateId.ClientID%>");
+        if (md6.selectedIndex > 0) {
+            var ModDeleteTemplateId = md6.options[md6.selectedIndex].value;
+        } else {
+            var ModDeleteTemplateId = 0;
+        };
+	    var md7 = document.getElementById("<%=drpModNotifyTemplateId.ClientID%>");
+        if (md7.selectedIndex > 0) {
+            var ModNotifyTemplateId = md7.options[md7.selectedIndex].value;
+        } else {
+            var ModNotifyTemplateId = 0;
+        };
+	    var as = document.getElementById("<%=rdAutoSubOn.ClientID%>");
+	    var as1 = document.getElementById('<%=hidRoles.ClientID%>');
 		if (as != null){
-			as = as.checked;
-			as1 = as1.value;
+			var AutoSubscribeEnabled = as.checked;
+			var AutoSubscribeRoles = as1.value;
 		}else{
-			as = false;
-			as1 = ''
-		};
-		var tg = 'false';
-		var socialOn = false;
-		var socialTopics = false;
-		var socialSec = '';
+			var AutoSubscribeEnabled = false;
+			var AutoSubscribeRoles = ''
+        };
+	    var AutoSubscribeNewTopicsOnly = document.getElementById("<%=chkAutoSubscribeNewTopicsOnly.ClientID%>").checked;
+	    if (AutoSubscribeNewTopicsOnly == null){AutoSubscribeNewTopicsOnly = false;};
 
+        var AllowLikes = document.getElementById("<%=rdLikesOn.ClientID%>").checked;
 	};
-	var mc = false;
-	var mc1,mc2,mc3,mc4,mc5,mc6,mc7,mc8,mc9,mc10,mc11,mc12,mc13,mc14,mc15;
-	mc1 = '';mc2 = '';mc3=false;mc4='';mc5='';mc6='';mc7=0;mc8=0;mc9=0;mc10=0;mc11=false;mc12=0;mc13='';mc14=0;mc15=false;
 
-	var likes = document.getElementById("<%=rdLikesOn.ClientID%>").checked;
 
-	var as2 = null;
-	if (as2 != null){as2 = as2.checked;}else{as2 = false;};
-	<%=cbEditorAction.ClientID%>.Callback(settingsAction,forumid,tt1,tt2,em,ef,pi,ei,sp,ix,rs,at,at1,at2,at3,at4,at5,at6,at7,at10,at8,at9,at11,ed,ed1,ed2,ed3,ed4,ed5,ed6,tt3,tt4,tt5,tt6,md,md1,md2,md3,md4,md5,md6,md7,as,as1,tg,mc,mc1,mc2,mc3,mc4,mc5,mc6,mc7,mc8,mc9,mc10,mc11,mc12,mc13,mc14,mc15,as2,socialOn,socialTopics,socialSec,cpc,rpc,likes,edm);
+	<%=cbEditorAction.ClientID%>.Callback(settingsAction, forumid, TopicsTemplateId, TopicTemplateId, EmailAddress, UseFilter, AllowPostIcon, AllowEmoticons, AllowScripts,
+        IndexContent, AllowRSS, AllowAttach, AttachCount, AttachMaxSize, AttachTypeAllowed, EditorMobile, AllowLikes, ReplyPostCount, AttachAllowBrowseSite, AttachInsertAllowed, MaxAttachWidth,
+        MaxAttachHeight, AttachConvertToJGPAllowed, AllowHtml, EditorType, EditorHeight, EditorWidth, CreatePostCount, AutoSubscribeNewTopicsOnly, EditorPermittedRoles, TopicFormId, ReplyFormId,
+        AutoSubscribeRoles, ProfileTemplateId, IsModerated, DefaultTrustLevel, AutoTrustLevel, ModApproveTemplateId, ModRejectTemplateId, ModMoveTemplateId, ModDeleteTemplateId,
+        ModNotifyTemplateId, AutoSubscribeEnabled);
 
 
 };
@@ -265,62 +311,25 @@ function toggleAttach(obj){
 
 
 	function showProp(obj,win){
+        var propertyWindow = document.getElementById(win);
+        if (propertyWindow.style.display == '' || propertyWindow.style.display == 'block') {
+            propertyWindow.style.display = 'none';
+            hideSelectBoxes();
+        } else {
+            propertyWindow.style.display = '';
+            var $propertyWindow = $(propertyWindow);
+            var elem = $(obj);
+            var position = elem.position();
+            position.left += 15;
+            position.top = (position.top - ($propertyWindow.height() / 2));
+            position.width = $propertyWindow.innerWidth() + 20;
+            position.height = $propertyWindow.innerHeight();
 
-
-	var popShell = document.getElementById("amProp");
-	var fid = document.getElementById("<%=hidForumId.ClientID%>").value;
-	var winDiv = document.getElementById(win);
-	var tmpShell = document.getElementById('tmp' + fid + win);
-	if (tmpShell == null){
-		var input = winDiv.getElementsByTagName("SELECT");
-		var mysel = new Array();
-		tmpShell = winDiv.cloneNode(true);
-		tmpShell.id = 'tmp' + fid + winDiv.id;
-		for(var hsby = 0; hsby < input.length; hsby++) {
-			var o = input.item(hsby);
-			mysel[hsby] = new Array(tmpShell.id,o.id,o.selectedIndex);
-		};
-
-
-		popShell.appendChild(tmpShell);
-		var tmpP = winDiv.parentNode;
-		tmpP.removeChild(winDiv);
-		var input = popShell.getElementsByTagName("SELECT");
-		for(var hsby = 0; hsby < input.length; hsby++) {
-			var o = input.item(hsby);
-			var x;
-			for (x in mysel){
-				var tmp = mysel[x];
-				if (tmp[0] == tmpShell.id && tmp[1] == o.id){
-					o.selectedIndex = tmp[2];
-				};
-			};
-
-		};
-	};
-
-
-		var $tmpShell = $(tmpShell);
-
-		if (tmpShell.style.display == 'block' || tmpShell.style.display == ''){
-		displaySelectBoxes();
-		closeAllProp();
-		tmpShell.style.display = 'none';
-	}else{
-		closeAllProp();
-		hideSelectBoxes();
-		var elem = $(obj);
-		var position = elem.position();
-
-		position.left += 15;
-		position.top = (position.top - ($tmpShell.height() / 2));
-		position.width = $tmpShell.innerWidth() + 20;
-		position.height = $tmpShell.innerHeight();
-
-		$tmpShell.css(position);
-		tmpShell.style.display = '';
-		}
-
+            $propertyWindow.css(position);
+            closeAllProp();
+            displaySelectBoxes();
+            propertyWindow.style.display = '';
+        }
 	};
 
 
@@ -1228,6 +1237,7 @@ function afadmin_getProperties() {
 	<Content><asp:HiddenField ID="hidEditorResult" runat="server" /></Content>
 </am:callback>
 
+<!-- Forum Features HTML Input -->
 <div class="ammodalpop" style="display: none; position: absolute;" id="edProp">
 	<div style="margin: 0px; padding: 10px;">
 		<table cellpadding="0" cellspacing="2" border="0" style="margin: 0px; padding: 0px;">
@@ -1247,7 +1257,7 @@ function afadmin_getProperties() {
 			<tr>
 				<td></td>
 				<td class="amcpbold" style="white-space: nowrap">[RESX:EditorType]:</td>
-				<td width="100%">
+				<td>
 					<asp:DropDownList ID="drpEditorTypes" runat="server" CssClass="amcptxtbx">
 						<asp:ListItem Value="0">TextBox</asp:ListItem>
 						<asp:ListItem Value="2">Default DNN Editor</asp:ListItem>
@@ -1258,21 +1268,21 @@ function afadmin_getProperties() {
 			<tr>
 				<td></td>
 				<td class="amcpbold">[RESX:EditorHeight]:</td>
-				<td width="100%">
+				<td>
 					<asp:TextBox ID="txtEditorHeight" runat="server" CssClass="amcptxtbx" Text="400" /></td>
 				<td></td>
 			</tr>
 			<tr>
 				<td></td>
 				<td class="amcpbold">[RESX:EditorWidth]:</td>
-				<td width="100%">
+				<td>
 					<asp:TextBox ID="txtEditorWidth" runat="server" CssClass="amcptxtbx" Text="99%" /></td>
 				<td></td>
 			</tr>
 			<tr>
 				<td></td>
 				<td class="amcpbold">[RESX:EditorMobile]:</td>
-				<td width="100%">
+				<td>
 					<asp:DropDownList ID="drpEditorMobile" runat="server" CssClass="amcptxtbx">
 						<asp:ListItem Value="0">TextBox</asp:ListItem>
 						<asp:ListItem Value="2">Default DNN Editor</asp:ListItem>
@@ -1396,13 +1406,16 @@ function afadmin_getProperties() {
 		</table>
 	</div>
 </div>
+
+<!-- Forums Features Auto Subscriptions -->
 <div class="ammodalpop" style="display: none; position: absolute;" id="subProp">
 	<div style="margin: 0px; padding: 10px;">
 		<table cellpadding="0" cellspacing="2" border="0" style="margin: 0px; padding: 0px;">
 			<tr>
 				<td></td>
 				<td class="amcpbold" style="white-space: nowrap" colspan="3">[RESX:NewTopicsOnly]:</td>
-				<td colspan="2"><asp:CheckBox ID="chkTopicsOnly" runat="server" /></td>
+				<td><asp:CheckBox ID="chkAutoSubscribeNewTopicsOnly" runat="server" /></td>
+                <td></td>
 			</tr>
 			<tr>
 				<td></td>
@@ -1417,6 +1430,7 @@ function afadmin_getProperties() {
 		<asp:HiddenField ID="hidRoles" runat="server" />
 	</div>
 </div>
+
 <div class="ammodalpop" style="display: none; position: absolute;" id="socialProp">
 	<div style="margin: 0px; padding: 10px;">
 		<table cellpadding="0" cellspacing="2" border="0" style="margin: 0px; padding: 0px;">

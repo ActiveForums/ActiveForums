@@ -26,6 +26,7 @@ using System.Threading;
 using System.Web;
 using DotNetNuke.Entities.Host;
 using DotNetNuke.Entities.Users;
+using DotNetNuke.Security.Roles;
 
 namespace DotNetNuke.Modules.ActiveForums
 {
@@ -47,9 +48,9 @@ namespace DotNetNuke.Modules.ActiveForums
 		    var sTemplate = string.Empty;
 			var tc = new TemplateController();
 			var ti = tc.Template_Get(templateId, portalId, moduleId);
-			var subject = TemplateUtils.ParseEmailTemplate(ti.Subject, string.Empty, portalId, moduleId, tabId, forumId, topicId, replyId, string.Empty, author.AuthorId, portalSettings.TimeZoneOffset);
-			var bodyText = TemplateUtils.ParseEmailTemplate(ti.TemplateText, string.Empty, portalId, moduleId, tabId, forumId, topicId, replyId, string.Empty, author.AuthorId, portalSettings.TimeZoneOffset);
-			var bodyHTML = TemplateUtils.ParseEmailTemplate(ti.TemplateHTML, string.Empty, portalId, moduleId, tabId, forumId, topicId, replyId, string.Empty, author.AuthorId, portalSettings.TimeZoneOffset);
+			var subject = TemplateUtils.ParseEmailTemplate(ti.Subject, string.Empty, portalId, moduleId, tabId, forumId, topicId, replyId, string.Empty, author.AuthorId, Convert.ToInt32(portalSettings.TimeZone.BaseUtcOffset.TotalMinutes));
+			var bodyText = TemplateUtils.ParseEmailTemplate(ti.TemplateText, string.Empty, portalId, moduleId, tabId, forumId, topicId, replyId, string.Empty, author.AuthorId, Convert.ToInt32(portalSettings.TimeZone.BaseUtcOffset.TotalMinutes));
+			var bodyHTML = TemplateUtils.ParseEmailTemplate(ti.TemplateHTML, string.Empty, portalId, moduleId, tabId, forumId, topicId, replyId, string.Empty, author.AuthorId, Convert.ToInt32(portalSettings.TimeZone.BaseUtcOffset.TotalMinutes));
 			bodyText = bodyText.Replace("[REASON]", comments);
 			bodyHTML = bodyHTML.Replace("[REASON]", comments);
 		    var fc = new ForumController();
@@ -98,6 +99,7 @@ namespace DotNetNuke.Modules.ActiveForums
 
 			var subs = new List<SubscriptionInfo>();
 			var rc = new Security.Roles.RoleController();
+            var rp = RoleProvider.Instance();
 			var uc = new Entities.Users.UserController();
 		    var modApprove = fi.Security.ModApprove;
 			var modRoles = modApprove.Split('|')[0].Split(';');
@@ -106,7 +108,7 @@ namespace DotNetNuke.Modules.ActiveForums
 		        if (string.IsNullOrEmpty(r)) continue;
 		        var rid = Convert.ToInt32(r);
 		        var rName = rc.GetRole(rid, portalId).RoleName;
-		        foreach (UserRoleInfo usr in rc.GetUserRolesByRoleName(portalId, rName))
+		        foreach (UserRoleInfo usr in rp.GetUserRoles(portalId, null, rName))
 		        {
 		            var ui = uc.GetUser(portalId, usr.UserID);
 		            var si = new SubscriptionInfo
@@ -130,9 +132,9 @@ namespace DotNetNuke.Modules.ActiveForums
 		    var sTemplate = string.Empty;
 			var tc = new TemplateController();
 			var ti = tc.Template_Get(templateId, portalId, moduleID);
-			var subject = TemplateUtils.ParseEmailTemplate(ti.Subject, string.Empty, portalId, moduleID, tabID, forumId, topicId, replyId, portalSettings.TimeZoneOffset);
-			var bodyText = TemplateUtils.ParseEmailTemplate(ti.TemplateText, string.Empty, portalId, moduleID, tabID, forumId, topicId, replyId, comments, user, -1, portalSettings.TimeZoneOffset);
-			var bodyHTML = TemplateUtils.ParseEmailTemplate(ti.TemplateHTML, string.Empty, portalId, moduleID, tabID, forumId, topicId, replyId, comments, user, -1, portalSettings.TimeZoneOffset);
+			var subject = TemplateUtils.ParseEmailTemplate(ti.Subject, string.Empty, portalId, moduleID, tabID, forumId, topicId, replyId, Convert.ToInt32(portalSettings.TimeZone.BaseUtcOffset.TotalMinutes));
+			var bodyText = TemplateUtils.ParseEmailTemplate(ti.TemplateText, string.Empty, portalId, moduleID, tabID, forumId, topicId, replyId, comments, user, -1, Convert.ToInt32(portalSettings.TimeZone.BaseUtcOffset.TotalMinutes));
+			var bodyHTML = TemplateUtils.ParseEmailTemplate(ti.TemplateHTML, string.Empty, portalId, moduleID, tabID, forumId, topicId, replyId, comments, user, -1, Convert.ToInt32(portalSettings.TimeZone.BaseUtcOffset.TotalMinutes));
 		    var sFrom = fi.EmailAddress != string.Empty ? fi.EmailAddress : portalSettings.Email;
 
 			var oEmail = new Email

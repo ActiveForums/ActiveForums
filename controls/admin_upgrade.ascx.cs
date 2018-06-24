@@ -53,7 +53,7 @@ namespace DotNetNuke.Modules.ActiveForums
                 if (System.IO.File.Exists(upFilePath))
                 {
                     string s = Utilities.GetFileContent(upFilePath);
-                    err = DotNetNuke.Entities.Portals.PortalSettings.ExecuteScript(s);
+                    err = DotNetNuke.Data.DataProvider.Instance().ExecuteScript(s);
                     System.IO.File.Delete(upFilePath);
                 }
             }
