@@ -12,11 +12,11 @@ BEGIN
 			OR (@FileID > 0 AND @FileID = FileID)
 	ELSE
 		SELECT A.AttachID, A.ContentId, ISNULL(A.UserID, - 1) AS UserID, A.Filename, A.FileData, A.ContentType, A.FileSize, A.FileID, A.AllowDownload, p.CanRead
-		FROM {databaseOwner}[{objectQualifier}activeforums_ForumTopics] INNER JOIN
-			{databaseOwner}[{objectQualifier}activeforums_Attachments] AS A INNER JOIN
-			{databaseOwner}[{objectQualifier}activeforums_Topics] AS T ON A.ContentId = T.ContentId ON {databaseOwner}[{objectQualifier}activeforums_ForumTopics].TopicId = T.TopicId INNER JOIN
-			{databaseOwner}[{objectQualifier}activeforums_Permissions] AS p INNER JOIN
-			{databaseOwner}[{objectQualifier}activeforums_Forums] AS F ON p.PermissionsId = F.PermissionsId ON {databaseOwner}[{objectQualifier}activeforums_ForumTopics].ForumId = F.ForumId		
+		FROM {databaseOwner}[{objectQualifier}activeforums_Attachments] A
+		inner join dbo.vw_activeforums_TopicView as tv on tv.ContentId = A.ContentId 
+		INNER JOIN {databaseOwner}[{objectQualifier}activeforums_ForumTopics] FT ON FT.TopicId = tv.TopicId 
+		INNER JOIN {databaseOwner}[{objectQualifier}activeforums_Forums] AS F ON F.ForumId = FT.ForumId		
+		INNER JOIN {databaseOwner}[{objectQualifier}activeforums_Permissions] AS p ON p.PermissionsId = F.PermissionsId 
 		WHERE (@AttachmentID > 0 AND AttachID = @AttachmentID)
 			OR (@FileID > 0 AND @FileID = FileID)
 END
