@@ -1,0 +1,22 @@
+﻿ALTER PROCEDURE {databaseOwner}[{objectQualifier}activeforums_Attachments_Get]
+@AttachmentID int,
+@FileID int,
+@WithSecurity bit = 0
+AS
+BEGIN
+	SET NOCOUNT ON
+	If @WithSecurity = 0
+		SELECT AttachID, ContentId, IsNull(UserID,-1) as UserID, [Filename], FileData, ContentType, FileSize, FileID, AllowDownload
+		FROM {databaseOwner}[{objectQualifier}activeforums_Attachments]
+		WHERE (@AttachmentId > 0 AND AttachID = @AttachmentID)
+			OR (@FileID > 0 AND @FileID = FileID)
+	ELSE
+		SELECT A.AttachID, A.ContentId, ISNULL(A.UserID, - 1) AS UserID, A.Filename, A.FileData, A.ContentType, A.FileSize, A.FileID, A.AllowDownload, p.CanRead
+		FROM {databaseOwner}[{objectQualifier}activeforums_Attachments] A
+		inner join {databaseOwner}[{objectQualifier}vw_activeforums_TopicView as tv on tv.ContentId = A.ContentId
+		INNER JOIN {databaseOwner}[{objectQualifier}activeforums_ForumTopics] FT ON FT.TopicId = tv.TopicId 
+		INNER JOIN {databaseOwner}[{objectQualifier}activeforums_Forums] AS F ON F.ForumId	 = FT.ForumId		
+		INNER JOIN {databaseOwner}[{objectQualifier}activeforums_Permissions] AS p ON p.PermissionsId = F.PermissionsId 
+		WHERE (@AttachmentID > 0 AND AttachID = @AttachmentID)
+			OR (@FileID > 0 AND @FileID = FileID)
+END
