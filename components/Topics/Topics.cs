@@ -39,298 +39,36 @@ namespace DotNetNuke.Modules.ActiveForums
 			Security = new PermissionInfo();
 			Author = new Author();
 		}
-#region Private Members
-		private int _TopicId;
-		private int _ContentId;
-		private int _ViewCount;
-		private int _ReplyCount;
-		private bool _IsLocked;
-		private bool _IsPinned;
-		private string _TopicIcon;
-		private int _StatusId;
-		private bool _IsApproved;
-		private bool _IsDeleted;
-		private bool _IsAnnounce;
-		private bool _IsArchived;
-		private TopicTypes _TopicType;
-		private DateTime _AnnounceStart;
-		private DateTime _AnnounceEnd;
-		private Content _Content;
-		private PermissionInfo _PermissionInfo;
-		private Author _author;
-		private string _tags;
-#endregion
-#region Public Properties
-		public int TopicId
-		{
-			get
-			{
-				return _TopicId;
-			}
-			set
-			{
-				_TopicId = value;
-			}
-		}
-		public int ContentId
-		{
-			get
-			{
-				return _ContentId;
-			}
-			set
-			{
-				_ContentId = value;
-			}
-		}
-		public int ViewCount
-		{
-			get
-			{
-				return _ViewCount;
-			}
-			set
-			{
-				_ViewCount = value;
-			}
-		}
-		public int ReplyCount
-		{
-			get
-			{
-				return _ReplyCount;
-			}
-			set
-			{
-				_ReplyCount = value;
-			}
-		}
-		public bool IsLocked
-		{
-			get
-			{
-				return _IsLocked;
-			}
-			set
-			{
-				_IsLocked = value;
-			}
-		}
-		public bool IsPinned
-		{
-			get
-			{
-				return _IsPinned;
-			}
-			set
-			{
-				_IsPinned = value;
-			}
-		}
-		public string TopicIcon
-		{
-			get
-			{
-				return _TopicIcon;
-			}
-			set
-			{
-				_TopicIcon = value;
-			}
-		}
-		public int StatusId
-		{
-			get
-			{
-				return _StatusId;
-			}
-			set
-			{
-				_StatusId = value;
-			}
-		}
-		public bool IsApproved
-		{
-			get
-			{
-				return _IsApproved;
-			}
-			set
-			{
-				_IsApproved = value;
-			}
-		}
-		public bool IsDeleted
-		{
-			get
-			{
-				return _IsDeleted;
-			}
-			set
-			{
-				_IsDeleted = value;
-			}
-		}
-		public bool IsAnnounce
-		{
-			get
-			{
-				return _IsAnnounce;
-			}
-			set
-			{
-				_IsAnnounce = value;
-			}
-		}
-		public bool IsArchived
-		{
-			get
-			{
-				return _IsArchived;
-			}
-			set
-			{
-				_IsArchived = value;
-			}
-		}
-		public TopicTypes TopicType
-		{
-			get
-			{
-				return _TopicType;
-			}
-			set
-			{
-				_TopicType = value;
-			}
-		}
-		public DateTime AnnounceStart
-		{
-			get
-			{
-				return _AnnounceStart;
-			}
-			set
-			{
-				_AnnounceStart = value;
-			}
-		}
-		public DateTime AnnounceEnd
-		{
-			get
-			{
-				return _AnnounceEnd;
-			}
-			set
-			{
-				_AnnounceEnd = value;
-			}
-		}
-		public Content Content
-		{
-			get
-			{
-				return _Content;
-			}
-			set
-			{
-				_Content = value;
-			}
-		}
-		public PermissionInfo Security
-		{
-			get
-			{
-				return _PermissionInfo;
-			}
-			set
-			{
-				_PermissionInfo = value;
-			}
-		}
-		public Author Author
-		{
-			get
-			{
-				return _author;
-			}
-			set
-			{
-				_author = value;
-			}
-		}
-		public string Tags
-		{
-			get
-			{
-				return _tags;
-			}
-			set
-			{
-				_tags = value;
-			}
-		}
-		private int _Priority = 0;
-		public int Priority
-		{
-			get
-			{
-				return _Priority;
-			}
-			set
-			{
-				_Priority = value;
-			}
-		}
-		private string _Categories = string.Empty;
-		public string Categories
-		{
-			get
-			{
-				return _Categories;
-			}
-			set
-			{
-				_Categories = value;
-			}
-		}
-		private string _TopicUrl = string.Empty;
-		public string TopicUrl
-		{
-			get
-			{
-				return _TopicUrl;
-			}
-			set
-			{
-				_TopicUrl = value;
-			}
-		}
-		private string _ForumURL = string.Empty;
-		public string ForumURL
-		{
-			get
-			{
-				return _ForumURL;
-			}
-			set
-			{
-				_ForumURL = value;
-			}
-		}
-		private string _TopicData = string.Empty;
-		public string TopicData
-		{
-			get
-			{
-				return _TopicData;
-			}
-			set
-			{
-				_TopicData = value;
-			}
-		}
-		public string URL
+
+        #region Private Members
+        #endregion
+        #region Public Properties
+        public int TopicId { get; set; }
+        public int ContentId { get; set; }
+        public int ViewCount { get; set; }
+        public int ReplyCount { get; set; }
+        public bool IsLocked { get; set; }
+        public bool IsPinned { get; set; }
+        public string TopicIcon { get; set; }
+        public int StatusId { get; set; }
+        public bool IsApproved { get; set; }
+        public bool IsDeleted { get; set; }
+        public bool IsAnnounce { get; set; }
+        public bool IsArchived { get; set; }
+        public TopicTypes TopicType { get; set; }
+        public DateTime AnnounceStart { get; set; }
+        public DateTime AnnounceEnd { get; set; }
+        public Content Content { get; set; }
+        public PermissionInfo Security { get; set; }
+        public Author Author { get; set; }
+        public string Tags { get; set; }
+        public int Priority { get; set; } = 0;
+        public string Categories { get; set; } = string.Empty;
+        public string TopicUrl { get; set; } = string.Empty;
+        public string ForumURL { get; set; } = string.Empty;
+        public string TopicData { get; set; } = string.Empty;
+
+        public string URL
 		{
 			get
 			{
@@ -467,56 +205,6 @@ namespace DotNetNuke.Modules.ActiveForums
 			int id = Convert.ToInt32(DataProvider.Instance().Topics_SaveToForum(ForumId, TopicId, LastReplyId));
 
 			return id;
-		}
-		public List<TopicInfo> TopicsList(int ForumId, int ModuleId, int PortalId)
-		{
-			IDataReader dr = DataProvider.Instance().Topics_List(ForumId, ModuleId, PortalId);
-			List<TopicInfo> tl = new List<TopicInfo>();
-			while (dr.Read())
-			{
-				TopicInfo ti = new TopicInfo();
-				if (! (dr["AnnounceEnd"] == DBNull.Value))
-				{
-					ti.AnnounceEnd = Convert.ToDateTime(dr["AnnounceEnd"]);
-				}
-
-				if (! (dr["AnnounceStart"] == DBNull.Value))
-				{
-					ti.AnnounceStart = Convert.ToDateTime(dr["AnnounceStart"]);
-				}
-				ti.Content.AuthorId = Convert.ToInt32(dr["AuthorId"]);
-				ti.Content.AuthorName = dr["AuthorName"].ToString();
-				ti.Content.Body = dr["Body"].ToString();
-				ti.Content.ContentId = Convert.ToInt32(dr["ContentId"]);
-				ti.Content.DateCreated = Convert.ToDateTime(dr["DateCreated"]);
-				ti.Content.DateUpdated = Convert.ToDateTime(dr["DateUpdated"]);
-				ti.Content.IsDeleted = Convert.ToBoolean(dr["IsDeleted"]);
-				ti.Content.Subject = dr["Subject"].ToString();
-				ti.Content.Summary = dr["Summary"].ToString();
-				ti.Author.AuthorId = ti.Content.AuthorId;
-				ti.Author.DisplayName = dr["DisplayName"].ToString();
-				ti.Author.Email = dr["Email"].ToString();
-				ti.Author.FirstName = dr["FirstName"].ToString();
-				ti.Author.LastName = dr["LastName"].ToString();
-				ti.Author.Username = dr["Username"].ToString();
-				ti.ContentId = Convert.ToInt32(dr["ContentId"]);
-				ti.IsAnnounce = Convert.ToBoolean(dr["IsAnnounce"]);
-				ti.IsApproved = Convert.ToBoolean(dr["IsApproved"]);
-				ti.IsArchived = Convert.ToBoolean(dr["IsArchived"]);
-				ti.IsDeleted = Convert.ToBoolean(dr["IsDeleted"]);
-				ti.IsLocked = Convert.ToBoolean(dr["IsLocked"]);
-				ti.IsPinned = Convert.ToBoolean(dr["IsPinned"]);
-				ti.ReplyCount = Convert.ToInt32(dr["ReplyCount"]);
-				ti.StatusId = Convert.ToInt32(dr["StatusId"]);
-				ti.TopicIcon = Convert.ToString(dr["TopicIcon"]);
-				ti.TopicId = Convert.ToInt32(dr["TopicId"]);
-				ti.TopicType = (TopicTypes)(dr["TopicType"]);
-				ti.ViewCount = Convert.ToInt32(dr["ViewCount"]);
-				ti.Tags = dr["Tags"].ToString();
-				tl.Add(ti);
-			}
-			dr.Close();
-			return tl;
 		}
 		public TopicInfo Topics_Get(int PortalId, int ModuleId, int TopicId)
 		{

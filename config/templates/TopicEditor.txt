@@ -85,20 +85,6 @@
 						<td style="width:70px;">[AF:CONTROL:EMOTICONS]</td>
 					</tr>
 					<tr>
-						<td>
-							<div class="amtbwrapper">
-								<div class="amtbwrapper" style="text-align:center;">
-									<div style="margin-left:0 auto;margin-right:0 auto;min-width:50px;max-width:160px;">
-										[AF:BUTTON:SUBMIT][AF:BUTTON:CANCEL][AF:BUTTON:PREVIEW]
-									</div>
-								</div>
-								
-							</div>
-							
-						</td>
-						<td></td>
-					</tr>
-					<tr>
 						<td style="text-align:left;">
 							
 							[AF:UI:SECTION:TAGS]
@@ -119,6 +105,20 @@
 						</td>
 						<td></td>
 					</tr>		
+					<tr>
+						<td>
+							<div class="amtbwrapper">
+								<div class="amtbwrapper" style="text-align:center;">
+									<div style="margin-left:0 auto;margin-right:0 auto;min-width:50px;max-width:160px;">
+										[AF:BUTTON:SUBMIT][AF:BUTTON:CANCEL][AF:BUTTON:PREVIEW]
+									</div>
+								</div>
+								
+							</div>
+							
+						</td>
+						<td></td>
+					</tr>
 					<tr>
 						<td colspan="2">
 						
