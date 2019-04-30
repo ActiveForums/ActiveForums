@@ -130,7 +130,7 @@ namespace DotNetNuke.Modules.ActiveForums
 
         public bool NeedsConversion
         {
-            get { return MainSettings.GetBoolean("NeedsConvert", true); }
+            get { return MainSettings.GetBoolean("NeedsConvert", false); }
         }
 
         public PMTypes PMType
