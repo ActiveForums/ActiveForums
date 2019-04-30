@@ -8,7 +8,15 @@ Active Forums is an award winning, DotNetNuke module that allows you to easily b
 
     <hr />
 	</div>
-    <h3>Release Notes</h3>
+
+
+<h3>Release Notes</h3>
+<b>Version 06.03.04</b>
+<ul>
+	<li>#432 Attempted fix for losing INSTALLDATE</li>
+<ul>
+
+<h3>Release Notes</h3>
 <b>Version 06.03.03</b>
 <ul>
 	<li>Changed deprecated APIs.</li>

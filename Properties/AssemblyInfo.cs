@@ -1,6 +1,6 @@
 //
 // Active Forums - http://activeforums.org
-// Copyright (c) 2015
+// Copyright (c) 2015-2019
 // by Active Forums Community
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
@@ -35,7 +35,7 @@ using System.Security;
 [assembly: AssemblyDescription("Discussion Forum Module for DotNetNuke")]
 [assembly: AssemblyCompany("activeforums.org")]
 [assembly: AssemblyProduct("Active Forums")]
-[assembly: AssemblyCopyright("Copyright © 2004-2018 activeforums.org")]
+[assembly: AssemblyCopyright("Copyright © 2004-2019 activeforums.org")]
 [assembly: AssemblyTrademark("")]
 
 
@@ -52,9 +52,9 @@ using System.Security;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("06.03.03")]
+[assembly: AssemblyVersion("06.03.04")]
 
-[assembly: AssemblyFileVersion("06.03.03")]
+[assembly: AssemblyFileVersion("06.03.04")]
 [assembly: WebResource("DotNetNuke.Modules.ActiveForums.CustomControls.Resources.cb.js", "text/javascript")]
 [assembly: WebResource("DotNetNuke.Modules.ActiveForums.scripts.afadmin.properties.js", "text/javascript")]
 
