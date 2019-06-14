@@ -2,11 +2,11 @@
     <packages>
         <package name="Active Forums" type="Module" version="06.03.04">
             <friendlyName>Active Forums</friendlyName>
-            <description>Active Forums - Forum module for DotNetNuke</description>
+            <description>Active Forums - Forum Module for DNN</description>
             <iconFile>DesktopModules/ActiveForums/images/af6_icon.jpg</iconFile>
             <owner>
                 <name>DotNetNuke Active Forums Module</name>
-                <organization>Active Forums</organization>
+                <organization>Active Forums Community</organization>
                 <url>activeforums.org</url>
               <email>webmaster@activeforums.org</email>
             </owner>

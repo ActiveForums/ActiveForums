@@ -1,6 +1,6 @@
 //
 // Active Forums - http://activeforums.org
-// Copyright (c) 2015-2019
+// Copyright (c) 2019-2019
 // by Active Forums Community
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
@@ -32,7 +32,7 @@ using System.Security;
 // Review the values of the assembly attributes
 [assembly: AllowPartiallyTrustedCallers()]
 [assembly: AssemblyTitle("Active Forums")]
-[assembly: AssemblyDescription("Discussion Forum Module for DotNetNuke")]
+[assembly: AssemblyDescription("Discussion Forum Module for DNN")]
 [assembly: AssemblyCompany("activeforums.org")]
 [assembly: AssemblyProduct("Active Forums")]
 [assembly: AssemblyCopyright("Copyright © 2004-2019 activeforums.org")]
