@@ -1478,9 +1478,9 @@ namespace DotNetNuke.Modules.ActiveForums.Controls
                 }
                 else
                 {
-                    sbOutput = sbOutput.Replace("[LIKES]", "<i class=\"fa " + image + "\" /> " + likes.Count.ToString());
-                    sbOutput = sbOutput.Replace("[LIKESx2]", "<i class=\"fa " + image + " fa-2x\" /> " + likes.Count.ToString());
-                    sbOutput = sbOutput.Replace("[LIKESx3]", "<i class=\"fa " + image + " fa-3x\" /> " + likes.Count.ToString());
+                    sbOutput = sbOutput.Replace("[LIKES]", "<i class=\"fa " + image + "\" /> " + likes.Count.ToString() + "</i>");
+                    sbOutput = sbOutput.Replace("[LIKESx2]", "<i class=\"fa " + image + " fa-2x\" /> " + likes.Count.ToString() + "</i>");
+                    sbOutput = sbOutput.Replace("[LIKESx3]", "<i class=\"fa " + image + " fa-3x\" /> " + likes.Count.ToString() + "</i>");
                     //sbOutput = sbOutput.Replace("[LIKES]", "<img src=\"" + image + "\" onclick=\"amaf_likePost(" + UserId + "," + contentId + ")\" /> " + likes.Count.ToString());
                 }
             }
