@@ -424,26 +424,39 @@ namespace DotNetNuke.Modules.ActiveForums
             var original = text;
             if (!(string.IsNullOrEmpty(text)))
             {
-                const string encodedHref = "&lt;a.*?href=[\"'](?<url>.*?)[\"'].*?&gt;(http.*?)&lt;/a&gt;";
-                const string regHref = "<a.*?href=[\"'](?<url>.*?)[\"'].*?>(?<http>http.*?)</a>";
+                const string encodedHref = "&lt;a.*?href=[\"'](?<url>.*?)[\"'].*?&gt;(http[s]?.*?)&lt;/a&gt;"; // Encoded href regex
 
+                // Replace encoded url with decoded url
                 foreach (Match m in Regex.Matches(text, encodedHref, RegexOptions.IgnoreCase))
                     text = text.Replace(m.Value, HttpUtility.HtmlDecode(m.Value));
 
+                const string regHref = "<a.*?href=[\"'](?<url>.*?)[\"'].*?>(?<http>http[s]?.*?)</a>";
+
+                // Remove all exiting <A> anchors, so they will be treated by the ReplaceLink function. (adding target=_blank & nofollow)
                 foreach (Match m in Regex.Matches(text, regHref, RegexOptions.IgnoreCase))
                     text = text.Replace(m.Value, m.Groups["http"].Value.Contains("...") ? m.Groups["url"].Value : m.Groups["http"].Value);
 
+
+                // Handle Empty string
                 if (string.IsNullOrEmpty(text))
                 {
                     return original;
                 }
 
-                text = Regex.Replace(text, @"http://([\w+?\.\w+])+([a-zA-Z0-9\~\!\@\\#\$\%\^\&amp;\*\(\)_\-\=\+\\\/\?\.\:\;\'\,]*)?", m => ReplaceLink(m, currentSite, text), RegexOptions.IgnoreCase);
+                // Look for http(s) URLs  that are not perceded by a quote or <a>.
+                String strRegexUrl = @"http[s]?://([\w+?\.\w+])+([a-zA-Z0-9\~\!\@\\#\$\%\^\&amp;\*\(\)_\-\=\+\\\/\?\.\:\;\'\,]*)?";
+
+                // Create auto link
+                text = Regex.Replace(text, strRegexUrl, m => ReplaceLink(m, currentSite, text), RegexOptions.IgnoreCase);
+
+
                 if (string.IsNullOrEmpty(text))
                 {
                     return original;
                 }
             }
+
+
             return text;
         }
 
