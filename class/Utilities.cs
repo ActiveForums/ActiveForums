@@ -444,7 +444,7 @@ namespace DotNetNuke.Modules.ActiveForums
                 }
 
                 // Look for http(s) URLs  that are not perceded by a quote or <a>.
-                String strRegexUrl = @"(?<!['""]+|<a.*?>\s*)http[s]?://([\w+?\.\w+])+([a-zA-Z0-9\~\!\@\\#\$\%\^\&amp;\*\(\)_\-\=\+\\\/\?\.\:\;\'\,]*)?";
+                String strRegexUrl = @"http[s]?://([\w+?\.\w+])+([a-zA-Z0-9\~\!\@\\#\$\%\^\&amp;\*\(\)_\-\=\+\\\/\?\.\:\;\'\,]*)?";
 
                 // Create auto link
                 text = Regex.Replace(text, strRegexUrl, m => ReplaceLink(m, currentSite, text), RegexOptions.IgnoreCase);
