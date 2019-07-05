@@ -449,7 +449,6 @@ namespace DotNetNuke.Modules.ActiveForums
                 }
             }
 
-            Console.WriteLine("End:" + text + "\n");
 
             return text;
         }
