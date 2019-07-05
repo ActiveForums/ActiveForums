@@ -430,7 +430,14 @@ namespace DotNetNuke.Modules.ActiveForums
                 foreach (Match m in Regex.Matches(text, encodedHref, RegexOptions.IgnoreCase))
                     text = text.Replace(m.Value, HttpUtility.HtmlDecode(m.Value));
 
-               // Handle Empty string
+                const string regHref = "<a.*?href=[\"'](?<url>.*?)[\"'].*?>(?<http>http[s]?.*?)</a>";
+
+                // Remove all exiting <A> anchors, so they will be treated by the ReplaceLink function. (adding target=_blank & nofollow)
+                foreach (Match m in Regex.Matches(text, regHref, RegexOptions.IgnoreCase))
+                    text = text.Replace(m.Value, m.Groups["http"].Value.Contains("...") ? m.Groups["url"].Value : m.Groups["http"].Value);
+
+
+                // Handle Empty string
                 if (string.IsNullOrEmpty(text))
                 {
                     return original;
