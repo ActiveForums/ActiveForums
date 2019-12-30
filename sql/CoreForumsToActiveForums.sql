@@ -1,19 +1,22 @@
 /*********************************************************/
-/*													     */
-/*     V1.5 - 9-30-2012								     */
-/*     Enhancements by Chris Hammond				     */
-/*     DotNetNuke Corporation						     */
-/*     Additional Enhancements by					     */
-/*     Matthias Schloman - Aarsys.de				     */
-/*     (c) 2013 DNN Corporation							 */
+/*							 */
+/*     V1.6 - 11-11-2018				 */
+/*     Enhancements by Chris Hammond			 */
+/*     Christoc.com Software Solutions			 */
+/*							 */
+/*     Additional Enhancements by			 */
+/*     Matthias Schloman - Aarsys.de			 */
+/*     (c) 2013 DNN Corporation				 */
 /*     http://activeforums.codeplex.com/workitem/1583	 */
-/*														 */
+/*							 */
 /*********************************************************/
 
 /*******************************************************************/
 /*
 	Instructions for use at 
-	http://activeforums.codeplex.com/wikipage?title=Migrating%20from%20DNN%20Forums%205.0.3%20to%20Active%20Forums%205.0&referringTitle=Documentation
+	https://github.com/ActiveForums/ActiveForums/wiki/Migrating-DNN-Core-Forum-5.0.3-to-Active-Forums-5.0
+
+	DEAD LINK -> http://activeforums.codeplex.com/wikipage?title=Migrating%20from%20DNN%20Forums%205.0.3%20to%20Active%20Forums%205.0&referringTitle=Documentation
 */
 /*******************************************************************/
 

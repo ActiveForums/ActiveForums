@@ -667,10 +667,10 @@
     <value>You are subscribed to this forum. Click to unsubscribe.</value>
   </data>
   <data name="[RESX:TopicSubscribe:FALSE].Text" xml:space="preserve">
-    <value>Check this box to subscribe to this topic.</value>
+    <value>Check this box to subscribe to this topic</value>
   </data>
   <data name="[RESX:TopicSubscribe:TRUE].Text" xml:space="preserve">
-    <value>You are subscribed to this topic.</value>
+    <value>You are subscribed to this topic</value>
   </data>
   <data name="[RESX:Avatar].Text" xml:space="preserve">
     <value>Avatar</value>
@@ -718,7 +718,7 @@
     <value>Check the box to pin this topic.  Pinned topics will appear before all others.</value>
   </data>
   <data name="[RESX:Subscribe:Note].Text" xml:space="preserve">
-    <value>Check the box to receive email notifications for this topic.</value>
+    <value>If checked, you are subscribed to this topic</value>
   </data>
   <data name="[RESX:Subscribe].Text" xml:space="preserve">
     <value>Subscribe</value>
