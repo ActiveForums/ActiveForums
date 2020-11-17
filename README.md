@@ -3,6 +3,8 @@ ActiveForums
 
 Active Forums Module for the DNN Platform
 
+A new community driven copy of this project is being maintained here: https://github.com/DNNCommunity/Dnn.CommunityForums
+
 What is the Active Forums Module?
 
 The Active Forums Module installs an online discussion forum that is tightly integrated with the DotNetNuke CMS platform. Previously offered as a commercial module from Active Modules Inc. the codebase has been converted to an open source project after the acquisition of Active Modules by DNN Corp.
