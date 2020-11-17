@@ -361,18 +361,15 @@ namespace DotNetNuke.Modules.ActiveForums
 					catQS = "&act=" + _categoryId.ToString();
 				}
 				string sendTo = string.Empty;
-				if (_topicId > 0)
+				if ((_topicId > 0) || (_forumId > 0) || (_forumgroupId > 0))
 				{
-					sendTo = ResolveUrl(app.Context.Request.ApplicationPath, "~/default.aspx?tabid=" + _tabId + "&aft=" + _topicId + sPage + qs);
-				}
-				else if (_forumId > 0)
-				{
-					sendTo = ResolveUrl(app.Context.Request.ApplicationPath, "~/default.aspx?tabid=" + _tabId + "&aff=" + _forumId + sPage + qs + catQS);
-				}
-				else if (_forumgroupId > 0)
-				{
-					sendTo = ResolveUrl(app.Context.Request.ApplicationPath, "~/default.aspx?tabid=" + _tabId + "&afg=" + _forumgroupId + sPage + qs + catQS);
-				}
+                    			sendTo = ResolveUrl(app.Context.Request.ApplicationPath, "~/default.aspx?tabid=" + _tabId +
+		                        (_forumgroupId > 0 ? "&afg=" + _forumgroupId : string.Empty) +
+                		        (_forumId > 0 ? "&aff=" + _forumId : string.Empty) +
+                	        	(_topicId > 0 ? "&aft=" + _topicId : string.Empty) +
+		                        sPage + qs +
+                	        	((_forumgroupId > 0 || _forumId > 0) ? catQS : string.Empty));
+		                }				
 				else if (_urlType == 2 && _otherId > 0)
 				{
 					sendTo = ResolveUrl(app.Context.Request.ApplicationPath, "~/default.aspx?tabid=" + _tabId + "&act=" + _otherId + sPage + qs);
